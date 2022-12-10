@@ -5,6 +5,7 @@ import 'package:autoversa/main.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -20,10 +21,18 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
   }
 
-  nextScreen() {
-    Timer(const Duration(milliseconds: 1500), () {
-      Navigator.pushReplacementNamed(context, Routes.bottombar);
-    });
+  nextScreen() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool? repeat = prefs.getBool('islogged');
+    if (repeat == true) {
+      Timer(const Duration(milliseconds: 1500), () {
+        Navigator.pushReplacementNamed(context, Routes.bottombar);
+      });
+    } else {
+      Timer(const Duration(milliseconds: 1500), () {
+        Navigator.pushReplacementNamed(context, Routes.loginPage);
+      });
+    }
   }
 
   @override
