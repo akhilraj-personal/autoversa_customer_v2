@@ -1,0 +1,44 @@
+class ImageConst {
+  static const baseImageURl = "assets/images/";
+  static const baseIconURl = "assets/icons/";
+////-----------------images---------------
+  static const splashImage = baseImageURl + 'splash_image.png';
+  static const img1 = baseImageURl + 'img1.png';
+
+  static const img2 = baseImageURl + 'img2.png';
+
+  static const img3 = baseImageURl + 'img3.png';
+
+  static const img4 = baseImageURl + 'img4.png';
+  static const handel = baseImageURl + 'handel.png';
+  static const person1 = baseImageURl + 'person1.png';
+  static const curv = baseImageURl + 'curv.png';
+
+////-----------------icons---------------
+
+  static const abcd = baseIconURl + 'abcd.png';
+  static const add = baseIconURl + 'add.png';
+  static const car = baseIconURl + 'car.png';
+  static const downarrow = baseIconURl + 'downarrow.png';
+  static const drive_car = baseIconURl + 'drive_car.png';
+
+  static const insurance = baseIconURl + 'insurance.png';
+  static const music = baseIconURl + 'music.png';
+  static const notification = baseIconURl + 'notification.png';
+  static const person = baseIconURl + 'person.png';
+  static const right_arrow = baseIconURl + 'right_arrow.png';
+  static const road_asset = baseIconURl + 'road_asset.png';
+  static const upArrow = baseIconURl + 'upArrow.png';
+
+  static const home = baseIconURl + 'home.png';
+  static const unSelect_home = baseIconURl + 'unSelect_home.png';
+
+  static const bottom_car = baseIconURl + 'bottom_car.png';
+
+  static const tool = baseIconURl + 'tool.png';
+
+  static const setting = baseIconURl + 'setting.png';
+}
+
+var height;
+var width;
