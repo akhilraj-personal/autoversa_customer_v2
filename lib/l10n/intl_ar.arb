@@ -1,7 +1,7 @@
 {
   "welcome_text":"تسجيل الدخول إلى حسابك",
   "sign_in": "تسجيل الدخول",
-  "verify_me": "Verify Me",
+  "verify_me": "تحقق عني",
   "verify_mobile_number": "تحقق من رقم الهاتف المحمول",
   "we_have_send_a_6_digit_verification": "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى",
   "change_number": "تغيير رقم",

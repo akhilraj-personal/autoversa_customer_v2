@@ -14,6 +14,8 @@ class ImageConst {
   static const person1 = baseImageURl + 'person1.png';
   static const curv = baseImageURl + 'curv.png';
   static const ai_icon = baseImageURl + 'av_ai_icon.png';
+  static const verify_icon = baseImageURl + 'verify_icon.png';
+  static const signup_icon = baseImageURl + 'signup_icon.png';
 
 ////-----------------icons---------------
 

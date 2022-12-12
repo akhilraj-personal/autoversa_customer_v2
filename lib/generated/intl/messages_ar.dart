@@ -30,7 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "resend_otp": MessageLookupByLibrary.simpleMessage("إعادة إرسال OTP"),
         "sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("سجل دخولك بواسطة"),
-        "verify_me": MessageLookupByLibrary.simpleMessage("Verify Me"),
+        "verify_me": MessageLookupByLibrary.simpleMessage("تحقق عني"),
         "verify_mobile_number":
             MessageLookupByLibrary.simpleMessage("تحقق من رقم الهاتف المحمول"),
         "verify_via_call":
