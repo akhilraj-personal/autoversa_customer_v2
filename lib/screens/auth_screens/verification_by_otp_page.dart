@@ -91,11 +91,13 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    // Image.asset(
-                                    //   'images/cp_otp_verification.png',
-                                    //   width: 150,
-                                    // ),
-                                    SizedBox(height: 8),
+                                    Image.asset(
+                                      ImageConst.verify_icon,
+                                      fit: BoxFit.contain,
+                                      width: 80,
+                                      height: 110,
+                                    ),
+                                    SizedBox(height: 20),
                                     Text(
                                       S.of(context).verify_mobile_number,
                                       style: montserratBold.copyWith(
@@ -106,19 +108,20 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                     SizedBox(height: 16),
                                     Text(
                                       S
-                                          .of(context)
-                                          .we_have_send_a_6_digit_verification,
+                                              .of(context)
+                                              .we_have_send_a_6_digit_verification +
+                                          " +918129312321",
                                       style: montserratRegular.copyWith(
-                                          color: blackColor,
+                                          color: lightblackColor,
                                           fontSize: width * 0.043),
                                       textAlign: TextAlign.center,
                                     ),
                                     Text('\n' + S.of(context).change_number,
                                         style: montserratRegular.copyWith(
-                                            color: Colors.orange,
+                                            color: changenumberorange,
                                             fontSize: width * 0.043),
                                         textAlign: TextAlign.end),
-                                    SizedBox(height: 4),
+                                    SizedBox(height: 8),
                                     Text(
                                       S.of(context).please_enter_the_code,
                                       style: montserratRegular.copyWith(
@@ -140,35 +143,34 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                       onSubmit: (String
                                           verificationCode) {}, // end onSubmit
                                     ),
-
                                     SizedBox(height: 16),
-                                    // Container(
-                                    //   margin:
-                                    //       EdgeInsets.only(left: 16, right: 16),
-                                    //   child: Row(
-                                    //     mainAxisAlignment:
-                                    //         MainAxisAlignment.spaceBetween,
-                                    //     children: [
-                                    //       GestureDetector(
-                                    //         onTap: () async {},
-                                    //         child: Text("Resend",
-                                    //             style: const TextStyle(
-                                    //                 color: Colors.black,
-                                    //                 fontSize: 18)),
-                                    //       ),
-                                    //       Text("30 Seconds"),
-                                    //       GestureDetector(
-                                    //         onTap: () async {},
-                                    //         child: Text(
-                                    //           "Verify via call",
-                                    //           style: montserratRegular.copyWith(
-                                    //               color: blackColor,
-                                    //               fontSize: width * 0.053),
-                                    //         ),
-                                    //       ),
-                                    //     ],
-                                    //   ),
-                                    // ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(left: 16, right: 16),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () async {},
+                                            child: Text(" ",
+                                                style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18)),
+                                          ),
+                                          Text("30 Seconds"),
+                                          GestureDetector(
+                                            onTap: () async {},
+                                            child: Text(
+                                              " ",
+                                              style: montserratRegular.copyWith(
+                                                  color: lightblackColor,
+                                                  fontSize: width * 0.053),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                     SizedBox(height: 20),
                                     GestureDetector(
                                       onTap: () {
@@ -181,14 +183,16 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                         alignment: Alignment.bottomCenter,
                                         children: [
                                           Container(
+                                            height: height * 0.045,
+                                            width: height * 0.37,
                                             decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(14),
                                                 boxShadow: [
                                                   BoxShadow(
                                                       blurRadius: 16,
-                                                      color: Colors
-                                                          .lightBlue[400]!,
+                                                      color: syanColor
+                                                          .withOpacity(.6),
                                                       spreadRadius: 0,
                                                       blurStyle:
                                                           BlurStyle.outer,
@@ -196,7 +200,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                                 ]),
                                           ),
                                           Container(
-                                            height: height * 0.065,
+                                            height: height * 0.075,
                                             width: height * 0.4,
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
@@ -217,8 +221,9 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                                   .of(context)
                                                   .verify_me
                                                   .toUpperCase(),
-                                              style: montserratBold.copyWith(
-                                                  color: Colors.white),
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: Colors.white),
                                             ),
                                           ),
                                         ],
