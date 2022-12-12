@@ -13,6 +13,7 @@ class ImageConst {
   static const handel = baseImageURl + 'handel.png';
   static const person1 = baseImageURl + 'person1.png';
   static const curv = baseImageURl + 'curv.png';
+  static const ai_icon = baseImageURl + 'av_ai_icon.png';
 
 ////-----------------icons---------------
 

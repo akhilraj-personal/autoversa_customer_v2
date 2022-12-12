@@ -1,4 +1,7 @@
 {
   "welcome_text": "Sign in to your account",
-  "sign_in": "Sign In"
+  "sign_in": "Sign In",
+  "enter_mobile_text": "Enter Mobile Number",
+  "sign_in_alt": "Sign in with",
+  "verify_me": "Verify Me"
 }
