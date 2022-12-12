@@ -10,4 +10,4 @@ TextStyle montserratMedium =
     const TextStyle(fontFamily: "Montserrat", fontWeight: FontWeight.w500);
 TextStyle montserratRegular =
     const TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w400);
-
+TextStyle montserratLight = const TextStyle(fontFamily: 'Montserrat');
