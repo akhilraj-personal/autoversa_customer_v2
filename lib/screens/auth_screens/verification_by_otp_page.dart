@@ -10,7 +10,14 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:provider/provider.dart';
 
 class LoginOTPVerification extends StatefulWidget {
-  const LoginOTPVerification({super.key});
+  final String country_code;
+  final String phone;
+  final Map<String, dynamic> timer;
+  const LoginOTPVerification(
+      {super.key,
+      required this.country_code,
+      required this.phone,
+      required this.timer});
 
   @override
   State<LoginOTPVerification> createState() => LoginOTPVerificationState();
