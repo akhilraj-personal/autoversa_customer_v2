@@ -1,3 +1,4 @@
+import 'package:autoversa/screens/auth_screens/verification_by_otp_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -5,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../../constant/image_const.dart';
 import '../../constant/text_style.dart';
 import '../../generated/l10n.dart';
-import '../../main.dart';
 import '../../provider/provider.dart';
 import '../../utils/color_utils.dart';
 
@@ -186,8 +186,11 @@ class _LoginPageState extends State<LoginPage> {
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          Navigator.pushReplacementNamed(
-                                              context, Routes.otpverification);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginOTPVerification()));
                                         });
                                       },
                                       child: Stack(
