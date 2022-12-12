@@ -139,42 +139,44 @@ class _LoginPageState extends State<LoginPage> {
                                                 children: <Widget>[
                                                   Container(
                                                       padding: EdgeInsets.only(
-                                                          left: 10, right: 10),
+                                                          left: width * 0.025,
+                                                          right: width * 0.025),
                                                       child: Text("AE +971")),
                                                   Container(
                                                     height: height * 0.075,
                                                     width: 2.0,
                                                     color: borderGreyColor,
                                                     margin: EdgeInsets.only(
-                                                        left: 10.0,
-                                                        right: 10.0),
+                                                        left: width * 0.025,
+                                                        right: width * 0.025),
                                                   ),
                                                   Expanded(
-                                                    child: TextFormField(
-                                                      keyboardType:
-                                                          TextInputType.number,
-                                                      maxLength: 10,
-                                                      style: TextStyle(
-                                                          fontSize: 18.0),
-                                                      decoration: InputDecoration(
-                                                          counterText: "",
-                                                          filled: true,
-                                                          contentPadding:
-                                                              EdgeInsets
-                                                                  .fromLTRB(16,
-                                                                      0, 16, 0),
-                                                          hintText: S
-                                                              .of(context)
-                                                              .enter_mobile_text,
-                                                          hintStyle: TextStyle(
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontSize: 14),
-                                                          border:
-                                                              InputBorder.none,
-                                                          fillColor:
-                                                              whiteColor),
-                                                      validator: (value) {},
+                                                    child: Container(
+                                                      padding: EdgeInsets.only(
+                                                          right: width * 0.025),
+                                                      child: TextFormField(
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        maxLength: 10,
+                                                        style: TextStyle(
+                                                            fontSize: 18.0),
+                                                        decoration: InputDecoration(
+                                                            counterText: "",
+                                                            filled: true,
+                                                            hintText: S
+                                                                .of(context)
+                                                                .enter_mobile_text,
+                                                            hintStyle: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 14),
+                                                            border: InputBorder
+                                                                .none,
+                                                            fillColor:
+                                                                whiteColor),
+                                                        validator: (value) {},
+                                                      ),
                                                     ),
                                                   )
                                                 ],
