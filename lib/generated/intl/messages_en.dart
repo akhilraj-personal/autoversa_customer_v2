@@ -22,7 +22,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "change_number": MessageLookupByLibrary.simpleMessage("Change Number"),
+        "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
+            "Please enter the code below to verify its you"),
+        "resend_otp": MessageLookupByLibrary.simpleMessage("Resend OTP"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
+        "verify_me": MessageLookupByLibrary.simpleMessage("Verify Me"),
+        "verify_mobile_number":
+            MessageLookupByLibrary.simpleMessage("Verify Mobile Number"),
+        "verify_via_call":
+            MessageLookupByLibrary.simpleMessage("Verify Via Call"),
+        "we_have_send_a_6_digit_verification":
+            MessageLookupByLibrary.simpleMessage(
+                "We have send a 6 digit verification code to"),
         "welcome_text":
             MessageLookupByLibrary.simpleMessage("Sign in to your account")
       };

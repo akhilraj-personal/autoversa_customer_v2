@@ -1,24 +1,22 @@
+import 'package:autoversa/constant/image_const.dart';
+import 'package:autoversa/constant/text_style.dart';
+import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/main.dart';
+import 'package:autoversa/provider/provider.dart';
+import 'package:autoversa/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:provider/provider.dart';
 
-import '../../constant/image_const.dart';
-import '../../constant/text_style.dart';
-import '../../generated/l10n.dart';
-import '../../main.dart';
-import '../../provider/provider.dart';
-import '../../utils/color_utils.dart';
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginOTPVerification extends StatefulWidget {
+  const LoginOTPVerification({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginOTPVerification> createState() => LoginOTPVerificationState();
 }
 
-customerLogin() {}
-
-class _LoginPageState extends State<LoginPage> {
+class LoginOTPVerificationState extends State<LoginOTPVerification> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
@@ -86,120 +84,103 @@ class _LoginPageState extends State<LoginPage> {
                                   ],
                                 )),
                             Container(
+                                padding: EdgeInsets.all(20),
                                 height: height - 90,
                                 width: width,
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    // Image.asset(
+                                    //   'images/cp_otp_verification.png',
+                                    //   width: 150,
+                                    // ),
+                                    SizedBox(height: 8),
                                     Text(
-                                      S.of(context).welcome_text,
+                                      S.of(context).verify_mobile_number,
                                       style: montserratBold.copyWith(
                                           color: blackColor,
                                           fontSize: width * 0.053),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    SizedBox(height: 10),
-                                    Stack(
-                                        alignment: Alignment.bottomCenter,
-                                        children: [
-                                          Container(
-                                            height: height * 0.045,
-                                            width: height * 0.37,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      blurRadius: 16,
-                                                      color: Colors
-                                                          .lightBlue[400]!,
-                                                      spreadRadius: 0,
-                                                      blurStyle:
-                                                          BlurStyle.outer,
-                                                      offset: Offset(0, 0)),
-                                                ]),
-                                          ),
-                                          Container(
-                                              width: height * 0.37,
-                                              margin: EdgeInsets.only(
-                                                  bottom: height * 0.002),
-                                              padding: EdgeInsets.only(
-                                                left: width * 0.04,
-                                                right: width * 0.08,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                gradient: LinearGradient(
-                                                  begin: Alignment.topCenter,
-                                                  end: Alignment.bottomCenter,
-                                                  colors: [
-                                                    whiteColor,
-                                                    whiteColor,
-                                                    whiteColor,
-                                                    borderGreyColor,
-                                                  ],
-                                                ),
-                                              ),
-                                              child: Row(
-                                                children: <Widget>[
-                                                  // CountryCodePicker(
-                                                  //   initialSelection: '+971',
-                                                  //   favorite: ['+971'],
-                                                  //   padding: EdgeInsets.all(0),
-                                                  //   showFlag: false,
-                                                  // ),
-                                                  Container(
-                                                      child: Text("AE +971")),
-                                                  Container(
-                                                    height: 30.0,
-                                                    width: 2.0,
-                                                    color: greyColor,
-                                                    margin: EdgeInsets.only(
-                                                        left: 10.0,
-                                                        right: 10.0),
-                                                  ),
-                                                  Expanded(
-                                                    child: TextFormField(
-                                                      keyboardType:
-                                                          TextInputType.number,
-                                                      maxLength: 10,
-                                                      style: TextStyle(
-                                                          fontSize: 18.0),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        counterText: "",
-                                                        filled: true,
-                                                        contentPadding:
-                                                            EdgeInsets.fromLTRB(
-                                                                16, 0, 16, 0),
-                                                        hintText:
-                                                            "Mobile Number",
-                                                        hintStyle: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 14),
-                                                        border:
-                                                            InputBorder.none,
-                                                      ),
-                                                      validator: (value) {},
-                                                    ),
-                                                  )
-                                                ],
-                                              ))
-                                        ]),
+                                    SizedBox(height: 16),
+                                    Text(
+                                      S
+                                          .of(context)
+                                          .we_have_send_a_6_digit_verification,
+                                      style: montserratRegular.copyWith(
+                                          color: blackColor,
+                                          fontSize: width * 0.043),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Text('\n' + S.of(context).change_number,
+                                        style: montserratRegular.copyWith(
+                                            color: Colors.orange,
+                                            fontSize: width * 0.043),
+                                        textAlign: TextAlign.end),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      S.of(context).please_enter_the_code,
+                                      style: montserratRegular.copyWith(
+                                          color: blackColor,
+                                          fontSize: width * 0.043),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(height: 12),
+                                    OtpTextField(
+                                      numberOfFields: 6,
+                                      fieldWidth: 45,
+                                      clearText: true,
+                                      focusedBorderColor: Colors.lightBlue,
+                                      showFieldAsBox: true,
+                                      autoFocus: true,
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(12.0)),
+                                      onCodeChanged: (String code) {},
+                                      onSubmit: (String
+                                          verificationCode) {}, // end onSubmit
+                                    ),
+
+                                    SizedBox(height: 16),
+                                    // Container(
+                                    //   margin:
+                                    //       EdgeInsets.only(left: 16, right: 16),
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceBetween,
+                                    //     children: [
+                                    //       GestureDetector(
+                                    //         onTap: () async {},
+                                    //         child: Text("Resend",
+                                    //             style: const TextStyle(
+                                    //                 color: Colors.black,
+                                    //                 fontSize: 18)),
+                                    //       ),
+                                    //       Text("30 Seconds"),
+                                    //       GestureDetector(
+                                    //         onTap: () async {},
+                                    //         child: Text(
+                                    //           "Verify via call",
+                                    //           style: montserratRegular.copyWith(
+                                    //               color: blackColor,
+                                    //               fontSize: width * 0.053),
+                                    //         ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                    SizedBox(height: 20),
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
                                           Navigator.pushReplacementNamed(
-                                              context, Routes.otpverification);
+                                              context, Routes.signup);
                                         });
                                       },
                                       child: Stack(
                                         alignment: Alignment.bottomCenter,
                                         children: [
                                           Container(
-                                            height: height * 0.045,
-                                            width: height * 0.37,
                                             decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(14),
@@ -234,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                                             child: Text(
                                               S
                                                   .of(context)
-                                                  .sign_in
+                                                  .verify_me
                                                   .toUpperCase(),
                                               style: montserratBold.copyWith(
                                                   color: Colors.white),

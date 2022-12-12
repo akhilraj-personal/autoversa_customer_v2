@@ -24,8 +24,12 @@ dependencies:
   # Added by Akhil
   flutter_dotenv: ^5.0.2
   shared_preferences: ^2.0.15
+  
+  
   # sizer: ^2.0.15
 
+  # Added by Bharad
+  flutter_otp_text_field: ^1.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

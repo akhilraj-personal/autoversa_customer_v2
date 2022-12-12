@@ -22,7 +22,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "change_number": MessageLookupByLibrary.simpleMessage("تغيير رقم"),
+        "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
+            "الرجاء إدخال الرمز أدناه للتحقق من هويتك"),
+        "resend_otp": MessageLookupByLibrary.simpleMessage("إعادة إرسال OTP"),
         "sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
+        "verify_me": MessageLookupByLibrary.simpleMessage("تحقق عني"),
+        "verify_mobile_number":
+            MessageLookupByLibrary.simpleMessage("تحقق من رقم الهاتف المحمول"),
+        "verify_via_call":
+            MessageLookupByLibrary.simpleMessage("تحقق عبر المكالمة"),
+        "we_have_send_a_6_digit_verification":
+            MessageLookupByLibrary.simpleMessage(
+                "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى"),
         "welcome_text":
             MessageLookupByLibrary.simpleMessage("تسجيل الدخول إلى حسابك")
       };
