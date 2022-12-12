@@ -16,6 +16,8 @@ class ImageConst {
   static const ai_icon = baseImageURl + 'av_ai_icon.png';
   static const verify_icon = baseImageURl + 'verify_icon.png';
   static const signup_icon = baseImageURl + 'signup_icon.png';
+  static const fb_icon = baseImageURl + 'fb_icon.png';
+  static const g_icon = baseImageURl + 'g_icon.png';
 
 ////-----------------icons---------------
 
