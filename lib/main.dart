@@ -1,5 +1,7 @@
 import 'package:autoversa/provider/provider.dart';
 import 'package:autoversa/screens/auth_screens/login_page.dart';
+import 'package:autoversa/screens/auth_screens/signup_page.dart';
+import 'package:autoversa/screens/auth_screens/verification_by_otp_page.dart';
 import 'package:autoversa/screens/bottom_tab/bottomtab.dart';
 import 'package:autoversa/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -62,10 +64,15 @@ var routes = <String, WidgetBuilder>{
         index: 1,
       ),
   Routes.loginPage: (BuildContext context) => LoginPage(),
+  Routes.otpverification: (BuildContext context) => LoginOTPVerification(),
+  Routes.signup: (BuildContext context) => SignupPage(),
 };
 
 class Routes {
   static const SPLASH = "/";
   static const bottombar = "screens/bottom_tab/bottomtab.dart";
   static const loginPage = "screens/auth_screens/login_page.dart";
+  static const otpverification =
+      "screens/auth_screens/verification_by_otp_page.dart";
+  static const signup = "screens/auth_screens/signup_page.dart";
 }

@@ -1,4 +1,11 @@
 {
   "welcome_text": "Sign in to your account",
-  "sign_in": "Sign In"
+  "sign_in": "Sign In",
+  "verify_me": "Verify Me",
+  "verify_mobile_number": "Verify Mobile Number",
+  "we_have_send_a_6_digit_verification": "We have send a 6 digit verification code to",
+  "change_number": "Change Number",
+  "please_enter_the_code": "Please enter the code below to verify its you",
+  "resend_otp": "Resend OTP",
+  "verify_via_call": "Verify Via Call"
 }

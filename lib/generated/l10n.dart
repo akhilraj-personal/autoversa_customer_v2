@@ -69,6 +69,76 @@ class S {
       args: [],
     );
   }
+
+  /// `Verify Me`
+  String get verify_me {
+    return Intl.message(
+      'Verify Me',
+      name: 'verify_me',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify Mobile Number`
+  String get verify_mobile_number {
+    return Intl.message(
+      'Verify Mobile Number',
+      name: 'verify_mobile_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We have send a 6 digit verification code to`
+  String get we_have_send_a_6_digit_verification {
+    return Intl.message(
+      'We have send a 6 digit verification code to',
+      name: 'we_have_send_a_6_digit_verification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Number`
+  String get change_number {
+    return Intl.message(
+      'Change Number',
+      name: 'change_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter the code below to verify its you`
+  String get please_enter_the_code {
+    return Intl.message(
+      'Please enter the code below to verify its you',
+      name: 'please_enter_the_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resend OTP`
+  String get resend_otp {
+    return Intl.message(
+      'Resend OTP',
+      name: 'resend_otp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify Via Call`
+  String get verify_via_call {
+    return Intl.message(
+      'Verify Via Call',
+      name: 'verify_via_call',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
