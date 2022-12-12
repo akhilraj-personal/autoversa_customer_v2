@@ -92,11 +92,17 @@ class _LoginPageState extends State<LoginPage> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    Image.asset(
+                                      ImageConst.ai_icon,
+                                      fit: BoxFit.contain,
+                                      width: 115,
+                                      height: 50,
+                                    ),
+                                    SizedBox(height: 50),
                                     Text(
                                       S.of(context).welcome_text,
-                                      style: montserratBold.copyWith(
-                                          color: blackColor,
-                                          fontSize: width * 0.053),
+                                      style: montserratSemiBold.copyWith(
+                                          color: blackColor, fontSize: 21),
                                     ),
                                     SizedBox(height: 10),
                                     Stack(
@@ -111,8 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                                                 boxShadow: [
                                                   BoxShadow(
                                                       blurRadius: 16,
-                                                      color: Colors
-                                                          .lightBlue[400]!,
+                                                      color: syanColor
+                                                          .withOpacity(.5),
                                                       spreadRadius: 0,
                                                       blurStyle:
                                                           BlurStyle.outer,
@@ -120,41 +126,25 @@ class _LoginPageState extends State<LoginPage> {
                                                 ]),
                                           ),
                                           Container(
-                                              width: height * 0.37,
-                                              margin: EdgeInsets.only(
-                                                  bottom: height * 0.002),
-                                              padding: EdgeInsets.only(
-                                                left: width * 0.04,
-                                                right: width * 0.08,
-                                              ),
+                                              height: height * 0.075,
+                                              width: height * 0.4,
                                               decoration: BoxDecoration(
+                                                color: whiteColor,
                                                 borderRadius:
-                                                    BorderRadius.circular(10),
-                                                gradient: LinearGradient(
-                                                  begin: Alignment.topCenter,
-                                                  end: Alignment.bottomCenter,
-                                                  colors: [
-                                                    whiteColor,
-                                                    whiteColor,
-                                                    whiteColor,
-                                                    borderGreyColor,
-                                                  ],
-                                                ),
+                                                    BorderRadius.circular(12),
+                                                border: Border.all(
+                                                    color: borderGreyColor),
                                               ),
                                               child: Row(
                                                 children: <Widget>[
-                                                  // CountryCodePicker(
-                                                  //   initialSelection: '+971',
-                                                  //   favorite: ['+971'],
-                                                  //   padding: EdgeInsets.all(0),
-                                                  //   showFlag: false,
-                                                  // ),
                                                   Container(
+                                                      padding: EdgeInsets.only(
+                                                          left: 10, right: 10),
                                                       child: Text("AE +971")),
                                                   Container(
-                                                    height: 30.0,
+                                                    height: height * 0.075,
                                                     width: 2.0,
-                                                    color: greyColor,
+                                                    color: borderGreyColor,
                                                     margin: EdgeInsets.only(
                                                         left: 10.0,
                                                         right: 10.0),
@@ -166,27 +156,31 @@ class _LoginPageState extends State<LoginPage> {
                                                       maxLength: 10,
                                                       style: TextStyle(
                                                           fontSize: 18.0),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        counterText: "",
-                                                        filled: true,
-                                                        contentPadding:
-                                                            EdgeInsets.fromLTRB(
-                                                                16, 0, 16, 0),
-                                                        hintText:
-                                                            "Mobile Number",
-                                                        hintStyle: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 14),
-                                                        border:
-                                                            InputBorder.none,
-                                                      ),
+                                                      decoration: InputDecoration(
+                                                          counterText: "",
+                                                          filled: true,
+                                                          contentPadding:
+                                                              EdgeInsets
+                                                                  .fromLTRB(16,
+                                                                      0, 16, 0),
+                                                          hintText: S
+                                                              .of(context)
+                                                              .enter_mobile_text,
+                                                          hintStyle: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 14),
+                                                          border:
+                                                              InputBorder.none,
+                                                          fillColor:
+                                                              whiteColor),
                                                       validator: (value) {},
                                                     ),
                                                   )
                                                 ],
                                               ))
                                         ]),
+                                    SizedBox(height: 20),
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -206,8 +200,8 @@ class _LoginPageState extends State<LoginPage> {
                                                 boxShadow: [
                                                   BoxShadow(
                                                       blurRadius: 16,
-                                                      color: Colors
-                                                          .lightBlue[400]!,
+                                                      color: syanColor
+                                                          .withOpacity(.6),
                                                       spreadRadius: 0,
                                                       blurStyle:
                                                           BlurStyle.outer,
@@ -215,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 ]),
                                           ),
                                           Container(
-                                            height: height * 0.065,
+                                            height: height * 0.075,
                                             width: height * 0.4,
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
@@ -236,13 +230,47 @@ class _LoginPageState extends State<LoginPage> {
                                                   .of(context)
                                                   .sign_in
                                                   .toUpperCase(),
-                                              style: montserratBold.copyWith(
-                                                  color: Colors.white),
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: Colors.white),
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
+                                    SizedBox(height: 20),
+                                    Text(
+                                      S.of(context).sign_in_alt,
+                                      style: montserratRegular.copyWith(
+                                          color: blackColor, fontSize: 12),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.25,
+                                            decoration: BoxDecoration(
+                                                color: Colors.greenAccent),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.25,
+                                            decoration: BoxDecoration(
+                                                color: Colors.yellow),
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 )),
                           ])))),

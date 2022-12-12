@@ -7,5 +7,7 @@
   "change_number": "Change Number",
   "please_enter_the_code": "Please enter the code below to verify its you",
   "resend_otp": "Resend OTP",
-  "verify_via_call": "Verify Via Call"
+  "verify_via_call": "Verify Via Call",
+  "enter_mobile_text": "Enter Mobile Number",
+  "sign_in_alt": "Sign in with"
 }

@@ -23,11 +23,14 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "change_number": MessageLookupByLibrary.simpleMessage("تغيير رقم"),
+        "enter_mobile_text":
+            MessageLookupByLibrary.simpleMessage("أدخل رقم الهاتف المتحرك"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
             "الرجاء إدخال الرمز أدناه للتحقق من هويتك"),
         "resend_otp": MessageLookupByLibrary.simpleMessage("إعادة إرسال OTP"),
         "sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
-        "verify_me": MessageLookupByLibrary.simpleMessage("تحقق عني"),
+        "sign_in_alt": MessageLookupByLibrary.simpleMessage("سجل دخولك بواسطة"),
+        "verify_me": MessageLookupByLibrary.simpleMessage("Verify Me"),
         "verify_mobile_number":
             MessageLookupByLibrary.simpleMessage("تحقق من رقم الهاتف المحمول"),
         "verify_via_call":
