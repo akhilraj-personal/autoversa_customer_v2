@@ -27,6 +27,58 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
           systemNavigationBarColor: Colors.white,
         ),
         child: Scaffold(
+          appBar: AppBar(
+            elevation: 1,
+            backgroundColor: whiteColor,
+            iconTheme: IconThemeData(color: blackColor),
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarIconBrightness: Brightness.dark,
+            ),
+            actions: [
+              Center(
+                child: Row(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.20,
+                      child: GestureDetector(
+                        onTap: () async {
+                          context
+                              .read<LanguageChangeProvider>()
+                              .changeLocale("en");
+                          setState(() {});
+                        },
+                        child: Text(
+                          'English',
+                          textAlign: TextAlign.end,
+                          style:
+                              montserratRegular.copyWith(color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.20,
+                      padding: EdgeInsets.only(
+                          right: width * 0.05, left: width * 0.05),
+                      child: GestureDetector(
+                        onTap: () async {
+                          context
+                              .read<LanguageChangeProvider>()
+                              .changeLocale("ar");
+                          setState(() {});
+                        },
+                        child: Text(
+                          'عربي',
+                          textAlign: TextAlign.end,
+                          style:
+                              montserratRegular.copyWith(color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
           body: SingleChildScrollView(
               child: Center(
                   child: Container(
@@ -36,56 +88,56 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                                height: 30,
-                                width: width,
-                                margin: EdgeInsets.only(
-                                    left: width * 0.06, right: width * 0.06),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.20,
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          context
-                                              .read<LanguageChangeProvider>()
-                                              .changeLocale("en");
-                                          setState(() {});
-                                        },
-                                        child: Text(
-                                          'English',
-                                          textAlign: TextAlign.end,
-                                          style: montserratRegular.copyWith(
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.15,
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          context
-                                              .read<LanguageChangeProvider>()
-                                              .changeLocale("ar");
-                                          setState(() {});
-                                        },
-                                        child: Text(
-                                          'عربي',
-                                          textAlign: TextAlign.end,
-                                          style: montserratRegular.copyWith(
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
+                            // Container(
+                            //     height: 30,
+                            //     width: width,
+                            //     margin: EdgeInsets.only(
+                            //         left: width * 0.06, right: width * 0.06),
+                            //     child: Row(
+                            //       crossAxisAlignment: CrossAxisAlignment.end,
+                            //       mainAxisAlignment: MainAxisAlignment.end,
+                            //       children: [
+                            //         Container(
+                            //           width: MediaQuery.of(context).size.width *
+                            //               0.20,
+                            //           child: GestureDetector(
+                            //             onTap: () async {
+                            //               context
+                            //                   .read<LanguageChangeProvider>()
+                            //                   .changeLocale("en");
+                            //               setState(() {});
+                            //             },
+                            //             child: Text(
+                            //               'English',
+                            //               textAlign: TextAlign.end,
+                            //               style: montserratRegular.copyWith(
+                            //                   color: Colors.black),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //         Container(
+                            //           width: MediaQuery.of(context).size.width *
+                            //               0.15,
+                            //           child: GestureDetector(
+                            //             onTap: () async {
+                            //               context
+                            //                   .read<LanguageChangeProvider>()
+                            //                   .changeLocale("ar");
+                            //               setState(() {});
+                            //             },
+                            //             child: Text(
+                            //               'عربي',
+                            //               textAlign: TextAlign.end,
+                            //               style: montserratRegular.copyWith(
+                            //                   color: Colors.black),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ],
+                            //     )),
                             Container(
                                 padding: EdgeInsets.all(width * 0.08),
-                                height: height - 80,
+                                height: height - 50,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
