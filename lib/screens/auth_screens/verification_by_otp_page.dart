@@ -84,57 +84,54 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                   ],
                                 )),
                             Container(
-                                padding: EdgeInsets.all(20),
-                                height: height - 90,
-                                width: width,
+                                padding: EdgeInsets.all(width * 0.08),
+                                height: height - 80,
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Image.asset(
                                       ImageConst.verify_icon,
                                       fit: BoxFit.contain,
-                                      width: 80,
-                                      height: 110,
+                                      height: height * 0.1,
                                     ),
-                                    SizedBox(height: 20),
+                                    SizedBox(height: height * 0.05),
                                     Text(
                                       S.of(context).verify_mobile_number,
-                                      style: montserratBold.copyWith(
+                                      style: montserratSemiBold.copyWith(
                                           color: blackColor,
                                           fontSize: width * 0.053),
                                       textAlign: TextAlign.center,
                                     ),
-                                    SizedBox(height: 16),
+                                    SizedBox(height: height * 0.03),
                                     Text(
                                       S
                                               .of(context)
                                               .we_have_send_a_6_digit_verification +
                                           " +918129312321",
-                                      style: montserratRegular.copyWith(
-                                          color: lightblackColor,
-                                          fontSize: width * 0.043),
+                                      style: montserratLight.copyWith(
+                                          color: lightblackColor, fontSize: 14),
                                       textAlign: TextAlign.center,
                                     ),
                                     Text('\n' + S.of(context).change_number,
-                                        style: montserratRegular.copyWith(
+                                        style: montserratMedium.copyWith(
                                             color: changenumberorange,
-                                            fontSize: width * 0.043),
+                                            fontSize: 14),
                                         textAlign: TextAlign.end),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: height * 0.03),
                                     Text(
                                       S.of(context).please_enter_the_code,
                                       style: montserratRegular.copyWith(
-                                          color: blackColor,
-                                          fontSize: width * 0.043),
+                                          color: blackColor, fontSize: 14),
                                       textAlign: TextAlign.center,
                                     ),
-                                    SizedBox(height: 12),
+                                    SizedBox(height: height * 0.02),
                                     OtpTextField(
                                       numberOfFields: 6,
-                                      fieldWidth: 45,
+                                      fieldWidth: width * 0.12,
                                       clearText: true,
-                                      focusedBorderColor: Colors.lightBlue,
+                                      focusedBorderColor: syanColor,
+                                      cursorColor: syanColor,
                                       showFieldAsBox: true,
                                       autoFocus: true,
                                       borderRadius: const BorderRadius.all(
