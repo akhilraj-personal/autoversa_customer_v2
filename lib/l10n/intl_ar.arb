@@ -1,11 +1,13 @@
 {
   "welcome_text":"تسجيل الدخول إلى حسابك",
   "sign_in": "تسجيل الدخول",
-  "verify_me": "تحقق عني",
+  "verify_me": "Verify Me",
   "verify_mobile_number": "تحقق من رقم الهاتف المحمول",
   "we_have_send_a_6_digit_verification": "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى",
   "change_number": "تغيير رقم",
   "please_enter_the_code": "الرجاء إدخال الرمز أدناه للتحقق من هويتك",
   "resend_otp": "إعادة إرسال OTP",
-  "verify_via_call": "تحقق عبر المكالمة"
+  "verify_via_call": "تحقق عبر المكالمة",
+  "enter_mobile_text": "أدخل رقم الهاتف المتحرك",
+  "sign_in_alt": "سجل دخولك بواسطة"
 }
