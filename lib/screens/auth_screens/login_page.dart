@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                                height: 30,
+                                height: 20,
                                 width: width,
                                 margin: EdgeInsets.only(
                                     left: width * 0.06, right: width * 0.06),
@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ],
                                 )),
                             Container(
-                                height: height - 90,
+                                height: height - 70,
                                 width: width,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -98,13 +98,13 @@ class _LoginPageState extends State<LoginPage> {
                                       width: 115,
                                       height: 50,
                                     ),
-                                    SizedBox(height: 50),
+                                    SizedBox(height: height * 0.08),
                                     Text(
                                       S.of(context).welcome_text,
                                       style: montserratSemiBold.copyWith(
                                           color: blackColor, fontSize: 21),
                                     ),
-                                    SizedBox(height: 10),
+                                    SizedBox(height: height * 0.02),
                                     Stack(
                                         alignment: Alignment.bottomCenter,
                                         children: [
@@ -180,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 ],
                                               ))
                                         ]),
-                                    SizedBox(height: 20),
+                                    SizedBox(height: height * 0.03),
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -238,35 +238,40 @@ class _LoginPageState extends State<LoginPage> {
                                         ],
                                       ),
                                     ),
-                                    SizedBox(height: 20),
+                                    SizedBox(height: height * 0.03),
                                     Text(
                                       S.of(context).sign_in_alt,
                                       style: montserratRegular.copyWith(
                                           color: blackColor, fontSize: 12),
                                     ),
-                                    SizedBox(height: 10),
+                                    SizedBox(height: height * 0.04),
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.25,
-                                            decoration: BoxDecoration(
-                                                color: Colors.greenAccent),
+                                        Container(
+                                          alignment: Alignment.center,
+                                          padding: EdgeInsets.only(
+                                            right: height * 0.045 / 2,
+                                            left: height * 0.045 / 2,
+                                          ),
+                                          child: Image.asset(
+                                            ImageConst.fb_icon,
+                                            fit: BoxFit.contain,
+                                            height: height * 0.065,
+                                            width: height * 0.065,
                                           ),
                                         ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.25,
-                                            decoration: BoxDecoration(
-                                                color: Colors.yellow),
+                                        Container(
+                                          alignment: Alignment.center,
+                                          padding: EdgeInsets.only(
+                                              left: height * 0.045 / 2,
+                                              right: height * 0.045 / 2),
+                                          child: Image.asset(
+                                            ImageConst.g_icon,
+                                            fit: BoxFit.contain,
+                                            height: height * 0.065,
+                                            width: height * 0.065,
                                           ),
                                         ),
                                       ],
