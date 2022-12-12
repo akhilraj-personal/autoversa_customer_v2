@@ -88,53 +88,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // Container(
-                            //     height: 30,
-                            //     width: width,
-                            //     margin: EdgeInsets.only(
-                            //         left: width * 0.06, right: width * 0.06),
-                            //     child: Row(
-                            //       crossAxisAlignment: CrossAxisAlignment.end,
-                            //       mainAxisAlignment: MainAxisAlignment.end,
-                            //       children: [
-                            //         Container(
-                            //           width: MediaQuery.of(context).size.width *
-                            //               0.20,
-                            //           child: GestureDetector(
-                            //             onTap: () async {
-                            //               context
-                            //                   .read<LanguageChangeProvider>()
-                            //                   .changeLocale("en");
-                            //               setState(() {});
-                            //             },
-                            //             child: Text(
-                            //               'English',
-                            //               textAlign: TextAlign.end,
-                            //               style: montserratRegular.copyWith(
-                            //                   color: Colors.black),
-                            //             ),
-                            //           ),
-                            //         ),
-                            //         Container(
-                            //           width: MediaQuery.of(context).size.width *
-                            //               0.15,
-                            //           child: GestureDetector(
-                            //             onTap: () async {
-                            //               context
-                            //                   .read<LanguageChangeProvider>()
-                            //                   .changeLocale("ar");
-                            //               setState(() {});
-                            //             },
-                            //             child: Text(
-                            //               'عربي',
-                            //               textAlign: TextAlign.end,
-                            //               style: montserratRegular.copyWith(
-                            //                   color: Colors.black),
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       ],
-                            //     )),
                             Container(
                                 padding: EdgeInsets.all(width * 0.08),
                                 height: height - 50,
@@ -180,11 +133,12 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                     SizedBox(height: height * 0.02),
                                     OtpTextField(
                                       numberOfFields: 6,
-                                      fieldWidth: width * 0.12,
+                                      fieldWidth: width * 0.11,
                                       clearText: true,
                                       focusedBorderColor: syanColor,
                                       cursorColor: syanColor,
                                       showFieldAsBox: true,
+                                      margin: EdgeInsets.all(width * 0.01),
                                       autoFocus: true,
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(12.0)),
