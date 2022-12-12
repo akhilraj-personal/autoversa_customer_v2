@@ -1,6 +1,9 @@
 {
   "welcome_text":"تسجيل الدخول إلى حسابك",
   "sign_in": "تسجيل الدخول",
+  "valid_mobile": "من فضلك أدخل رقما صالحا",
+  "data_verify_text": "التحقق من البيانات",
+  "no_network_text": "الاتصال بالإنترنت غير متوفر",
   "verify_me": "تحقق عني",
   "verify_mobile_number": "تحقق من رقم الهاتف المحمول",
   "we_have_send_a_6_digit_verification": "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى",

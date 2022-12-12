@@ -7,6 +7,8 @@ import '../../constant/image_const.dart';
 import '../../constant/text_style.dart';
 import '../../generated/l10n.dart';
 import '../../provider/provider.dart';
+import '../../services/pre_auth_services.dart';
+import '../../utils/app_validations.dart';
 import '../../utils/color_utils.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,9 +18,36 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-customerLogin() {}
-
 class _LoginPageState extends State<LoginPage> {
+  var country_code = "+971";
+
+  TextEditingController mobileNumber = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
+
+  customerLogin() async {
+    setState(() {
+      FocusScope.of(context).unfocus();
+    });
+    var valid_number = (mobileNumber.text.toString()).length - 9;
+    Map req = {
+      "phone": valid_number,
+      "country_code": country_code,
+    };
+    await customerLoginService(req).then((value) {
+      if (value['ret_data'] == "success") {
+        setState(() => isLoading = false);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LoginOTPVerification(
+                    country_code: country_code.toString(),
+                    phone: valid_number.toString(),
+                    timer: value['timer'])));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
@@ -125,72 +154,89 @@ class _LoginPageState extends State<LoginPage> {
                                                       offset: Offset(0, 0)),
                                                 ]),
                                           ),
-                                          Container(
-                                              height: height * 0.075,
-                                              width: height * 0.4,
-                                              decoration: BoxDecoration(
-                                                color: whiteColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                border: Border.all(
-                                                    color: borderGreyColor),
-                                              ),
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Container(
-                                                      padding: EdgeInsets.only(
+                                          Form(
+                                            key: _formKey,
+                                            child: Container(
+                                                height: height * 0.075,
+                                                width: height * 0.4,
+                                                decoration: BoxDecoration(
+                                                  color: whiteColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                      color: borderGreyColor),
+                                                ),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: width *
+                                                                    0.025,
+                                                                right: width *
+                                                                    0.025),
+                                                        child: Text("AE +971")),
+                                                    Container(
+                                                      height: height * 0.075,
+                                                      width: 2.0,
+                                                      color: borderGreyColor,
+                                                      margin: EdgeInsets.only(
                                                           left: width * 0.025,
                                                           right: width * 0.025),
-                                                      child: Text("AE +971")),
-                                                  Container(
-                                                    height: height * 0.075,
-                                                    width: 2.0,
-                                                    color: borderGreyColor,
-                                                    margin: EdgeInsets.only(
-                                                        left: width * 0.025,
-                                                        right: width * 0.025),
-                                                  ),
-                                                  Expanded(
-                                                    child: Container(
-                                                      padding: EdgeInsets.only(
-                                                          right: width * 0.025),
-                                                      child: TextFormField(
-                                                        keyboardType:
-                                                            TextInputType
-                                                                .number,
-                                                        maxLength: 10,
-                                                        style: TextStyle(
-                                                            fontSize: 18.0),
-                                                        decoration: InputDecoration(
-                                                            counterText: "",
-                                                            filled: true,
-                                                            hintText: S
-                                                                .of(context)
-                                                                .enter_mobile_text,
-                                                            hintStyle: TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontSize: 14),
-                                                            border: InputBorder
-                                                                .none,
-                                                            fillColor:
-                                                                whiteColor),
-                                                        validator: (value) {},
-                                                      ),
                                                     ),
-                                                  )
-                                                ],
-                                              ))
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                right: width *
+                                                                    0.025),
+                                                        child: TextFormField(
+                                                          controller:
+                                                              mobileNumber,
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          maxLength: 10,
+                                                          style: TextStyle(
+                                                              fontSize: 18.0),
+                                                          decoration: InputDecoration(
+                                                              counterText: "",
+                                                              filled: true,
+                                                              hintText: S
+                                                                  .of(context)
+                                                                  .enter_mobile_text,
+                                                              hintStyle: TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontSize: 14),
+                                                              border:
+                                                                  InputBorder
+                                                                      .none,
+                                                              fillColor:
+                                                                  whiteColor),
+                                                          validator: (value) {
+                                                            return mobileNumberValidation(
+                                                                value, context);
+                                                          },
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                )),
+                                          ),
                                         ]),
                                     SizedBox(height: height * 0.03),
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      LoginOTPVerification()));
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            customerLogin();
+                                          } else {
+                                            setState(() {
+                                              isLoading = false;
+                                            });
+                                          }
                                         });
                                       },
                                       child: Stack(
@@ -230,15 +276,31 @@ class _LoginPageState extends State<LoginPage> {
                                                 ],
                                               ),
                                             ),
-                                            child: Text(
-                                              S
-                                                  .of(context)
-                                                  .sign_in
-                                                  .toUpperCase(),
-                                              style:
-                                                  montserratSemiBold.copyWith(
-                                                      color: Colors.white),
-                                            ),
+                                            child: !isLoading
+                                                ? Text(
+                                                    S
+                                                        .of(context)
+                                                        .sign_in
+                                                        .toUpperCase(),
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                            color:
+                                                                Colors.white),
+                                                  )
+                                                : Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Transform.scale(
+                                                        scale: 0.7,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: whiteColor,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                           ),
                                         ],
                                       ),

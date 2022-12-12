@@ -70,6 +70,36 @@ class S {
     );
   }
 
+  /// `Please enter a valid number`
+  String get valid_mobile {
+    return Intl.message(
+      'Please enter a valid number',
+      name: 'valid_mobile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verifying Data`
+  String get data_verify_text {
+    return Intl.message(
+      'Verifying Data',
+      name: 'data_verify_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Internet connection not available`
+  String get no_network_text {
+    return Intl.message(
+      'Internet connection not available',
+      name: 'no_network_text',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Verify Me`
   String get verify_me {
     return Intl.message(

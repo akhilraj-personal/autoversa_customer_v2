@@ -1,6 +1,9 @@
 {
   "welcome_text": "Sign in to your account",
   "sign_in": "Sign In",
+  "valid_mobile": "Please enter a valid number",
+  "data_verify_text": "Verifying Data",
+  "no_network_text": "Internet connection not available",
   "verify_me": "Verify Me",
   "verify_mobile_number": "Verify Mobile Number",
   "we_have_send_a_6_digit_verification": "We have send a 6 digit verification code to",
