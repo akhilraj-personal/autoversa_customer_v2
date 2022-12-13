@@ -27,11 +27,11 @@ void showCustomToast(
         color: bgColor ?? blackColor,
         boxShadow: [
           BoxShadow(
-              blurRadius: 16,
-              color: syanColor,
+              blurRadius: 14,
+              color: greyColor,
               spreadRadius: 0,
               blurStyle: BlurStyle.outer,
-              offset: Offset(0, -7)),
+              offset: Offset(0, 0)),
         ],
         borderRadius: BorderRadius.all(Radius.circular(14)),
       ),
