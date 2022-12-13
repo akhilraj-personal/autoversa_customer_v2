@@ -64,7 +64,6 @@ var routes = <String, WidgetBuilder>{
         index: 1,
       ),
   Routes.loginPage: (BuildContext context) => LoginPage(),
-  Routes.signup: (BuildContext context) => SignupPage(),
 };
 
 class Routes {
