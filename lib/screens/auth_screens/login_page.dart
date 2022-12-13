@@ -20,7 +20,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  var country_code = "+971";
+  // var country_code = "+971";
+  var country_code = "+91";
 
   TextEditingController mobileNumber = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -30,10 +31,15 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       FocusScope.of(context).unfocus();
     });
+    // var appSignatureID = await SmsAutoFill().getAppSignature;
     var in_mobile = mobileNumber.text.toString();
     var valid_number = in_mobile.substring(in_mobile.length - 9);
+    // Map req = {
+    //   "phone": valid_number,
+    //   "country_code": country_code,
+    // };
     Map req = {
-      "phone": valid_number,
+      "phone": mobileNumber.text.toString(),
       "country_code": country_code,
     };
     await customerLoginService(req).then((value) {
@@ -41,12 +47,19 @@ class _LoginPageState extends State<LoginPage> {
         setState(() => isLoading = false);
         showCustomToast(context, "OTP Send Successfully",
             bgColor: syanColor, textColor: whiteColor);
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => LoginOTPVerification(
+        //             country_code: country_code.toString(),
+        //             phone: valid_number.toString(),
+        //             timer: value['timer'])));
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => LoginOTPVerification(
                     country_code: country_code.toString(),
-                    phone: valid_number.toString(),
+                    phone: mobileNumber.text.toString(),
                     timer: value['timer'])));
       } else {
         showCustomToast(context, value['ret_data'],
