@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginOTPVerification extends StatefulWidget {
   final String country_code;
@@ -24,6 +27,106 @@ class LoginOTPVerification extends StatefulWidget {
 }
 
 class LoginOTPVerificationState extends State<LoginOTPVerification> {
+  late Timer _timer;
+  int count = 0, OTPtimer = 0;
+  String otppin = '';
+
+  @override
+  void initState() {
+    OTPtimer = int.parse(widget.timer['gs_reotp_time']);
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) => setState(
+        () {
+          if (OTPtimer < 1) {
+            timer.cancel();
+          } else {
+            OTPtimer = OTPtimer - 1;
+          }
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  // submit_otp(otpval) async {
+  //   setState(() {});
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final status = await OneSignal.shared.getDeviceState();
+  //   final String? osUserID = status?.userId;
+  //   Map req = {
+  //     "phone": widget.phone,
+  //     "country_code": widget.countrycode,
+  //     "otp": otpval,
+  //     "fcm_token": osUserID
+  //   };
+  //   if (otpval == null || otpval == "") {
+  //     setState(() => isOTPverifying = false);
+  //     toasty(context, "Enter Valid OTP",
+  //         bgColor: Color.fromARGB(255, 255, 47, 0),
+  //         textColor: whiteColor,
+  //         gravity: ToastGravity.BOTTOM,
+  //         length: Toast.LENGTH_LONG);
+  //   } else {
+  //     await verifyOtp(req).then((value) {
+  //       if (value['ret_data'] == "success") {
+  //         prefs.setBool('islogged', true);
+  //         if (value['customer']['cust_type'] == "old") {
+  //           prefs.setString('cust_id', value['customer']['id']);
+  //           prefs.setString('name', value['customer']['name']);
+  //           prefs.setString('email', value['customer']['email']);
+  //           prefs.setString('phone', value['customer']['phone']);
+  //           prefs.setString('country_code', value['customer']['country_code']);
+  //           prefs.setString('emirate', value['customer']['emirate']);
+  //           prefs.setString('language', value['customer']['language']);
+  //           prefs.setString('credits', value['customer']['credits']);
+  //           prefs.setString('token', value['token']);
+  //           Navigator.pushAndRemoveUntil(
+  //             context,
+  //             MaterialPageRoute(
+  //                 builder: (context) => AMDashScreen(
+  //                       selectedindex: 0,
+  //                     )),
+  //             (route) => false,
+  //           );
+  //         } else if (value['customer']['cust_type'] == "new") {
+  //           prefs.setString('cust_id', value['customer']['id']);
+  //           prefs.setString('phone', value['customer']['phone']);
+  //           prefs.setString('country_code', value['customer']['country_code']);
+  //           prefs.setString('token', value['token']);
+  //           Navigator.push(
+  //               context,
+  //               MaterialPageRoute(
+  //                   builder: (context) => SignupPage(
+  //                         countrycode: value['customer']['country_code'],
+  //                         phone: value['customer']['phone'],
+  //                       )));
+  //         }
+  //       } else if (value['ret_data'] == "MaxAttempt") {
+  //         toasty(context, "Maximum attempt reached. Please try again later.",
+  //             bgColor: Color.fromARGB(255, 255, 47, 0),
+  //             textColor: whiteColor,
+  //             gravity: ToastGravity.BOTTOM,
+  //             length: Toast.LENGTH_LONG);
+  //         otppin = "";
+  //       } else {
+  //       }
+  //     }).catchError((e) {
+  //     });
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
