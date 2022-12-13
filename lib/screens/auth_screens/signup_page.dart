@@ -27,7 +27,7 @@ class SignupPageState extends State<SignupPage> {
 
   FocusNode userNameFocus = FocusNode();
   FocusNode emailFocus = FocusNode();
-  FocusNode numberWordFocus = FocusNode();
+  FocusNode numberFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
   bool issubmitted = false;
   List<DropdownMenuItem<String>> items = [];
@@ -59,11 +59,6 @@ class SignupPageState extends State<SignupPage> {
       if (value['ret_data'] == "success") {
         setState(() {
           data = value['statelist'];
-          items = data
-              .map((item) => DropdownMenuItem(
-                  child: Text(item['state_name']),
-                  value: item['state_id'].toString()))
-              .toList();
         });
       } else {}
     }).catchError((e) {
@@ -76,11 +71,11 @@ class SignupPageState extends State<SignupPage> {
   //   void hideKeyboard(context) => FocusScope.of(context).requestFocus(FocusNode());
   //   setState(() {});
   //   var country;
-  //   if (widget.countrycode == '+971') {
-  //     country = "UAE";
-  //   } else {
-  //     country = "INDIA";
-  //   }
+  //   // if (widget.countrycode == '+971') {
+  //   //   country = "UAE";
+  //   // } else {
+  //   //   country = "INDIA";
+  //   // }
   //   Map req = {
   //     "emiratesId": emirates,
   //     "fullname": userNameController.text.toString(),
@@ -265,18 +260,31 @@ class SignupPageState extends State<SignupPage> {
                                             ),
                                             hintText: S.of(context).emirates,
                                             hintStyle: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontStyle: FontStyle.normal,
                                               fontSize: 14,
                                               color: Colors.grey,
                                             ),
                                             filled: true,
                                             fillColor: whiteColor,
-                                            isDense: false,
+                                            isDense: true,
                                             contentPadding: EdgeInsets.fromLTRB(
                                                 16, 8, 12, 8),
                                           ),
-                                          items: items,
+                                          items: data
+                                              .map((item) => DropdownMenuItem(
+                                                  child: Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        item['state_name'],
+                                                        style: montserratLight
+                                                            .copyWith(
+                                                                color:
+                                                                    lightblackColor,
+                                                                fontSize: 12),
+                                                      )),
+                                                  value: item['state_id']
+                                                      .toString()))
+                                              .toList(),
                                           validator: (value) {
                                             if (value == null) {
                                               return emirateValidation(
@@ -391,7 +399,7 @@ class SignupPageState extends State<SignupPage> {
                                           keyboardType:
                                               TextInputType.emailAddress,
                                           textAlign: TextAlign.center,
-                                          maxLength: 10,
+                                          maxLength: 80,
                                           style: montserratLight.copyWith(
                                               color: lightblackColor,
                                               fontSize: 14),
@@ -407,7 +415,7 @@ class SignupPageState extends State<SignupPage> {
                                               fillColor: whiteColor),
                                           onFieldSubmitted: (value) {
                                             FocusScope.of(context)
-                                                .requestFocus(numberWordFocus);
+                                                .requestFocus(numberFocus);
                                           },
                                           focusNode: emailFocus,
                                           validator: (value) {
@@ -475,7 +483,7 @@ class SignupPageState extends State<SignupPage> {
                                         child: TextFormField(
                                           controller: numberController,
                                           keyboardType: TextInputType.number,
-                                          focusNode: numberWordFocus,
+                                          focusNode: numberFocus,
                                           maxLength: 10,
                                           style: montserratLight.copyWith(
                                               color: lightblackColor,
