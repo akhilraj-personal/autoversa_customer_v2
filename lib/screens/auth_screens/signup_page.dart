@@ -12,12 +12,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class SignupPage extends StatefulWidget {
-  final String country_code;
-  final String phone;
   const SignupPage({
     super.key,
-    required this.country_code,
-    required this.phone,
   });
 
   @override
@@ -245,30 +241,8 @@ class SignupPageState extends State<SignupPage> {
                                         ),
                                         child: DropdownButtonFormField(
                                           isExpanded: true,
-                                          decoration: InputDecoration(
-                                            disabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(14),
-                                              borderSide: BorderSide(
-                                                  color: Colors.transparent,
-                                                  width: 1),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(14),
-                                              borderSide: BorderSide(
-                                                  color: Colors.transparent,
-                                                  width: 1),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(14),
-                                              borderSide: BorderSide(
-                                                  color: Colors.transparent,
-                                                  width: 1),
-                                            ),
-                                            fillColor: whiteColor,
-                                          ),
+                                          decoration: InputDecoration.collapsed(
+                                              hintText: ''),
                                           hint: Align(
                                               alignment: Alignment.center,
                                               child: Text(
