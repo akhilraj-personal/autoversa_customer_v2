@@ -10,6 +10,7 @@ import '../../provider/provider.dart';
 import '../../services/pre_auth_services.dart';
 import '../../utils/app_validations.dart';
 import '../../utils/color_utils.dart';
+import '../../utils/common_utils.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -29,7 +30,8 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       FocusScope.of(context).unfocus();
     });
-    var valid_number = (mobileNumber.text.toString()).length - 9;
+    var in_mobile = mobileNumber.text.toString();
+    var valid_number = in_mobile.substring(in_mobile.length - 9);
     Map req = {
       "phone": valid_number,
       "country_code": country_code,
@@ -37,6 +39,8 @@ class _LoginPageState extends State<LoginPage> {
     await customerLoginService(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() => isLoading = false);
+        showCustomToast(context, "OTP Send Successfully",
+            bgColor: syanColor, textColor: whiteColor);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -44,7 +48,16 @@ class _LoginPageState extends State<LoginPage> {
                     country_code: country_code.toString(),
                     phone: valid_number.toString(),
                     timer: value['timer'])));
+      } else {
+        showCustomToast(context, value['ret_data'],
+            bgColor: changenumberorange, textColor: whiteColor);
+        setState(() {});
       }
+    }).catchError((e) {
+      setState(() => isLoading = false);
+      print(e.toString());
+      showCustomToast(context, e.toString(),
+          bgColor: changenumberorange, textColor: whiteColor);
     });
   }
 
