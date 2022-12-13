@@ -45,17 +45,19 @@ class MessageLookup extends MessageLookupByLibrary {
             "الرجاء إدخال الرمز أدناه للتحقق من هويتك"),
         "register_new_account":
             MessageLookupByLibrary.simpleMessage("تسجيل حساب جديد"),
-        "resend_otp": MessageLookupByLibrary.simpleMessage("إعادة إرسال OTP"),
+        "resend_otp_text":
+            MessageLookupByLibrary.simpleMessage("إعادة إرسال OTP"),
+        "seconds_text": MessageLookupByLibrary.simpleMessage("ثانيا"),
         "sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("سجل دخولك بواسطة"),
         "sign_up": MessageLookupByLibrary.simpleMessage("اشتراك"),
         "valid_mobile":
             MessageLookupByLibrary.simpleMessage("من فضلك أدخل رقما صالحا"),
+        "verify_call_text":
+            MessageLookupByLibrary.simpleMessage("تحقق عبر المكالمة"),
         "verify_me": MessageLookupByLibrary.simpleMessage("تحقق عني"),
         "verify_mobile_number":
             MessageLookupByLibrary.simpleMessage("تحقق من رقم الهاتف المحمول"),
-        "verify_via_call":
-            MessageLookupByLibrary.simpleMessage("تحقق عبر المكالمة"),
         "we_have_send_a_6_digit_verification":
             MessageLookupByLibrary.simpleMessage(
                 "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى"),
