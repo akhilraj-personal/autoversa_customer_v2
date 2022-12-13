@@ -3,8 +3,10 @@ import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/provider/provider.dart';
+import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
+import 'package:autoversa/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -28,28 +30,47 @@ class SignupPageState extends State<SignupPage> {
   FocusNode numberWordFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
   bool issubmitted = false;
+  List<DropdownMenuItem<String>> items = [];
+  List data = List<String>.empty();
 
-  // _getStateList() async {
-  //   Map req = {
-  //     "countryId": 1,
-  //   };
-  //   onLoading(context);
-  //   await getStateList(req).then((value) {
-  //     Navigator.pop(context);
-  //     if (value['ret_data'] == "success") {
-  //       setState(() {
-  //         data = value['statelist'];
-  //         items = data
-  //             .map((item) => DropdownMenuItem(
-  //                 child: Text(item['state_name']),
-  //                 value: item['state_id'].toString()))
-  //             .toList();
-  //       });
-  //     } else {}
-  //   }).catchError((e) {
-  //     toasty(context, e.toString());
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    init();
+    Future.delayed(Duration.zero, () {
+      _getStateList();
+    });
+  }
+
+  Future<void> init() async {
+    //
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  _getStateList() async {
+    Map req = {
+      "countryId": 1,
+    };
+    await getStateList(req).then((value) {
+      if (value['ret_data'] == "success") {
+        setState(() {
+          data = value['statelist'];
+          items = data
+              .map((item) => DropdownMenuItem(
+                  child: Text(item['state_name']),
+                  value: item['state_id'].toString()))
+              .toList();
+        });
+      } else {}
+    }).catchError((e) {
+      showCustomToast(context, "Application error. Contact support",
+          bgColor: warningcolor, textColor: whiteColor);
+    });
+  }
 
   // cust_signup() async {
   //   void hideKeyboard(context) => FocusScope.of(context).requestFocus(FocusNode());
@@ -212,85 +233,62 @@ class SignupPageState extends State<SignupPage> {
                                 ),
                                 child: Row(
                                   children: <Widget>[
-                                    // Expanded(
-                                    //   child: Container(
-                                    //       padding: EdgeInsets.only(
-                                    //         left: width * 0.025,
-                                    //         right: width * 0.025,
-                                    //       ),
-                                    //       child:
-                                    //           DropdownButtonFormField<String>(
-                                    //         decoration: InputDecoration(
-                                    //           disabledBorder:
-                                    //               OutlineInputBorder(
-                                    //             borderRadius:
-                                    //                 BorderRadius.circular(16.0),
-                                    //             borderSide: BorderSide(
-                                    //                 color: Colors.transparent,
-                                    //                 width: 1),
-                                    //           ),
-                                    //           focusedBorder: OutlineInputBorder(
-                                    //             borderRadius:
-                                    //                 BorderRadius.circular(16.0),
-                                    //             borderSide: BorderSide(
-                                    //                 color: Colors.transparent,
-                                    //                 width: 1),
-                                    //           ),
-                                    //           enabledBorder: OutlineInputBorder(
-                                    //             borderRadius:
-                                    //                 BorderRadius.circular(16.0),
-                                    //             borderSide: BorderSide(
-                                    //                 color: Colors.transparent,
-                                    //                 width: 1),
-                                    //           ),
-                                    //           hintText: S.of(context).emirates,
-                                    //           hintStyle: TextStyle(
-                                    //             color: Colors.grey,
-                                    //             fontSize: 12,
-                                    //           ),
-                                    //           filled: true,
-                                    //           fillColor: whiteColor,
-                                    //           isDense: false,
-                                    //           contentPadding:
-                                    //               EdgeInsets.fromLTRB(
-                                    //                   16, 8, 12, 8),
-                                    //         ),
-                                    //         items: options.map((String value) {
-                                    //           return DropdownMenuItem<String>(
-                                    //             value: value,
-                                    //             child: Align(
-                                    //                 alignment: Alignment.center,
-                                    //                 child: Text(
-                                    //                   value,
-                                    //                   style: montserratLight
-                                    //                       .copyWith(
-                                    //                           color:
-                                    //                               lightblackColor,
-                                    //                           fontSize: 12),
-                                    //                 )),
-                                    //           );
-                                    //         }).toList(),
-                                    //         // validator: (value) {
-                                    //         //   if (value == null) {
-                                    //         //     return emirateValidation(
-                                    //         //         value, context);
-                                    //         //   }
-                                    //         // },
-                                    //         isDense: true,
-                                    //         isExpanded: true,
-                                    //         hint: Align(
-                                    //             alignment: Alignment.center,
-                                    //             child: Text(
-                                    //               options[0],
-                                    //               style:
-                                    //                   montserratLight.copyWith(
-                                    //                       color:
-                                    //                           lightblackColor,
-                                    //                       fontSize: 12),
-                                    //             )),
-                                    //         onChanged: (_) {},
-                                    //       )),
-                                    // ),
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                          left: width * 0.025,
+                                          right: width * 0.025,
+                                        ),
+                                        child: DropdownButtonFormField(
+                                          isExpanded: true,
+                                          decoration: InputDecoration(
+                                            disabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0),
+                                              borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0),
+                                              borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0),
+                                              borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1),
+                                            ),
+                                            hintText: S.of(context).emirates,
+                                            hintStyle: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontStyle: FontStyle.normal,
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                            filled: true,
+                                            fillColor: whiteColor,
+                                            isDense: false,
+                                            contentPadding: EdgeInsets.fromLTRB(
+                                                16, 8, 12, 8),
+                                          ),
+                                          items: items,
+                                          validator: (value) {
+                                            if (value == null) {
+                                              return emirateValidation(
+                                                  value, context);
+                                            }
+                                          },
+                                          onChanged: (value) {
+                                            emirates = value.toString();
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ))
                           ]),
@@ -332,14 +330,14 @@ class SignupPageState extends State<SignupPage> {
                                           maxLength: 50,
                                           style: montserratLight.copyWith(
                                               color: lightblackColor,
-                                              fontSize: 12),
+                                              fontSize: 14),
                                           decoration: InputDecoration(
                                               counterText: "",
                                               filled: true,
                                               hintText: S.of(context).full_name,
                                               hintStyle: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: 12),
+                                                  fontSize: 14),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
                                           focusNode: userNameFocus,
@@ -396,14 +394,14 @@ class SignupPageState extends State<SignupPage> {
                                           maxLength: 10,
                                           style: montserratLight.copyWith(
                                               color: lightblackColor,
-                                              fontSize: 12),
+                                              fontSize: 14),
                                           decoration: InputDecoration(
                                               counterText: "",
                                               filled: true,
                                               hintText: S.of(context).email,
                                               hintStyle: TextStyle(
                                                 color: Colors.grey,
-                                                fontSize: 12,
+                                                fontSize: 14,
                                               ),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
@@ -481,7 +479,7 @@ class SignupPageState extends State<SignupPage> {
                                           maxLength: 10,
                                           style: montserratLight.copyWith(
                                               color: lightblackColor,
-                                              fontSize: 12),
+                                              fontSize: 14),
                                           decoration: InputDecoration(
                                               counterText: "",
                                               filled: true,
@@ -489,7 +487,7 @@ class SignupPageState extends State<SignupPage> {
                                                   S.of(context).mobile_number,
                                               hintStyle: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: 12),
+                                                  fontSize: 14),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
                                           validator: (value) {
