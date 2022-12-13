@@ -25,15 +25,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "change_number": MessageLookupByLibrary.simpleMessage("تغيير رقم"),
         "data_verify_text":
             MessageLookupByLibrary.simpleMessage("التحقق من البيانات"),
+        "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
+        "email_error":
+            MessageLookupByLibrary.simpleMessage("أدخل بريد إلكتروني صالح"),
+        "emirate_error":
+            MessageLookupByLibrary.simpleMessage("اختر طيران الإمارات"),
+        "emirates": MessageLookupByLibrary.simpleMessage("طيران الإمارات *"),
         "enter_mobile_text":
             MessageLookupByLibrary.simpleMessage("أدخل رقم الهاتف المتحرك"),
+        "full_name": MessageLookupByLibrary.simpleMessage("الاسم الكامل*"),
+        "mobile_number":
+            MessageLookupByLibrary.simpleMessage("رقم الهاتف المحمول*"),
+        "name_error": MessageLookupByLibrary.simpleMessage("أدخل اسمًا صالحًا"),
         "no_network_text":
             MessageLookupByLibrary.simpleMessage("الاتصال بالإنترنت غير متوفر"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
             "الرجاء إدخال الرمز أدناه للتحقق من هويتك"),
+        "register_new_account":
+            MessageLookupByLibrary.simpleMessage("تسجيل حساب جديد"),
         "resend_otp": MessageLookupByLibrary.simpleMessage("إعادة إرسال OTP"),
         "sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("سجل دخولك بواسطة"),
+        "sign_up": MessageLookupByLibrary.simpleMessage("اشتراك"),
         "valid_mobile":
             MessageLookupByLibrary.simpleMessage("من فضلك أدخل رقما صالحا"),
         "verify_me": MessageLookupByLibrary.simpleMessage("تحقق عني"),

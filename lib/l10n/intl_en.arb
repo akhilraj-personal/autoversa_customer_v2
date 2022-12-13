@@ -12,5 +12,14 @@
   "resend_otp": "Resend OTP",
   "verify_via_call": "Verify Via Call",
   "enter_mobile_text": "Enter Mobile Number",
-  "sign_in_alt": "Sign in with"
+  "sign_in_alt": "Sign in with",
+  "register_new_account": "Register New Account",
+  "sign_up": "Sign Up",
+  "emirates": "Emirates*",
+  "full_name": "Full Name*",
+  "email": "Email",
+  "mobile_number": "Mobile Number*",
+  "name_error": "Enter Valid Name",
+  "email_error": "Enter Valid Email",
+  "emirate_error": "Choose Emirates"
 }

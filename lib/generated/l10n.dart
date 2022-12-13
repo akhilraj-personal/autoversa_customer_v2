@@ -189,6 +189,96 @@ class S {
       args: [],
     );
   }
+
+  /// `Register New Account`
+  String get register_new_account {
+    return Intl.message(
+      'Register New Account',
+      name: 'register_new_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign Up`
+  String get sign_up {
+    return Intl.message(
+      'Sign Up',
+      name: 'sign_up',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Emirates*`
+  String get emirates {
+    return Intl.message(
+      'Emirates*',
+      name: 'emirates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Full Name*`
+  String get full_name {
+    return Intl.message(
+      'Full Name*',
+      name: 'full_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get email {
+    return Intl.message(
+      'Email',
+      name: 'email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mobile Number*`
+  String get mobile_number {
+    return Intl.message(
+      'Mobile Number*',
+      name: 'mobile_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Valid Name`
+  String get name_error {
+    return Intl.message(
+      'Enter Valid Name',
+      name: 'name_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Valid Email`
+  String get email_error {
+    return Intl.message(
+      'Enter Valid Email',
+      name: 'email_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose Emirates`
+  String get emirate_error {
+    return Intl.message(
+      'Choose Emirates',
+      name: 'emirate_error',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
