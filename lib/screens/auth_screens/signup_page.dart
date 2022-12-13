@@ -12,7 +12,13 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+  final String country_code;
+  final String phone;
+  const SignupPage({
+    super.key,
+    required this.country_code,
+    required this.phone,
+  });
 
   @override
   State<SignupPage> createState() => SignupPageState();
