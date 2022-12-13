@@ -11,5 +11,6 @@ Color borderGreyColor = const Color(0xffCCCCCC);
 Color changenumberorange = const Color(0xffFF6833);
 Color warningcolor = const Color(0xfff7941d);
 Color toastgrey = const Color(0xff414042);
+Color errorcolor = const Color(0xffff0000);
 Color lightGreyColor = const Color(0xffEFEFEF);
 Color container_grey_color = const Color(0xffF1F1F1);
