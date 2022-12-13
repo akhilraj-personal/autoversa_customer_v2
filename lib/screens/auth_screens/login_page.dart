@@ -87,15 +87,17 @@ class _LoginPageState extends State<LoginPage> {
           body: SingleChildScrollView(
               child: Center(
                   child: Container(
-                      height: height - 50,
+                      height: height - height * 0.048,
                       width: width,
-                      margin: const EdgeInsets.only(top: 50),
+                      color: whiteColor,
+                      margin: EdgeInsets.only(top: height * 0.048),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                                height: 20,
+                                height: height * 0.04,
                                 width: width,
+                                color: whiteColor,
                                 margin: EdgeInsets.only(
                                     left: width * 0.06, right: width * 0.06),
                                 child: Row(
@@ -141,8 +143,9 @@ class _LoginPageState extends State<LoginPage> {
                                   ],
                                 )),
                             Container(
-                                height: height - 70,
+                                height: height - height * 0.18,
                                 width: width,
+                                color: whiteColor,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
