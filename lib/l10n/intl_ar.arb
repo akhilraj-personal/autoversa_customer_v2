@@ -12,5 +12,14 @@
   "resend_otp": "إعادة إرسال OTP",
   "verify_via_call": "تحقق عبر المكالمة",
   "enter_mobile_text": "أدخل رقم الهاتف المتحرك",
-  "sign_in_alt": "سجل دخولك بواسطة"
+  "sign_in_alt": "سجل دخولك بواسطة",
+  "register_new_account": "تسجيل حساب جديد",
+  "sign_up": "اشتراك",
+  "emirates": "طيران الإمارات *",
+  "full_name": "الاسم الكامل*",
+  "email": "البريد الإلكتروني",
+  "mobile_number": "رقم الهاتف المحمول*",
+  "name_error": "أدخل اسمًا صالحًا",
+  "email_error": "أدخل بريد إلكتروني صالح",
+  "emirate_error": "اختر طيران الإمارات"
 }
