@@ -10,7 +10,6 @@ import 'package:autoversa/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -125,8 +124,9 @@ class SignupPageState extends State<SignupPage> {
       ),
       child: Scaffold(
         appBar: AppBar(
-          elevation: 1,
+          elevation: 0,
           backgroundColor: whiteColor,
+          shadowColor: whiteColor,
           iconTheme: IconThemeData(color: blackColor),
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarIconBrightness: Brightness.dark,
@@ -136,6 +136,7 @@ class SignupPageState extends State<SignupPage> {
               child: Row(
                 children: [
                   Container(
+                    color: whiteColor,
                     width: MediaQuery.of(context).size.width * 0.20,
                     child: GestureDetector(
                       onTap: () async {
@@ -152,6 +153,7 @@ class SignupPageState extends State<SignupPage> {
                     ),
                   ),
                   Container(
+                    color: whiteColor,
                     width: MediaQuery.of(context).size.width * 0.20,
                     padding: EdgeInsets.only(
                         right: width * 0.05, left: width * 0.05),
@@ -182,8 +184,9 @@ class SignupPageState extends State<SignupPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
+                      color: whiteColor,
                       padding: EdgeInsets.all(20),
-                      height: height - 90,
+                      height: height - height * 0.12,
                       width: width,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -202,7 +205,7 @@ class SignupPageState extends State<SignupPage> {
                                 color: blackColor, fontSize: 21),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(height: height * 0.02),
+                          SizedBox(height: height * 0.03),
                           Stack(alignment: Alignment.bottomCenter, children: [
                             Container(
                               height: height * 0.045,
@@ -239,36 +242,35 @@ class SignupPageState extends State<SignupPage> {
                                           decoration: InputDecoration(
                                             disabledBorder: OutlineInputBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(16.0),
+                                                  BorderRadius.circular(14),
                                               borderSide: BorderSide(
                                                   color: Colors.transparent,
                                                   width: 1),
                                             ),
                                             focusedBorder: OutlineInputBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(16.0),
+                                                  BorderRadius.circular(14),
                                               borderSide: BorderSide(
                                                   color: Colors.transparent,
                                                   width: 1),
                                             ),
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(16.0),
+                                                  BorderRadius.circular(14),
                                               borderSide: BorderSide(
                                                   color: Colors.transparent,
                                                   width: 1),
                                             ),
-                                            hintText: S.of(context).emirates,
-                                            hintStyle: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey,
-                                            ),
-                                            filled: true,
                                             fillColor: whiteColor,
-                                            isDense: true,
-                                            contentPadding: EdgeInsets.fromLTRB(
-                                                16, 8, 12, 8),
                                           ),
+                                          hint: Align(
+                                              alignment: Alignment.center,
+                                              child:
+                                                  Text(S.of(context).emirates,
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: blackColor,
+                                                      ))),
                                           items: data
                                               .map((item) => DropdownMenuItem(
                                                   child: Align(
@@ -279,7 +281,7 @@ class SignupPageState extends State<SignupPage> {
                                                         style: montserratLight
                                                             .copyWith(
                                                                 color:
-                                                                    lightblackColor,
+                                                                    blackColor,
                                                                 fontSize: 12),
                                                       )),
                                                   value: item['state_id']
@@ -337,14 +339,13 @@ class SignupPageState extends State<SignupPage> {
                                           textAlign: TextAlign.center,
                                           maxLength: 50,
                                           style: montserratLight.copyWith(
-                                              color: lightblackColor,
-                                              fontSize: 14),
+                                              color: blackColor, fontSize: 14),
                                           decoration: InputDecoration(
                                               counterText: "",
                                               filled: true,
                                               hintText: S.of(context).full_name,
                                               hintStyle: TextStyle(
-                                                  color: Colors.grey,
+                                                  color: blackColor,
                                                   fontSize: 14),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
@@ -401,14 +402,13 @@ class SignupPageState extends State<SignupPage> {
                                           textAlign: TextAlign.center,
                                           maxLength: 80,
                                           style: montserratLight.copyWith(
-                                              color: lightblackColor,
-                                              fontSize: 14),
+                                              color: blackColor, fontSize: 14),
                                           decoration: InputDecoration(
                                               counterText: "",
                                               filled: true,
                                               hintText: S.of(context).email,
                                               hintStyle: TextStyle(
-                                                color: Colors.grey,
+                                                color: blackColor,
                                                 fontSize: 14,
                                               ),
                                               border: InputBorder.none,
@@ -464,8 +464,7 @@ class SignupPageState extends State<SignupPage> {
                                       child: Text(
                                         "AE +971",
                                         style: montserratLight.copyWith(
-                                            color: lightblackColor,
-                                            fontSize: 14),
+                                            color: blackColor, fontSize: 14),
                                       ),
                                     ),
                                     Container(
@@ -486,15 +485,14 @@ class SignupPageState extends State<SignupPage> {
                                           focusNode: numberFocus,
                                           maxLength: 10,
                                           style: montserratLight.copyWith(
-                                              color: lightblackColor,
-                                              fontSize: 14),
+                                              color: blackColor, fontSize: 14),
                                           decoration: InputDecoration(
                                               counterText: "",
                                               filled: true,
                                               hintText:
                                                   S.of(context).mobile_number,
                                               hintStyle: TextStyle(
-                                                  color: Colors.grey,
+                                                  color: blackColor,
                                                   fontSize: 14),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
