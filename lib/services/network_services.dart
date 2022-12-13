@@ -28,7 +28,7 @@ Future<Response> postRequest(String endPoint, body) async {
 Future<Response> securedPostRequest(String endPoint, body) async {
   try {
     if (!await isNetworkAvailable()) throw "NETWORK_ERROR";
-    String url = "$dotenv.env['API_URL']$endPoint";
+    String url = dotenv.env['API_URL']! + endPoint;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     Response response = await post(Uri.parse(url),
@@ -48,7 +48,7 @@ Future<Response> securedPostRequest(String endPoint, body) async {
 Future<Response> getRequest(String endPoint) async {
   try {
     if (!await isNetworkAvailable()) throw "NETWORK_ERROR";
-    String url = "$dotenv.env['API_URL']$endPoint";
+    String url = dotenv.env['API_URL']! + endPoint;
     Response response = await get(Uri.parse(url)).timeout(Duration(seconds: 30),
         onTimeout: (() => throw "SERVER_NOT_REACHABLE"));
     return response;
@@ -60,7 +60,7 @@ Future<Response> getRequest(String endPoint) async {
 Future<Response> getRequestBearer(String endPoint) async {
   try {
     if (!await isNetworkAvailable()) throw "NETWORK_ERROR";
-    String url = "$dotenv.env['API_URL']$endPoint";
+    String url = dotenv.env['API_URL']! + endPoint;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     Response response = await get(Uri.parse(url), headers: {

@@ -39,14 +39,14 @@ class _LoginPageState extends State<LoginPage> {
     //   "country_code": country_code,
     // };
     Map req = {
-      "phone": mobileNumber.text.toString(),
+      "phone": in_mobile,
       "country_code": country_code,
     };
     await customerLoginService(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() => isLoading = false);
         showCustomToast(context, "OTP Send Successfully",
-            bgColor: syanColor, textColor: whiteColor);
+            bgColor: toastgrey, textColor: whiteColor);
         // Navigator.push(
         //     context,
         //     MaterialPageRoute(
@@ -59,19 +59,18 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute(
                 builder: (context) => LoginOTPVerification(
                     country_code: country_code.toString(),
-                    phone: mobileNumber.text.toString(),
+                    phone: in_mobile,
                     timer: value['timer'])));
       } else {
         setState(() => isLoading = false);
         showCustomToast(context, value['ret_data'],
-            bgColor: changenumberorange, textColor: whiteColor);
+            bgColor: warningcolor, textColor: whiteColor);
         setState(() {});
       }
     }).catchError((e) {
       setState(() => isLoading = false);
-      print(e.toString());
       showCustomToast(context, "Application error. Contact support",
-          bgColor: changenumberorange, textColor: whiteColor);
+          bgColor: warningcolor, textColor: whiteColor);
     });
   }
 
