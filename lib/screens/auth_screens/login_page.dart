@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
     }).catchError((e) {
       setState(() => isLoading = false);
       showCustomToast(context, "Application error. Contact support",
-          bgColor: warningcolor, textColor: whiteColor);
+          bgColor: errorcolor, textColor: whiteColor);
     });
   }
 
@@ -229,6 +229,10 @@ class _LoginPageState extends State<LoginPage> {
                                                           style: TextStyle(
                                                               fontSize: 18.0),
                                                           decoration: InputDecoration(
+                                                              errorStyle: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color:
+                                                                      warningcolor),
                                                               counterText: "",
                                                               filled: true,
                                                               hintText: S
