@@ -49,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                     phone: valid_number.toString(),
                     timer: value['timer'])));
       } else {
+        setState(() => isLoading = false);
         showCustomToast(context, value['ret_data'],
             bgColor: changenumberorange, textColor: whiteColor);
         setState(() {});
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
     }).catchError((e) {
       setState(() => isLoading = false);
       print(e.toString());
-      showCustomToast(context, e.toString(),
+      showCustomToast(context, "Application error. Contact support",
           bgColor: changenumberorange, textColor: whiteColor);
     });
   }
@@ -242,6 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
+                                          isLoading = true;
                                           if (_formKey.currentState!
                                               .validate()) {
                                             customerLogin();
