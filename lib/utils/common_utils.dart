@@ -38,6 +38,6 @@ void showCustomToast(
       padding: padding ?? EdgeInsets.symmetric(vertical: 16, horizontal: 30),
     ),
     gravity: gravity ?? ToastGravity.BOTTOM,
-    toastDuration: Duration(seconds: 2),
+    toastDuration: Duration(seconds: 4),
   );
 }
