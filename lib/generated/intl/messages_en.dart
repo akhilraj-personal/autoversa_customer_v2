@@ -25,15 +25,27 @@ class MessageLookup extends MessageLookupByLibrary {
         "change_number": MessageLookupByLibrary.simpleMessage("Change Number"),
         "data_verify_text":
             MessageLookupByLibrary.simpleMessage("Verifying Data"),
+        "email": MessageLookupByLibrary.simpleMessage("Email"),
+        "email_error":
+            MessageLookupByLibrary.simpleMessage("Enter Valid Email"),
+        "emirate_error":
+            MessageLookupByLibrary.simpleMessage("Choose Emirates"),
+        "emirates": MessageLookupByLibrary.simpleMessage("Emirates*"),
         "enter_mobile_text":
             MessageLookupByLibrary.simpleMessage("Enter Mobile Number"),
+        "full_name": MessageLookupByLibrary.simpleMessage("Full Name*"),
+        "mobile_number": MessageLookupByLibrary.simpleMessage("Mobile Number*"),
+        "name_error": MessageLookupByLibrary.simpleMessage("Enter Valid Name"),
         "no_network_text": MessageLookupByLibrary.simpleMessage(
             "Internet connection not available"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
             "Please enter the code below to verify its you"),
+        "register_new_account":
+            MessageLookupByLibrary.simpleMessage("Register New Account"),
         "resend_otp": MessageLookupByLibrary.simpleMessage("Resend OTP"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("Sign in with"),
+        "sign_up": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "valid_mobile":
             MessageLookupByLibrary.simpleMessage("Please enter a valid number"),
         "verify_me": MessageLookupByLibrary.simpleMessage("Verify Me"),
