@@ -39,6 +39,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "name_error": MessageLookupByLibrary.simpleMessage("أدخل اسمًا صالحًا"),
         "no_network_text":
             MessageLookupByLibrary.simpleMessage("الاتصال بالإنترنت غير متوفر"),
+        "otp_send_text":
+            MessageLookupByLibrary.simpleMessage("تم إرسال OTP بنجاح"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
             "الرجاء إدخال الرمز أدناه للتحقق من هويتك"),
         "register_new_account":

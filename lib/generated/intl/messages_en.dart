@@ -37,7 +37,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "mobile_number": MessageLookupByLibrary.simpleMessage("Mobile Number*"),
         "name_error": MessageLookupByLibrary.simpleMessage("Enter Valid Name"),
         "no_network_text": MessageLookupByLibrary.simpleMessage(
-            "Internet connection not available"),
+            "Internet Connection Not Available"),
+        "otp_send_text":
+            MessageLookupByLibrary.simpleMessage("OTP Send Successfully"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
             "Please enter the code below to verify its you"),
         "register_new_account":

@@ -90,11 +90,21 @@ class S {
     );
   }
 
-  /// `Internet connection not available`
+  /// `Internet Connection Not Available`
   String get no_network_text {
     return Intl.message(
-      'Internet connection not available',
+      'Internet Connection Not Available',
       name: 'no_network_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OTP Send Successfully`
+  String get otp_send_text {
+    return Intl.message(
+      'OTP Send Successfully',
+      name: 'otp_send_text',
       desc: '',
       args: [],
     );
