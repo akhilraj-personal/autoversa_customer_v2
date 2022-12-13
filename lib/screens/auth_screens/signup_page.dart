@@ -271,12 +271,13 @@ class SignupPageState extends State<SignupPage> {
                                           ),
                                           hint: Align(
                                               alignment: Alignment.center,
-                                              child:
-                                                  Text(S.of(context).emirates,
-                                                      style: TextStyle(
-                                                        fontSize: 14,
+                                              child: Text(
+                                                S.of(context).emirates,
+                                                style:
+                                                    montserratRegular.copyWith(
                                                         color: blackColor,
-                                                      ))),
+                                                        fontSize: 14),
+                                              )),
                                           items: data
                                               .map((item) => DropdownMenuItem(
                                                   child: Align(
@@ -350,9 +351,10 @@ class SignupPageState extends State<SignupPage> {
                                               counterText: "",
                                               filled: true,
                                               hintText: S.of(context).full_name,
-                                              hintStyle: TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14),
+                                              hintStyle:
+                                                  montserratRegular.copyWith(
+                                                      color: blackColor,
+                                                      fontSize: 14),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
                                           focusNode: userNameFocus,
@@ -413,10 +415,10 @@ class SignupPageState extends State<SignupPage> {
                                               counterText: "",
                                               filled: true,
                                               hintText: S.of(context).email,
-                                              hintStyle: TextStyle(
-                                                color: blackColor,
-                                                fontSize: 14,
-                                              ),
+                                              hintStyle:
+                                                  montserratRegular.copyWith(
+                                                      color: blackColor,
+                                                      fontSize: 14),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
                                           onFieldSubmitted: (value) {
@@ -497,9 +499,10 @@ class SignupPageState extends State<SignupPage> {
                                               filled: true,
                                               hintText:
                                                   S.of(context).mobile_number,
-                                              hintStyle: TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14),
+                                              hintStyle:
+                                                  montserratRegular.copyWith(
+                                                      color: blackColor,
+                                                      fontSize: 14),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
                                           validator: (value) {
