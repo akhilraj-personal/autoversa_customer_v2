@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/network_utils.dart';
 
+const int timeoutDuration = 150;
+
 Map buildHeader() {
   return {
     'Content-Type': 'application/json',
@@ -15,13 +17,12 @@ Map buildHeader() {
 Future<Response> postRequest(String endPoint, body) async {
   try {
     if (!await isNetworkAvailable()) throw "NETWORK_ERROR";
-    String url = "$dotenv.env['API_URL']$endPoint";
+    String url = dotenv.env['API_URL']! + endPoint;
     Response response = await post(Uri.parse(url), body: body).timeout(
-        Duration(seconds: 150),
+        Duration(seconds: timeoutDuration),
         onTimeout: (() => throw "SERVER_NOT_REACHABLE"));
     return response;
   } catch (e) {
-    print(e);
     throw "INTERNAL_ERROR";
   }
 }

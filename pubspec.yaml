@@ -26,6 +26,7 @@ dependencies:
   shared_preferences: ^2.0.15
   http: ^0.13.5
   connectivity_plus: ^3.0.2
+  fluttertoast: ^8.1.2
 
   # Added by Bharad
   flutter_otp_text_field: ^1.1.1
