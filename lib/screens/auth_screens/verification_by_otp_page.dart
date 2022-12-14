@@ -89,7 +89,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
       }
     }).catchError((e) {
       setState(() => isResend = false);
-      showCustomToast(context, "Application error. Contact support",
+      showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -108,12 +108,12 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         startTimer();
       } else {
         setState(() => isResend = false);
-        showCustomToast(context, "Try another method",
+        showCustomToast(context, S.of(context).try_another_method,
             bgColor: warningcolor, textColor: whiteColor);
       }
     }).catchError((e) {
       setState(() => isResend = false);
-      showCustomToast(context, "Application error. Contact support",
+      showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -181,7 +181,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         }
       }).catchError((e) {
         setState(() => isOtpVerifying = false);
-        showCustomToast(context, "Application error. Contact support",
+        showCustomToast(context, S.of(context).toast_application_error,
             bgColor: errorcolor, textColor: whiteColor);
       });
     }
@@ -279,7 +279,8 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         SizedBox(height: height * 0.03),
                         Text(
                           S.of(context).we_have_send_a_6_digit_verification +
-                              " +918129312321",
+                              widget.country_code +
+                              widget.phone,
                           style: montserratLight.copyWith(
                               color: lightblackColor, fontSize: 14),
                           textAlign: TextAlign.center,
