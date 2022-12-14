@@ -57,7 +57,7 @@ Future<Response> getRequest(String endPoint) async {
   }
 }
 
-Future<Response> getRequestBearer(String endPoint) async {
+Future<Response> securedGetRequest(String endPoint) async {
   try {
     if (!await isNetworkAvailable()) throw "NETWORK_ERROR";
     String url = dotenv.env['API_URL']! + endPoint;

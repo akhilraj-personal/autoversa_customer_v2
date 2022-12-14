@@ -13,16 +13,14 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SignupPage extends StatefulWidget {
-  final String countrycode;
-  final String phone;
-  const SignupPage({super.key, required this.countrycode, required this.phone});
+class SignupViaGmail extends StatefulWidget {
+  const SignupViaGmail({super.key});
 
   @override
-  State<SignupPage> createState() => SignupPageState();
+  State<SignupViaGmail> createState() => SignupViaGmailState();
 }
 
-class SignupPageState extends State<SignupPage> {
+class SignupViaGmailState extends State<SignupViaGmail> {
   String emirates = '';
   TextEditingController userNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -86,7 +84,7 @@ class SignupPageState extends State<SignupPage> {
       "email": emailController.text.toString() != ""
           ? emailController.text.toString()
           : "",
-      "phone": widget.phone,
+      "phone": "widget.phone",
       "country_coded": "1",
       "country": country
     };
@@ -507,6 +505,13 @@ class SignupPageState extends State<SignupPage> {
                           SizedBox(height: height * 0.04),
                           GestureDetector(
                             onTap: () async {
+                              // if (_formKey.currentState!.validate()) {
+                              //   if (issubmitted) return;
+                              //   setState(() => issubmitted = true);
+                              //   await Future.delayed(
+                              //       Duration(milliseconds: 1000));
+                              //   cust_signup();
+                              // }
                               setState(() {
                                 Navigator.pushReplacementNamed(
                                     context, Routes.bottombar);

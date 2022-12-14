@@ -25,5 +25,7 @@
   "mobile_number": "Mobile Number*",
   "name_error": "Enter Valid Name",
   "email_error": "Enter Valid Email",
-  "emirate_error": "Choose Emirates"
+  "emirate_error": "Choose Emirates",
+  "toast_application_error": "Application error. Contact support",
+  "vehicle_add" : "Vehicle Add"
 }

@@ -42,3 +42,35 @@ emailValidation(value, context) {
   }
   return null;
 }
+
+selectmakeValidation(value) {
+  if (value == null) {
+    return "Make is required";
+  } else {
+    return null;
+  }
+}
+
+selectmodelValidation(value) {
+  if (value == null) {
+    return "Model is required";
+  } else {
+    return null;
+  }
+}
+
+selectvariantValidation(value) {
+  if (value == null) {
+    return "Variant is required";
+  } else {
+    return null;
+  }
+}
+
+selectyearValidation(value) {
+  if (value == null) {
+    return "Year is required";
+  } else {
+    return null;
+  }
+}
