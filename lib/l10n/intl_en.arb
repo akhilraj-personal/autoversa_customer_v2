@@ -29,5 +29,6 @@
   "toast_application_error": "Application Error. Contact Support",
   "vehicle_add" : "Vehicle Add",
   "vehicle_save_toast": "Vehicle Added Successfully",
-  "vehicle_already_exist": "Vehicle Already Exist"
+  "vehicle_already_exist": "Vehicle Already Exist",
+  "try_another_method": "Try Another Method"
 }

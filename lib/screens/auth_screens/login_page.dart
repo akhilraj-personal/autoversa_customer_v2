@@ -54,13 +54,13 @@ class _LoginPageState extends State<LoginPage> {
                     country_code: country_code.toString(),
                     phone: valid_number.toString(),
                     timer: value['timer'])));
-        //   // Navigator.push(
-        //   //     context,
-        //   //     MaterialPageRoute(
-        //   //         builder: (context) => LoginOTPVerification(
-        //   //             country_code: country_code.toString(),
-        //   //             phone: in_mobile,
-        //   //             timer: value['timer'])));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => LoginOTPVerification(
+        //             country_code: country_code.toString(),
+        //             phone: in_mobile,
+        //             timer: value['timer'])));
       } else {
         setState(() => isLoading = false);
         showCustomToast(context, value['ret_data'],
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
       }
     }).catchError((e) {
       setState(() => isLoading = false);
-      showCustomToast(context, "Application error. Contact support",
+      showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }

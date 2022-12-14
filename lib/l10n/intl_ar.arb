@@ -29,5 +29,6 @@
   "toast_application_error": "خطأ في تطبيق. اتصل بالدعم",
   "vehicle_add" : "إضافة مركبة",
   "vehicle_save_toast": "تمت إضافة السيارة بنجاح",
-  "vehicle_already_exist": "السيارة موجودة بالفعل"
+  "vehicle_already_exist": "السيارة موجودة بالفعل",
+  "try_another_method": "جرب طريقة أخرى"
 }

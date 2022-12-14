@@ -359,6 +359,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Try Another Method`
+  String get try_another_method {
+    return Intl.message(
+      'Try Another Method',
+      name: 'try_another_method',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
