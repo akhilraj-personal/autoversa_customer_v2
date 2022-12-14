@@ -57,6 +57,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sign_up": MessageLookupByLibrary.simpleMessage("اشتراك"),
         "toast_application_error":
             MessageLookupByLibrary.simpleMessage("خطأ في تطبيق. اتصل بالدعم"),
+        "try_another_method":
+            MessageLookupByLibrary.simpleMessage("جرب طريقة أخرى"),
         "valid_mobile":
             MessageLookupByLibrary.simpleMessage("من فضلك أدخل رقما صالحا"),
         "vehicle_add": MessageLookupByLibrary.simpleMessage("إضافة مركبة"),

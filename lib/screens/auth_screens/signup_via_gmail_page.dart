@@ -63,7 +63,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
         });
       } else {}
     }).catchError((e) {
-      showCustomToast(context, "Application error. Contact support",
+      showCustomToast(context, S.of(context).toast_application_error,
           bgColor: warningcolor, textColor: whiteColor);
     });
   }
@@ -113,7 +113,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
       }
     }).catchError((e) {
       setState(() => issubmitted = false);
-      showCustomToast(context, "Application error. Contact support",
+      showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
