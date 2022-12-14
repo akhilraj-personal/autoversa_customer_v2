@@ -14,7 +14,6 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../main.dart';
 import '../../services/pre_auth_services.dart';
 import '../../utils/common_utils.dart';
 
@@ -109,7 +108,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         startTimer();
       } else {
         setState(() => isResend = false);
-        showCustomToast(context, "Try another methode",
+        showCustomToast(context, "Try another method",
             bgColor: warningcolor, textColor: whiteColor);
       }
     }).catchError((e) {
@@ -298,8 +297,8 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         ),
                         SizedBox(height: height * 0.02),
                         OtpTextField(
-                          numberOfFields: 6,
-                          fieldWidth: width * 0.11,
+                          numberOfFields: 4,
+                          fieldWidth: width * 0.14,
                           clearText: true,
                           focusedBorderColor: syanColor,
                           cursorColor: syanColor,

@@ -55,8 +55,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("سجل دخولك بواسطة"),
         "sign_up": MessageLookupByLibrary.simpleMessage("اشتراك"),
+        "toast_application_error":
+            MessageLookupByLibrary.simpleMessage("خطأ في تطبيق. اتصل بالدعم"),
         "valid_mobile":
             MessageLookupByLibrary.simpleMessage("من فضلك أدخل رقما صالحا"),
+        "vehicle_add": MessageLookupByLibrary.simpleMessage("إضافة مركبة"),
         "verify_call_text":
             MessageLookupByLibrary.simpleMessage("تحقق عبر المكالمة"),
         "verify_me": MessageLookupByLibrary.simpleMessage("تحقق عني"),
