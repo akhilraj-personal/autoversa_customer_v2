@@ -44,17 +44,18 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please enter the code below to verify its you"),
         "register_new_account":
             MessageLookupByLibrary.simpleMessage("Register New Account"),
-        "resend_otp": MessageLookupByLibrary.simpleMessage("Resend OTP"),
+        "resend_otp_text": MessageLookupByLibrary.simpleMessage("Resend OTP"),
+        "seconds_text": MessageLookupByLibrary.simpleMessage("Second"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("Sign in with"),
         "sign_up": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "valid_mobile":
             MessageLookupByLibrary.simpleMessage("Please enter a valid number"),
+        "verify_call_text":
+            MessageLookupByLibrary.simpleMessage("Verify Via Call"),
         "verify_me": MessageLookupByLibrary.simpleMessage("Verify Me"),
         "verify_mobile_number":
             MessageLookupByLibrary.simpleMessage("Verify Mobile Number"),
-        "verify_via_call":
-            MessageLookupByLibrary.simpleMessage("Verify Via Call"),
         "we_have_send_a_6_digit_verification":
             MessageLookupByLibrary.simpleMessage(
                 "We have send a 6 digit verification code to"),
