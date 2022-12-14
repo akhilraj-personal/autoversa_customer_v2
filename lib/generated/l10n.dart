@@ -120,6 +120,36 @@ class S {
     );
   }
 
+  /// `Second`
+  String get seconds_text {
+    return Intl.message(
+      'Second',
+      name: 'seconds_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resend OTP`
+  String get resend_otp_text {
+    return Intl.message(
+      'Resend OTP',
+      name: 'resend_otp_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify Via Call`
+  String get verify_call_text {
+    return Intl.message(
+      'Verify Via Call',
+      name: 'verify_call_text',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Verify Mobile Number`
   String get verify_mobile_number {
     return Intl.message(
@@ -155,26 +185,6 @@ class S {
     return Intl.message(
       'Please enter the code below to verify its you',
       name: 'please_enter_the_code',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Resend OTP`
-  String get resend_otp {
-    return Intl.message(
-      'Resend OTP',
-      name: 'resend_otp',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Verify Via Call`
-  String get verify_via_call {
-    return Intl.message(
-      'Verify Via Call',
-      name: 'verify_via_call',
       desc: '',
       args: [],
     );

@@ -262,14 +262,16 @@ class _LoginPageState extends State<LoginPage> {
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          isLoading = true;
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            customerLogin();
-                                          } else {
-                                            setState(() {
-                                              isLoading = false;
-                                            });
+                                          if (isLoading == false) {
+                                            isLoading = true;
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              customerLogin();
+                                            } else {
+                                              setState(() {
+                                                isLoading = false;
+                                              });
+                                            }
                                           }
                                         });
                                       },
