@@ -71,7 +71,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
         });
       } else {}
     }).catchError((e) {
-      showCustomToast(context, "Application error. Contact support",
+      showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -101,7 +101,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
         });
       } else {}
     }).catchError((e) {
-      showCustomToast(context, "Application error. Contact support",
+      showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -133,7 +133,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
         // toasty(context, language!.lblPhoneErr);
       }
     }).catchError((e) {
-      showCustomToast(context, "Application error. Contact support",
+      showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -170,7 +170,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
         });
       } else {}
     }).catchError((e) {
-      showCustomToast(context, "Application error. Contact support",
+      showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -210,7 +210,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
         });
       }
     }).catchError((e) {
-      showCustomToast(context, "Application error. Contact support",
+      showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -239,7 +239,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
           modelname = '';
           variantname = '';
           yearselected = '';
-          showCustomToast(context, "Vehicle Added Successfully",
+          showCustomToast(context, S.of(context).vehicle_save_toast,
               bgColor: blackColor, textColor: whiteColor);
           Navigator.pushAndRemoveUntil(
             context,
@@ -254,15 +254,15 @@ class VehicleAddPageState extends State<VehicleAddPage> {
       } else {
         if (value['ret_message'] == "duplicate") {
           setState(() => issubmitted = false);
-          showCustomToast(context, "Vehicle already exist",
+          showCustomToast(context, S.of(context).vehicle_already_exist,
               bgColor: warningcolor, textColor: whiteColor);
         } else {
-          showCustomToast(context, "Vehicle Added Successfully",
+          showCustomToast(context, S.of(context).vehicle_save_toast,
               bgColor: blackColor, textColor: whiteColor);
         }
       }
     }).catchError((e) {
-      showCustomToast(context, "Application error. Contact support",
+      showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -359,7 +359,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                           ),
                           SizedBox(height: 20),
                           Text(
-                            S.of(context).register_new_account,
+                            S.of(context).vehicle_add,
                             style: montserratSemiBold.copyWith(
                                 color: blackColor, fontSize: 21),
                             textAlign: TextAlign.center,
