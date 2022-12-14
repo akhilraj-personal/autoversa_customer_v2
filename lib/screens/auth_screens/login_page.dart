@@ -153,8 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                                     Image.asset(
                                       ImageConst.ai_icon,
                                       fit: BoxFit.contain,
-                                      width: 115,
-                                      height: 50,
+                                      width: height * 0.17,
                                     ),
                                     SizedBox(height: height * 0.08),
                                     Text(
