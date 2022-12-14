@@ -150,6 +150,26 @@ class S {
     );
   }
 
+  /// `Please enter valid OTP`
+  String get otp_invalid_text {
+    return Intl.message(
+      'Please enter valid OTP',
+      name: 'otp_invalid_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maximum attempt reached. Please try again later.`
+  String get max_otp_text {
+    return Intl.message(
+      'Maximum attempt reached. Please try again later.',
+      name: 'max_otp_text',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Verify Mobile Number`
   String get verify_mobile_number {
     return Intl.message(

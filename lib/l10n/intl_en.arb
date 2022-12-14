@@ -9,6 +9,8 @@
   "seconds_text": "Second",
   "resend_otp_text": "Resend OTP",
   "verify_call_text": "Verify Via Call",
+  "otp_invalid_text": "Please enter valid OTP",
+  "max_otp_text": "Maximum attempt reached. Please try again later.",
   "verify_mobile_number": "Verify Mobile Number",
   "we_have_send_a_6_digit_verification": "We have send a 6 digit verification code to",
   "change_number": "Change Number",

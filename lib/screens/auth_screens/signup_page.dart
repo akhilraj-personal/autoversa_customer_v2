@@ -12,9 +12,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({
-    super.key,
-  });
+  final String countrycode;
+  final String phone;
+  const SignupPage({super.key, required this.countrycode, required this.phone});
 
   @override
   State<SignupPage> createState() => SignupPageState();
@@ -493,13 +493,6 @@ class SignupPageState extends State<SignupPage> {
                           SizedBox(height: height * 0.04),
                           GestureDetector(
                             onTap: () async {
-                              // if (_formKey.currentState!.validate()) {
-                              //   if (issubmitted) return;
-                              //   setState(() => issubmitted = true);
-                              //   await Future.delayed(
-                              //       Duration(milliseconds: 1000));
-                              //   cust_signup();
-                              // }
                               setState(() {
                                 Navigator.pushReplacementNamed(
                                     context, Routes.bottombar);

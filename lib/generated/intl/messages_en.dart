@@ -34,10 +34,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "enter_mobile_text":
             MessageLookupByLibrary.simpleMessage("Enter Mobile Number"),
         "full_name": MessageLookupByLibrary.simpleMessage("Full Name*"),
+        "max_otp_text": MessageLookupByLibrary.simpleMessage(
+            "Maximum attempt reached. Please try again later."),
         "mobile_number": MessageLookupByLibrary.simpleMessage("Mobile Number*"),
         "name_error": MessageLookupByLibrary.simpleMessage("Enter Valid Name"),
         "no_network_text": MessageLookupByLibrary.simpleMessage(
             "Internet Connection Not Available"),
+        "otp_invalid_text":
+            MessageLookupByLibrary.simpleMessage("Please enter valid OTP"),
         "otp_send_text":
             MessageLookupByLibrary.simpleMessage("OTP Send Successfully"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(

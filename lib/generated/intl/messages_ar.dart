@@ -34,11 +34,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "enter_mobile_text":
             MessageLookupByLibrary.simpleMessage("أدخل رقم الهاتف المتحرك"),
         "full_name": MessageLookupByLibrary.simpleMessage("الاسم الكامل*"),
+        "max_otp_text": MessageLookupByLibrary.simpleMessage(
+            "وصلت المحاولة القصوى. الرجاء معاودة المحاولة في وقت لاحق."),
         "mobile_number":
             MessageLookupByLibrary.simpleMessage("رقم الهاتف المحمول*"),
         "name_error": MessageLookupByLibrary.simpleMessage("أدخل اسمًا صالحًا"),
         "no_network_text":
             MessageLookupByLibrary.simpleMessage("الاتصال بالإنترنت غير متوفر"),
+        "otp_invalid_text":
+            MessageLookupByLibrary.simpleMessage("الرجاء إدخال OTP صالح"),
         "otp_send_text":
             MessageLookupByLibrary.simpleMessage("تم إرسال OTP بنجاح"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
