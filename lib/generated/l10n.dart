@@ -319,6 +319,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Application error. Contact support`
+  String get toast_application_error {
+    return Intl.message(
+      'Application error. Contact support',
+      name: 'toast_application_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vehicle Add`
+  String get vehicle_add {
+    return Intl.message(
+      'Vehicle Add',
+      name: 'vehicle_add',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
