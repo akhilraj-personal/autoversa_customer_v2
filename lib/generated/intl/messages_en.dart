@@ -41,7 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_network_text": MessageLookupByLibrary.simpleMessage(
             "Internet Connection Not Available"),
         "otp_invalid_text":
-            MessageLookupByLibrary.simpleMessage("Please enter valid OTP"),
+            MessageLookupByLibrary.simpleMessage("Please Enter Valid OTP"),
         "otp_send_text":
             MessageLookupByLibrary.simpleMessage("OTP Send Successfully"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
@@ -53,8 +53,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("Sign in with"),
         "sign_up": MessageLookupByLibrary.simpleMessage("Sign Up"),
+        "toast_application_error": MessageLookupByLibrary.simpleMessage(
+            "Application Error. Contact Support"),
         "valid_mobile":
-            MessageLookupByLibrary.simpleMessage("Please enter a valid number"),
+            MessageLookupByLibrary.simpleMessage("Please Enter Valid Number"),
+        "vehicle_add": MessageLookupByLibrary.simpleMessage("Vehicle Add"),
+        "vehicle_already_exist":
+            MessageLookupByLibrary.simpleMessage("Vehicle Already Exist"),
+        "vehicle_save_toast":
+            MessageLookupByLibrary.simpleMessage("Vehicle Added Successfully"),
         "verify_call_text":
             MessageLookupByLibrary.simpleMessage("Verify Via Call"),
         "verify_me": MessageLookupByLibrary.simpleMessage("Verify Me"),
@@ -64,6 +71,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "We have send a 6 digit verification code to"),
         "welcome_text":
-            MessageLookupByLibrary.simpleMessage("Sign in to your account")
+            MessageLookupByLibrary.simpleMessage("Sign in to Your Account")
       };
 }

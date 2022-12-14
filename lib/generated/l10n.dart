@@ -50,10 +50,10 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Sign in to your account`
+  /// `Sign in to Your Account`
   String get welcome_text {
     return Intl.message(
-      'Sign in to your account',
+      'Sign in to Your Account',
       name: 'welcome_text',
       desc: '',
       args: [],
@@ -70,10 +70,10 @@ class S {
     );
   }
 
-  /// `Please enter a valid number`
+  /// `Please Enter Valid Number`
   String get valid_mobile {
     return Intl.message(
-      'Please enter a valid number',
+      'Please Enter Valid Number',
       name: 'valid_mobile',
       desc: '',
       args: [],
@@ -150,10 +150,10 @@ class S {
     );
   }
 
-  /// `Please enter valid OTP`
+  /// `Please Enter Valid OTP`
   String get otp_invalid_text {
     return Intl.message(
-      'Please enter valid OTP',
+      'Please Enter Valid OTP',
       name: 'otp_invalid_text',
       desc: '',
       args: [],
@@ -315,6 +315,46 @@ class S {
     return Intl.message(
       'Choose Emirates',
       name: 'emirate_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Application Error. Contact Support`
+  String get toast_application_error {
+    return Intl.message(
+      'Application Error. Contact Support',
+      name: 'toast_application_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vehicle Add`
+  String get vehicle_add {
+    return Intl.message(
+      'Vehicle Add',
+      name: 'vehicle_add',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vehicle Added Successfully`
+  String get vehicle_save_toast {
+    return Intl.message(
+      'Vehicle Added Successfully',
+      name: 'vehicle_save_toast',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vehicle Already Exist`
+  String get vehicle_already_exist {
+    return Intl.message(
+      'Vehicle Already Exist',
+      name: 'vehicle_already_exist',
       desc: '',
       args: [],
     );
