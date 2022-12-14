@@ -9,6 +9,8 @@
   "seconds_text": "ثانيا",
   "resend_otp_text": "إعادة إرسال OTP",
   "verify_call_text": "تحقق عبر المكالمة",
+  "otp_invalid_text": "الرجاء إدخال OTP صالح",
+  "max_otp_text": "وصلت المحاولة القصوى. الرجاء معاودة المحاولة في وقت لاحق.",
   "verify_mobile_number": "تحقق من رقم الهاتف المحمول",
   "we_have_send_a_6_digit_verification": "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى",
   "change_number": "تغيير رقم",
@@ -23,5 +25,7 @@
   "mobile_number": "رقم الهاتف المحمول*",
   "name_error": "أدخل اسمًا صالحًا",
   "email_error": "أدخل بريد إلكتروني صالح",
-  "emirate_error": "اختر طيران الإمارات"
+  "emirate_error": "اختر طيران الإمارات",
+  "toast_application_error": "خطأ في تطبيق. اتصل بالدعم",
+  "vehicle_add" : "إضافة مركبة"
 }

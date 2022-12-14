@@ -5,13 +5,16 @@ import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/provider/provider.dart';
+import 'package:autoversa/screens/auth_screens/signup_page.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../main.dart';
 import '../../services/pre_auth_services.dart';
 import '../../utils/common_utils.dart';
 
@@ -33,6 +36,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
   late Timer _timer;
   int OTPtimer = 0, click_count = 0;
   bool isResend = false;
+  bool isOtpVerifying = false;
 
   String otppin = '';
 
@@ -119,82 +123,69 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
     setState(() {
       FocusScope.of(context).unfocus();
     });
-    // final prefs = await SharedPreferences.getInstance();
-    // final status = await OneSignal.shared.getDeviceState();
-    // final String? osUserID = status?.userId;
-    // Map req = {
-    //   "phone": widget.phone,
-    //   "country_code": widget.countrycode,
-    //   "otp": otpval,
-    //   "fcm_token": osUserID
-    // };
-    // if (otpval == null || otpval == "") {
-    //   setState(() => isOTPverifying = false);
-    //   toasty(context, "Enter Valid OTP",
-    //       bgColor: Color.fromARGB(255, 255, 47, 0),
-    //       textColor: whiteColor,
-    //       gravity: ToastGravity.BOTTOM,
-    //       length: Toast.LENGTH_LONG);
-    // } else {
-    //   await verifyOtp(req).then((value) {
-    //     if (value['ret_data'] == "success") {
-    //       prefs.setBool('islogged', true);
-    //       if (value['customer']['cust_type'] == "old") {
-    //         prefs.setString('cust_id', value['customer']['id']);
-    //         prefs.setString('name', value['customer']['name']);
-    //         prefs.setString('email', value['customer']['email']);
-    //         prefs.setString('phone', value['customer']['phone']);
-    //         prefs.setString('country_code', value['customer']['country_code']);
-    //         prefs.setString('emirate', value['customer']['emirate']);
-    //         prefs.setString('language', value['customer']['language']);
-    //         prefs.setString('credits', value['customer']['credits']);
-    //         prefs.setString('token', value['token']);
-    //         Navigator.pushAndRemoveUntil(
-    //           context,
-    //           MaterialPageRoute(
-    //               builder: (context) => AMDashScreen(
-    //                 selectedindex: 0,
-    //               )),
-    //               (route) => false,
-    //         );
-    //       } else if (value['customer']['cust_type'] == "new") {
-    //         prefs.setString('cust_id', value['customer']['id']);
-    //         prefs.setString('phone', value['customer']['phone']);
-    //         prefs.setString('country_code', value['customer']['country_code']);
-    //         prefs.setString('token', value['token']);
-    //         Navigator.push(
-    //             context,
-    //             MaterialPageRoute(
-    //                 builder: (context) => AMSignUpScreen(
-    //                   countrycode: value['customer']['country_code'],
-    //                   phone: value['customer']['phone'],
-    //                 )));
-    //       }
-    //     } else if (value['ret_data'] == "MaxAttempt") {
-    //       setState(() => isOTPverifying = false);
-    //       toasty(context, "Maximum attempt reached. Please try again later.",
-    //           bgColor: Color.fromARGB(255, 255, 47, 0),
-    //           textColor: whiteColor,
-    //           gravity: ToastGravity.BOTTOM,
-    //           length: Toast.LENGTH_LONG);
-    //       otppin = "";
-    //     } else {
-    //       setState(() => isOTPverifying = false);
-    //       toasty(context, value['message'],
-    //           bgColor: Color.fromARGB(255, 255, 47, 0),
-    //           textColor: whiteColor,
-    //           gravity: ToastGravity.BOTTOM,
-    //           length: Toast.LENGTH_LONG);
-    //     }
-    //   }).catchError((e) {
-    //     setState(() => isOTPverifying = false);
-    //     toasty(context, e.toString(),
-    //         bgColor: Color.fromARGB(255, 255, 47, 0),
-    //         textColor: whiteColor,
-    //         gravity: ToastGravity.BOTTOM,
-    //         length: Toast.LENGTH_LONG);
-    //   });
-    // }
+    if (otpval == null || otpval == "") {
+      setState(() {
+        isOtpVerifying = false;
+      });
+      showCustomToast(context, S.of(context).otp_invalid_text,
+          bgColor: warningcolor, textColor: whiteColor);
+    } else {
+      final prefs = await SharedPreferences.getInstance();
+      final status = await OneSignal.shared.getDeviceState();
+      final String? osUserID = status?.userId;
+      Map req = {
+        "phone": widget.phone,
+        "country_code": widget.country_code,
+        "otp": otpval,
+        "fcm_token": osUserID
+      };
+      await verifyOtp(req).then((value) {
+        if (value['ret_data'] == "success") {
+          prefs.setBool('islogged', true);
+          if (value['customer']['cust_type'] == "old") {
+            prefs.setString('cust_id', value['customer']['id']);
+            prefs.setString('name', value['customer']['name']);
+            prefs.setString('email', value['customer']['email']);
+            prefs.setString('phone', value['customer']['phone']);
+            prefs.setString('country_code', value['customer']['country_code']);
+            prefs.setString('emirate', value['customer']['emirate']);
+            prefs.setString('language', value['customer']['language']);
+            prefs.setString('credits', value['customer']['credits']);
+            prefs.setString('token', value['token']);
+            setState(() => isOtpVerifying = false);
+            setState(() {
+              Navigator.pushReplacementNamed(context, Routes.bottombar);
+            });
+          } else if (value['customer']['cust_type'] == "new") {
+            prefs.setString('cust_id', value['customer']['id']);
+            prefs.setString('phone', value['customer']['phone']);
+            prefs.setString('country_code', value['customer']['country_code']);
+            prefs.setString('token', value['token']);
+            setState(() => isOtpVerifying = false);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SignupPage(
+                          countrycode: value['customer']['country_code'],
+                          phone: value['customer']['phone'],
+                        )));
+          }
+        } else if (value['ret_data'] == "MaxAttempt") {
+          setState(() => isOtpVerifying = false);
+          showCustomToast(context, S.of(context).max_otp_text,
+              bgColor: warningcolor, textColor: whiteColor);
+          otppin = "";
+        } else {
+          setState(() => isOtpVerifying = false);
+          showCustomToast(context, value['message'],
+              bgColor: warningcolor, textColor: whiteColor);
+        }
+      }).catchError((e) {
+        setState(() => isOtpVerifying = false);
+        showCustomToast(context, "Application error. Contact support",
+            bgColor: errorcolor, textColor: whiteColor);
+      });
+    }
   }
 
   @override
@@ -315,9 +306,16 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                           showFieldAsBox: true,
                           borderRadius:
                               const BorderRadius.all(Radius.circular(12.0)),
-                          onCodeChanged: (String code) {},
-                          onSubmit:
-                              (String verificationCode) {}, // end onSubmit
+                          onCodeChanged: (String code) {
+                            setState(() {
+                              otppin = "";
+                            });
+                          },
+                          onSubmit: (String verificationCode) {
+                            setState(() {
+                              otppin = verificationCode;
+                            });
+                          }, // end onSubmit
                         ),
                         SizedBox(height: 16),
                         Container(
@@ -373,8 +371,10 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              Navigator.pushReplacementNamed(
-                                  context, Routes.gmailsignin);
+                              if (isOtpVerifying == false) {
+                                isOtpVerifying = true;
+                                submit_otp(otppin);
+                              }
                             });
                           },
                           child: Stack(
@@ -411,11 +411,24 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                     ],
                                   ),
                                 ),
-                                child: Text(
-                                  S.of(context).verify_me.toUpperCase(),
-                                  style: montserratSemiBold.copyWith(
-                                      color: Colors.white),
-                                ),
+                                child: !isOtpVerifying
+                                    ? Text(
+                                        S.of(context).verify_me.toUpperCase(),
+                                        style: montserratSemiBold.copyWith(
+                                            color: Colors.white),
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Transform.scale(
+                                            scale: 0.7,
+                                            child: CircularProgressIndicator(
+                                              color: whiteColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                               ),
                             ],
                           ),
