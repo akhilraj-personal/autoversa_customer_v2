@@ -30,3 +30,7 @@ Future addCustomerVehicle(Map req) async {
   return handleResponse(
       await securedPostRequest("Customer/CustomerVehicleController", req));
 }
+
+Future getVehicleBrands() async {
+  return handleResponse(await securedGetRequest('get_vehicle_brands'));
+}
