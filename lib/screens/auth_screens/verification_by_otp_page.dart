@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/main.dart';
 import 'package:autoversa/provider/provider.dart';
 import 'package:autoversa/screens/auth_screens/signup_page.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -374,8 +375,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                 isOtpVerifying = true;
                                 submit_otp(otppin);
                               }
-                              // Navigator.pushReplacementNamed(
-                              //     context, Routes.signup);
                             });
                           },
                           child: Stack(

@@ -25,5 +25,7 @@
   "mobile_number": "رقم الهاتف المحمول*",
   "name_error": "أدخل اسمًا صالحًا",
   "email_error": "أدخل بريد إلكتروني صالح",
-  "emirate_error": "اختر طيران الإمارات"
+  "emirate_error": "اختر طيران الإمارات",
+  "toast_application_error": "خطأ في تطبيق. اتصل بالدعم",
+  "vehicle_add" : "إضافة مركبة"
 }
