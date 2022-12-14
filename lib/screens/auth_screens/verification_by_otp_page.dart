@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/main.dart';
 import 'package:autoversa/provider/provider.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:flutter/material.dart';
@@ -372,8 +373,8 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              // Navigator.pushReplacementNamed(
-                              //     context, Routes.signup);
+                              Navigator.pushReplacementNamed(
+                                  context, Routes.gmailsignin);
                             });
                           },
                           child: Stack(
