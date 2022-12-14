@@ -298,7 +298,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         SizedBox(height: height * 0.02),
                         OtpTextField(
                           numberOfFields: 6,
-                          fieldWidth: width * 0.12,
+                          fieldWidth: width * 0.11,
                           clearText: true,
                           focusedBorderColor: syanColor,
                           cursorColor: syanColor,
