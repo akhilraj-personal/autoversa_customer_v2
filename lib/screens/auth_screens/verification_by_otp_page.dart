@@ -278,10 +278,10 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         SizedBox(height: 20),
                         GestureDetector(
                           onTap: () {
-                            setState(() {
-                              Navigator.pushReplacementNamed(
-                                  context, Routes.signup);
-                            });
+                            // setState(() {
+                            //   Navigator.pushReplacementNamed(
+                            //       context, Routes.signup);
+                            // });
                           },
                           child: Stack(
                             alignment: Alignment.bottomCenter,

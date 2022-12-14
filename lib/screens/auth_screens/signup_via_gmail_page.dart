@@ -13,20 +13,14 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SignupPage extends StatefulWidget {
-  final String country_code;
-  final String phone;
-  const SignupPage({
-    super.key,
-    required this.country_code,
-    required this.phone,
-  });
+class SignupViaGmail extends StatefulWidget {
+  const SignupViaGmail({super.key});
 
   @override
-  State<SignupPage> createState() => SignupPageState();
+  State<SignupViaGmail> createState() => SignupViaGmailState();
 }
 
-class SignupPageState extends State<SignupPage> {
+class SignupViaGmailState extends State<SignupViaGmail> {
   String emirates = '';
   TextEditingController userNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -90,7 +84,7 @@ class SignupPageState extends State<SignupPage> {
       "email": emailController.text.toString() != ""
           ? emailController.text.toString()
           : "",
-      "phone": widget.phone,
+      "phone": "widget.phone",
       "country_coded": "1",
       "country": country
     };
