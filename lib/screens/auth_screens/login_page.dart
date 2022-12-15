@@ -65,7 +65,6 @@ class _LoginPageState extends State<LoginPage> {
         setState(() => isLoading = false);
         showCustomToast(context, value['ret_data'],
             bgColor: errorcolor, textColor: whiteColor);
-        setState(() {});
       }
     }).catchError((e) {
       setState(() => isLoading = false);

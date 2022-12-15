@@ -42,6 +42,7 @@ class SignupPageState extends State<SignupPage> {
     init();
     Future.delayed(Duration.zero, () {
       _getStateList();
+      numberController.text = widget.phone;
     });
   }
 
@@ -75,7 +76,7 @@ class SignupPageState extends State<SignupPage> {
         FocusScope.of(context).requestFocus(FocusNode());
     setState(() {});
     var country;
-    if ("widget.countrycode" == '+971') {
+    if (widget.countrycode == '+971') {
       country = "UAE";
     } else {
       country = "INDIA";
@@ -87,27 +88,20 @@ class SignupPageState extends State<SignupPage> {
           ? emailController.text.toString()
           : "",
       "phone": widget.phone,
-      "country_coded": "1",
+      "country_coded": widget.countrycode,
       "country": country
     };
     final prefs = await SharedPreferences.getInstance();
     await customerSignup(req).then((value) {
-      Navigator.pop(context);
       if (value['ret_data'] == "success") {
         prefs.setString('name', value['cust_info']['name']);
         prefs.setString('email', value['cust_info']['email']);
         prefs.setString('emirate', value['cust_info']['emirate']);
         prefs.setString('language', value['cust_info']['language']);
         prefs.setString('credits', value['cust_info']['credits']);
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BottomNavBarScreen(
-              index: 1,
-            ),
-          ),
-          (route) => false,
-        );
+        setState(() {
+          Navigator.pushReplacementNamed(context, Routes.bottombar);
+        });
       } else {
         showCustomToast(context, value['ret_data'],
             bgColor: warningcolor, textColor: whiteColor);
@@ -507,10 +501,13 @@ class SignupPageState extends State<SignupPage> {
                           SizedBox(height: height * 0.04),
                           GestureDetector(
                             onTap: () async {
-                              setState(() {
-                                Navigator.pushReplacementNamed(
-                                    context, Routes.bottombar);
-                              });
+                              if (_formKey.currentState!.validate()) {
+                                if (issubmitted) return;
+                                setState(() => issubmitted = true);
+                                await Future.delayed(
+                                    Duration(milliseconds: 1000));
+                                cust_signup();
+                              }
                             },
                             child: Stack(
                               alignment: Alignment.bottomCenter,

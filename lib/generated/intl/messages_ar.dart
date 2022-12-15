@@ -43,8 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("الاتصال بالإنترنت غير متوفر"),
         "otp_invalid_text":
             MessageLookupByLibrary.simpleMessage("الرجاء إدخال OTP صالح"),
-        "otp_send_text":
-            MessageLookupByLibrary.simpleMessage("تم إرسال OTP بنجاح"),
+        "otp_send_text": MessageLookupByLibrary.simpleMessage("أدخل OTP صالح"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
             "الرجاء إدخال الرمز أدناه للتحقق من هويتك"),
         "register_new_account":
@@ -59,8 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("خطأ في تطبيق. اتصل بالدعم"),
         "try_another_method":
             MessageLookupByLibrary.simpleMessage("جرب طريقة أخرى"),
-        "valid_mobile":
-            MessageLookupByLibrary.simpleMessage("من فضلك أدخل رقما صالحا"),
+        "valid_mobile": MessageLookupByLibrary.simpleMessage("أدخل رقم صحيح"),
         "vehicle_add": MessageLookupByLibrary.simpleMessage("إضافة مركبة"),
         "vehicle_already_exist":
             MessageLookupByLibrary.simpleMessage("السيارة موجودة بالفعل"),

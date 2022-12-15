@@ -15,7 +15,7 @@ mobileNumberValidation(value, context) {
 
 emirateValidation(value, context) {
   if (value == null) {
-    return S.of(context).email_error;
+    return S.of(context).emirate_error;
   } else {
     return null;
   }

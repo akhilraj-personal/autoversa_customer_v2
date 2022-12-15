@@ -70,10 +70,10 @@ class S {
     );
   }
 
-  /// `Please Enter Valid Number`
+  /// `Enter Valid Number`
   String get valid_mobile {
     return Intl.message(
-      'Please Enter Valid Number',
+      'Enter Valid Number',
       name: 'valid_mobile',
       desc: '',
       args: [],
@@ -150,10 +150,10 @@ class S {
     );
   }
 
-  /// `Please Enter Valid OTP`
+  /// `Enter Valid OTP`
   String get otp_invalid_text {
     return Intl.message(
-      'Please Enter Valid OTP',
+      'Enter Valid OTP',
       name: 'otp_invalid_text',
       desc: '',
       args: [],

@@ -41,7 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_network_text": MessageLookupByLibrary.simpleMessage(
             "Internet Connection Not Available"),
         "otp_invalid_text":
-            MessageLookupByLibrary.simpleMessage("Please Enter Valid OTP"),
+            MessageLookupByLibrary.simpleMessage("Enter Valid OTP"),
         "otp_send_text":
             MessageLookupByLibrary.simpleMessage("OTP Send Successfully"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
@@ -58,7 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "try_another_method":
             MessageLookupByLibrary.simpleMessage("Try Another Method"),
         "valid_mobile":
-            MessageLookupByLibrary.simpleMessage("Please Enter Valid Number"),
+            MessageLookupByLibrary.simpleMessage("Enter Valid Number"),
         "vehicle_add": MessageLookupByLibrary.simpleMessage("Vehicle Add"),
         "vehicle_already_exist":
             MessageLookupByLibrary.simpleMessage("Vehicle Already Exist"),
