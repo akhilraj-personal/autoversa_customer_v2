@@ -69,53 +69,53 @@ class SignupViaGmailState extends State<SignupViaGmail> {
   }
 
   cust_signup() async {
-    void hideKeyboard(context) =>
-        FocusScope.of(context).requestFocus(FocusNode());
-    setState(() {});
-    var country;
-    if ("widget.countrycode" == '+971') {
-      country = "UAE";
-    } else {
-      country = "INDIA";
-    }
-    Map req = {
-      "emiratesId": emirates,
-      "fullname": userNameController.text.toString(),
-      "email": emailController.text.toString() != ""
-          ? emailController.text.toString()
-          : "",
-      "phone": "widget.phone",
-      "country_coded": "1",
-      "country": country
-    };
-    final prefs = await SharedPreferences.getInstance();
-    await customerSignup(req).then((value) {
-      Navigator.pop(context);
-      if (value['ret_data'] == "success") {
-        prefs.setString('name', value['cust_info']['name']);
-        prefs.setString('email', value['cust_info']['email']);
-        prefs.setString('emirate', value['cust_info']['emirate']);
-        prefs.setString('language', value['cust_info']['language']);
-        prefs.setString('credits', value['cust_info']['credits']);
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BottomNavBarScreen(
-              index: 1,
-            ),
-          ),
-          (route) => false,
-        );
-      } else {
-        showCustomToast(context, value['ret_data'],
-            bgColor: warningcolor, textColor: whiteColor);
-        setState(() => issubmitted = false);
-      }
-    }).catchError((e) {
-      setState(() => issubmitted = false);
-      showCustomToast(context, S.of(context).toast_application_error,
-          bgColor: errorcolor, textColor: whiteColor);
-    });
+    // void hideKeyboard(context) =>
+    //     FocusScope.of(context).requestFocus(FocusNode());
+    // setState(() {});
+    // var country;
+    // if ("widget.countrycode" == '+971') {
+    //   country = "UAE";
+    // } else {
+    //   country = "INDIA";
+    // }
+    // Map req = {
+    //   "emiratesId": emirates,
+    //   "fullname": userNameController.text.toString(),
+    //   "email": emailController.text.toString() != ""
+    //       ? emailController.text.toString()
+    //       : "",
+    //   "phone": "widget.phone",
+    //   "country_coded": "1",
+    //   "country": country
+    // };
+    // final prefs = await SharedPreferences.getInstance();
+    // await customerSignup(req).then((value) {
+    //   Navigator.pop(context);
+    //   if (value['ret_data'] == "success") {
+    //     prefs.setString('name', value['cust_info']['name']);
+    //     prefs.setString('email', value['cust_info']['email']);
+    //     prefs.setString('emirate', value['cust_info']['emirate']);
+    //     prefs.setString('language', value['cust_info']['language']);
+    //     prefs.setString('credits', value['cust_info']['credits']);
+    //     Navigator.pushAndRemoveUntil(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) => BottomNavBarScreen(
+    //           index: 1,
+    //         ),
+    //       ),
+    //       (route) => false,
+    //     );
+    //   } else {
+    //     showCustomToast(context, value['ret_data'],
+    //         bgColor: warningcolor, textColor: whiteColor);
+    //     setState(() => issubmitted = false);
+    //   }
+    // }).catchError((e) {
+    //   setState(() => issubmitted = false);
+    //   showCustomToast(context, S.of(context).toast_application_error,
+    //       bgColor: errorcolor, textColor: whiteColor);
+    // });
   }
 
   @override
