@@ -23,6 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "change_number": MessageLookupByLibrary.simpleMessage("تغيير رقم"),
+        "dash_intro_text": MessageLookupByLibrary.simpleMessage("أهلا وسهلا"),
         "data_verify_text":
             MessageLookupByLibrary.simpleMessage("التحقق من البيانات"),
         "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
