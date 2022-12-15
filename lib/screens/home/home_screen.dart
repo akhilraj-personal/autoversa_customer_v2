@@ -4,9 +4,13 @@ import 'package:autoversa/utils/text_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constant/image_const.dart';
+import '../../generated/l10n.dart';
+import '../../services/post_auth_services.dart';
 import '../../utils/color_utils.dart';
+import '../../utils/common_utils.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +23,11 @@ bool isExpanded = false;
 bool isAdded = false;
 
 class _HomeScreenState extends State<HomeScreen> {
+  String cut_name = "";
+  late List customerVehList = [];
+
+  bool isVehicleLoaded = false;
+
   List offerList = [
     {
       "offerName": TextConst.carRepair.toUpperCase(),
@@ -27,13 +36,48 @@ class _HomeScreenState extends State<HomeScreen> {
       "offerName": TextConst.carWash.toUpperCase(),
     }
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      _getCustomerVehicles();
+      // _getPackages();
+      // _getCustomerBookingList();
+    });
+    init();
+  }
+
+  _getCustomerVehicles() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map req = {"custId": prefs.getString("cust_id")};
+    await getCustomerVehicles(req).then((value) {
+      if (value['ret_data'] == "success") {
+        setState(() {
+          customerVehList = value['vehList'];
+          isVehicleLoaded = true;
+        });
+      }
+    }).catchError((e) {
+      showCustomToast(context, S.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: whiteColor);
+    });
+  }
+
+  Future<void> init() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      cut_name = prefs.getString('name')!;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.light,
-        statusBarColor: blueColor,
+        statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.white,
       ),
       child: Scaffold(
@@ -55,10 +99,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 : height * 0.7,
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                begin: Alignment.topRight,
+                                begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  blueColor,
                                   blueColor,
                                   syanColor,
                                 ],
@@ -120,7 +163,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 left: width * 0.03),
                                             child: RichText(
                                               text: TextSpan(
-                                                text: TextConst.welcome,
+                                                text: S
+                                                        .of(context)
+                                                        .dash_intro_text +
+                                                    " ",
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: whiteColor,
@@ -128,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             width * 0.034),
                                                 children: <TextSpan>[
                                                   TextSpan(
-                                                      text: ' Akhil Raj',
+                                                      text: cut_name,
                                                       style: montserratBold
                                                           .copyWith(
                                                               color: whiteColor,
@@ -495,13 +541,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Container(
-                          height: isAdded == false
+                          height: customerVehList.length < 1 && isVehicleLoaded
                               ? height * 0.05
                               : height * 0.083),
                     ],
                   ),
                   //------------------vehicle card---------------
-                  isAdded == false
+                  customerVehList.length < 2 && isVehicleLoaded
                       ? Stack(
                           alignment: Alignment.bottomCenter,
                           children: [

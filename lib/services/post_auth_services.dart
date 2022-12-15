@@ -9,6 +9,10 @@ Future customerSignup(Map req) async {
   return handleResponse(await securedPostRequest("cust_signup", req));
 }
 
+Future getCustomerVehicles(Map req) async {
+  return handleResponse(await securedPostRequest('customer_vehicle_list', req));
+}
+
 Future getVehicleModels(Map req) async {
   return handleResponse(await securedPostRequest("get_vehicle_models", req));
 }

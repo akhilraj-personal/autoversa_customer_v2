@@ -170,6 +170,16 @@ class S {
     );
   }
 
+  /// `Welcome`
+  String get dash_intro_text {
+    return Intl.message(
+      'Welcome',
+      name: 'dash_intro_text',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Verify Mobile Number`
   String get verify_mobile_number {
     return Intl.message(
