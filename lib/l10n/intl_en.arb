@@ -12,6 +12,7 @@
   "otp_invalid_text": "Enter Valid OTP",
   "max_otp_text": "Maximum attempt reached. Please try again later.",
   "dash_intro_text": "Welcome",
+  "new_vehicle_text": "Add new vehicle",
   "verify_mobile_number": "Verify Mobile Number",
   "we_have_send_a_6_digit_verification": "We have send a 6 digit verification code to",
   "change_number": "Change Number",

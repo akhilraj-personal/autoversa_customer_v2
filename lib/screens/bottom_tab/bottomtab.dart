@@ -62,8 +62,8 @@
 // }
 import 'dart:async';
 
+import 'package:autoversa/screens/home/dashboard_page.dart';
 import 'package:autoversa/screens/home/home_screen.dart';
-import 'package:autoversa/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -101,7 +101,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   final List<Widget> viewContainer = [
     Container(),
     HomeScreen(),
-    Container(),
+    DashScreen(),
     Container(),
     Container(),
   ];
