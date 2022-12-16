@@ -515,79 +515,67 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                           ))
                                     ])
                               : Container(),
-                          isvariant
-                              ? Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                      Container(
-                                        height: height * 0.045,
-                                        width: height * 0.37,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 16,
-                                                  color:
-                                                      syanColor.withOpacity(.5),
-                                                  spreadRadius: 0,
-                                                  blurStyle: BlurStyle.outer,
-                                                  offset: Offset(0, 0)),
-                                            ]),
+                          SizedBox(height: height * 0.04),
+                          Stack(alignment: Alignment.bottomCenter, children: [
+                            Container(
+                              height: height * 0.045,
+                              width: height * 0.37,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 16,
+                                        color: syanColor.withOpacity(.5),
+                                        spreadRadius: 0,
+                                        blurStyle: BlurStyle.outer,
+                                        offset: Offset(0, 0)),
+                                  ]),
+                            ),
+                            Container(
+                                height: height * 0.075,
+                                width: height * 0.4,
+                                decoration: BoxDecoration(
+                                  color: whiteColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: borderGreyColor),
+                                ),
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            right: width * 0.025,
+                                            left: width * 0.025),
+                                        child: DropdownButtonFormField(
+                                          key: _yearkey,
+                                          isExpanded: true,
+                                          decoration: InputDecoration.collapsed(
+                                              hintText: ''),
+                                          hint: Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "Year",
+                                                style:
+                                                    montserratRegular.copyWith(
+                                                        color: blackColor,
+                                                        fontSize: 14),
+                                              )),
+                                          items: modyears,
+                                          validator: (value) {
+                                            if (value == null) {
+                                              return selectyearValidation(
+                                                  value);
+                                            }
+                                          },
+                                          onChanged: (value) {
+                                            yearselected = value.toString();
+                                          },
+                                        ),
                                       ),
-                                      Container(
-                                          height: height * 0.075,
-                                          width: height * 0.4,
-                                          decoration: BoxDecoration(
-                                            color: whiteColor,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            border: Border.all(
-                                                color: borderGreyColor),
-                                          ),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.only(
-                                                      right: width * 0.025,
-                                                      left: width * 0.025),
-                                                  child:
-                                                      DropdownButtonFormField(
-                                                    key: _yearkey,
-                                                    isExpanded: true,
-                                                    decoration: InputDecoration
-                                                        .collapsed(
-                                                            hintText: ''),
-                                                    hint: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          "Year",
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color:
-                                                                      blackColor,
-                                                                  fontSize: 14),
-                                                        )),
-                                                    items: modyears,
-                                                    validator: (value) {
-                                                      if (value == null) {
-                                                        return selectyearValidation(
-                                                            value);
-                                                      }
-                                                    },
-                                                    onChanged: (value) {
-                                                      yearselected =
-                                                          value.toString();
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ))
-                                    ])
-                              : Container(),
+                                    ),
+                                  ],
+                                ))
+                          ]),
                           SizedBox(height: height * 0.04),
                           Stack(alignment: Alignment.bottomCenter, children: [
                             Container(
