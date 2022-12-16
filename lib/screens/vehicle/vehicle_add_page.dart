@@ -620,10 +620,12 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                     Expanded(
                                       child: Container(
                                         padding: EdgeInsets.only(
-                                            right: width * 0.025),
+                                            right: width * 0.025,
+                                            left: width * 0.025),
                                         child: TextFormField(
                                           controller: plateNumberController,
-                                          keyboardType: TextInputType.number,
+                                          keyboardType: TextInputType.text,
+                                          textAlign: TextAlign.center,
                                           maxLength: 15,
                                           style: montserratLight.copyWith(
                                               color: blackColor, fontSize: 14),
