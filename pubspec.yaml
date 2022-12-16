@@ -30,6 +30,7 @@ dependencies:
   onesignal_flutter: ^3.5.0
   shimmer: ^2.0.0
   cached_network_image: ^3.2.3
+  intl: ^0.17.0
 
   # Added by Bharad
   flutter_otp_text_field: ^1.1.1
