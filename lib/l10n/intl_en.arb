@@ -33,5 +33,9 @@
   "vehicle_already_exist": "Vehicle Already Exist",
   "try_another_method": "Try Another Method",
   "save": "Save",
-  "plate_number": "Plate Number"
+  "plate_number": "Plate Number",
+  "make": "Make",
+  "model": "Model",
+  "variant": "Variant",
+  "year": "Year"
 }
