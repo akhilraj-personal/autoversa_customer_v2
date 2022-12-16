@@ -5,23 +5,26 @@ import 'package:autoversa/main.dart';
 import 'package:autoversa/provider/provider.dart';
 import 'package:autoversa/screens/bottom_tab/bottomtab.dart';
 import 'package:autoversa/services/post_auth_services.dart';
+import 'package:autoversa/services/pre_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupViaGmail extends StatefulWidget {
-  const SignupViaGmail({super.key});
+  final String name;
+  final String email;
+  const SignupViaGmail({super.key, required this.name, required this.email});
 
   @override
   State<SignupViaGmail> createState() => SignupViaGmailState();
 }
 
 class SignupViaGmailState extends State<SignupViaGmail> {
-  String emirates = '';
   TextEditingController userNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController numberController = TextEditingController();
@@ -30,9 +33,12 @@ class SignupViaGmailState extends State<SignupViaGmail> {
   FocusNode emailFocus = FocusNode();
   FocusNode numberFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
-  bool issubmitted = false;
+  String emirates = '';
+  var country_code = "+91";
+  String otppin = '';
   List<DropdownMenuItem<String>> items = [];
   List data = List<String>.empty();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -40,6 +46,8 @@ class SignupViaGmailState extends State<SignupViaGmail> {
     init();
     Future.delayed(Duration.zero, () {
       _getStateList();
+      userNameController.text = widget.name;
+      emailController.text = widget.email;
     });
   }
 
@@ -68,51 +76,83 @@ class SignupViaGmailState extends State<SignupViaGmail> {
     });
   }
 
+  verify_submit_otp(pin) async {
+    void hideKeyboard(context) =>
+        FocusScope.of(context).requestFocus(FocusNode());
+    setState(() {});
+    final prefs = await SharedPreferences.getInstance();
+    final status = await OneSignal.shared.getDeviceState();
+    final String? osUserID = status?.userId;
+    Map req = {
+      "phone": numberController.text.toString(),
+      "country_code": country_code,
+      "otp": pin,
+      "fcm_token": osUserID
+    };
+    if (pin == null || pin == "") {
+      setState(() {
+        isLoading = false;
+      });
+      showCustomToast(context, S.of(context).otp_invalid_text,
+          bgColor: warningcolor, textColor: whiteColor);
+    } else {
+      await verifyOtp(req).then((value) {
+        if (value['ret_data'] == "success") {
+          prefs.setString('cust_id', value['customer']['id']);
+          prefs.setString('phone', value['customer']['phone']);
+          prefs.setString('country_code', value['customer']['country_code']);
+          prefs.setString('token', value['token']);
+          showCustomToast(context, "OTP verified",
+              bgColor: blackColor, textColor: whiteColor);
+        } else if (value['ret_data'] == "MaxAttempt") {
+          setState(() => isLoading = false);
+          showCustomToast(context, S.of(context).max_otp_text,
+              bgColor: warningcolor, textColor: whiteColor);
+          otppin = "";
+        } else {
+          setState(() => isLoading = false);
+          showCustomToast(context, value['message'],
+              bgColor: warningcolor, textColor: whiteColor);
+        }
+      }).catchError((e) {
+        setState(() => isLoading = false);
+        showCustomToast(context, S.of(context).toast_application_error,
+            bgColor: errorcolor, textColor: whiteColor);
+      });
+    }
+  }
+
   cust_signup() async {
     void hideKeyboard(context) =>
         FocusScope.of(context).requestFocus(FocusNode());
     setState(() {});
     var country;
-    if ("widget.countrycode" == '+971') {
-      country = "UAE";
-    } else {
-      country = "INDIA";
-    }
     Map req = {
       "emiratesId": emirates,
-      "fullname": userNameController.text.toString(),
-      "email": emailController.text.toString() != ""
-          ? emailController.text.toString()
-          : "",
-      "phone": "widget.phone",
-      "country_coded": "1",
-      "country": country
+      "fullname": widget.name.toString(),
+      "email": widget.email.toString(),
+      "phone": numberController.text.toString(),
+      "country_coded": country_code.toString(),
+      "country": "UAE"
     };
     final prefs = await SharedPreferences.getInstance();
     await customerSignup(req).then((value) {
-      Navigator.pop(context);
       if (value['ret_data'] == "success") {
         prefs.setString('name', value['cust_info']['name']);
         prefs.setString('email', value['cust_info']['email']);
         prefs.setString('emirate', value['cust_info']['emirate']);
         prefs.setString('language', value['cust_info']['language']);
         prefs.setString('credits', value['cust_info']['credits']);
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BottomNavBarScreen(
-              index: 1,
-            ),
-          ),
-          (route) => false,
-        );
+        setState(() {
+          Navigator.pushReplacementNamed(context, Routes.bottombar);
+        });
       } else {
         showCustomToast(context, value['ret_data'],
             bgColor: warningcolor, textColor: whiteColor);
-        setState(() => issubmitted = false);
+        setState(() => isLoading = false);
       }
     }).catchError((e) {
-      setState(() => issubmitted = false);
+      setState(() => isLoading = false);
       showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });

@@ -503,11 +503,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                           //------------------add new ---------------
                                           GestureDetector(
                                             onTap: () {
-                                              // setState(() {
-                                              //   Navigator.pushReplacementNamed(
-                                              //       context,
-                                              //       Routes.vehiclePage);
-                                              // });
+                                              setState(() {
+                                                Navigator.pushReplacementNamed(
+                                                    context,
+                                                    Routes.vehiclePage);
+                                              });
                                             },
                                             child: Row(
                                               mainAxisAlignment:

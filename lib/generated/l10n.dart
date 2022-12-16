@@ -70,10 +70,10 @@ class S {
     );
   }
 
-  /// `Please Enter Valid Number`
+  /// `Enter Valid Number`
   String get valid_mobile {
     return Intl.message(
-      'Please Enter Valid Number',
+      'Enter Valid Number',
       name: 'valid_mobile',
       desc: '',
       args: [],
@@ -150,10 +150,10 @@ class S {
     );
   }
 
-  /// `Please Enter Valid OTP`
+  /// `Enter Valid OTP`
   String get otp_invalid_text {
     return Intl.message(
-      'Please Enter Valid OTP',
+      'Enter Valid OTP',
       name: 'otp_invalid_text',
       desc: '',
       args: [],
@@ -385,6 +385,26 @@ class S {
     return Intl.message(
       'Try Another Method',
       name: 'try_another_method',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Plate Number`
+  String get plate_number {
+    return Intl.message(
+      'Plate Number',
+      name: 'plate_number',
       desc: '',
       args: [],
     );

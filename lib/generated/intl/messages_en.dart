@@ -44,14 +44,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_network_text": MessageLookupByLibrary.simpleMessage(
             "Internet Connection Not Available"),
         "otp_invalid_text":
-            MessageLookupByLibrary.simpleMessage("Please Enter Valid OTP"),
+            MessageLookupByLibrary.simpleMessage("Enter Valid OTP"),
         "otp_send_text":
             MessageLookupByLibrary.simpleMessage("OTP Send Successfully"),
+        "plate_number": MessageLookupByLibrary.simpleMessage("Plate Number"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
             "Please enter the code below to verify its you"),
         "register_new_account":
             MessageLookupByLibrary.simpleMessage("Register New Account"),
         "resend_otp_text": MessageLookupByLibrary.simpleMessage("Resend OTP"),
+        "save": MessageLookupByLibrary.simpleMessage("Save"),
         "seconds_text": MessageLookupByLibrary.simpleMessage("Second"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("Sign in with"),
@@ -61,7 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "try_another_method":
             MessageLookupByLibrary.simpleMessage("Try Another Method"),
         "valid_mobile":
-            MessageLookupByLibrary.simpleMessage("Please Enter Valid Number"),
+            MessageLookupByLibrary.simpleMessage("Enter Valid Number"),
         "vehicle_add": MessageLookupByLibrary.simpleMessage("Vehicle Add"),
         "vehicle_already_exist":
             MessageLookupByLibrary.simpleMessage("Vehicle Already Exist"),
