@@ -1195,7 +1195,7 @@ class _DashScreenState extends State<DashScreen> {
                                 // childAspectRatio: 3 / 2,
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 25,
-                                mainAxisSpacing: 2),
+                                mainAxisSpacing: 17),
                         itemCount: packageList.length,
                         itemBuilder: (BuildContext ctx, index) {
                           return commonWidget(
