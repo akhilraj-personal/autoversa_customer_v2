@@ -180,6 +180,16 @@ class S {
     );
   }
 
+  /// `Add new vehicle`
+  String get new_vehicle_text {
+    return Intl.message(
+      'Add new vehicle',
+      name: 'new_vehicle_text',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Verify Mobile Number`
   String get verify_mobile_number {
     return Intl.message(

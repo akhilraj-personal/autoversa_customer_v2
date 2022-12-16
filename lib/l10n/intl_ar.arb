@@ -12,6 +12,7 @@
   "otp_invalid_text": "الرجاء إدخال OTP صالح",
   "max_otp_text": "وصلت المحاولة القصوى. الرجاء معاودة المحاولة في وقت لاحق.",
   "dash_intro_text": "أهلا وسهلا",
+  "new_vehicle_text": "أضف مركبة جديدة",
   "verify_mobile_number": "تحقق من رقم الهاتف المحمول",
   "we_have_send_a_6_digit_verification": "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى",
   "change_number": "تغيير رقم",

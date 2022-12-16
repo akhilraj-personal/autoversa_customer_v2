@@ -1,4 +1,5 @@
 import 'package:autoversa/constant/text_style.dart';
+import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/NextScreen.dart';
 import 'package:autoversa/utils/text_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
@@ -502,9 +503,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                           //------------------add new ---------------
                                           GestureDetector(
                                             onTap: () {
-                                              setState(() {
-                                                isAdded = !isAdded;
-                                              });
+                                              // setState(() {
+                                              //   Navigator.pushReplacementNamed(
+                                              //       context,
+                                              //       Routes.vehiclePage);
+                                              // });
                                             },
                                             child: Row(
                                               mainAxisAlignment:
@@ -822,11 +825,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           CommanService(
                             ImageConst.abcd,
-                            TextConst.abcd,
+                            TextConst.cardetailing,
                           ),
                           CommanService(
                             ImageConst.drive_car,
-                            TextConst.abcd,
+                            TextConst.carpassing,
                           ),
                         ],
                       ),
