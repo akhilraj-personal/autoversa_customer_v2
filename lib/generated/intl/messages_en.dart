@@ -39,6 +39,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Maximum attempt reached. Please try again later."),
         "mobile_number": MessageLookupByLibrary.simpleMessage("Mobile Number*"),
         "name_error": MessageLookupByLibrary.simpleMessage("Enter Valid Name"),
+        "new_vehicle_text":
+            MessageLookupByLibrary.simpleMessage("Add new vehicle"),
         "no_network_text": MessageLookupByLibrary.simpleMessage(
             "Internet Connection Not Available"),
         "otp_invalid_text":

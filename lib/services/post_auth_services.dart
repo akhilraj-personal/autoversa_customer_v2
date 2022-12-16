@@ -13,6 +13,16 @@ Future getCustomerVehicles(Map req) async {
   return handleResponse(await securedPostRequest('customer_vehicle_list', req));
 }
 
+Future getCustomerBookingList(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/getCustomerBookings', req));
+}
+
+Future getPackages(Map req) async {
+  return handleResponse(
+      await securedPostRequest('Package/PackageController/packageList', req));
+}
+
 Future getVehicleModels(Map req) async {
   return handleResponse(await securedPostRequest("get_vehicle_models", req));
 }

@@ -40,6 +40,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mobile_number":
             MessageLookupByLibrary.simpleMessage("رقم الهاتف المحمول*"),
         "name_error": MessageLookupByLibrary.simpleMessage("أدخل اسمًا صالحًا"),
+        "new_vehicle_text":
+            MessageLookupByLibrary.simpleMessage("أضف مركبة جديدة"),
         "no_network_text":
             MessageLookupByLibrary.simpleMessage("الاتصال بالإنترنت غير متوفر"),
         "otp_invalid_text":

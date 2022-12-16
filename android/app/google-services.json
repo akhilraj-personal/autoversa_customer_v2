@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "14059462520",
+    "project_id": "autoversa-8abc8",
+    "storage_bucket": "autoversa-8abc8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:14059462520:android:371df884312e5b304ab28d",
+        "android_client_info": {
+          "package_name": "com.autoversa.av_customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "14059462520-9uhhv2u61ck3dv5ihcp8mmliplfduf38.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdYFUeZCFoZcHnW0XOpGb-33rqDw5TSF0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "14059462520-9uhhv2u61ck3dv5ihcp8mmliplfduf38.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "14059462520-1ucv780q2aohpcsvv3i434caqcq8nkjh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.amsoftware.amSoft"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
