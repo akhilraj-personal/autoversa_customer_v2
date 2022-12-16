@@ -77,7 +77,7 @@ class _DashScreenState extends State<DashScreen> {
     await getCustomerBookingList(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() {
-          bookingList = value['book_list'];
+          // bookingList = value['book_list'];
           isBookingLoaded = true;
         });
       } else {
@@ -139,7 +139,11 @@ class _DashScreenState extends State<DashScreen> {
                   height: isExpanded == false
                       ? bookingList.length > 0
                           ? height * 0.4
-                          : height * 0.3
+                          : isVehicleLoaded
+                              ? customerVehList.length == 0
+                                  ? height * 0.2
+                                  : height * 0.3
+                              : height * 0.3
                       : height * 0.7,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -162,7 +166,11 @@ class _DashScreenState extends State<DashScreen> {
                           ? height * 0.61
                           : bookingList.length > 0
                               ? height * 0.31
-                              : height * 0.20,
+                              : isVehicleLoaded
+                                  ? customerVehList.length == 0
+                                      ? height * 0.11
+                                      : height * 0.20
+                                  : height * 0.20,
                       // padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -503,51 +511,55 @@ class _DashScreenState extends State<DashScreen> {
                                   ),
                                 )
                               : Container(),
-                          Container(
-                            margin: EdgeInsets.only(
-                                top: bookingList.length > 0
-                                    ? height * 0.02
-                                    : height * 0.01),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  TextConst.myVehicles,
-                                  style: montserratSemiBold.copyWith(
-                                      color: whiteColor,
-                                      fontSize: width * 0.04),
-                                ),
-                                //------------------add new ---------------
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      // isAdded = !isAdded;
-                                    });
-                                  },
+                          isVehicleLoaded && customerVehList.length > 0
+                              ? Container(
+                                  margin: EdgeInsets.only(
+                                      top: bookingList.length > 0
+                                          ? height * 0.02
+                                          : height * 0.01),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        TextConst.addNew,
+                                        TextConst.myVehicles,
                                         style: montserratSemiBold.copyWith(
                                             color: whiteColor,
                                             fontSize: width * 0.04),
                                       ),
-                                      Container(
-                                        margin:
-                                            EdgeInsets.only(left: width * 0.02),
-                                        child: Image.asset(
-                                          ImageConst.add,
-                                          scale: 4.7,
+                                      //------------------add new ---------------
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            // isAdded = !isAdded;
+                                          });
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              TextConst.addNew,
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: whiteColor,
+                                                      fontSize: width * 0.04),
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  left: width * 0.02),
+                                              child: Image.asset(
+                                                ImageConst.add,
+                                                scale: 4.7,
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                )
+                              : Container(),
                         ]),
                   ),
                 ]),
@@ -600,7 +612,7 @@ class _DashScreenState extends State<DashScreen> {
                               ),
                               child: customerVehList.length == 0
                                   ? Container(
-                                      height: height * 0.15,
+                                      height: height * 0.1,
                                       width: width,
                                       padding: EdgeInsets.only(
                                           left: width * 0.04,
@@ -613,8 +625,10 @@ class _DashScreenState extends State<DashScreen> {
                                           begin: Alignment.topCenter,
                                           end: Alignment.bottomCenter,
                                           colors: [
-                                            lightGreyColor,
-                                            borderGreyColor
+                                            whiteColor,
+                                            whiteColor,
+                                            whiteColor,
+                                            borderGreyColor,
                                           ],
                                         ),
                                       ),
@@ -632,7 +646,7 @@ class _DashScreenState extends State<DashScreen> {
                                           ),
                                           Icon(
                                             Icons.add_circle_outline,
-                                            color: blackColor,
+                                            color: greyColor,
                                             size: 40.0,
                                             semanticLabel:
                                                 'Text to announce in accessibility modes',
