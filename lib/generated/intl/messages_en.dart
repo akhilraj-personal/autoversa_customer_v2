@@ -45,11 +45,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Enter Valid OTP"),
         "otp_send_text":
             MessageLookupByLibrary.simpleMessage("OTP Send Successfully"),
+        "plate_number": MessageLookupByLibrary.simpleMessage("Plate Number"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
             "Please enter the code below to verify its you"),
         "register_new_account":
             MessageLookupByLibrary.simpleMessage("Register New Account"),
         "resend_otp_text": MessageLookupByLibrary.simpleMessage("Resend OTP"),
+        "save": MessageLookupByLibrary.simpleMessage("Save"),
         "seconds_text": MessageLookupByLibrary.simpleMessage("Second"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("Sign in with"),

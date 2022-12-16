@@ -634,7 +634,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                               counterText: "",
                                               filled: true,
                                               hintText:
-                                                  S.of(context).mobile_number,
+                                                  S.of(context).plate_number,
                                               hintStyle:
                                                   montserratRegular.copyWith(
                                                       color: blackColor,
@@ -655,13 +655,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                           SizedBox(height: height * 0.04),
                           GestureDetector(
                             onTap: () async {
-                              if (_formKey.currentState!.validate()) {
-                                if (issubmitted) return;
-                                setState(() => issubmitted = true);
-                                await Future.delayed(
-                                    Duration(milliseconds: 1000));
-                                saveCustomerVehicle();
-                              }
                               setState(() {
                                 Navigator.pushReplacementNamed(
                                     context, Routes.bottombar);
@@ -702,7 +695,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                     ),
                                   ),
                                   child: Text(
-                                    S.of(context).sign_up.toUpperCase(),
+                                    S.of(context).save.toUpperCase(),
                                     style: montserratSemiBold.copyWith(
                                         color: Colors.white),
                                   ),
