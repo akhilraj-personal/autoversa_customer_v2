@@ -35,9 +35,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "enter_mobile_text":
             MessageLookupByLibrary.simpleMessage("Enter Mobile Number"),
         "full_name": MessageLookupByLibrary.simpleMessage("Full Name*"),
+        "make": MessageLookupByLibrary.simpleMessage("Make"),
         "max_otp_text": MessageLookupByLibrary.simpleMessage(
             "Maximum attempt reached. Please try again later."),
         "mobile_number": MessageLookupByLibrary.simpleMessage("Mobile Number*"),
+        "model": MessageLookupByLibrary.simpleMessage("Model"),
         "name_error": MessageLookupByLibrary.simpleMessage("Enter Valid Name"),
         "no_network_text": MessageLookupByLibrary.simpleMessage(
             "Internet Connection Not Available"),
@@ -62,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Try Another Method"),
         "valid_mobile":
             MessageLookupByLibrary.simpleMessage("Enter Valid Number"),
+        "variant": MessageLookupByLibrary.simpleMessage("Variant"),
         "vehicle_add": MessageLookupByLibrary.simpleMessage("Vehicle Add"),
         "vehicle_already_exist":
             MessageLookupByLibrary.simpleMessage("Vehicle Already Exist"),
@@ -76,6 +79,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "We have send a 6 digit verification code to"),
         "welcome_text":
-            MessageLookupByLibrary.simpleMessage("Sign in to Your Account")
+            MessageLookupByLibrary.simpleMessage("Sign in to Your Account"),
+        "year": MessageLookupByLibrary.simpleMessage("Year")
       };
 }
