@@ -1,4 +1,5 @@
 import 'package:autoversa/constant/text_style.dart';
+import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/NextScreen.dart';
 import 'package:autoversa/utils/text_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
@@ -503,7 +504,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                isAdded = !isAdded;
+                                                Navigator.pushReplacementNamed(
+                                                    context,
+                                                    Routes.vehiclePage);
                                               });
                                             },
                                             child: Row(
