@@ -825,11 +825,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           CommanService(
                             ImageConst.abcd,
-                            TextConst.abcd,
+                            TextConst.cardetailing,
                           ),
                           CommanService(
                             ImageConst.drive_car,
-                            TextConst.abcd,
+                            TextConst.carpassing,
                           ),
                         ],
                       ),

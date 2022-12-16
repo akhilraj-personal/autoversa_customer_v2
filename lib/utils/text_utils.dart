@@ -11,8 +11,9 @@ class TextConst {
   static const carRepair = "Car\nRepair";
   static const addOnServices = "Add On Services ";
   static const roadAssistance = "Road\nAssistance";
-  static const abcd = "abcd";
-  static const insurance = "Insurance";
+  static const carpassing = "Car\nPassing";
+  static const cardetailing = "Car\nDetailing";
+  static const insurance = "Insurance\nRenewal";
   static const currentOrder = "Current Order Status";
   static const offerForYou = "Offer For You";
   static const carWash = "CAR\nWASH";
