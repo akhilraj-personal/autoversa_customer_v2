@@ -31,5 +31,7 @@
   "vehicle_add" : "Vehicle Add",
   "vehicle_save_toast": "Vehicle Added Successfully",
   "vehicle_already_exist": "Vehicle Already Exist",
-  "try_another_method": "Try Another Method"
+  "try_another_method": "Try Another Method",
+  "save": "Save",
+  "plate_number": "Plate Number"
 }
