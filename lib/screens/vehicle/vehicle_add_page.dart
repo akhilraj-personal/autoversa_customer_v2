@@ -272,7 +272,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light,
-        statusBarColor: Colors.transparent,
+        statusBarColor: syanColor,
         systemNavigationBarColor: Colors.white,
       ),
       child: Scaffold(
@@ -280,7 +280,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
           elevation: 0,
           backgroundColor: whiteColor,
           shadowColor: whiteColor,
-          iconTheme: IconThemeData(color: blackColor),
+          iconTheme: IconThemeData(color: whiteColor),
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarIconBrightness: Brightness.dark,
           ),
@@ -340,10 +340,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 0),
-                            child: Text("kkkkk"),
-                          ),
                           SizedBox(height: 8),
                           Stack(alignment: Alignment.bottomCenter, children: [
                             Container(
