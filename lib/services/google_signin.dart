@@ -15,6 +15,8 @@ class GoogleSignInProvider with ChangeNotifier {
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) return;
       _user = googleUser;
+      print("jhjhj");
+      print(_user);
       Navigator.push(
           context,
           MaterialPageRoute(

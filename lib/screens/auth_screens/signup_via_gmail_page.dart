@@ -39,6 +39,8 @@ class SignupViaGmailState extends State<SignupViaGmail> {
   List<DropdownMenuItem<String>> items = [];
   List data = List<String>.empty();
   bool isLoading = false;
+  bool isVerifiedClicked = false;
+  bool isVerifymeActive = true;
 
   @override
   void initState() {
@@ -98,12 +100,12 @@ class SignupViaGmailState extends State<SignupViaGmail> {
     } else {
       await verifyOtp(req).then((value) {
         if (value['ret_data'] == "success") {
-          prefs.setString('cust_id', value['customer']['id']);
-          prefs.setString('phone', value['customer']['phone']);
-          prefs.setString('country_code', value['customer']['country_code']);
-          prefs.setString('token', value['token']);
-          showCustomToast(context, "OTP verified",
-              bgColor: blackColor, textColor: whiteColor);
+          // prefs.setString('cust_id', value['customer']['id']);
+          // prefs.setString('phone', value['customer']['phone']);
+          // prefs.setString('country_code', value['customer']['country_code']);
+          // prefs.setString('token', value['token']);
+          // showCustomToast(context, "OTP verified",
+          //     bgColor: blackColor, textColor: whiteColor);
         } else if (value['ret_data'] == "MaxAttempt") {
           setState(() => isLoading = false);
           showCustomToast(context, S.of(context).max_otp_text,
@@ -133,7 +135,8 @@ class SignupViaGmailState extends State<SignupViaGmail> {
       "email": widget.email.toString(),
       "phone": numberController.text.toString(),
       "country_coded": country_code.toString(),
-      "country": "UAE"
+      "country": "UAE",
+      // "otp": pin,
     };
     final prefs = await SharedPreferences.getInstance();
     await customerSignup(req).then((value) {
@@ -543,6 +546,58 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                                 ))
                           ]),
                           SizedBox(height: height * 0.04),
+                          isVerifymeActive
+                              ? GestureDetector(
+                                  onTap: () async {
+                                    setState(() => isVerifiedClicked = true);
+                                    setState(() => isVerifymeActive = false);
+                                  },
+                                  child: Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height: height * 0.045,
+                                        width: height * 0.37,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 16,
+                                                  color:
+                                                      syanColor.withOpacity(.6),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Container(
+                                        height: height * 0.075,
+                                        width: height * 0.4,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(14)),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              syanColor,
+                                              blueColor,
+                                            ],
+                                          ),
+                                        ),
+                                        child: Text(
+                                          S.of(context).sign_up.toUpperCase(),
+                                          style: montserratSemiBold.copyWith(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Row(),
                           GestureDetector(
                             onTap: () async {
                               // if (_formKey.currentState!.validate()) {
