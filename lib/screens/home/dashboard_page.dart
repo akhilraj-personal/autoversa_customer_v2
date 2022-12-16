@@ -77,7 +77,7 @@ class _DashScreenState extends State<DashScreen> {
     await getCustomerBookingList(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() {
-          // bookingList = value['book_list'];
+          bookingList = value['book_list'];
           isBookingLoaded = true;
         });
       } else {
@@ -138,7 +138,7 @@ class _DashScreenState extends State<DashScreen> {
                   width: width,
                   height: isExpanded == false
                       ? bookingList.length > 0
-                          ? height * 0.5
+                          ? height * 0.4
                           : height * 0.3
                       : height * 0.7,
                   decoration: BoxDecoration(
@@ -161,7 +161,7 @@ class _DashScreenState extends State<DashScreen> {
                       height: isExpanded
                           ? height * 0.61
                           : bookingList.length > 0
-                              ? height * 0.28
+                              ? height * 0.31
                               : height * 0.20,
                       // padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
@@ -246,9 +246,265 @@ class _DashScreenState extends State<DashScreen> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          bookingList.length > 0
+                              ? Container(
+                                  child: Text(
+                                    TextConst.myActive,
+                                    style: montserratSemiBold.copyWith(
+                                        color: whiteColor,
+                                        fontSize: width * 0.04),
+                                  ),
+                                )
+                              : SizedBox(),
+                          bookingList.length > 0
+                              ? Container(
+                                  margin: EdgeInsets.only(top: height * 0.007),
+                                  decoration: BoxDecoration(
+                                      color: whiteColor,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  padding: EdgeInsets.only(
+                                    left: width * 0.04,
+                                    right: width * 0.03,
+                                    top: height * 0.012,
+                                    bottom: height * 0.012,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          ///--------- first text -------------
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "DU 55566",
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        color: blackColor,
+                                                        fontSize:
+                                                            width * 0.034),
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                  "Mercedes Benz",
+                                                  style: montserratRegular
+                                                      .copyWith(
+                                                          color: blackColor,
+                                                          fontSize:
+                                                              width * 0.034),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          ///--------- up down arrow -------------
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                isExpanded = !isExpanded;
+                                              });
+                                            },
+                                            child: Image.asset(
+                                              isExpanded == true
+                                                  ? ImageConst.upArrow
+                                                  : ImageConst.downarrow,
+                                              scale: 4,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      isExpanded == true
+                                          ? Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                ///--------- Regular Oil Service -------------
+                                                Container(
+                                                  margin: EdgeInsets.only(
+                                                      top: height * 0.03),
+                                                  child: Text(
+                                                    "Regular Oil Service (BK108)",
+                                                    style: montserratRegular
+                                                        .copyWith(
+                                                            color: blackColor,
+                                                            fontSize:
+                                                                width * 0.037),
+                                                  ),
+                                                ),
+
+                                                ///--------- Date -------------
+                                                Container(
+                                                    margin: EdgeInsets.only(
+                                                        top: height * 0.007,
+                                                        bottom: height * 0.007),
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                        text: "Date: ",
+                                                        style: montserratSemiBold
+                                                            .copyWith(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034),
+                                                        children: <TextSpan>[
+                                                          TextSpan(
+                                                              text:
+                                                                  '12-11-2022',
+                                                              style: montserratRegular
+                                                                  .copyWith(
+                                                                      color:
+                                                                          blackColor,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.034)),
+                                                        ],
+                                                      ),
+                                                    )),
+
+                                                ///--------- time -------------
+                                                RichText(
+                                                  text: TextSpan(
+                                                    text: "Time: ",
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                            color: blackColor,
+                                                            fontSize:
+                                                                width * 0.034),
+                                                    children: <TextSpan>[
+                                                      TextSpan(
+                                                          text:
+                                                              '04:00 PM - 05:00 OM',
+                                                          style: montserratRegular
+                                                              .copyWith(
+                                                                  color:
+                                                                      blackColor,
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034)),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                                ///--------- divider -------------
+                                                Container(
+                                                  margin: EdgeInsets.only(
+                                                      top: height * 0.02,
+                                                      bottom: height * 0.02,
+                                                      left: width * 0.01,
+                                                      right: width * 0.01),
+                                                  height: 1,
+                                                  width: width,
+                                                  color: greyColor,
+                                                ),
+
+                                                ///--------- currentOrder status -------------
+                                                Container(
+                                                  margin: EdgeInsets.only(
+                                                      bottom: height * 0.008),
+                                                  child: Text(
+                                                    TextConst.currentOrder,
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                            color: blackColor,
+                                                            fontSize:
+                                                                width * 0.034),
+                                                  ),
+                                                ),
+
+                                                ///--------- car image -------------
+
+                                                Row(
+                                                  children: [
+                                                    Image.asset(
+                                                      ImageConst.car,
+                                                      scale: 4,
+                                                    ),
+
+                                                    ///--------- vehicle at workshop -------------
+
+                                                    Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: width * 0.02),
+                                                      child: Text(
+                                                        TextConst.vehicle,
+                                                        style: montserratRegular
+                                                            .copyWith(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+
+                                                ///--------- view details -------------
+
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                NextPage()));
+                                                  },
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(
+                                                        top: height * 0.02,
+                                                        bottom: height * 0.01),
+                                                    width: width / 3,
+                                                    padding: EdgeInsets.all(
+                                                        height * 0.014),
+                                                    decoration: BoxDecoration(
+                                                      color: lightGreyColor,
+                                                      border: Border.all(
+                                                          color: greyColor),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        height * 0.1,
+                                                      ),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          TextConst.view,
+                                                          style: montserratSemiBold
+                                                              .copyWith(
+                                                                  color:
+                                                                      blackColor,
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
+                                                        ),
+                                                        Image.asset(
+                                                          ImageConst
+                                                              .right_arrow,
+                                                          color: greyColor,
+                                                          scale: 4,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          : Container(),
+                                    ],
+                                  ),
+                                )
+                              : Container(),
                           Container(
-                            margin: EdgeInsets.only(
-                                left: width * 0.01, top: height * 0.02),
+                            margin: EdgeInsets.only(top: height * 0.02),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -294,9 +550,13 @@ class _DashScreenState extends State<DashScreen> {
                 ]),
               ]),
               Container(
-                  height: isVehicleLoaded && customerVehList.length > 1
-                      ? height * 0.08
-                      : height * 0.05),
+                  height: bookingList.length > 0
+                      ? isVehicleLoaded && customerVehList.length > 1
+                          ? height * 0.06
+                          : height * 0.03
+                      : isVehicleLoaded && customerVehList.length > 1
+                          ? height * 0.08
+                          : height * 0.05),
             ]),
             isVehicleLoaded
                 ? customerVehList.length < 2
@@ -470,8 +730,27 @@ class _DashScreenState extends State<DashScreen> {
                                                 ],
                                               ),
                                               Image.asset(
-                                                ImageConst.handel,
-                                                scale: 4,
+                                                customerVehList[0]['cv_make'] ==
+                                                        'Mercedes Benz'
+                                                    ? ImageConst.benz_ico
+                                                    : customerVehList[0]
+                                                                ['cv_make'] ==
+                                                            'BMW'
+                                                        ? ImageConst.bmw_ico
+                                                        : customerVehList[0][
+                                                                    'cv_make'] ==
+                                                                'Skoda'
+                                                            ? ImageConst
+                                                                .skod_ico
+                                                            : customerVehList[0]
+                                                                        [
+                                                                        'cv_make'] ==
+                                                                    'Audi'
+                                                                ? ImageConst
+                                                                    .aud_ico
+                                                                : ImageConst
+                                                                    .defcar_ico,
+                                                width: width * 0.2,
                                               )
                                             ],
                                           ),
