@@ -77,7 +77,7 @@ class _DashScreenState extends State<DashScreen> {
     await getCustomerBookingList(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() {
-          // bookingList = value['book_list'];
+          bookingList = value['book_list'];
           isBookingLoaded = true;
         });
       } else {
@@ -139,11 +139,7 @@ class _DashScreenState extends State<DashScreen> {
                   height: isExpanded == false
                       ? bookingList.length > 0
                           ? height * 0.4
-                          : isVehicleLoaded
-                              ? customerVehList.length == 0
-                                  ? height * 0.2
-                                  : height * 0.3
-                              : height * 0.3
+                          : height * 0.3
                       : height * 0.7,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -166,11 +162,7 @@ class _DashScreenState extends State<DashScreen> {
                           ? height * 0.61
                           : bookingList.length > 0
                               ? height * 0.31
-                              : isVehicleLoaded
-                                  ? customerVehList.length == 0
-                                      ? height * 0.11
-                                      : height * 0.20
-                                  : height * 0.20,
+                              : height * 0.20,
                       // padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -247,7 +239,7 @@ class _DashScreenState extends State<DashScreen> {
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                        top: height * 0.02,
+                        top: height * 0.01,
                         left: width * 0.04,
                         right: width * 0.03,
                         bottom: height * 0.02),
@@ -266,7 +258,7 @@ class _DashScreenState extends State<DashScreen> {
                               : SizedBox(),
                           bookingList.length > 0
                               ? Container(
-                                  margin: EdgeInsets.only(top: height * 0.02),
+                                  margin: EdgeInsets.only(top: height * 0.007),
                                   decoration: BoxDecoration(
                                       color: whiteColor,
                                       borderRadius: BorderRadius.circular(10)),
@@ -511,55 +503,48 @@ class _DashScreenState extends State<DashScreen> {
                                   ),
                                 )
                               : Container(),
-                          isVehicleLoaded && customerVehList.length > 0
-                              ? Container(
-                                  margin: EdgeInsets.only(
-                                      top: bookingList.length > 0
-                                          ? height * 0.02
-                                          : height * 0.01),
+                          Container(
+                            margin: EdgeInsets.only(top: height * 0.02),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  TextConst.myVehicles,
+                                  style: montserratSemiBold.copyWith(
+                                      color: whiteColor,
+                                      fontSize: width * 0.04),
+                                ),
+                                //------------------add new ---------------
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      // isAdded = !isAdded;
+                                    });
+                                  },
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        TextConst.myVehicles,
+                                        TextConst.addNew,
                                         style: montserratSemiBold.copyWith(
                                             color: whiteColor,
                                             fontSize: width * 0.04),
                                       ),
-                                      //------------------add new ---------------
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            // isAdded = !isAdded;
-                                          });
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              TextConst.addNew,
-                                              style:
-                                                  montserratSemiBold.copyWith(
-                                                      color: whiteColor,
-                                                      fontSize: width * 0.04),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.only(
-                                                  left: width * 0.02),
-                                              child: Image.asset(
-                                                ImageConst.add,
-                                                scale: 4.7,
-                                              ),
-                                            )
-                                          ],
+                                      Container(
+                                        margin:
+                                            EdgeInsets.only(left: width * 0.02),
+                                        child: Image.asset(
+                                          ImageConst.add,
+                                          scale: 4.7,
                                         ),
-                                      ),
+                                      )
                                     ],
                                   ),
-                                )
-                              : Container(),
+                                ),
+                              ],
+                            ),
+                          ),
                         ]),
                   ),
                 ]),
@@ -567,8 +552,8 @@ class _DashScreenState extends State<DashScreen> {
               Container(
                   height: bookingList.length > 0
                       ? isVehicleLoaded && customerVehList.length > 1
-                          ? height * 0.08
-                          : height * 0.05
+                          ? height * 0.06
+                          : height * 0.03
                       : isVehicleLoaded && customerVehList.length > 1
                           ? height * 0.08
                           : height * 0.05),
@@ -612,7 +597,7 @@ class _DashScreenState extends State<DashScreen> {
                               ),
                               child: customerVehList.length == 0
                                   ? Container(
-                                      height: height * 0.1,
+                                      height: height * 0.15,
                                       width: width,
                                       padding: EdgeInsets.only(
                                           left: width * 0.04,
@@ -625,10 +610,8 @@ class _DashScreenState extends State<DashScreen> {
                                           begin: Alignment.topCenter,
                                           end: Alignment.bottomCenter,
                                           colors: [
-                                            whiteColor,
-                                            whiteColor,
-                                            whiteColor,
-                                            borderGreyColor,
+                                            lightGreyColor,
+                                            borderGreyColor
                                           ],
                                         ),
                                       ),
@@ -646,7 +629,7 @@ class _DashScreenState extends State<DashScreen> {
                                           ),
                                           Icon(
                                             Icons.add_circle_outline,
-                                            color: greyColor,
+                                            color: blackColor,
                                             size: 40.0,
                                             semanticLabel:
                                                 'Text to announce in accessibility modes',
