@@ -56,7 +56,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
 
   _getMakeList() async {
     await getVehicleBrands().then((value) {
-      Navigator.pop(context);
       if (value['ret_data'] == "success") {
         setState(() {
           data = value['brands'];
@@ -89,7 +88,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
       "brand": brand,
     };
     await getVehicleModels(req).then((value) {
-      Navigator.pop(context);
       if (value['ret_data'] == "success") {
         setState(() {
           data = value['models'];
@@ -119,7 +117,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
       "model": smodel,
     };
     await getVehicleVariants(req).then((value) {
-      Navigator.pop(context);
       if (value['ret_data'] == "success") {
         setState(() {
           data = value['variants'];
@@ -147,7 +144,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
       "model": smodel,
     };
     await getVehicleModelYears(req).then((value) {
-      Navigator.pop(context);
       if (value['ret_data'] == "success") {
         setState(() {
           var last_year = 0;
@@ -187,7 +183,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
       "varient": svariant,
     };
     await getVehicleModelVariantYears(req).then((value) {
-      Navigator.pop(context);
       if (value['ret_data'] == "success") {
         setState(() {
           var end_year = 0;
@@ -284,56 +279,21 @@ class VehicleAddPageState extends State<VehicleAddPage> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: whiteColor,
-          shadowColor: whiteColor,
-          iconTheme: IconThemeData(color: blackColor),
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark,
+          centerTitle: false,
+          automaticallyImplyLeading: false,
+          backgroundColor: syanColor,
+          title: Text(
+            S.of(context).vehicle_add,
+            style:
+                montserratRegular.copyWith(color: Colors.white, fontSize: 18),
           ),
-          actions: [
-            Center(
-              child: Row(
-                children: [
-                  Container(
-                    color: whiteColor,
-                    width: MediaQuery.of(context).size.width * 0.20,
-                    child: GestureDetector(
-                      onTap: () async {
-                        context
-                            .read<LanguageChangeProvider>()
-                            .changeLocale("en");
-                        setState(() {});
-                      },
-                      child: Text(
-                        'English',
-                        textAlign: TextAlign.end,
-                        style: montserratRegular.copyWith(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    color: whiteColor,
-                    width: MediaQuery.of(context).size.width * 0.20,
-                    padding: EdgeInsets.only(
-                        right: width * 0.05, left: width * 0.05),
-                    child: GestureDetector(
-                      onTap: () async {
-                        context
-                            .read<LanguageChangeProvider>()
-                            .changeLocale("ar");
-                        setState(() {});
-                      },
-                      child: Text(
-                        'عربي',
-                        textAlign: TextAlign.end,
-                        style: montserratRegular.copyWith(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back, color: whiteColor),
+            iconSize: 20,
+          ),
         ),
         body: SingleChildScrollView(
           child: Center(
@@ -351,20 +311,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            ImageConst.signup_icon,
-                            fit: BoxFit.contain,
-                            width: 75,
-                            height: 88,
-                          ),
-                          SizedBox(height: 20),
-                          Text(
-                            S.of(context).vehicle_add,
-                            style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 21),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: height * 0.03),
                           Stack(alignment: Alignment.bottomCenter, children: [
                             Container(
                               height: height * 0.045,
@@ -409,22 +355,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                         color: blackColor,
                                                         fontSize: 14),
                                               )),
-                                          items: data
-                                              .map((item) => DropdownMenuItem(
-                                                  child: Align(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        item['veh_brand'],
-                                                        style: montserratLight
-                                                            .copyWith(
-                                                                color:
-                                                                    blackColor,
-                                                                fontSize: 12),
-                                                      )),
-                                                  value: item['veh_brand']
-                                                      .toString()))
-                                              .toList(),
+                                          items: brands,
                                           validator: (value) {
                                             if (value == null) {
                                               return selectmakeValidation(
@@ -485,22 +416,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                         color: blackColor,
                                                         fontSize: 14),
                                               )),
-                                          items: data
-                                              .map((item) => DropdownMenuItem(
-                                                  child: Align(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        item['veh_model'],
-                                                        style: montserratLight
-                                                            .copyWith(
-                                                                color:
-                                                                    blackColor,
-                                                                fontSize: 12),
-                                                      )),
-                                                  value: item['veh_model']
-                                                      .toString()))
-                                              .toList(),
+                                          items: models,
                                           validator: (value) {
                                             if (value == null) {
                                               return selectmodelValidation(
@@ -581,26 +497,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                                       blackColor,
                                                                   fontSize: 14),
                                                         )),
-                                                    items: data
-                                                        .map((item) =>
-                                                            DropdownMenuItem(
-                                                                child: Align(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    child: Text(
-                                                                      item[
-                                                                          'veh_variant'],
-                                                                      style: montserratLight.copyWith(
-                                                                          color:
-                                                                              blackColor,
-                                                                          fontSize:
-                                                                              12),
-                                                                    )),
-                                                                value: item[
-                                                                        'veh_variant']
-                                                                    .toString()))
-                                                        .toList(),
+                                                    items: variants,
                                                     validator: (value) {
                                                       if (value == null) {
                                                         return selectvariantValidation(
@@ -610,96 +507,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                     onChanged: (value) {
                                                       getModelVariantYear(
                                                           value);
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ))
-                                    ])
-                              : Container(),
-                          isvariant
-                              ? Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                      Container(
-                                        height: height * 0.045,
-                                        width: height * 0.37,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 16,
-                                                  color:
-                                                      syanColor.withOpacity(.5),
-                                                  spreadRadius: 0,
-                                                  blurStyle: BlurStyle.outer,
-                                                  offset: Offset(0, 0)),
-                                            ]),
-                                      ),
-                                      Container(
-                                          height: height * 0.075,
-                                          width: height * 0.4,
-                                          decoration: BoxDecoration(
-                                            color: whiteColor,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            border: Border.all(
-                                                color: borderGreyColor),
-                                          ),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Container(
-                                                  padding: EdgeInsets.only(
-                                                      right: width * 0.025,
-                                                      left: width * 0.025),
-                                                  child:
-                                                      DropdownButtonFormField(
-                                                    key: _yearkey,
-                                                    isExpanded: true,
-                                                    decoration: InputDecoration
-                                                        .collapsed(
-                                                            hintText: ''),
-                                                    hint: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          "Year",
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color:
-                                                                      blackColor,
-                                                                  fontSize: 14),
-                                                        )),
-                                                    items: data
-                                                        .map((item) =>
-                                                            DropdownMenuItem(
-                                                                child: Align(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    child: Text(
-                                                                      item,
-                                                                      style: montserratLight.copyWith(
-                                                                          color:
-                                                                              blackColor,
-                                                                          fontSize:
-                                                                              12),
-                                                                    )),
-                                                                value: item
-                                                                    .toString()))
-                                                        .toList(),
-                                                    validator: (value) {
-                                                      if (value == null) {
-                                                        return selectyearValidation(
-                                                            value);
-                                                      }
-                                                    },
-                                                    onChanged: (value) {
-                                                      yearselected =
-                                                          value.toString();
                                                     },
                                                   ),
                                                 ),
@@ -733,6 +540,67 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                   border: Border.all(color: borderGreyColor),
                                 ),
                                 child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            right: width * 0.025,
+                                            left: width * 0.025),
+                                        child: DropdownButtonFormField(
+                                          key: _yearkey,
+                                          isExpanded: true,
+                                          decoration: InputDecoration.collapsed(
+                                              hintText: ''),
+                                          hint: Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "Year",
+                                                style:
+                                                    montserratRegular.copyWith(
+                                                        color: blackColor,
+                                                        fontSize: 14),
+                                              )),
+                                          items: modyears,
+                                          validator: (value) {
+                                            if (value == null) {
+                                              return selectyearValidation(
+                                                  value);
+                                            }
+                                          },
+                                          onChanged: (value) {
+                                            yearselected = value.toString();
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                          ]),
+                          SizedBox(height: height * 0.04),
+                          Stack(alignment: Alignment.bottomCenter, children: [
+                            Container(
+                              height: height * 0.045,
+                              width: height * 0.37,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 16,
+                                        color: syanColor.withOpacity(.5),
+                                        spreadRadius: 0,
+                                        blurStyle: BlurStyle.outer,
+                                        offset: Offset(0, 0)),
+                                  ]),
+                            ),
+                            Container(
+                                height: height * 0.075,
+                                width: height * 0.4,
+                                decoration: BoxDecoration(
+                                  color: whiteColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: borderGreyColor),
+                                ),
+                                child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -740,10 +608,12 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                     Expanded(
                                       child: Container(
                                         padding: EdgeInsets.only(
-                                            right: width * 0.025),
+                                            right: width * 0.025,
+                                            left: width * 0.025),
                                         child: TextFormField(
                                           controller: plateNumberController,
-                                          keyboardType: TextInputType.number,
+                                          keyboardType: TextInputType.text,
+                                          textAlign: TextAlign.center,
                                           maxLength: 15,
                                           style: montserratLight.copyWith(
                                               color: blackColor, fontSize: 14),
@@ -754,7 +624,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                               counterText: "",
                                               filled: true,
                                               hintText:
-                                                  S.of(context).mobile_number,
+                                                  S.of(context).plate_number,
                                               hintStyle:
                                                   montserratRegular.copyWith(
                                                       color: blackColor,
@@ -775,13 +645,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                           SizedBox(height: height * 0.04),
                           GestureDetector(
                             onTap: () async {
-                              if (_formKey.currentState!.validate()) {
-                                if (issubmitted) return;
-                                setState(() => issubmitted = true);
-                                await Future.delayed(
-                                    Duration(milliseconds: 1000));
-                                saveCustomerVehicle();
-                              }
                               setState(() {
                                 Navigator.pushReplacementNamed(
                                     context, Routes.bottombar);
@@ -822,7 +685,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                     ),
                                   ),
                                   child: Text(
-                                    S.of(context).sign_up.toUpperCase(),
+                                    S.of(context).save.toUpperCase(),
                                     style: montserratSemiBold.copyWith(
                                         color: Colors.white),
                                   ),

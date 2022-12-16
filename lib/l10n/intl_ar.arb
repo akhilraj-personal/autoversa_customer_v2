@@ -1,10 +1,10 @@
 {
   "welcome_text":"تسجيل الدخول إلى حسابك",
   "sign_in": "تسجيل الدخول",
-  "valid_mobile": "من فضلك أدخل رقما صالحا",
+  "valid_mobile": "أدخل رقم صحيح",
   "data_verify_text": "التحقق من البيانات",
   "no_network_text": "الاتصال بالإنترنت غير متوفر",
-  "otp_send_text": "تم إرسال OTP بنجاح",
+  "otp_send_text": "أدخل OTP صالح",
   "verify_me": "تحقق عني",
   "seconds_text": "ثانيا",
   "resend_otp_text": "إعادة إرسال OTP",
@@ -32,5 +32,7 @@
   "vehicle_add" : "إضافة مركبة",
   "vehicle_save_toast": "تمت إضافة السيارة بنجاح",
   "vehicle_already_exist": "السيارة موجودة بالفعل",
-  "try_another_method": "جرب طريقة أخرى"
+  "try_another_method": "جرب طريقة أخرى",
+  "save": "حفظ",
+  "plate_number": "رقم لوحة"
 }

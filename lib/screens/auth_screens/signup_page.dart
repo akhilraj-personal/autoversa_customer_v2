@@ -3,7 +3,6 @@ import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/provider/provider.dart';
-import 'package:autoversa/screens/bottom_tab/bottomtab.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -32,9 +31,9 @@ class SignupPageState extends State<SignupPage> {
   FocusNode emailFocus = FocusNode();
   FocusNode numberFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
-  bool issubmitted = false;
   List<DropdownMenuItem<String>> items = [];
   List data = List<String>.empty();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -42,6 +41,7 @@ class SignupPageState extends State<SignupPage> {
     init();
     Future.delayed(Duration.zero, () {
       _getStateList();
+      numberController.text = widget.phone;
     });
   }
 
@@ -75,7 +75,7 @@ class SignupPageState extends State<SignupPage> {
         FocusScope.of(context).requestFocus(FocusNode());
     setState(() {});
     var country;
-    if ("widget.countrycode" == '+971') {
+    if (widget.countrycode == '+971') {
       country = "UAE";
     } else {
       country = "INDIA";
@@ -87,34 +87,28 @@ class SignupPageState extends State<SignupPage> {
           ? emailController.text.toString()
           : "",
       "phone": widget.phone,
-      "country_coded": "1",
+      "country_coded": widget.countrycode,
       "country": country
     };
     final prefs = await SharedPreferences.getInstance();
     await customerSignup(req).then((value) {
-      Navigator.pop(context);
       if (value['ret_data'] == "success") {
+        setState(() => isLoading = false);
         prefs.setString('name', value['cust_info']['name']);
         prefs.setString('email', value['cust_info']['email']);
         prefs.setString('emirate', value['cust_info']['emirate']);
         prefs.setString('language', value['cust_info']['language']);
         prefs.setString('credits', value['cust_info']['credits']);
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BottomNavBarScreen(
-              index: 1,
-            ),
-          ),
-          (route) => false,
-        );
+        setState(() {
+          Navigator.pushReplacementNamed(context, Routes.bottombar);
+        });
       } else {
+        setState(() => isLoading = false);
         showCustomToast(context, value['ret_data'],
             bgColor: warningcolor, textColor: whiteColor);
-        setState(() => issubmitted = false);
       }
     }).catchError((e) {
-      setState(() => issubmitted = false);
+      setState(() => isLoading = false);
       showCustomToast(context, S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
@@ -202,8 +196,8 @@ class SignupPageState extends State<SignupPage> {
                           Image.asset(
                             ImageConst.signup_icon,
                             fit: BoxFit.contain,
-                            width: 75,
-                            height: 88,
+                            height: height * 0.12,
+                            width: height * 0.12,
                           ),
                           SizedBox(height: 20),
                           Text(
@@ -320,6 +314,8 @@ class SignupPageState extends State<SignupPage> {
                                             right: width * 0.025,
                                             left: width * 0.025),
                                         child: TextFormField(
+                                          textCapitalization:
+                                              TextCapitalization.characters,
                                           controller: userNameController,
                                           keyboardType: TextInputType.text,
                                           textAlign: TextAlign.center,
@@ -507,10 +503,13 @@ class SignupPageState extends State<SignupPage> {
                           SizedBox(height: height * 0.04),
                           GestureDetector(
                             onTap: () async {
-                              setState(() {
-                                Navigator.pushReplacementNamed(
-                                    context, Routes.bottombar);
-                              });
+                              if (_formKey.currentState!.validate()) {
+                                if (isLoading) return;
+                                setState(() => isLoading = true);
+                                await Future.delayed(
+                                    Duration(milliseconds: 1000));
+                                cust_signup();
+                              }
                             },
                             child: Stack(
                               alignment: Alignment.bottomCenter,
@@ -546,11 +545,24 @@ class SignupPageState extends State<SignupPage> {
                                       ],
                                     ),
                                   ),
-                                  child: Text(
-                                    S.of(context).sign_up.toUpperCase(),
-                                    style: montserratSemiBold.copyWith(
-                                        color: Colors.white),
-                                  ),
+                                  child: !isLoading
+                                      ? Text(
+                                          S.of(context).sign_up.toUpperCase(),
+                                          style: montserratSemiBold.copyWith(
+                                              color: Colors.white),
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Transform.scale(
+                                              scale: 0.7,
+                                              child: CircularProgressIndicator(
+                                                color: whiteColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                 ),
                               ],
                             ),

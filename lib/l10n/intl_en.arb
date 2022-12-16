@@ -1,7 +1,7 @@
 {
   "welcome_text": "Sign in to Your Account",
   "sign_in": "Sign In",
-  "valid_mobile": "Please Enter Valid Number",
+  "valid_mobile": "Enter Valid Number",
   "data_verify_text": "Verifying Data",
   "no_network_text": "Internet Connection Not Available",
   "otp_send_text": "OTP Send Successfully",
@@ -9,7 +9,7 @@
   "seconds_text": "Second",
   "resend_otp_text": "Resend OTP",
   "verify_call_text": "Verify Via Call",
-  "otp_invalid_text": "Please Enter Valid OTP",
+  "otp_invalid_text": "Enter Valid OTP",
   "max_otp_text": "Maximum attempt reached. Please try again later.",
   "dash_intro_text": "Welcome",
   "new_vehicle_text": "Add new vehicle",
@@ -32,5 +32,7 @@
   "vehicle_add" : "Vehicle Add",
   "vehicle_save_toast": "Vehicle Added Successfully",
   "vehicle_already_exist": "Vehicle Already Exist",
-  "try_another_method": "Try Another Method"
+  "try_another_method": "Try Another Method",
+  "save": "Save",
+  "plate_number": "Plate Number"
 }
