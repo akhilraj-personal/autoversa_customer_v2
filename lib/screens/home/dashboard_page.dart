@@ -239,7 +239,7 @@ class _DashScreenState extends State<DashScreen> {
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                        top: height * 0.01,
+                        top: height * 0.02,
                         left: width * 0.04,
                         right: width * 0.03,
                         bottom: height * 0.02),
@@ -258,7 +258,7 @@ class _DashScreenState extends State<DashScreen> {
                               : SizedBox(),
                           bookingList.length > 0
                               ? Container(
-                                  margin: EdgeInsets.only(top: height * 0.007),
+                                  margin: EdgeInsets.only(top: height * 0.02),
                                   decoration: BoxDecoration(
                                       color: whiteColor,
                                       borderRadius: BorderRadius.circular(10)),
@@ -504,7 +504,10 @@ class _DashScreenState extends State<DashScreen> {
                                 )
                               : Container(),
                           Container(
-                            margin: EdgeInsets.only(top: height * 0.02),
+                            margin: EdgeInsets.only(
+                                top: bookingList.length > 0
+                                    ? height * 0.02
+                                    : height * 0.01),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -552,8 +555,8 @@ class _DashScreenState extends State<DashScreen> {
               Container(
                   height: bookingList.length > 0
                       ? isVehicleLoaded && customerVehList.length > 1
-                          ? height * 0.06
-                          : height * 0.03
+                          ? height * 0.08
+                          : height * 0.05
                       : isVehicleLoaded && customerVehList.length > 1
                           ? height * 0.08
                           : height * 0.05),
