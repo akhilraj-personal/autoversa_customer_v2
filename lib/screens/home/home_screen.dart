@@ -18,14 +18,14 @@ import '../../utils/text_utils.dart';
 import '../NextScreen.dart';
 import '../vehicle/vehicle_add_page.dart';
 
-class DashScreen extends StatefulWidget {
-  const DashScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<DashScreen> createState() => _DashScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _DashScreenState extends State<DashScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   String cut_name = "";
   late List customerVehList = [];
   late List bookingList = [];
