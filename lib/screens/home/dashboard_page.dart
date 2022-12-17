@@ -16,6 +16,7 @@ import '../../utils/color_utils.dart';
 import '../../utils/common_utils.dart';
 import '../../utils/text_utils.dart';
 import '../NextScreen.dart';
+import '../vehicle/vehicle_add_page.dart';
 
 class DashScreen extends StatefulWidget {
   const DashScreen({super.key});
@@ -683,7 +684,11 @@ class _DashScreenState extends State<DashScreen> {
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            // isAdded = !isAdded;
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        VehicleAddPage()));
                                           });
                                         },
                                         child: Row(
@@ -771,45 +776,58 @@ class _DashScreenState extends State<DashScreen> {
                                 borderRadius: BorderRadius.circular(14),
                               ),
                               child: customerVehList.length == 0
-                                  ? Container(
-                                      height: height * 0.1,
-                                      width: width,
-                                      padding: EdgeInsets.only(
-                                          left: width * 0.04,
-                                          right: width * 0.08,
-                                          top: height * 0.03,
-                                          bottom: height * 0.03),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(14),
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            whiteColor,
-                                            whiteColor,
-                                            borderGreyColor,
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      VehicleAddPage()));
+                                        });
+                                      },
+                                      child: Container(
+                                        height: height * 0.1,
+                                        width: width,
+                                        padding: EdgeInsets.only(
+                                            left: width * 0.04,
+                                            right: width * 0.08,
+                                            top: height * 0.03,
+                                            bottom: height * 0.03),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              whiteColor,
+                                              whiteColor,
+                                              borderGreyColor,
+                                            ],
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              S.of(context).new_vehicle_text,
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: blackColor,
+                                                      fontSize: 16),
+                                            ),
+                                            Icon(
+                                              Icons.add_circle_outline,
+                                              color: greyColor,
+                                              size: height * 0.04,
+                                              semanticLabel: 'Add vehicle',
+                                            ),
                                           ],
                                         ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            S.of(context).new_vehicle_text,
-                                            style: montserratSemiBold.copyWith(
-                                                color: blackColor,
-                                                fontSize: 16),
-                                          ),
-                                          Icon(
-                                            Icons.add_circle_outline,
-                                            color: greyColor,
-                                            size: height * 0.04,
-                                            semanticLabel: 'Add vehicle',
-                                          ),
-                                        ],
                                       ),
                                     )
                                   : customerVehList.length == 1
