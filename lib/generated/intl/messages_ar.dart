@@ -58,9 +58,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("إعادة إرسال OTP"),
         "save": MessageLookupByLibrary.simpleMessage("حفظ"),
         "seconds_text": MessageLookupByLibrary.simpleMessage("ثانيا"),
+        "send_verification_msg": MessageLookupByLibrary.simpleMessage(
+            "لقد أرسلنا رمز التحقق المكون من 4 أرقام إلى"),
         "sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("سجل دخولك بواسطة"),
         "sign_up": MessageLookupByLibrary.simpleMessage("اشتراك"),
+        "to_mentioned_number":
+            MessageLookupByLibrary.simpleMessage("الرقم المذكور"),
         "toast_application_error":
             MessageLookupByLibrary.simpleMessage("خطأ في تطبيق. اتصل بالدعم"),
         "try_another_method":
@@ -77,9 +81,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "verify_me": MessageLookupByLibrary.simpleMessage("تحقق عني"),
         "verify_mobile_number":
             MessageLookupByLibrary.simpleMessage("تحقق من رقم الهاتف المحمول"),
-        "we_have_send_a_6_digit_verification":
-            MessageLookupByLibrary.simpleMessage(
-                "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى"),
         "welcome_text":
             MessageLookupByLibrary.simpleMessage("تسجيل الدخول إلى حسابك"),
         "year": MessageLookupByLibrary.simpleMessage("سنة")

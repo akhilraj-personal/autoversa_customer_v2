@@ -11,6 +11,7 @@ import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,7 +75,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
       } else {}
     }).catchError((e) {
       showCustomToast(context, S.of(context).toast_application_error,
-          bgColor: warningcolor, textColor: whiteColor);
+          bgColor: errorcolor, textColor: whiteColor);
     });
   }
 
@@ -243,8 +244,8 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                           Image.asset(
                             ImageConst.signup_icon,
                             fit: BoxFit.contain,
-                            width: 75,
-                            height: 88,
+                            height: height * 0.12,
+                            width: height * 0.12,
                           ),
                           SizedBox(height: 20),
                           Text(
@@ -546,6 +547,38 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                                 ))
                           ]),
                           SizedBox(height: height * 0.04),
+                          Text(
+                            S.of(context).send_verification_msg +
+                                " " +
+                                S.of(context).to_mentioned_number +
+                                "." +
+                                S.of(context).please_enter_the_code,
+                            style: montserratLight.copyWith(
+                                color: lightblackColor, fontSize: 14),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: height * 0.02),
+                          OtpTextField(
+                            numberOfFields: 4,
+                            fieldWidth: width * 0.14,
+                            clearText: true,
+                            focusedBorderColor: syanColor,
+                            cursorColor: syanColor,
+                            showFieldAsBox: true,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(12.0)),
+                            onCodeChanged: (String code) {
+                              setState(() {
+                                otppin = "";
+                              });
+                            },
+                            onSubmit: (String verificationCode) {
+                              setState(() {
+                                otppin = verificationCode;
+                              });
+                            }, // end onSubmit
+                          ),
+                          SizedBox(height: height * 0.04),
                           isVerifymeActive
                               ? GestureDetector(
                                   onTap: () async {
@@ -589,7 +622,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                                           ),
                                         ),
                                         child: Text(
-                                          S.of(context).sign_up.toUpperCase(),
+                                          "Verify Me",
                                           style: montserratSemiBold.copyWith(
                                               color: Colors.white),
                                         ),
@@ -598,63 +631,63 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                                   ),
                                 )
                               : Row(),
-                          GestureDetector(
-                            onTap: () async {
-                              // if (_formKey.currentState!.validate()) {
-                              //   if (issubmitted) return;
-                              //   setState(() => issubmitted = true);
-                              //   await Future.delayed(
-                              //       Duration(milliseconds: 1000));
-                              //   cust_signup();
-                              // }
-                              setState(() {
-                                Navigator.pushReplacementNamed(
-                                    context, Routes.bottombar);
-                              });
-                            },
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: [
-                                Container(
-                                  height: height * 0.045,
-                                  width: height * 0.37,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(14),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            blurRadius: 16,
-                                            color: syanColor.withOpacity(.6),
-                                            spreadRadius: 0,
-                                            blurStyle: BlurStyle.outer,
-                                            offset: Offset(0, 0)),
-                                      ]),
-                                ),
-                                Container(
-                                  height: height * 0.075,
-                                  width: height * 0.4,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(14)),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        syanColor,
-                                        blueColor,
-                                      ],
-                                    ),
-                                  ),
-                                  child: Text(
-                                    S.of(context).sign_up.toUpperCase(),
-                                    style: montserratSemiBold.copyWith(
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          // GestureDetector(
+                          //   onTap: () async {
+                          //     // if (_formKey.currentState!.validate()) {
+                          //     //   if (issubmitted) return;
+                          //     //   setState(() => issubmitted = true);
+                          //     //   await Future.delayed(
+                          //     //       Duration(milliseconds: 1000));
+                          //     //   cust_signup();
+                          //     // }
+                          //     setState(() {
+                          //       Navigator.pushReplacementNamed(
+                          //           context, Routes.bottombar);
+                          //     });
+                          //   },
+                          //   child: Stack(
+                          //     alignment: Alignment.bottomCenter,
+                          //     children: [
+                          //       Container(
+                          //         height: height * 0.045,
+                          //         width: height * 0.37,
+                          //         decoration: BoxDecoration(
+                          //             borderRadius: BorderRadius.circular(14),
+                          //             boxShadow: [
+                          //               BoxShadow(
+                          //                   blurRadius: 16,
+                          //                   color: syanColor.withOpacity(.6),
+                          //                   spreadRadius: 0,
+                          //                   blurStyle: BlurStyle.outer,
+                          //                   offset: Offset(0, 0)),
+                          //             ]),
+                          //       ),
+                          //       Container(
+                          //         height: height * 0.075,
+                          //         width: height * 0.4,
+                          //         alignment: Alignment.center,
+                          //         decoration: BoxDecoration(
+                          //           shape: BoxShape.rectangle,
+                          //           borderRadius:
+                          //               BorderRadius.all(Radius.circular(14)),
+                          //           gradient: LinearGradient(
+                          //             begin: Alignment.topLeft,
+                          //             end: Alignment.bottomRight,
+                          //             colors: [
+                          //               syanColor,
+                          //               blueColor,
+                          //             ],
+                          //           ),
+                          //         ),
+                          //         child: Text(
+                          //           S.of(context).sign_up.toUpperCase(),
+                          //           style: montserratSemiBold.copyWith(
+                          //               color: Colors.white),
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

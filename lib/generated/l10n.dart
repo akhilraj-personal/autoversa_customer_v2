@@ -200,11 +200,21 @@ class S {
     );
   }
 
-  /// `We have send a 6 digit verification code to`
-  String get we_have_send_a_6_digit_verification {
+  /// `We have send a 4 digit verification code to`
+  String get send_verification_msg {
     return Intl.message(
-      'We have send a 6 digit verification code to',
-      name: 'we_have_send_a_6_digit_verification',
+      'We have send a 4 digit verification code to',
+      name: 'send_verification_msg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `mentioned number`
+  String get to_mentioned_number {
+    return Intl.message(
+      'mentioned number',
+      name: 'to_mentioned_number',
       desc: '',
       args: [],
     );

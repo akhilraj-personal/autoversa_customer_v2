@@ -66,7 +66,7 @@ class SignupPageState extends State<SignupPage> {
       } else {}
     }).catchError((e) {
       showCustomToast(context, S.of(context).toast_application_error,
-          bgColor: warningcolor, textColor: whiteColor);
+          bgColor: errorcolor, textColor: whiteColor);
     });
   }
 
