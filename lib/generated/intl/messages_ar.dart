@@ -35,10 +35,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "enter_mobile_text":
             MessageLookupByLibrary.simpleMessage("أدخل رقم الهاتف المتحرك"),
         "full_name": MessageLookupByLibrary.simpleMessage("الاسم الكامل*"),
+        "make": MessageLookupByLibrary.simpleMessage("يجعلون"),
         "max_otp_text": MessageLookupByLibrary.simpleMessage(
             "وصلت المحاولة القصوى. الرجاء معاودة المحاولة في وقت لاحق."),
         "mobile_number":
             MessageLookupByLibrary.simpleMessage("رقم الهاتف المحمول*"),
+        "model": MessageLookupByLibrary.simpleMessage("نموذج"),
         "name_error": MessageLookupByLibrary.simpleMessage("أدخل اسمًا صالحًا"),
         "new_vehicle_text":
             MessageLookupByLibrary.simpleMessage("أضف مركبة جديدة"),
@@ -64,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "try_another_method":
             MessageLookupByLibrary.simpleMessage("جرب طريقة أخرى"),
         "valid_mobile": MessageLookupByLibrary.simpleMessage("أدخل رقم صحيح"),
+        "variant": MessageLookupByLibrary.simpleMessage("متغير"),
         "vehicle_add": MessageLookupByLibrary.simpleMessage("إضافة مركبة"),
         "vehicle_already_exist":
             MessageLookupByLibrary.simpleMessage("السيارة موجودة بالفعل"),
@@ -78,6 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى"),
         "welcome_text":
-            MessageLookupByLibrary.simpleMessage("تسجيل الدخول إلى حسابك")
+            MessageLookupByLibrary.simpleMessage("تسجيل الدخول إلى حسابك"),
+        "year": MessageLookupByLibrary.simpleMessage("سنة")
       };
 }

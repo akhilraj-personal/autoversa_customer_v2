@@ -409,6 +409,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Make`
+  String get make {
+    return Intl.message(
+      'Make',
+      name: 'make',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Model`
+  String get model {
+    return Intl.message(
+      'Model',
+      name: 'model',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Variant`
+  String get variant {
+    return Intl.message(
+      'Variant',
+      name: 'variant',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Year`
+  String get year {
+    return Intl.message(
+      'Year',
+      name: 'year',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

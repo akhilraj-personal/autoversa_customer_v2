@@ -34,5 +34,9 @@
   "vehicle_already_exist": "السيارة موجودة بالفعل",
   "try_another_method": "جرب طريقة أخرى",
   "save": "حفظ",
-  "plate_number": "رقم لوحة"
+  "plate_number": "رقم لوحة",
+  "make": "يجعلون",
+  "model": "نموذج",
+  "variant": "متغير",
+  "year": "سنة"
 }

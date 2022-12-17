@@ -2,15 +2,14 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
-import 'package:autoversa/provider/provider.dart';
 import 'package:autoversa/screens/bottom_tab/bottomtab.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
+import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VehicleAddPage extends StatefulWidget {
@@ -273,34 +272,65 @@ class VehicleAddPageState extends State<VehicleAddPage> {
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light,
-        statusBarColor: Colors.white,
+        statusBarColor: syanColor,
         systemNavigationBarColor: Colors.white,
       ),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          centerTitle: false,
-          automaticallyImplyLeading: false,
-          backgroundColor: syanColor,
-          title: Text(
-            S.of(context).vehicle_add,
-            style:
-                montserratRegular.copyWith(color: Colors.white, fontSize: 18),
+          backgroundColor: whiteColor,
+          shadowColor: whiteColor,
+          iconTheme: IconThemeData(color: whiteColor),
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarIconBrightness: Brightness.dark,
           ),
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back, color: whiteColor),
-            iconSize: 20,
-          ),
+          actions: [
+            Center(
+              child: Row(
+                children: [
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    width: width,
+                    height: height * 0.12,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          blueColor,
+                          syanColor,
+                        ],
+                      ),
+                    ),
+                    child: ClipPath(
+                      clipper: SinCosineWaveClipper(
+                        verticalPosition: VerticalPosition.top,
+                      ),
+                      child: Container(
+                        height: height * 0.31,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            syanColor.withOpacity(0.3),
+                            Color.fromARGB(255, 176, 205, 210),
+                          ],
+                        )),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
         body: SingleChildScrollView(
           child: Center(
             child: Form(
               key: _formKey,
               child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       color: whiteColor,
@@ -308,9 +338,9 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       height: height - height * 0.12,
                       width: width,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          SizedBox(height: 8),
                           Stack(alignment: Alignment.bottomCenter, children: [
                             Container(
                               height: height * 0.045,
@@ -349,7 +379,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                           hint: Align(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                "Make",
+                                                S.of(context).make + "*",
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: blackColor,
@@ -410,7 +440,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                           hint: Align(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                "Model",
+                                                S.of(context).model + "*",
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: blackColor,
@@ -441,7 +471,9 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                   ],
                                 ))
                           ]),
-                          SizedBox(height: height * 0.04),
+                          isvariant
+                              ? SizedBox(height: height * 0.04)
+                              : SizedBox(height: height * 0.001),
                           isvariant
                               ? Stack(
                                   alignment: Alignment.bottomCenter,
@@ -490,7 +522,10 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                         alignment:
                                                             Alignment.center,
                                                         child: Text(
-                                                          "Variant",
+                                                          S
+                                                                  .of(context)
+                                                                  .variant +
+                                                              "*",
                                                           style: montserratRegular
                                                               .copyWith(
                                                                   color:
@@ -554,7 +589,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                           hint: Align(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                "Year",
+                                                S.of(context).year + "*",
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: blackColor,
