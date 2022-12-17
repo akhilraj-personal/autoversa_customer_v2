@@ -57,9 +57,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "resend_otp_text": MessageLookupByLibrary.simpleMessage("Resend OTP"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "seconds_text": MessageLookupByLibrary.simpleMessage("Second"),
+        "send_verification_msg": MessageLookupByLibrary.simpleMessage(
+            "We have send a 4 digit verification code to"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("Sign in with"),
         "sign_up": MessageLookupByLibrary.simpleMessage("Sign Up"),
+        "to_mentioned_number":
+            MessageLookupByLibrary.simpleMessage("mentioned number"),
         "toast_application_error": MessageLookupByLibrary.simpleMessage(
             "Application Error. Contact Support"),
         "try_another_method":
@@ -77,9 +81,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "verify_me": MessageLookupByLibrary.simpleMessage("Verify Me"),
         "verify_mobile_number":
             MessageLookupByLibrary.simpleMessage("Verify Mobile Number"),
-        "we_have_send_a_6_digit_verification":
-            MessageLookupByLibrary.simpleMessage(
-                "We have send a 6 digit verification code to"),
         "welcome_text":
             MessageLookupByLibrary.simpleMessage("Sign in to Your Account"),
         "year": MessageLookupByLibrary.simpleMessage("Year")

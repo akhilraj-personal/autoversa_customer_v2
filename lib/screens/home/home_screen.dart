@@ -1,6 +1,8 @@
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/NextScreen.dart';
+import 'package:autoversa/screens/auth_screens/signup_via_gmail_page.dart';
+import 'package:autoversa/screens/vehicle/vehicle_add_page.dart';
 import 'package:autoversa/utils/text_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
@@ -504,9 +506,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                Navigator.pushReplacementNamed(
+                                                Navigator.push(
                                                     context,
-                                                    Routes.vehiclePage);
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            SignupViaGmail(
+                                                                name: "BHARAD",
+                                                                email:
+                                                                    "rbharadkrishna@gmail.com")));
                                               });
                                             },
                                             child: Row(

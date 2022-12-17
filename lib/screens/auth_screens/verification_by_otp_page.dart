@@ -278,7 +278,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         ),
                         SizedBox(height: height * 0.03),
                         Text(
-                          S.of(context).we_have_send_a_6_digit_verification +
+                          S.of(context).send_verification_msg +
                               widget.country_code +
                               widget.phone,
                           style: montserratLight.copyWith(
