@@ -48,3 +48,23 @@ Future addCustomerVehicle(Map req) async {
 Future getVehicleBrands() async {
   return handleResponse(await securedGetRequest('get_vehicle_brands'));
 }
+
+Future getbookingjobs_forcustomer(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/getbookingjobs_forcustomer', req));
+}
+
+Future getbookingdetails(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/getbookingdetails_forcustomer', req));
+}
+
+Future booking_unhold(Map req) async {
+  return handleResponse(
+      await securedPostRequest('Booking/BookingController/Update_status', req));
+}
+
+Future booking_cancel(Map req) async {
+  return handleResponse(
+      await securedPostRequest('Booking/BookingController/hold_booking', req));
+}
