@@ -1,3 +1,4 @@
+import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
@@ -370,7 +371,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           true;
                                                     }
                                                   });
-                                                  print(bookingList[index]);
                                                 },
                                                 child: Image.asset(
                                                   bookingList[index]
@@ -600,7 +600,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 MaterialPageRoute(
                                                                     builder:
                                                                         (context) =>
-                                                                            NextPage()));
+                                                                            BookingStatusFlow(
+                                                                              bk_id: bookingList[index]['bk_id'],
+                                                                              vehname: bookingList[index]['cv_make'] != null
+                                                                                  ? bookingList[index]['cv_variant'] != null
+                                                                                      ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
+                                                                                      : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
+                                                                                  : "",
+                                                                              make: bookingList[index]['cv_make'],
+                                                                            )));
                                                           },
                                                           child: Container(
                                                             margin:
