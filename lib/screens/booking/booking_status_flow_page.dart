@@ -1750,16 +1750,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     margin: EdgeInsets.all(16.0),
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(14)),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          syanColor,
-                          blueColor,
-                        ],
-                      ),
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(16.0),
                     ),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
