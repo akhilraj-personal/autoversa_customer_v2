@@ -927,7 +927,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
               }
             } else if (statuslist["bkt_code"] == "CDLC") {
               var temp = {
-                "status": "Confirm drop\nlocation",
+                "status": "Confirm drop location",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -1090,7 +1090,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
             if (cust_status_master[i] == "CDLC") {
               var temp = {
-                "status": "Confirm Drop Location",
+                "status": "Confirm Drop\nLocation",
                 "time": "",
                 "code": "",
                 "icon": 'images/automobile/waiting.png',
@@ -1780,35 +1780,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                 booking[
                                                     'cv_registrationvalidity'] +
                                                 ".",
-                                            overflow: TextOverflow.clip,
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.bold,
-                                              fontStyle: FontStyle.normal,
-                                              color: Colors.red,
-                                            )),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Row(),
-                          status['st_code'] == "HOLDC" ||
-                                  backstatus['st_code'] == "HOLDB"
-                              ? Divider()
-                              : Row(),
-                          status['st_code'] == "HOLDC" ||
-                                  backstatus['st_code'] == "HOLDB"
-                              ? Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.all(16),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        child: Text(
-                                            "Booking on Hold. Reason: " +
-                                                reasonforhold,
                                             overflow: TextOverflow.clip,
                                             style: TextStyle(
                                               fontSize: 14.0,

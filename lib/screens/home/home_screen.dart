@@ -1,4 +1,7 @@
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
+import 'package:autoversa/screens/notification_screen/notification_screen.dart';
+import 'package:autoversa/screens/package_screens/car_repair_screeen.dart';
+import 'package:autoversa/screens/package_screens/package_details_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late List bookingList = [];
   late List packageList = [];
   String currency = "";
+  int selectedVeh = 0;
+  bool noofvehicle = false;
 
   bool isBookingLoaded = false,
       isVehicleLoaded = false,
@@ -57,11 +62,55 @@ class _HomeScreenState extends State<HomeScreen> {
     init();
   }
 
+  @override
+  void setState(fn) {
+    if (mounted) super.setState(fn);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  redirectPackage(pack_details, pack_typ, currency, noofvehicle) {
+    if (noofvehicle) {
+      if (pack_typ == "1") {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PackageDetails(
+                      package_id: pack_details,
+                      custvehlist: customerVehList,
+                      currency: currency,
+                      selectedVeh: selectedVeh,
+                      booking_list: bookingList,
+                      pack_type: 1,
+                    )));
+      } else if (pack_typ == "2") {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CarRepair(
+                      package_id: pack_details,
+                      custvehlist: customerVehList,
+                      currency: currency,
+                      selectedVeh: selectedVeh,
+                      booking_list: bookingList,
+                      pack_type: 2,
+                    )));
+      }
+    } else {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => VehicleAddPage()));
+    }
+  }
+
   _getCustomerVehicles() async {
     final prefs = await SharedPreferences.getInstance();
     Map req = {"custId": prefs.getString("cust_id")};
     await getCustomerVehicles(req).then((value) {
       if (value['ret_data'] == "success") {
+        noofvehicle = true;
         setState(() {
           customerVehList = value['vehList'];
           isVehicleLoaded = true;
@@ -94,6 +143,11 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future refresh() async {
+    _getCustomerBookingList();
+    setState(() {});
+  }
+
   _getPackages() async {
     try {
       Map req = {};
@@ -118,6 +172,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       cut_name = prefs.getString('name')!;
     });
+  }
+
+  notificationclick() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => NotificationPage()));
   }
 
   @override
@@ -238,10 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ///--------- notification---------
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => NextPage()));
+                            notificationclick();
                           },
                           child: Image.asset(
                             ImageConst.notification,
@@ -1227,7 +1283,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               dotenv.env['aws_url']! +
                                   this.packageList[index]['pkg_imageUrl'],
                               this.packageList[index]['pkg_name'],
-                              true);
+                              true,
+                              packageList[index],
+                              packageList[index]['pkg_type'],
+                              currency,
+                              noofvehicle);
                         })
                     : Shimmer.fromColors(
                         baseColor: lightGreyColor,
@@ -1241,10 +1301,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisSpacing: 17,
                             crossAxisCount: 2,
                             children: <Widget>[
-                              commonWidget(ImageConst.img1, "Sample", false),
-                              commonWidget(ImageConst.img1, "Sample", false),
-                              commonWidget(ImageConst.img1, "Sample", false),
-                              commonWidget(ImageConst.img1, "Sample", false),
+                              commonWidget(ImageConst.img1, "Sample", false,
+                                  "0", "1", "AED", "0"),
+                              commonWidget(ImageConst.img1, "Sample", false,
+                                  "0", "1", "AED", "0"),
+                              commonWidget(ImageConst.img1, "Sample", false,
+                                  "0", "1", "AED", "0"),
+                              commonWidget(ImageConst.img1, "Sample", false,
+                                  "0", "1", "AED", "0"),
                             ],
                           )
                         ])),
@@ -1390,11 +1454,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ]))));
   }
 
-  commonWidget(String img, String text, bool type) {
+  commonWidget(String img, String text, bool type, pack_details, pack_typ,
+      currency, noofvehicle) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => NextPage()));
+        redirectPackage(pack_details, pack_typ, currency, noofvehicle);
       },
       child: Container(
         padding: EdgeInsets.only(
