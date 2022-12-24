@@ -276,123 +276,319 @@ class PackageDetailsState extends State<PackageDetails> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      margin: EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Row(
-                          children: <Widget>[
-                            if (widget.custvehlist[0]['cv_make'] ==
-                                'Mercedes Benz') ...[
-                              Image.asset(
-                                ImageConst.benz_ico,
-                                width: width * 0.18,
-                              ),
-                            ] else if (widget.custvehlist[0]['cv_make'] ==
-                                'BMW') ...[
-                              Image.asset(
-                                ImageConst.bmw_ico,
-                                width: width * 0.18,
-                              ),
-                            ] else if (widget.custvehlist[0]['cv_make'] ==
-                                'Skoda') ...[
-                              Image.asset(
-                                ImageConst.skod_ico,
-                                width: width * 0.18,
-                              ),
-                            ] else ...[
-                              Image.asset(
-                                ImageConst.defcar_ico,
-                                width: width * 0.18,
-                              ),
-                            ],
-                            SizedBox(width: 8.0),
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: Text("ccc",
-                                              overflow: TextOverflow.clip,
-                                              style:
-                                                  montserratSemiBold.copyWith(
-                                                      color: blackColor,
-                                                      fontSize: 14)),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: Text("rrr",
-                                              overflow: TextOverflow.clip,
-                                              style: montserratRegular.copyWith(
-                                                  color: blackColor,
-                                                  fontSize: 12)),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: Text("xxxxxx",
-                                              overflow: TextOverflow.clip,
-                                              style: montserratRegular.copyWith(
-                                                  color: blackColor,
-                                                  fontSize: 12)),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: Text("sssssss",
-                                              overflow: TextOverflow.clip,
-                                              style: montserratRegular.copyWith(
-                                                  color: blackColor,
-                                                  fontSize: 12)),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    widget.custvehlist.length > 0
+                        ? widget.custvehlist.length >= 2
+                            ? Container(
+                                child: CarouselSlider(
+                                options: CarouselOptions(
+                                    aspectRatio: 3.6,
+                                    enlargeCenterPage: true,
+                                    viewportFraction: 0.58,
+                                    autoPlay: false,
+                                    onPageChanged: (index, reason) {
+                                      setState(() {
+                                        currentveh = index;
+                                        isPriceShow = false;
+                                        _getpackageinfo();
+                                      });
+                                    },
+                                    initialPage: widget.selectedVeh),
+                                items: widget.custvehlist
+                                    .map((item) => Container(
+                                          child: Container(
+                                            margin: EdgeInsets.all(5.0),
+                                            child: ClipRRect(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(5.0)),
+                                                child: Stack(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.grey
+                                                                .withOpacity(
+                                                                    0.2),
+                                                            blurRadius: 0.1,
+                                                            spreadRadius: 0,
+                                                          ),
+                                                        ],
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16),
+                                                      ),
+                                                      child: Card(
+                                                        semanticContainer: true,
+                                                        clipBehavior: Clip
+                                                            .antiAliasWithSaveLayer,
+                                                        color: Colors.white,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                        ),
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .stretch,
+                                                          children: <Widget>[
+                                                            Container(
+                                                                color: Color(
+                                                                    0xFFADD8E6),
+                                                                width: 10),
+                                                            SizedBox(width: 5),
+                                                            Expanded(
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .fromLTRB(
+                                                                            1,
+                                                                            0,
+                                                                            1,
+                                                                            0),
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Row(
+                                                                      children: <
+                                                                          Widget>[
+                                                                        SizedBox(
+                                                                            width:
+                                                                                10),
+                                                                        if (item['cv_make'] ==
+                                                                            'Mercedes Benz') ...[
+                                                                          Image.asset(
+                                                                              "images/carlogo/cp_benz.png",
+                                                                              width: 35,
+                                                                              height: 35),
+                                                                        ] else if (item['cv_make'] ==
+                                                                            'BMW') ...[
+                                                                          Image.asset(
+                                                                              "images/carlogo/cp_bmw.png",
+                                                                              width: 35,
+                                                                              height: 35),
+                                                                        ] else if (item['cv_make'] ==
+                                                                            'Skoda') ...[
+                                                                          Image.asset(
+                                                                              "images/carlogo/skoda.png",
+                                                                              width: 35,
+                                                                              height: 35),
+                                                                        ] else ...[
+                                                                          Image.asset(
+                                                                              "images/carlogo/no_logo_car.png",
+                                                                              width: 35,
+                                                                              height: 35)
+                                                                        ],
+                                                                        SizedBox(
+                                                                            width:
+                                                                                5),
+                                                                        Expanded(
+                                                                          child:
+                                                                              Container(
+                                                                            padding:
+                                                                                EdgeInsets.only(left: 8),
+                                                                            child:
+                                                                                Column(
+                                                                              mainAxisAlignment: MainAxisAlignment.end,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: <Widget>[
+                                                                                item['cv_plate_number'] != "" && item['cv_plate_number'] != null ? Text(item['cv_plate_number'], style: montserratSemiBold.copyWith(color: blackColor, fontSize: 12), maxLines: 2) : SizedBox(),
+                                                                                Text(item['cv_make'], style: montserratSemiBold.copyWith(color: blackColor, fontSize: 10)),
+                                                                                Text(item['cv_model'] + " (" + item['cv_year'] + ")", style: montserratSemiBold.copyWith(color: blackColor, fontSize: 9), maxLines: 2),
+                                                                                item['cv_variant'] != "" && item['cv_variant'] != null ? Text(item['cv_variant'], style: montserratSemiBold.copyWith(color: blackColor, fontSize: 9), maxLines: 2) : SizedBox()
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 5),
+                                                            Container(
+                                                                color: Color(
+                                                                    0xFFADD8E6),
+                                                                width: 10),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
+                                          ),
+                                        ))
+                                    .toList(),
+                              ))
+                            : Container(
+                                padding: EdgeInsets.all(16),
+                                width: width() * 0.85,
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.4),
+                                      spreadRadius: 1,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                  borderRadius: BorderRadius.circular(16),
+                                  color: Colors.white,
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(0),
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              SizedBox(width: 30),
+                                              if (widget.custvehlist[0]
+                                                      ['cv_make'] ==
+                                                  'Mercedes Benz') ...[
+                                                Image.asset(
+                                                  ImageConst.benz_ico,
+                                                  width: width * 0.18,
+                                                ),
+                                              ] else if (widget.custvehlist[0]
+                                                      ['cv_make'] ==
+                                                  'BMW') ...[
+                                                Image.asset(
+                                                  ImageConst.bmw_ico,
+                                                  width: width * 0.18,
+                                                ),
+                                              ] else if (widget.custvehlist[0]
+                                                      ['cv_make'] ==
+                                                  'Skoda') ...[
+                                                Image.asset(
+                                                  ImageConst.skod_ico,
+                                                  width: width * 0.18,
+                                                ),
+                                              ] else ...[
+                                                Image.asset(
+                                                  ImageConst.defcar_ico,
+                                                  width: width * 0.18,
+                                                ),
+                                              ],
+                                              SizedBox(width: 30),
+                                              Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      1, 0, 1, 0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      widget.custvehlist[0][
+                                                                      'cv_plate_number'] !=
+                                                                  "" &&
+                                                              widget.custvehlist[
+                                                                          0][
+                                                                      'cv_plate_number'] !=
+                                                                  null
+                                                          ? Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: <
+                                                                  Widget>[
+                                                                Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: Colors
+                                                                        .blue,
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(10)),
+                                                                  ),
+                                                                  padding: EdgeInsets
+                                                                      .fromLTRB(
+                                                                          22,
+                                                                          2,
+                                                                          22,
+                                                                          2),
+                                                                  child: Text(
+                                                                    widget.custvehlist[
+                                                                            0][
+                                                                        'cv_plate_number'],
+                                                                    style: montserratSemiBold.copyWith(
+                                                                        color:
+                                                                            blackColor,
+                                                                        fontSize:
+                                                                            14),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          : SizedBox(),
+                                                      Text(
+                                                        widget.custvehlist[0]
+                                                                ['cv_make'] +
+                                                            " ( " +
+                                                            widget.custvehlist[
+                                                                0]['cv_year'] +
+                                                            " )",
+                                                        style: montserratSemiBold
+                                                            .copyWith(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize: 14),
+                                                      ),
+                                                      Text(
+                                                          widget.custvehlist[0]
+                                                                  ['cv_model'] +
+                                                              " ",
+                                                          style: montserratSemiBold
+                                                              .copyWith(
+                                                                  color:
+                                                                      blackColor,
+                                                                  fontSize: 10),
+                                                          maxLines: 2),
+                                                      Text(
+                                                          widget.custvehlist[0][
+                                                                          'cv_variant'] !=
+                                                                      "" &&
+                                                                  widget.custvehlist[
+                                                                              0]
+                                                                          [
+                                                                          'cv_variant'] !=
+                                                                      null
+                                                              ? widget.custvehlist[
+                                                                      0][
+                                                                  'cv_variant']
+                                                              : "",
+                                                          style: montserratSemiBold
+                                                              .copyWith(
+                                                                  color:
+                                                                      blackColor,
+                                                                  fontSize: 10),
+                                                          maxLines: 2),
+                                                    ],
+                                                  )),
+                                              const SizedBox(width: 5),
+                                            ]),
+                                      ]),
+                                ),
+                              )
+                        : Row(),
                     Row(
                       children: <Widget>[
                         Padding(
