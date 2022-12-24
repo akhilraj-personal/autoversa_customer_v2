@@ -68,3 +68,18 @@ Future booking_cancel(Map req) async {
   return handleResponse(
       await securedPostRequest('Booking/BookingController/hold_booking', req));
 }
+
+Future getPackageDetails(Map req) async {
+  return handleResponse(
+      await securedPostRequest('Package/GetVehiclePackage', req));
+}
+
+Future read_notification(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'system/NotificationController/read_notification', req));
+}
+
+Future getCustomerNotificationList() async {
+  return handleResponse(
+      await securedGetRequest('system/NotificationController/'));
+}
