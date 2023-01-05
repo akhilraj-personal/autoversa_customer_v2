@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class TimerController extends ValueNotifier<bool> {
   TimerController({bool isPlaying = false}) : super(isPlaying);
