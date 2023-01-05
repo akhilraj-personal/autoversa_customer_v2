@@ -29,6 +29,7 @@ class ImageConst {
 
   static const abcd = baseIconURl + 'abcd.png';
   static const add = baseIconURl + 'add.png';
+  static const add_black = baseIconURl + 'add_black.png';
   static const car = baseIconURl + 'car.png';
   static const downarrow = baseIconURl + 'downarrow.png';
   static const rightarrow = baseIconURl + 'rightarrow.png';

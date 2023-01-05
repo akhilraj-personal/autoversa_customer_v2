@@ -8,11 +8,13 @@ import 'package:autoversa/screens/package_screens/sound_recorder_screen.dart';
 import 'package:autoversa/screens/package_screens/timer_controller.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PackageDetails extends StatefulWidget {
   final Map<String, dynamic> package_id;
@@ -35,9 +37,9 @@ class PackageDetails extends StatefulWidget {
 }
 
 class PackageDetailsState extends State<PackageDetails> {
-  // final timeController = TimerController();
-  // final recorder = SoundRecorder();
-  // final player = SoundPlayer();
+  final timeController = TimerController();
+  final recorder = SoundRecorder();
+  final player = SoundPlayer();
 
   bool recordLocation = false;
   var optionList = [];
@@ -165,6 +167,7 @@ class PackageDetailsState extends State<PackageDetails> {
               setState(() {});
             }
           } else {
+            // optionList.add("Sorry currently we don't service your vehicle");
             totalCost = 0.0;
             isServicing = false;
             isPriceShow = true;
@@ -187,8 +190,8 @@ class PackageDetailsState extends State<PackageDetails> {
 
   Future<void> init() async {
     super.initState();
-    // recorder.init();
-    // player.init();
+    recorder.init();
+    player.init();
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove("booking_data");
     await prefs.remove("comp_audio");
@@ -202,14 +205,22 @@ class PackageDetailsState extends State<PackageDetails> {
   @override
   void dispose() {
     super.dispose();
-    // recorder.dispose();
-    // player.dispose();
+    recorder.dispose();
+    player.dispose();
     optionList = [];
     totalCost = 0.0;
   }
 
   @override
   Widget build(BuildContext context) {
+    final isRecording = recorder.isRecording;
+    final icon = isRecording ? Icons.stop : Icons.mic;
+    final animate = recorder.isRecording;
+    final isPlaying = player.isPlaying;
+    final playrecordicon = isPlaying
+        ? Icons.stop_circle_outlined
+        : Icons.play_circle_outline_sharp;
+    final playrecordtext = isPlaying ? "Stop Playing" : "Play Recording";
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
@@ -281,9 +292,9 @@ class PackageDetailsState extends State<PackageDetails> {
                             ? Container(
                                 child: CarouselSlider(
                                 options: CarouselOptions(
-                                    aspectRatio: 3.6,
+                                    aspectRatio: 3.0,
                                     enlargeCenterPage: true,
-                                    viewportFraction: 0.58,
+                                    viewportFraction: 0.65,
                                     autoPlay: false,
                                     onPageChanged: (index, reason) {
                                       setState(() {
@@ -304,15 +315,6 @@ class PackageDetailsState extends State<PackageDetails> {
                                                   children: <Widget>[
                                                     Container(
                                                       decoration: BoxDecoration(
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: Colors.grey
-                                                                .withOpacity(
-                                                                    0.2),
-                                                            blurRadius: 0.1,
-                                                            spreadRadius: 0,
-                                                          ),
-                                                        ],
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(16),
@@ -327,26 +329,21 @@ class PackageDetailsState extends State<PackageDetails> {
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
-                                                                      10.0),
+                                                                      15.0),
                                                         ),
                                                         child: Row(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .stretch,
                                                           children: <Widget>[
-                                                            Container(
-                                                                color: Color(
-                                                                    0xFFADD8E6),
-                                                                width: 10),
-                                                            SizedBox(width: 5),
                                                             Expanded(
                                                               child: Padding(
                                                                 padding:
                                                                     EdgeInsets
                                                                         .fromLTRB(
-                                                                            1,
+                                                                            5,
                                                                             0,
-                                                                            1,
+                                                                            5,
                                                                             0),
                                                                 child: Column(
                                                                   mainAxisAlignment:
@@ -362,31 +359,21 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                           Widget>[
                                                                         SizedBox(
                                                                             width:
-                                                                                10),
-                                                                        if (item['cv_make'] ==
-                                                                            'Mercedes Benz') ...[
-                                                                          Image.asset(
-                                                                              "images/carlogo/cp_benz.png",
-                                                                              width: 35,
-                                                                              height: 35),
-                                                                        ] else if (item['cv_make'] ==
-                                                                            'BMW') ...[
-                                                                          Image.asset(
-                                                                              "images/carlogo/cp_bmw.png",
-                                                                              width: 35,
-                                                                              height: 35),
-                                                                        ] else if (item['cv_make'] ==
-                                                                            'Skoda') ...[
-                                                                          Image.asset(
-                                                                              "images/carlogo/skoda.png",
-                                                                              width: 35,
-                                                                              height: 35),
-                                                                        ] else ...[
-                                                                          Image.asset(
-                                                                              "images/carlogo/no_logo_car.png",
-                                                                              width: 35,
-                                                                              height: 35)
-                                                                        ],
+                                                                                5),
+                                                                        Image
+                                                                            .asset(
+                                                                          item['cv_make'] == 'Mercedes Benz'
+                                                                              ? ImageConst.benz_ico
+                                                                              : item['cv_make'] == 'BMW'
+                                                                                  ? ImageConst.bmw_ico
+                                                                                  : item['cv_make'] == 'Skoda'
+                                                                                      ? ImageConst.skod_ico
+                                                                                      : item['cv_make'] == 'Audi'
+                                                                                          ? ImageConst.aud_ico
+                                                                                          : ImageConst.defcar_ico,
+                                                                          width:
+                                                                              width * 0.12,
+                                                                        ),
                                                                         SizedBox(
                                                                             width:
                                                                                 5),
@@ -394,16 +381,18 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                           child:
                                                                               Container(
                                                                             padding:
-                                                                                EdgeInsets.only(left: 8),
+                                                                                EdgeInsets.only(left: 4),
                                                                             child:
                                                                                 Column(
                                                                               mainAxisAlignment: MainAxisAlignment.end,
                                                                               crossAxisAlignment: CrossAxisAlignment.start,
                                                                               children: <Widget>[
                                                                                 item['cv_plate_number'] != "" && item['cv_plate_number'] != null ? Text(item['cv_plate_number'], style: montserratSemiBold.copyWith(color: blackColor, fontSize: 12), maxLines: 2) : SizedBox(),
-                                                                                Text(item['cv_make'], style: montserratSemiBold.copyWith(color: blackColor, fontSize: 10)),
-                                                                                Text(item['cv_model'] + " (" + item['cv_year'] + ")", style: montserratSemiBold.copyWith(color: blackColor, fontSize: 9), maxLines: 2),
-                                                                                item['cv_variant'] != "" && item['cv_variant'] != null ? Text(item['cv_variant'], style: montserratSemiBold.copyWith(color: blackColor, fontSize: 9), maxLines: 2) : SizedBox()
+                                                                                item['cv_variant'] != "" && item['cv_variant'] != null ? Text(item['cv_make'] + " " + item['cv_model'] + " " + item['cv_variant'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: blackColor, fontSize: 12), maxLines: 5) : Text(item['cv_make'] + item['cv_model'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: blackColor, fontSize: 10), maxLines: 5),
+                                                                                Text(
+                                                                                  isPriceShow ? widget.currency + " " + (totalCost.round()).toString() : "Loading",
+                                                                                  style: montserratSemiBold.copyWith(color: warningcolor, fontSize: 17),
+                                                                                ),
                                                                               ],
                                                                             ),
                                                                           ),
@@ -415,10 +404,6 @@ class PackageDetailsState extends State<PackageDetails> {
                                                               ),
                                                             ),
                                                             SizedBox(width: 5),
-                                                            Container(
-                                                                color: Color(
-                                                                    0xFFADD8E6),
-                                                                width: 10),
                                                           ],
                                                         ),
                                                       ),
@@ -511,14 +496,6 @@ class PackageDetailsState extends State<PackageDetails> {
                                                               children: <
                                                                   Widget>[
                                                                 Container(
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                        .blue,
-                                                                    borderRadius:
-                                                                        BorderRadius.all(
-                                                                            Radius.circular(10)),
-                                                                  ),
                                                                   padding: EdgeInsets
                                                                       .fromLTRB(
                                                                           22,
@@ -611,6 +588,445 @@ class PackageDetailsState extends State<PackageDetails> {
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(16.0),
                       ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 12,
+                          ),
+                          isServicing
+                              ? ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  itemCount: 3,
+                                  itemBuilder: (context, index) {
+                                    return Shimmer.fromColors(
+                                      baseColor: Colors.grey,
+                                      highlightColor: Colors.grey,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.black,
+                                                    width: 1.0))),
+                                        child: Column(
+                                          children: <Widget>[
+                                            SizedBox(height: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Container(
+                                                          height: 15,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ]),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  })
+                              : Container(
+                                  padding: const EdgeInsets.all(15),
+                                  child: Text(serviceMsg,
+                                      maxLines: 10,
+                                      textAlign: TextAlign.center,
+                                      style: montserratSemiBold.copyWith(
+                                          color: blackColor, fontSize: 18))),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Divider(
+                              color: Colors.grey.withOpacity(.1),
+                              thickness: 2,
+                              indent: 40,
+                              endIndent: 40),
+                          isServicing
+                              ? Text("Additional Queries",
+                                  maxLines: 10,
+                                  style: montserratSemiBold.copyWith(
+                                      color: blackColor, fontSize: 14))
+                              : Container(),
+                          isServicing
+                              ? Padding(
+                                  padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(16)),
+                                        color: whiteColor),
+                                    child: TextField(
+                                        keyboardType: TextInputType.multiline,
+                                        minLines: 1,
+                                        maxLines: 5,
+                                        maxLength: 500,
+                                        textInputAction:
+                                            TextInputAction.newline,
+                                        controller: complaint,
+                                        decoration: InputDecoration(
+                                            counterText: "",
+                                            hintText: "Your message here...",
+                                            hintStyle:
+                                                montserratRegular.copyWith(
+                                                    color: blackColor,
+                                                    fontSize: 12),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: greyColor, width: 0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: greyColor, width: 0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ))),
+                                    alignment: Alignment.center,
+                                  ),
+                                )
+                              : SizedBox(),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                flex: 3,
+                                child: Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        14, 0, 14, 14),
+                                    child: Text(
+                                        "Press record to start audio recording",
+                                        style: montserratRegular.copyWith(
+                                            color: blackColor, fontSize: 12)),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        AvatarGlow(
+                                          endRadius: 60,
+                                          glowColor: Colors.green,
+                                          animate: animate,
+                                          repeatPauseDuration:
+                                              Duration(milliseconds: 100),
+                                          child: CircleAvatar(
+                                            radius: 30,
+                                            backgroundColor: isRecording
+                                                ? Colors.red
+                                                : syanColor,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 20,
+                                                  backgroundColor: isRecording
+                                                      ? Colors.red
+                                                      : syanColor,
+                                                  child: IconButton(
+                                                    icon: Icon(icon,
+                                                        color: whiteColor,
+                                                        size: 25),
+                                                    onPressed: () async {
+                                                      await recorder
+                                                          .toggleRecording();
+
+                                                      final isRecording =
+                                                          recorder.isRecording;
+                                                      recordPending =
+                                                          recorder.isRecording;
+                                                      setState(() {});
+
+                                                      if (isRecording) {
+                                                        timeController
+                                                            .startTimer();
+                                                      } else {
+                                                        timeController
+                                                            .stopTimer();
+                                                        setState(() {
+                                                          recordLocation = true;
+                                                        });
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                                AMTimerWidget(
+                                                    controller: timeController),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              recordLocation == true
+                                  ? Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 4,
+                                          child: Container(
+                                            margin: const EdgeInsets.fromLTRB(
+                                                14.0, 0, 0, 0),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: blackColor
+                                                      .withOpacity(0.2),
+                                                  blurRadius: 0.1,
+                                                  spreadRadius: 0,
+                                                ),
+                                              ],
+                                              border: Border.all(
+                                                  color: Colors.blueAccent),
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            padding: const EdgeInsets.all(8),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Row(
+                                                  children: <Widget>[
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.all(4)),
+                                                    CircleAvatar(
+                                                      radius: 20,
+                                                      backgroundColor:
+                                                          Colors.blue,
+                                                      child: IconButton(
+                                                        icon: Icon(
+                                                          Icons
+                                                              .record_voice_over_outlined,
+                                                          color: whiteColor,
+                                                        ),
+                                                        onPressed: () {},
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 16,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          playrecordtext,
+                                                          style: montserratSemiBold
+                                                              .copyWith(
+                                                                  color:
+                                                                      whiteColor,
+                                                                  fontSize: 12),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                                CircleAvatar(
+                                                  radius: 20,
+                                                  backgroundColor: whiteColor,
+                                                  child: IconButton(
+                                                    icon: Icon(playrecordicon,
+                                                        color: whiteColor),
+                                                    onPressed: () async {
+                                                      await player.togglePlaying(
+                                                          whenFinished: () =>
+                                                              setState(() {}));
+                                                      setState(() {});
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor: blackColor,
+                                            child: IconButton(
+                                              icon: Icon(
+                                                  Icons.delete_forever_outlined,
+                                                  color: Colors.grey,
+                                                  size: 32),
+                                              onPressed: () {
+                                                setState(() {
+                                                  recordLocation = false;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                              SizedBox(height: height * 0.04),
+                              // GestureDetector(
+                              //   onTap: () async {
+                              //     if (isbooked) return;
+                              //     setState(() => isbooked = true);
+                              //     await Future.delayed(
+                              //         Duration(milliseconds: 1000));
+                              //     proceedbooking();
+                              //   },
+                              //   child: Stack(
+                              //     alignment: Alignment.bottomCenter,
+                              //     children: [
+                              //       Container(
+                              //         height: height * 0.045,
+                              //         width: height * 0.37,
+                              //         decoration: BoxDecoration(
+                              //             borderRadius:
+                              //                 BorderRadius.circular(14),
+                              //             boxShadow: [
+                              //               BoxShadow(
+                              //                   blurRadius: 16,
+                              //                   color:
+                              //                       syanColor.withOpacity(.6),
+                              //                   spreadRadius: 0,
+                              //                   blurStyle: BlurStyle.outer,
+                              //                   offset: Offset(0, 0)),
+                              //             ]),
+                              //       ),
+                              //       Container(
+                              //         height: height * 0.075,
+                              //         width: height * 0.4,
+                              //         alignment: Alignment.center,
+                              //         decoration: BoxDecoration(
+                              //           shape: BoxShape.rectangle,
+                              //           borderRadius: BorderRadius.all(
+                              //               Radius.circular(14)),
+                              //           gradient: LinearGradient(
+                              //             begin: Alignment.topLeft,
+                              //             end: Alignment.bottomRight,
+                              //             colors: [
+                              //               syanColor,
+                              //               blueColor,
+                              //             ],
+                              //           ),
+                              //         ),
+                              //         child: !isbooked
+                              //             ? Text(
+                              //                 "BOOK",
+                              //                 style:
+                              //                     montserratSemiBold.copyWith(
+                              //                         color: Colors.white),
+                              //               )
+                              //             : Row(
+                              //                 mainAxisAlignment:
+                              //                     MainAxisAlignment.center,
+                              //                 children: [
+                              //                   Transform.scale(
+                              //                     scale: 0.7,
+                              //                     child:
+                              //                         CircularProgressIndicator(
+                              //                       color: whiteColor,
+                              //                     ),
+                              //                   ),
+                              //                 ],
+                              //               ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.04),
+                          GestureDetector(
+                            onTap: () async {
+                              if (isbooked) return;
+                              setState(() => isbooked = true);
+                              await Future.delayed(
+                                  Duration(milliseconds: 1000));
+                              proceedbooking();
+                            },
+                            child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: [
+                                Container(
+                                  height: height * 0.045,
+                                  width: height * 0.37,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            blurRadius: 16,
+                                            color: syanColor.withOpacity(.6),
+                                            spreadRadius: 0,
+                                            blurStyle: BlurStyle.outer,
+                                            offset: Offset(0, 0)),
+                                      ]),
+                                ),
+                                Container(
+                                  height: height * 0.075,
+                                  width: height * 0.4,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(14)),
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        syanColor,
+                                        blueColor,
+                                      ],
+                                    ),
+                                  ),
+                                  child: !isbooked
+                                      ? Text(
+                                          "BOOK",
+                                          style: montserratSemiBold.copyWith(
+                                              color: Colors.white),
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Transform.scale(
+                                              scale: 0.7,
+                                              child: CircularProgressIndicator(
+                                                color: whiteColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -622,3 +1038,61 @@ class PackageDetailsState extends State<PackageDetails> {
     );
   }
 }
+
+// enum SymbolType { Bullet, Numbered, Custom }
+
+// /// Add UL to its children
+// class UL extends StatelessWidget {
+//   final List<Widget>? children;
+//   final double padding;
+//   final double spacing;
+//   final SymbolType symbolType;
+//   final Color? symbolColor;
+//   final Color? textColor;
+//   final EdgeInsets? edgeInsets;
+//   final Widget? customSymbol;
+//   final String? prefixText; // Used when SymbolType is Numbered
+
+//   UL({
+//     this.children,
+//     this.padding = 8,
+//     this.spacing = 8,
+//     this.symbolType = SymbolType.Bullet,
+//     this.symbolColor,
+//     this.textColor,
+//     this.customSymbol,
+//     this.prefixText,
+//     this.edgeInsets,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: List.generate(children.validate().length, (index) {
+//         return Container(
+//           padding: edgeInsets ?? EdgeInsets.zero,
+//           child: Row(
+//             crossAxisAlignment: symbolType == SymbolType.Numbered
+//                 ? CrossAxisAlignment.start
+//                 : CrossAxisAlignment.center,
+//             children: [
+//               symbolType == SymbolType.Bullet
+//                   ? Text(
+//                       '•',
+//                     )
+//                   : SizedBox(),
+//               symbolType == SymbolType.Numbered
+//                   ? Text('${prefixText} ${index + 1}.',)
+//                   : SizedBox(),
+//               (symbolType == SymbolType.Custom && customSymbol != null)
+//                   ? customSymbol!
+//                   : SizedBox(),
+//               SizedBox(width: padding),
+//               children![index],
+//             ],
+//           ),
+//         );
+//       }),
+//     );
+//   }
+// }

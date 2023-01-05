@@ -1,3 +1,5 @@
+import 'package:autoversa/utils/app_validations.dart';
+
 import 'network_services.dart';
 
 Future getStateList(Map req) async {
@@ -82,4 +84,18 @@ Future read_notification(Map req) async {
 Future getCustomerNotificationList() async {
   return handleResponse(
       await securedGetRequest('system/NotificationController/'));
+}
+
+Future getCustomerAddresses(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Customer/CustomerAddressController/index', req));
+}
+
+Future getPickupOptions() async {
+  return handleResponse(await securedGetRequest('System/PickupTypeController'));
+}
+
+Future getTimeSlotsForBooking(Map req) async {
+  return handleResponse(
+      await securedPostRequest('Get_availabletimeslotby_id', req));
 }

@@ -2,6 +2,7 @@
     package="com.autoversa.av_customer">
     
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
    <application
         android:label="Autoversa"
         android:name="${applicationName}"
