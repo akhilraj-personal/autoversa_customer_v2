@@ -297,7 +297,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          blueColor,
+                          lightblueColor,
                           syanColor,
                         ],
                       ),
@@ -715,7 +715,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                       end: Alignment.bottomRight,
                                       colors: [
                                         syanColor,
-                                        blueColor,
+                                        lightblueColor,
                                       ],
                                     ),
                                   ),

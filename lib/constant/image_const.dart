@@ -17,6 +17,7 @@ class ImageConst {
   static const verify_icon = baseImageURl + 'verify_icon.png';
   static const signup_icon = baseImageURl + 'signup_icon.png';
   static const fb_icon = baseImageURl + 'fb_icon.png';
+  static const default_pro_pic = baseImageURl + 'default_profile.png';
   static const g_icon = baseImageURl + 'g_icon.png';
 
   static const benz_ico = baseImageURl + 'cp_benz.png';

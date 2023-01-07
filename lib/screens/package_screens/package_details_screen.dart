@@ -250,7 +250,7 @@ class PackageDetailsState extends State<PackageDetails> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          blueColor,
+                          lightblueColor,
                           syanColor,
                         ],
                       ),
@@ -930,7 +930,7 @@ class PackageDetailsState extends State<PackageDetails> {
                               //             end: Alignment.bottomRight,
                               //             colors: [
                               //               syanColor,
-                              //               blueColor,
+                              //               lightblueColor,
                               //             ],
                               //           ),
                               //         ),
@@ -999,7 +999,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                       end: Alignment.bottomRight,
                                       colors: [
                                         syanColor,
-                                        blueColor,
+                                        lightblueColor,
                                       ],
                                     ),
                                   ),

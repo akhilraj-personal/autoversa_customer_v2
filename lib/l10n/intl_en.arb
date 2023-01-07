@@ -39,5 +39,6 @@
   "make": "Make",
   "model": "Model",
   "variant": "Variant",
-  "year": "Year"
+  "year": "Year",
+  "address_error": "Enter Valid Address"
 }

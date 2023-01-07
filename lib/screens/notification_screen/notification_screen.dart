@@ -130,7 +130,7 @@ class NotificationPageState extends State<NotificationPage> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          blueColor,
+                          lightblueColor,
                           syanColor,
                         ],
                       ),

@@ -407,7 +407,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                     end: Alignment.bottomRight,
                                     colors: [
                                       syanColor,
-                                      blueColor,
+                                      lightblueColor,
                                     ],
                                   ),
                                 ),

@@ -459,6 +459,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Enter Valid Address`
+  String get address_error {
+    return Intl.message(
+      'Enter Valid Address',
+      name: 'address_error',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

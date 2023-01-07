@@ -541,7 +541,7 @@ class SignupPageState extends State<SignupPage> {
                                       end: Alignment.bottomRight,
                                       colors: [
                                         syanColor,
-                                        blueColor,
+                                        lightblueColor,
                                       ],
                                     ),
                                   ),

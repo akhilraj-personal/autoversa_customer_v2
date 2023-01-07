@@ -64,6 +64,7 @@ import 'dart:async';
 
 import 'package:autoversa/screens/home/dashboard_page.dart';
 import 'package:autoversa/screens/home/home_screen.dart';
+import 'package:autoversa/screens/settings/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -103,7 +104,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     HomeScreen(),
     DashScreen(),
     Container(),
-    Container(),
+    ProfilePage(),
   ];
 
   @override

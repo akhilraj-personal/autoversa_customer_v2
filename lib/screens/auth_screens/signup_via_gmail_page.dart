@@ -617,7 +617,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                                             end: Alignment.bottomRight,
                                             colors: [
                                               syanColor,
-                                              blueColor,
+                                              lightblueColor,
                                             ],
                                           ),
                                         ),
@@ -675,7 +675,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                           //             end: Alignment.bottomRight,
                           //             colors: [
                           //               syanColor,
-                          //               blueColor,
+                          //               lightblueColor,
                           //             ],
                           //           ),
                           //         ),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/screens/address/address_add_screen.dart';
 import 'package:autoversa/screens/package_screens/summery_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/AppWidgets.dart';
@@ -555,7 +556,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          blueColor,
+                          lightblueColor,
                           syanColor,
                         ],
                       ),
@@ -734,7 +735,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              setState(() {});
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddressAdd()));
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1385,13 +1389,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                 end: Alignment.bottomRight,
                                 colors: [
                                   syanColor,
-                                  blueColor,
+                                  lightblueColor,
                                 ],
                               ),
                             ),
                             child: !isproceeding
                                 ? Text(
-                                    "BOOK",
+                                    "PROCEED",
                                     style: montserratSemiBold.copyWith(
                                         color: Colors.white),
                                   )
