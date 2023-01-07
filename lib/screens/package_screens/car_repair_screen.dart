@@ -57,7 +57,7 @@ class CarRepairState extends State<CarRepair> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          blueColor,
+                          lightblueColor,
                           syanColor,
                         ],
                       ),

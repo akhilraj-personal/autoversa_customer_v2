@@ -371,7 +371,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           Alignment.bottomRight,
                                                       colors: [
                                                         syanColor,
-                                                        blueColor,
+                                                        lightblueColor,
                                                       ],
                                                     ),
                                                   ),
@@ -671,7 +671,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           Alignment.bottomRight,
                                                       colors: [
                                                         syanColor,
-                                                        blueColor,
+                                                        lightblueColor,
                                                       ],
                                                     ),
                                                   ),
@@ -1153,7 +1153,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
               begin: Alignment.topRight,
               end: Alignment.bottomRight,
               colors: [
-                blueColor,
+                lightblueColor,
                 syanColor,
               ],
             ),
@@ -1225,7 +1225,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            blueColor,
+                            lightblueColor,
                             syanColor,
                           ],
                         ),

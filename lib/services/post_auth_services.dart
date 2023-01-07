@@ -99,3 +99,12 @@ Future getTimeSlotsForBooking(Map req) async {
   return handleResponse(
       await securedPostRequest('Get_availabletimeslotby_id', req));
 }
+
+Future getCityList(Map req) async {
+  return handleResponse(
+      await securedPostRequest("get_citylist_by_state_id", req));
+}
+
+Future getprofiledetails(Map req) async {
+  return handleResponse(await securedPostRequest('get_customer_by_id', req));
+}

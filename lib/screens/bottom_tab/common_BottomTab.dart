@@ -178,7 +178,7 @@ class _PersistanceBottomTabState extends State<PersistanceBottomTab> {
                       begin: Alignment.topRight,
                       end: Alignment.bottomRight,
                       colors: [
-                        blueColor,
+                        lightblueColor,
                         syanColor,
                       ],
                     ),

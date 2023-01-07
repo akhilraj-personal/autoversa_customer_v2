@@ -1,6 +1,6 @@
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
-import 'package:autoversa/screens/package_screens/car_repair_screeen.dart';
+import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
@@ -215,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        blueColor,
+                        lightblueColor,
                         syanColor,
                       ],
                     ),
@@ -1409,7 +1409,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       end: Alignment.bottomLeft,
                                       colors: [
                                         syanColor,
-                                        blueColor,
+                                        lightblueColor,
                                       ],
                                     ),
                                   ),
@@ -1494,10 +1494,10 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => NextPage()));
-          },
+          // onTap: () {
+          //   Navigator.push(
+          //       context, MaterialPageRoute(builder: (context) => NextPage()));
+          // },
           child: Container(
             padding: EdgeInsets.all(height * 0.023),
             decoration: BoxDecoration(
@@ -1506,7 +1506,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 begin: Alignment.topRight,
                 end: Alignment.bottomRight,
                 colors: [
-                  blueColor,
+                  lightblueColor,
                   syanColor,
                 ],
               ),

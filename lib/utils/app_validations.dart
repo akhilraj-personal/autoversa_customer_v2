@@ -21,6 +21,17 @@ emirateValidation(value, context) {
   }
 }
 
+addressValidation(value, context) {
+  String pattern = r'(^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$)';
+  RegExp regExp = new RegExp(pattern);
+  if (value.length == 0) {
+    return S.of(context).address_error;
+  } else if (!regExp.hasMatch(value)) {
+    return S.of(context).address_error;
+  }
+  return null;
+}
+
 fullNameValidation(value, context) {
   String pattern = r'^[A-Za-z -]+$';
   RegExp regExp = new RegExp(pattern);

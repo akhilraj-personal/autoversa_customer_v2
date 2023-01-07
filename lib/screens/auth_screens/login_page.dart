@@ -338,7 +338,7 @@ class _LoginPageState extends State<LoginPage> {
                                                     end: Alignment.bottomRight,
                                                     colors: [
                                                       syanColor,
-                                                      blueColor,
+                                                      lightblueColor,
                                                     ],
                                                   ),
                                                 ),

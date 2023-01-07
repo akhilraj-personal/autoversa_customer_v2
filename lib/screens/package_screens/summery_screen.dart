@@ -6,6 +6,7 @@ import 'package:autoversa/utils/color_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -294,7 +295,7 @@ class SummeryPageState extends State<SummeryPage> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            blueColor,
+                            lightblueColor,
                             syanColor,
                           ],
                         ),
@@ -464,12 +465,18 @@ class SummeryPageState extends State<SummeryPage> {
                                       ),
                                       Divider(),
                                       Text(
-                                        "Driver Pickup",
+                                        packdata['pick_type_name'] ?? "",
                                         style: montserratLight.copyWith(
                                             color: blackColor, fontSize: 14),
                                       ),
                                       Text(
-                                        widget.currency + " " + "50",
+                                        packdata['pick_up_price'] != null
+                                            ? packdata['pick_up_price'] != "0"
+                                                ? "AED " +
+                                                    packdata['pick_up_price']
+                                                        .toString()
+                                                : "FREE"
+                                            : "",
                                         style: montserratSemiBold.copyWith(
                                             color: warningcolor, fontSize: 14),
                                       ),
@@ -483,6 +490,416 @@ class SummeryPageState extends State<SummeryPage> {
                         ),
                       ],
                     ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Pickup Location",
+                            style: montserratSemiBold.copyWith(
+                                color: blackColor, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: height * 0.050,
+                            width: height * 0.050,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  lightblueColor,
+                                  syanColor,
+                                ],
+                              ),
+                            ),
+                            child: Image.asset(
+                              ImageConst.music,
+                              scale: 4.5,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Flexible(
+                            child: Container(
+                              child: Text(
+                                packdata['pick_up_location'] ?? "",
+                                overflow: TextOverflow.clip,
+                                style: montserratLight.copyWith(
+                                    color: blackColor, fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Divider(
+                        color: divider_grey_color,
+                        thickness: 1.5,
+                        indent: 20,
+                        endIndent: 20),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Drop Location",
+                            style: montserratSemiBold.copyWith(
+                                color: blackColor, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: height * 0.050,
+                            width: height * 0.050,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  lightblueColor,
+                                  syanColor,
+                                ],
+                              ),
+                            ),
+                            child: Image.asset(
+                              ImageConst.music,
+                              scale: 4.5,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Flexible(
+                            child: Container(
+                              child: Text(
+                                packdata['drop_location'] ?? "",
+                                overflow: TextOverflow.clip,
+                                style: montserratLight.copyWith(
+                                    color: blackColor, fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Divider(
+                        color: divider_grey_color,
+                        thickness: 1.5,
+                        indent: 20,
+                        endIndent: 20),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Selected Date & Time",
+                            style: montserratSemiBold.copyWith(
+                                color: blackColor, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: height * 0.050,
+                            width: height * 0.050,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  lightblueColor,
+                                  syanColor,
+                                ],
+                              ),
+                            ),
+                            child: Image.asset(
+                              ImageConst.music,
+                              scale: 4.5,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            packdata['selected_date'] != null
+                                ? DateFormat('LLLL').format(
+                                    DateTime.parse(packdata['selected_date']))
+                                : "",
+                            style: montserratLight.copyWith(
+                                color: blackColor, fontSize: 14),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            packdata['selected_date'] != null
+                                ? DateFormat('d').format(
+                                    DateTime.parse(packdata['selected_date']))
+                                : "",
+                            style: montserratLight.copyWith(
+                                color: blackColor, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: height * 0.050,
+                            width: height * 0.050,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  lightblueColor,
+                                  syanColor,
+                                ],
+                              ),
+                            ),
+                            child: Image.asset(
+                              ImageConst.music,
+                              scale: 4.5,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            packdata['selected_timeslot'] != null
+                                ? packdata['selected_timeslot'].split('- ')[0] +
+                                    "-"
+                                : "",
+                            style: montserratLight.copyWith(
+                                color: blackColor, fontSize: 14),
+                          ),
+                          Text(
+                            packdata['selected_timeslot'] != null
+                                ? " " +
+                                    packdata['selected_timeslot'].split('- ')[1]
+                                : "",
+                            style: montserratLight.copyWith(
+                                color: blackColor, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Divider(
+                        color: divider_grey_color,
+                        thickness: 1.5,
+                        indent: 20,
+                        endIndent: 20),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Additional Comments",
+                            style: montserratSemiBold.copyWith(
+                                color: blackColor, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: height * 0.050,
+                            width: height * 0.050,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  lightblueColor,
+                                  syanColor,
+                                ],
+                              ),
+                            ),
+                            child: Image.asset(
+                              ImageConst.music,
+                              scale: 4.5,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            packdata['complaint'] ?? "",
+                            style: montserratLight.copyWith(
+                                color: blackColor, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Divider(
+                        color: divider_grey_color,
+                        thickness: 1.5,
+                        indent: 20,
+                        endIndent: 20),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Grand Total: ",
+                            style: montserratSemiBold.copyWith(
+                                color: blackColor, fontSize: 14),
+                          ),
+                          Text(
+                            widget.currency + " " + (totalamount).toString(),
+                            style: montserratSemiBold.copyWith(
+                                color: warningcolor, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        if (isproceeding) return;
+                        setState(() => isproceeding = true);
+                        await Future.delayed(Duration(milliseconds: 1000));
+                        createBooking();
+                      },
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Container(
+                            height: height * 0.045,
+                            width: height * 0.37,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                boxShadow: [
+                                  BoxShadow(
+                                      blurRadius: 16,
+                                      color: syanColor.withOpacity(.6),
+                                      spreadRadius: 0,
+                                      blurStyle: BlurStyle.outer,
+                                      offset: Offset(0, 0)),
+                                ]),
+                          ),
+                          Container(
+                            height: height * 0.075,
+                            width: height * 0.4,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(14)),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  syanColor,
+                                  lightblueColor,
+                                ],
+                              ),
+                            ),
+                            child: !isproceeding
+                                ? Text(
+                                    "PROCEED TO PAY",
+                                    style: montserratSemiBold.copyWith(
+                                        color: Colors.white),
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Transform.scale(
+                                        scale: 0.7,
+                                        child: CircularProgressIndicator(
+                                          color: whiteColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    )
                   ],
                 ),
               ],
