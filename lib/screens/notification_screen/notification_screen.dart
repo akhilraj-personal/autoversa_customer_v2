@@ -72,7 +72,7 @@ class NotificationPageState extends State<NotificationPage> {
       setState(() {
         isActive = false;
       });
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -326,7 +326,7 @@ class Notification extends StatelessWidget {
                 }
               }).catchError((e) {
                 print(e.toString());
-                showCustomToast(context, S.of(context).toast_application_error,
+                showCustomToast(context, ST.of(context).toast_application_error,
                     bgColor: errorcolor, textColor: whiteColor);
               });
             } else if (model.nt_read == "1") {

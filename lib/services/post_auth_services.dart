@@ -108,3 +108,12 @@ Future getCityList(Map req) async {
 Future getprofiledetails(Map req) async {
   return handleResponse(await securedPostRequest('get_customer_by_id', req));
 }
+
+Future profile_update(Map req) async {
+  return handleResponse(await securedPostRequest('customer_update', req));
+}
+
+Future deleteCustomerVehicle(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Customer/CustomerVehicleController/delete', req));
+}

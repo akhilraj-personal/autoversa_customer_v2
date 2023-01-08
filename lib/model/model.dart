@@ -25,3 +25,40 @@ class NotificationModel {
     this.cv_year,
   });
 }
+
+class VehicleModel {
+  var cv_id;
+  var cv_make;
+  var cv_model;
+  var cv_variant;
+  var cv_year;
+  var cv_vinnumber;
+  var cv_plate_number;
+  var cv_odometer;
+  var cv_group_id;
+  var cv_cust_id;
+  var cv_created_on;
+  var cv_created_by;
+  var cv_updated_on;
+  var cv_updated_by;
+  var cv_status_flag;
+  var cv_delete_flag;
+
+  VehicleModel(
+      {this.cv_id,
+      this.cv_make,
+      this.cv_model,
+      this.cv_variant,
+      this.cv_year,
+      this.cv_vinnumber,
+      this.cv_plate_number,
+      this.cv_odometer,
+      this.cv_group_id,
+      this.cv_cust_id,
+      this.cv_created_on,
+      this.cv_created_by,
+      this.cv_updated_on,
+      this.cv_updated_by,
+      this.cv_status_flag,
+      this.cv_delete_flag});
+}

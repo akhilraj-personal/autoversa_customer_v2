@@ -65,7 +65,7 @@ class SignupPageState extends State<SignupPage> {
         });
       } else {}
     }).catchError((e) {
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -109,7 +109,7 @@ class SignupPageState extends State<SignupPage> {
       }
     }).catchError((e) {
       setState(() => isLoading = false);
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -201,7 +201,7 @@ class SignupPageState extends State<SignupPage> {
                           ),
                           SizedBox(height: 20),
                           Text(
-                            S.of(context).register_new_account,
+                            ST.of(context).register_new_account,
                             style: montserratSemiBold.copyWith(
                                 color: blackColor, fontSize: 21),
                             textAlign: TextAlign.center,
@@ -245,7 +245,7 @@ class SignupPageState extends State<SignupPage> {
                                           hint: Align(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                S.of(context).emirates,
+                                                ST.of(context).emirates,
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: blackColor,
@@ -328,7 +328,8 @@ class SignupPageState extends State<SignupPage> {
                                                   color: warningcolor),
                                               counterText: "",
                                               filled: true,
-                                              hintText: S.of(context).full_name,
+                                              hintText:
+                                                  ST.of(context).full_name,
                                               hintStyle:
                                                   montserratRegular.copyWith(
                                                       color: blackColor,
@@ -395,7 +396,7 @@ class SignupPageState extends State<SignupPage> {
                                                   color: warningcolor),
                                               counterText: "",
                                               filled: true,
-                                              hintText: S.of(context).email,
+                                              hintText: ST.of(context).email,
                                               hintStyle:
                                                   montserratRegular.copyWith(
                                                       color: blackColor,
@@ -482,7 +483,7 @@ class SignupPageState extends State<SignupPage> {
                                               counterText: "",
                                               filled: true,
                                               hintText:
-                                                  S.of(context).mobile_number,
+                                                  ST.of(context).mobile_number,
                                               hintStyle:
                                                   montserratRegular.copyWith(
                                                       color: blackColor,
@@ -547,7 +548,7 @@ class SignupPageState extends State<SignupPage> {
                                   ),
                                   child: !isLoading
                                       ? Text(
-                                          S.of(context).sign_up.toUpperCase(),
+                                          ST.of(context).sign_up.toUpperCase(),
                                           style: montserratSemiBold.copyWith(
                                               color: Colors.white),
                                         )

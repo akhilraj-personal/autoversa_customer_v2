@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     }).catchError((e) {
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     }).catchError((e) {
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     } catch (e) {
       isPackageLoaded = false;
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     }
   }
@@ -278,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 margin: EdgeInsets.only(left: width * 0.03),
                                 child: RichText(
                                   text: TextSpan(
-                                    text: S.of(context).dash_intro_text + " ",
+                                    text: ST.of(context).dash_intro_text + " ",
                                     style: montserratRegular.copyWith(
                                         color: whiteColor,
                                         fontSize: width * 0.034),
@@ -877,7 +877,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Text(
-                                              S.of(context).new_vehicle_text,
+                                              ST.of(context).new_vehicle_text,
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: blackColor,

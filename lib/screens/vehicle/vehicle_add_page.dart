@@ -69,7 +69,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
         });
       } else {}
     }).catchError((e) {
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -98,7 +98,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
         });
       } else {}
     }).catchError((e) {
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -129,7 +129,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
         // toasty(context, language!.lblPhoneErr);
       }
     }).catchError((e) {
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -165,7 +165,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
         });
       } else {}
     }).catchError((e) {
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -204,7 +204,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
         });
       }
     }).catchError((e) {
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -233,7 +233,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
           modelname = '';
           variantname = '';
           yearselected = '';
-          showCustomToast(context, S.of(context).vehicle_save_toast,
+          showCustomToast(context, ST.of(context).vehicle_save_toast,
               bgColor: blackColor, textColor: whiteColor);
           Navigator.pushAndRemoveUntil(
             context,
@@ -248,15 +248,15 @@ class VehicleAddPageState extends State<VehicleAddPage> {
       } else {
         if (value['ret_message'] == "duplicate") {
           setState(() => issubmitted = false);
-          showCustomToast(context, S.of(context).vehicle_already_exist,
+          showCustomToast(context, ST.of(context).vehicle_already_exist,
               bgColor: warningcolor, textColor: whiteColor);
         } else {
-          showCustomToast(context, S.of(context).vehicle_save_toast,
+          showCustomToast(context, ST.of(context).vehicle_save_toast,
               bgColor: blackColor, textColor: whiteColor);
         }
       }
     }).catchError((e) {
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -379,7 +379,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                           hint: Align(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                S.of(context).make + "*",
+                                                ST.of(context).make + "*",
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: blackColor,
@@ -440,7 +440,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                           hint: Align(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                S.of(context).model + "*",
+                                                ST.of(context).model + "*",
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: blackColor,
@@ -522,7 +522,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                         alignment:
                                                             Alignment.center,
                                                         child: Text(
-                                                          S
+                                                          ST
                                                                   .of(context)
                                                                   .variant +
                                                               "*",
@@ -589,7 +589,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                           hint: Align(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                S.of(context).year + "*",
+                                                ST.of(context).year + "*",
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: blackColor,
@@ -659,7 +659,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                               counterText: "",
                                               filled: true,
                                               hintText:
-                                                  S.of(context).plate_number,
+                                                  ST.of(context).plate_number,
                                               hintStyle:
                                                   montserratRegular.copyWith(
                                                       color: blackColor,
@@ -720,7 +720,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                     ),
                                   ),
                                   child: Text(
-                                    S.of(context).save.toUpperCase(),
+                                    ST.of(context).save.toUpperCase(),
                                     style: montserratSemiBold.copyWith(
                                         color: Colors.white),
                                   ),

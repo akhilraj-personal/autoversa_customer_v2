@@ -56,12 +56,12 @@ class MyApp extends StatelessWidget {
             locale: Provider.of<LanguageChangeProvider>(context, listen: true)
                 .currentLocale,
             localizationsDelegates: [
-              S.delegate,
+              ST.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: S.delegate.supportedLocales,
+            supportedLocales: ST.delegate.supportedLocales,
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               primarySwatch: Colors.blue,
