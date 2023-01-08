@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
       }
     }).catchError((e) {
       setState(() => isLoading = false);
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -169,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                         SizedBox(height: height * 0.08),
                                         Text(
-                                          S.of(context).welcome_text,
+                                          ST.of(context).welcome_text,
                                           style: montserratSemiBold.copyWith(
                                               color: blackColor, fontSize: 21),
                                         ),
@@ -259,7 +259,7 @@ class _LoginPageState extends State<LoginPage> {
                                                                   counterText:
                                                                       "",
                                                                   filled: true,
-                                                                  hintText: S
+                                                                  hintText: ST
                                                                       .of(
                                                                           context)
                                                                       .enter_mobile_text,
@@ -344,7 +344,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 ),
                                                 child: !isLoading
                                                     ? Text(
-                                                        S
+                                                        ST
                                                             .of(context)
                                                             .sign_in
                                                             .toUpperCase(),
@@ -373,7 +373,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                         SizedBox(height: height * 0.03),
                                         Text(
-                                          S.of(context).sign_in_alt,
+                                          ST.of(context).sign_in_alt,
                                           style: montserratRegular.copyWith(
                                               color: blackColor, fontSize: 12),
                                         ),

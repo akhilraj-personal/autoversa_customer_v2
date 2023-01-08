@@ -89,7 +89,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
       }
     }).catchError((e) {
       setState(() => isResend = false);
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -108,12 +108,12 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         startTimer();
       } else {
         setState(() => isResend = false);
-        showCustomToast(context, S.of(context).try_another_method,
+        showCustomToast(context, ST.of(context).try_another_method,
             bgColor: warningcolor, textColor: whiteColor);
       }
     }).catchError((e) {
       setState(() => isResend = false);
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -126,7 +126,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
       setState(() {
         isOtpVerifying = false;
       });
-      showCustomToast(context, S.of(context).otp_invalid_text,
+      showCustomToast(context, ST.of(context).otp_invalid_text,
           bgColor: warningcolor, textColor: whiteColor);
     } else {
       final prefs = await SharedPreferences.getInstance();
@@ -171,7 +171,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
           }
         } else if (value['ret_data'] == "MaxAttempt") {
           setState(() => isOtpVerifying = false);
-          showCustomToast(context, S.of(context).max_otp_text,
+          showCustomToast(context, ST.of(context).max_otp_text,
               bgColor: warningcolor, textColor: whiteColor);
           otppin = "";
         } else {
@@ -181,7 +181,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         }
       }).catchError((e) {
         setState(() => isOtpVerifying = false);
-        showCustomToast(context, S.of(context).toast_application_error,
+        showCustomToast(context, ST.of(context).toast_application_error,
             bgColor: errorcolor, textColor: whiteColor);
       });
     }
@@ -271,27 +271,27 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         ),
                         SizedBox(height: height * 0.05),
                         Text(
-                          S.of(context).verify_mobile_number,
+                          ST.of(context).verify_mobile_number,
                           style: montserratSemiBold.copyWith(
                               color: blackColor, fontSize: width * 0.053),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: height * 0.03),
                         Text(
-                          S.of(context).send_verification_msg +
+                          ST.of(context).send_verification_msg +
                               widget.country_code +
                               widget.phone,
                           style: montserratLight.copyWith(
                               color: lightblackColor, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
-                        Text('\n' + S.of(context).change_number,
+                        Text('\n' + ST.of(context).change_number,
                             style: montserratMedium.copyWith(
                                 color: changenumberorange, fontSize: 14),
                             textAlign: TextAlign.end),
                         SizedBox(height: height * 0.03),
                         Text(
-                          S.of(context).please_enter_the_code,
+                          ST.of(context).please_enter_the_code,
                           style: montserratRegular.copyWith(
                               color: blackColor, fontSize: 14),
                           textAlign: TextAlign.center,
@@ -335,7 +335,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                       },
                                       child: Text(
                                           click_count >= 0
-                                              ? S.of(context).resend_otp_text
+                                              ? ST.of(context).resend_otp_text
                                               : "",
                                           style: montserratSemiBold.copyWith(
                                               color: lightblackColor,
@@ -350,7 +350,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                       },
                                       child: Text(
                                         click_count >= 1
-                                            ? S.of(context).verify_call_text
+                                            ? ST.of(context).verify_call_text
                                             : "",
                                         style: montserratSemiBold.copyWith(
                                             color: lightblackColor,
@@ -364,7 +364,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                   children: [
                                       Text(OTPtimer.toString() +
                                           " " +
-                                          S.of(context).seconds_text),
+                                          ST.of(context).seconds_text),
                                     ]),
                         ),
                         SizedBox(height: 20),
@@ -413,7 +413,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                 ),
                                 child: !isOtpVerifying
                                     ? Text(
-                                        S.of(context).verify_me.toUpperCase(),
+                                        ST.of(context).verify_me.toUpperCase(),
                                         style: montserratSemiBold.copyWith(
                                             color: Colors.white),
                                       )

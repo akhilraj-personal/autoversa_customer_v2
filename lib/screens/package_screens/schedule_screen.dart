@@ -169,7 +169,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     } catch (e) {
       // setState(() => issubmitted = false);
       print(e.toString());
-      showCustomToast(context, S.of(context).toast_application_error,
+      showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     }
   }
@@ -807,7 +807,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                         hint: Align(
                                             alignment: Alignment.center,
                                             child: Text(
-                                              S.of(context).emirates,
+                                              ST.of(context).emirates,
                                               style: montserratRegular.copyWith(
                                                   color: blackColor,
                                                   fontSize: 14),
@@ -959,7 +959,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                           alignment:
                                                               Alignment.center,
                                                           child: Text(
-                                                            S
+                                                            ST
                                                                 .of(context)
                                                                 .emirates,
                                                             style: montserratRegular

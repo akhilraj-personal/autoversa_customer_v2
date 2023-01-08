@@ -18,6 +18,8 @@ class ImageConst {
   static const signup_icon = baseImageURl + 'signup_icon.png';
   static const fb_icon = baseImageURl + 'fb_icon.png';
   static const default_pro_pic = baseImageURl + 'default_profile.png';
+  static const camera = baseImageURl + 'camera.png';
+  static const no_data_found = baseImageURl + 'no_data_found.png';
   static const g_icon = baseImageURl + 'g_icon.png';
 
   static const benz_ico = baseImageURl + 'cp_benz.png';
@@ -52,6 +54,7 @@ class ImageConst {
   static const tool = baseIconURl + 'tool.png';
 
   static const setting = baseIconURl + 'setting.png';
+  static const adrresslist_logo = baseIconURl + 'address.png';
 }
 
 var height;

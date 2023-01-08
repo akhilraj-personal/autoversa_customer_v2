@@ -743,7 +743,7 @@ class AddressAddState extends State<AddressAdd> {
                                     ),
                                   ),
                                   child: Text(
-                                    S.of(context).save.toUpperCase(),
+                                    ST.of(context).save.toUpperCase(),
                                     style: montserratSemiBold.copyWith(
                                         color: Colors.white),
                                   ),
