@@ -64,6 +64,7 @@ import 'dart:async';
 
 import 'package:autoversa/screens/home/home_screen.dart';
 import 'package:autoversa/screens/settings/profile_screen.dart';
+import 'package:autoversa/screens/support/support_screen.dart';
 import 'package:autoversa/screens/vehicle/vehicle_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -100,7 +101,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
   ///------- tab screen  ----------
   final List<Widget> viewContainer = [
-    Container(),
+    Support(),
     HomeScreen(),
     Vehiclelist(),
     Container(),

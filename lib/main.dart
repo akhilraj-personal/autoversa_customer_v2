@@ -4,6 +4,7 @@ import 'package:autoversa/provider/provider.dart';
 import 'package:autoversa/screens/auth_screens/login_page.dart';
 import 'package:autoversa/screens/bottom_tab/bottomtab.dart';
 import 'package:autoversa/screens/splash_screen/splash_screen.dart';
+import 'package:autoversa/screens/support/support_screen.dart';
 import 'package:autoversa/screens/vehicle/vehicle_add_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -81,12 +82,14 @@ var routes = <String, WidgetBuilder>{
       ),
   Routes.loginPage: (BuildContext context) => LoginPage(),
   Routes.vehiclePage: (BuildContext context) => VehicleAddPage(),
+  Routes.supportPage: (BuildContext context) => Support(),
 };
 
 class Routes {
   static const SPLASH = "/";
   static const bottombar = "screens/bottom_tab/bottomtab.dart";
   static const loginPage = "screens/auth_screens/login_page.dart";
+  static const supportPage = "screens/support/support_screen.dart";
   static const otpverification =
       "screens/auth_screens/verification_by_otp_page.dart";
   static const vehiclePage = "screens/vehicle/vehicle_add_page.dart";
