@@ -1,3 +1,4 @@
+import 'package:autoversa/main.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -165,8 +166,9 @@ class _PersistanceBottomTabState extends State<PersistanceBottomTab> {
               child: GestureDetector(
                 onTap: () {
                   setState(() {
-                    tabNotifier.setindex = 0;
-                    widget.onSuccess(tabNotifier.getindex);
+                    Navigator.pushReplacementNamed(context, Routes.supportPage);
+                    // tabNotifier.setindex = 0;
+                    // widget.onSuccess(tabNotifier.getindex);
                   });
                 },
                 child: Container(

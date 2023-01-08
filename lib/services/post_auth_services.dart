@@ -117,3 +117,13 @@ Future deleteCustomerVehicle(Map req) async {
   return handleResponse(await securedPostRequest(
       'Customer/CustomerVehicleController/delete', req));
 }
+
+Future saveCustomerMessage(Map req) async {
+  return handleResponse(
+      await securedPostRequest('Customer/SupportChatController', req));
+}
+
+Future getCustomerMessages(data) async {
+  return handleResponse(
+      await securedGetRequest('Customer/SupportChatController/' + data));
+}

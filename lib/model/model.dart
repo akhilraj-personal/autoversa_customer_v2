@@ -62,3 +62,23 @@ class VehicleModel {
       this.cv_status_flag,
       this.cv_delete_flag});
 }
+
+class MessageModel {
+  String? img;
+  String? name;
+  String? message;
+  String? lastSeen;
+
+  MessageModel({this.img, this.name, this.message, this.lastSeen});
+}
+
+class AMMessageModel {
+  int? senderId;
+  int? receiverId;
+  String? msg;
+  String? time;
+  String? username;
+
+  AMMessageModel(
+      {this.senderId, this.receiverId, this.msg, this.time, this.username});
+}
