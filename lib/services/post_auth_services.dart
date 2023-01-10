@@ -157,3 +157,12 @@ Future confirmbookingpayment(Map req) async {
   return handleResponse(await securedPostRequest(
       'Booking/BookingController/confirm_booking_payment', req));
 }
+
+Future create_payment_for_job_workcard(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/create_payment_for_job', req));
+}
+
+Future getServicePackageDetails(Map req) async {
+  return handleResponse(await securedPostRequest('getDynamicPackgeDatas', req));
+}

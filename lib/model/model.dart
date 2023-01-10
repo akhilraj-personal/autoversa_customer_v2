@@ -99,3 +99,26 @@ class ServiceListdata {
       this.patient,
       this.department});
 }
+
+class AMSeviceModel {
+  var serid;
+  var sername;
+  var ser_type;
+  var serdesctypeid;
+  var ser_desc = [];
+  var ser_pack_desc = [];
+  var sercost;
+  var packcost;
+  bool isPackageCheck;
+  bool isServiceCheck;
+
+  AMSeviceModel(
+      {this.serid,
+      this.sername,
+      this.ser_type,
+      this.serdesctypeid,
+      this.sercost,
+      this.packcost,
+      this.isServiceCheck = false,
+      this.isPackageCheck = false});
+}
