@@ -40,5 +40,19 @@
   "model": "نموذج",
   "variant": "متغير",
   "year": "سنة",
-  "address_error": "أدخل عنوان صالح"
+  "address_error": "أدخل عنوان صالح",
+  "additional_queries": "استفسارات إضافية",
+  "your_message_here": "رسالتك هنا...",
+  "press_record_dialogue": "اضغط على تسجيل لبدء التسجيل الصوتي",
+  "book_now": "احجز الآن",
+  "add_address": "اضف عنوان",
+  "drop_location_same": "إسقاط الموقع نفس موقع الالتقاط",
+  "select_drop_address": "حدد إسقاط العنوان",
+  "pickup_options": "خيارات الالتقاط",
+  "free": "مجانا",
+  "select_booking_date": "حدد تاريخ الحجز",
+  "select_a_time_slot": "حدد فترة زمنية",
+  "slot_is_full": "الفتحة ممتلئة",
+  "no_time_slot_available":"لا توجد فترة زمنية متاحة",
+  "proceed":"تقدم"
 }

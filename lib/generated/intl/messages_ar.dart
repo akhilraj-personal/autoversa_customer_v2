@@ -22,12 +22,18 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "add_address": MessageLookupByLibrary.simpleMessage("اضف عنوان"),
+        "additional_queries":
+            MessageLookupByLibrary.simpleMessage("استفسارات إضافية"),
         "address_error":
             MessageLookupByLibrary.simpleMessage("أدخل عنوان صالح"),
+        "book_now": MessageLookupByLibrary.simpleMessage("احجز الآن"),
         "change_number": MessageLookupByLibrary.simpleMessage("تغيير رقم"),
         "dash_intro_text": MessageLookupByLibrary.simpleMessage("أهلا وسهلا"),
         "data_verify_text":
             MessageLookupByLibrary.simpleMessage("التحقق من البيانات"),
+        "drop_location_same": MessageLookupByLibrary.simpleMessage(
+            "إسقاط الموقع نفس موقع الالتقاط"),
         "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
         "email_error":
             MessageLookupByLibrary.simpleMessage("أدخل بريد إلكتروني صالح"),
@@ -36,6 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "emirates": MessageLookupByLibrary.simpleMessage("طيران الإمارات *"),
         "enter_mobile_text":
             MessageLookupByLibrary.simpleMessage("أدخل رقم الهاتف المتحرك"),
+        "free": MessageLookupByLibrary.simpleMessage("مجانا"),
         "full_name": MessageLookupByLibrary.simpleMessage("الاسم الكامل*"),
         "make": MessageLookupByLibrary.simpleMessage("يجعلون"),
         "max_otp_text": MessageLookupByLibrary.simpleMessage(
@@ -48,23 +55,37 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("أضف مركبة جديدة"),
         "no_network_text":
             MessageLookupByLibrary.simpleMessage("الاتصال بالإنترنت غير متوفر"),
+        "no_time_slot_available":
+            MessageLookupByLibrary.simpleMessage("لا توجد فترة زمنية متاحة"),
         "otp_invalid_text":
             MessageLookupByLibrary.simpleMessage("الرجاء إدخال OTP صالح"),
         "otp_send_text": MessageLookupByLibrary.simpleMessage("أدخل OTP صالح"),
+        "pickup_options":
+            MessageLookupByLibrary.simpleMessage("خيارات الالتقاط"),
         "plate_number": MessageLookupByLibrary.simpleMessage("رقم لوحة"),
         "please_enter_the_code": MessageLookupByLibrary.simpleMessage(
             "الرجاء إدخال الرمز أدناه للتحقق من هويتك"),
+        "press_record_dialogue": MessageLookupByLibrary.simpleMessage(
+            "اضغط على تسجيل لبدء التسجيل الصوتي"),
+        "proceed": MessageLookupByLibrary.simpleMessage("تقدم"),
         "register_new_account":
             MessageLookupByLibrary.simpleMessage("تسجيل حساب جديد"),
         "resend_otp_text":
             MessageLookupByLibrary.simpleMessage("إعادة إرسال OTP"),
         "save": MessageLookupByLibrary.simpleMessage("حفظ"),
         "seconds_text": MessageLookupByLibrary.simpleMessage("ثانيا"),
+        "select_a_time_slot":
+            MessageLookupByLibrary.simpleMessage("حدد فترة زمنية"),
+        "select_booking_date":
+            MessageLookupByLibrary.simpleMessage("حدد تاريخ الحجز"),
+        "select_drop_address":
+            MessageLookupByLibrary.simpleMessage("حدد إسقاط العنوان"),
         "send_verification_msg": MessageLookupByLibrary.simpleMessage(
             "لقد أرسلنا رمز التحقق المكون من 4 أرقام إلى"),
         "sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "sign_in_alt": MessageLookupByLibrary.simpleMessage("سجل دخولك بواسطة"),
         "sign_up": MessageLookupByLibrary.simpleMessage("اشتراك"),
+        "slot_is_full": MessageLookupByLibrary.simpleMessage("الفتحة ممتلئة"),
         "to_mentioned_number":
             MessageLookupByLibrary.simpleMessage("الرقم المذكور"),
         "toast_application_error":
@@ -85,6 +106,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تحقق من رقم الهاتف المحمول"),
         "welcome_text":
             MessageLookupByLibrary.simpleMessage("تسجيل الدخول إلى حسابك"),
-        "year": MessageLookupByLibrary.simpleMessage("سنة")
+        "year": MessageLookupByLibrary.simpleMessage("سنة"),
+        "your_message_here":
+            MessageLookupByLibrary.simpleMessage("رسالتك هنا...")
       };
 }

@@ -40,5 +40,19 @@
   "model": "Model",
   "variant": "Variant",
   "year": "Year",
-  "address_error": "Enter Valid Address"
+  "address_error": "Enter Valid Address",
+  "additional_queries": "Additional Queries",
+  "your_message_here": "Your message here...",
+  "press_record_dialogue": "Press record to start audio recording",
+  "book_now": "BOOK NOW",
+  "add_address": "Add Address",
+  "drop_location_same": "Drop location same as pickup location",
+  "select_drop_address": "Select Drop Address",
+  "pickup_options": "Pickup options",
+  "free": "FREE",
+  "select_booking_date": "Select Booking Date",
+  "select_a_time_slot": "Select a Time Slot",
+  "slot_is_full": "Slot is Full",
+  "no_time_slot_available": "No time slot available",
+  "proceed": "PROCEED"
 }

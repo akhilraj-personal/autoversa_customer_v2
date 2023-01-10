@@ -127,3 +127,33 @@ Future getCustomerMessages(data) async {
   return handleResponse(
       await securedGetRequest('Customer/SupportChatController/' + data));
 }
+
+Future get_service_history(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/getCustomerBookinghistory', req));
+}
+
+Future getInspectionDetails(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/Get_inspection_by_bookid', req));
+}
+
+Future create_workcard_payment(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/create_jobpayment_booking', req));
+}
+
+Future withoutpayment(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/Job_status_update_bycust', req));
+}
+
+Future getcardjobdetails(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/Get_jobdetails_bybkid', req));
+}
+
+Future confirmbookingpayment(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/confirm_booking_payment', req));
+}
