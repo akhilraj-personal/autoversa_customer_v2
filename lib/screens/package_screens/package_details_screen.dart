@@ -679,7 +679,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                       maxLines: 10,
                                       textAlign: TextAlign.center,
                                       style: montserratRegular.copyWith(
-                                          color: black, fontSize: 18))),
+                                          color: black, fontSize: 14))),
                           SizedBox(
                             height: 12,
                           ),
