@@ -19,7 +19,7 @@ class ST {
 
   static ST get current {
     assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+        'No instance of ST was loaded. Try to initialize the ST delegate before accessing ST.current.');
     return _current!;
   }
 
@@ -465,6 +465,146 @@ class ST {
     return Intl.message(
       'Enter Valid Address',
       name: 'address_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Additional Queries`
+  String get additional_queries {
+    return Intl.message(
+      'Additional Queries',
+      name: 'additional_queries',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your message here...`
+  String get your_message_here {
+    return Intl.message(
+      'Your message here...',
+      name: 'your_message_here',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Press record to start audio recording`
+  String get press_record_dialogue {
+    return Intl.message(
+      'Press record to start audio recording',
+      name: 'press_record_dialogue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `BOOK NOW`
+  String get book_now {
+    return Intl.message(
+      'BOOK NOW',
+      name: 'book_now',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Address`
+  String get add_address {
+    return Intl.message(
+      'Add Address',
+      name: 'add_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Drop location same as pickup location`
+  String get drop_location_same {
+    return Intl.message(
+      'Drop location same as pickup location',
+      name: 'drop_location_same',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Drop Address`
+  String get select_drop_address {
+    return Intl.message(
+      'Select Drop Address',
+      name: 'select_drop_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pickup options`
+  String get pickup_options {
+    return Intl.message(
+      'Pickup options',
+      name: 'pickup_options',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FREE`
+  String get free {
+    return Intl.message(
+      'FREE',
+      name: 'free',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Booking Date`
+  String get select_booking_date {
+    return Intl.message(
+      'Select Booking Date',
+      name: 'select_booking_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select a Time Slot`
+  String get select_a_time_slot {
+    return Intl.message(
+      'Select a Time Slot',
+      name: 'select_a_time_slot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Slot is Full`
+  String get slot_is_full {
+    return Intl.message(
+      'Slot is Full',
+      name: 'slot_is_full',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No time slot available`
+  String get no_time_slot_available {
+    return Intl.message(
+      'No time slot available',
+      name: 'no_time_slot_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PROCEED`
+  String get proceed {
+    return Intl.message(
+      'PROCEED',
+      name: 'proceed',
       desc: '',
       args: [],
     );

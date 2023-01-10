@@ -40,15 +40,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   bool isExpanded = false;
 
   late List custAddressList = [];
-  late List citylist = [];
-  late List areaList = [];
   late List pickup_options = [];
   late List timeslots = [];
   late List temppickup_options = [];
 
   List<String?> SelectAddressList = <String?>["Select Address"];
-  List<String?> SelectCityList = <String?>["Select City"];
-  List<String?> SelectAreaList = <String?>["Select Area"];
 
   var selected_address = 0;
   var selected_drop_address = 0;
@@ -74,6 +70,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     super.initState();
     init();
     Future.delayed(Duration.zero, () {
+      _setdatas();
       _fetchdatas(0, 'p&d');
     });
     setState(() => isserviceble = true);
@@ -117,20 +114,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           }
         }
       });
-      Map country = {
-        "countryId": 1,
-      };
-      await getStateList(country).then((value) {
-        if (value['ret_data'] == "success") {
-          citylist = value['statelist'];
-          for (var state in value['statelist']) {
-            SelectCityList.add(state['state_name']);
-          }
-        }
-      });
-      // if (address_index == 1) {
-      //   pickupaddresschange(address_index);
-      // }
       await getPickupOptions().then((value) {
         freeservicedistance =
             int.parse(value['settings']['gs_freeservicearea']);
@@ -642,6 +625,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                   ImageConst.skod_ico,
                                   width: width * 0.12,
                                 ),
+                              ] else if (widget.custvehlist[widget.selectedveh]
+                                      ['cv_make'] ==
+                                  'Audi') ...[
+                                Image.asset(
+                                  ImageConst.aud_ico,
+                                  width: width * 0.12,
+                                ),
                               ] else ...[
                                 Image.asset(
                                   ImageConst.defcar_ico,
@@ -744,7 +734,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Add Address ",
+                                  ST.of(context).add_address + " ",
                                   style: montserratLight.copyWith(
                                       color: blackColor, fontSize: 14),
                                 ),
@@ -873,7 +863,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           ),
                         ),
                         Text(
-                          "Drop location same as pickup location ",
+                          ST.of(context).drop_location_same,
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.clip,
                           style: montserratLight.copyWith(
@@ -893,8 +883,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                     width: double.infinity,
                                     child: Container(
                                       child: Text(
-                                        "Select Drop Address" + "*",
+                                        ST.of(context).select_drop_address +
+                                            "*",
                                         textAlign: TextAlign.left,
+                                        style: montserratSemiBold.copyWith(),
                                       ),
                                     ),
                                   ),
@@ -1016,7 +1008,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       children: <Widget>[
                         Padding(padding: EdgeInsets.all(8)),
                         Text(
-                          "Pickup options" + "*",
+                          ST.of(context).pickup_options + "*",
                           textAlign: TextAlign.start,
                           style: montserratSemiBold.copyWith(
                               color: blackColor, fontSize: 14),
@@ -1115,7 +1107,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                       ? Text(
                                           pickup_options[index]['pk_cost'] ==
                                                   "AED 0"
-                                              ? "FREE"
+                                              ? ST.of(context).free
                                               : pickup_options[index]
                                                   ['pk_cost'],
                                           textAlign: TextAlign.end,
@@ -1126,7 +1118,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                       : Text(
                                           pickup_options[index]['pk_cost'] ==
                                                   "AED 0"
-                                              ? "FREE"
+                                              ? ST.of(context).free
                                               : pickup_options[index]
                                                   ['pk_cost'],
                                           textAlign: TextAlign.end,
@@ -1143,211 +1135,440 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     // : Row(),
                     // isserviceble
                     //     ?
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: <Widget>[
+                    //     Padding(padding: EdgeInsets.all(4)),
+                    //     Expanded(
+                    //       flex: 2,
+                    //       child: Card(
+                    //           shape: RoundedRectangleBorder(
+                    //               borderRadius: BorderRadius.circular(12),
+                    //               side: BorderSide(
+                    //                   width: 1, color: Colors.black)),
+                    //           elevation: 4,
+                    //           child: ListTile(
+                    //             trailing: IconButton(
+                    //               icon: Icon(
+                    //                 Icons.date_range,
+                    //                 color: syanColor,
+                    //               ),
+                    //               onPressed: () {
+                    //                 _selectDate(context);
+                    //               },
+                    //             ),
+                    //             onTap: () {
+                    //               _selectDate(context);
+                    //             },
+                    //             title: Text(
+                    //                 ST.of(context).select_booking_date + "*",
+                    //                 style: montserratLight.copyWith(
+                    //                     color: blackColor, fontSize: 12),
+                    //                 maxLines: 3),
+                    //             subtitle: Text(
+                    //               selectedDate == " "
+                    //                   ? " "
+                    //                   : DateFormat('dd-MM-yyyy')
+                    //                       .format(selectedDate),
+                    //               style: montserratLight.copyWith(
+                    //                   color: blackColor, fontSize: 12),
+                    //             ),
+                    //           )),
+                    //     ),
+                    //     Expanded(
+                    //       flex: 3,
+                    //       child: Container(
+                    //         margin: EdgeInsets.all(4.0),
+                    //         decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(12),
+                    //           color: whiteColor,
+                    //           border: Border.all(
+                    //             color: blackColor,
+                    //           ),
+                    //         ),
+                    //         child: ExpansionTile(
+                    //           leading: Container(
+                    //             child: Icon(Icons.av_timer_outlined,
+                    //                 color: syanColor, size: 25),
+                    //           ),
+                    //           title: Text(
+                    //               ST.of(context).select_a_time_slot + "*",
+                    //               style: montserratLight.copyWith(
+                    //                   color: blackColor, fontSize: 12),
+                    //               maxLines: 3),
+                    //           subtitle: Text(
+                    //               selected_timeslot == ""
+                    //                   ? " "
+                    //                   : selected_timeslot,
+                    //               style: montserratLight.copyWith(
+                    //                   color: blackColor, fontSize: 12)),
+                    //           textColor: blackColor,
+                    //           children: [
+                    //             Container(
+                    //               decoration: BoxDecoration(
+                    //                 borderRadius: BorderRadius.circular(12),
+                    //                 color: whiteColor,
+                    //                 border: Border.all(
+                    //                   color: whiteColor,
+                    //                 ),
+                    //               ),
+                    //               padding: EdgeInsets.all(8),
+                    //               child: Column(
+                    //                 mainAxisAlignment: MainAxisAlignment.center,
+                    //                 crossAxisAlignment:
+                    //                     CrossAxisAlignment.center,
+                    //                 children: [
+                    //                   timeslots.length > 0
+                    //                       ? ListView.builder(
+                    //                           scrollDirection: Axis.vertical,
+                    //                           shrinkWrap: true,
+                    //                           physics:
+                    //                               const NeverScrollableScrollPhysics(),
+                    //                           padding: EdgeInsets.only(
+                    //                               top: 16, bottom: 16),
+                    //                           itemCount: timeslots.length,
+                    //                           itemBuilder: (context, index) {
+                    //                             return Row(
+                    //                               children: <Widget>[
+                    //                                 Theme(
+                    //                                   data: Theme.of(context)
+                    //                                       .copyWith(
+                    //                                           unselectedWidgetColor:
+                    //                                               blackColor),
+                    //                                   child: Radio(
+                    //                                     value: timeslots[index][
+                    //                                             'tm_start_time'] +
+                    //                                         " - " +
+                    //                                         timeslots[index]
+                    //                                             ['tm_end_time'],
+                    //                                     groupValue: isTimeCheck,
+                    //                                     onChanged:
+                    //                                         (dynamic value) {
+                    //                                       timeslots[index][
+                    //                                                   'active_flag'] ==
+                    //                                               1
+                    //                                           ? value = 0
+                    //                                           : setState(() {
+                    //                                               isTimeCheck =
+                    //                                                   value;
+                    //                                               selected_timeid =
+                    //                                                   int.parse(
+                    //                                                       timeslots[index]
+                    //                                                           [
+                    //                                                           'tm_id']);
+                    //                                               selected_timeslot = timeFormatter(
+                    //                                                       timeslots[index]
+                    //                                                           [
+                    //                                                           'tm_start_time']) +
+                    //                                                   " - " +
+                    //                                                   timeFormatter(
+                    //                                                       timeslots[index]
+                    //                                                           [
+                    //                                                           'tm_end_time']);
+                    //                                             });
+                    //                                     },
+                    //                                   ),
+                    //                                 ),
+                    //                                 timeslots[index][
+                    //                                             'active_flag'] ==
+                    //                                         1
+                    //                                     ? Text(
+                    //                                         timeFormatter(
+                    //                                                 timeslots[
+                    //                                                         index]
+                    //                                                     [
+                    //                                                     'tm_start_time']) +
+                    //                                             " - " +
+                    //                                             timeFormatter(
+                    //                                                 timeslots[
+                    //                                                         index]
+                    //                                                     [
+                    //                                                     'tm_end_time']) +
+                    //                                             "\n" +
+                    //                                             ST
+                    //                                                 .of(context)
+                    //                                                 .slot_is_full,
+                    //                                         style:
+                    //                                             montserratRegular
+                    //                                                 .copyWith(
+                    //                                           fontSize: 14,
+                    //                                           color: errorcolor,
+                    //                                         ),
+                    //                                       )
+                    //                                     : Text(
+                    //                                         timeFormatter(timeslots[
+                    //                                                     index][
+                    //                                                 'tm_start_time']) +
+                    //                                             " - " +
+                    //                                             timeFormatter(
+                    //                                                 timeslots[
+                    //                                                         index]
+                    //                                                     [
+                    //                                                     'tm_end_time']),
+                    //                                         style:
+                    //                                             montserratRegular
+                    //                                                 .copyWith(
+                    //                                           fontSize: 14,
+                    //                                           color: blackColor,
+                    //                                         ),
+                    //                                       ),
+                    //                               ],
+                    //                             );
+                    //                           })
+                    //                       : Text(
+                    //                           ST
+                    //                               .of(context)
+                    //                               .no_time_slot_available,
+                    //                           style:
+                    //                               montserratSemiBold.copyWith(
+                    //                             fontSize: 14,
+                    //                             color: blackColor,
+                    //                           ),
+                    //                         ),
+                    //                   SizedBox(
+                    //                     height: 8,
+                    //                   )
+                    //                 ],
+                    //               ),
+                    //             )
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(padding: EdgeInsets.all(4)),
-                        Expanded(
-                          flex: 2,
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  side: BorderSide(
-                                      width: 1, color: Colors.black)),
-                              elevation: 4,
-                              child: ListTile(
-                                trailing: IconButton(
-                                  icon: Icon(
-                                    Icons.date_range,
-                                    color: syanColor,
-                                  ),
-                                  onPressed: () {
-                                    _selectDate(context);
-                                  },
-                                ),
-                                onTap: () {
-                                  _selectDate(context);
-                                },
-                                title: Text("Select Booking Date" + "*",
-                                    style: montserratLight.copyWith(
-                                        color: blackColor, fontSize: 12),
-                                    maxLines: 3),
-                                subtitle: Text(
-                                  selectedDate == " "
-                                      ? " "
-                                      : DateFormat('dd-MM-yyyy')
-                                          .format(selectedDate),
-                                  style: montserratLight.copyWith(
-                                      color: blackColor, fontSize: 12),
-                                ),
-                              )),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            margin: EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: whiteColor,
-                              border: Border.all(
-                                color: blackColor,
-                              ),
-                            ),
-                            child: ExpansionTile(
-                              leading: Container(
-                                child: Icon(Icons.av_timer_outlined,
-                                    color: syanColor, size: 25),
-                              ),
-                              title: Text("Select a Time Slot",
-                                  style: montserratLight.copyWith(
-                                      color: blackColor, fontSize: 12),
-                                  maxLines: 3),
-                              subtitle: Text(
-                                  selected_timeslot == ""
-                                      ? " "
-                                      : selected_timeslot,
-                                  style: montserratLight.copyWith(
-                                      color: blackColor, fontSize: 12)),
-                              textColor: blackColor,
-                              // trailing: isExpanded
-                              //     ? Container(
-                              //         child: Icon(Icons.keyboard_arrow_up,
-                              //             color: whiteColor, size: 30),
-                              //         padding: EdgeInsets.all(4),
-                              //         decoration: BoxDecoration(
-                              //             borderRadius:
-                              //                 BorderRadius.circular(100),
-                              //             color: whiteColor.withAlpha(32)),
-                              //       )
-                              //     : Icon(Icons.keyboard_arrow_down,
-                              //         color: whiteColor, size: 30),
-                              // onExpansionChanged: (t1) {
-                              //   isExpanded = !isExpanded;
-                              //   setState(() {});
-                              // },
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: whiteColor,
-                                    border: Border.all(
-                                      color: whiteColor,
-                                    ),
-                                  ),
-                                  padding: EdgeInsets.all(8),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      timeslots.length > 0
-                                          ? ListView.builder(
-                                              scrollDirection: Axis.vertical,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              padding: EdgeInsets.only(
-                                                  top: 16, bottom: 16),
-                                              itemCount: timeslots.length,
-                                              itemBuilder: (context, index) {
-                                                return Row(
-                                                  children: <Widget>[
-                                                    Theme(
-                                                      data: Theme.of(context)
-                                                          .copyWith(
-                                                              unselectedWidgetColor:
-                                                                  blackColor),
-                                                      child: Radio(
-                                                        value: timeslots[index][
-                                                                'tm_start_time'] +
-                                                            " - " +
-                                                            timeslots[index]
-                                                                ['tm_end_time'],
-                                                        groupValue: isTimeCheck,
-                                                        onChanged:
-                                                            (dynamic value) {
-                                                          timeslots[index][
-                                                                      'active_flag'] ==
-                                                                  1
-                                                              ? value = 0
-                                                              : setState(() {
-                                                                  isTimeCheck =
-                                                                      value;
-                                                                  selected_timeid =
-                                                                      int.parse(
-                                                                          timeslots[index]
-                                                                              [
-                                                                              'tm_id']);
-                                                                  selected_timeslot = timeFormatter(
-                                                                          timeslots[index]
-                                                                              [
-                                                                              'tm_start_time']) +
-                                                                      " - " +
-                                                                      timeFormatter(
-                                                                          timeslots[index]
-                                                                              [
-                                                                              'tm_end_time']);
-                                                                });
-                                                        },
-                                                      ),
-                                                    ),
-                                                    timeslots[index][
-                                                                'active_flag'] ==
-                                                            1
-                                                        ? Text(
-                                                            timeFormatter(timeslots[
-                                                                        index][
-                                                                    'tm_start_time']) +
-                                                                " - " +
-                                                                timeFormatter(
-                                                                    timeslots[
-                                                                            index]
-                                                                        [
-                                                                        'tm_end_time']) +
-                                                                "\n" +
-                                                                "Slot is Full",
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              color: errorcolor,
-                                                            ),
-                                                          )
-                                                        : Text(
-                                                            timeFormatter(timeslots[
-                                                                        index][
-                                                                    'tm_start_time']) +
-                                                                " - " +
-                                                                timeFormatter(
-                                                                    timeslots[
-                                                                            index]
-                                                                        [
-                                                                        'tm_end_time']),
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              color: blackColor,
-                                                            ),
-                                                          ),
-                                                  ],
-                                                );
-                                              })
-                                          : Text(
-                                              "No time slot available",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: whiteColor,
-                                              ),
-                                            ),
-                                      SizedBox(
-                                        height: 8,
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
+                      children: [
+                        Padding(padding: EdgeInsets.all(12)),
+                        Text(
+                          ST.of(context).select_booking_date + "*",
+                          style: montserratSemiBold.copyWith(
+                              fontSize: 14, color: blackColor),
                         ),
                       ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(width: 1, color: Colors.black)),
+                          elevation: 4,
+                          child: ListTile(
+                            trailing: RadiantGradientMask(
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.date_range,
+                                  color: whiteColor,
+                                ),
+                                onPressed: () {
+                                  _selectDate(context);
+                                },
+                              ),
+                            ),
+                            onTap: () {
+                              _selectDate(context);
+                            },
+                            title: Text(
+                                ST.of(context).select_booking_date + " ",
+                                style: montserratLight.copyWith(
+                                    color: blackColor, fontSize: 12),
+                                maxLines: 3),
+                            subtitle: Text(
+                              selectedDate == " "
+                                  ? " "
+                                  : DateFormat('dd-MM-yyyy')
+                                      .format(selectedDate),
+                              style: montserratLight.copyWith(
+                                  color: blackColor, fontSize: 12),
+                            ),
+                          )),
+                    ),
+                    Row(
+                      children: [
+                        Padding(padding: EdgeInsets.all(12)),
+                        Text(
+                          ST.of(context).select_a_time_slot + "*",
+                          style: montserratSemiBold.copyWith(
+                              fontSize: 14, color: blackColor),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Container(
+                        margin: EdgeInsets.all(4.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: whiteColor,
+                          border: Border.all(
+                            color: blackColor,
+                          ),
+                        ),
+                        child: ExpansionTile(
+                          childrenPadding: EdgeInsets.all(8),
+                          leading: Container(
+                            width: 30,
+                            height: 30,
+                            child: RadiantGradientMask(
+                              child: Icon(Icons.av_timer_outlined,
+                                  color: whiteColor, size: 28),
+                            ),
+                          ),
+                          title: Text(ST.of(context).select_a_time_slot,
+                              overflow: TextOverflow.ellipsis,
+                              style:
+                                  montserratLight.copyWith(color: blackColor),
+                              maxLines: 3),
+                          subtitle: Text(
+                              selected_timeslot == ""
+                                  ? ST.of(context).select_a_time_slot + "*"
+                                  : selected_timeslot,
+                              style: TextStyle(color: blackColor)),
+                          textColor: blackColor,
+                          trailing: isExpanded
+                              ? Container(
+                                  child: RadiantGradientMask(
+                                    child: Icon(Icons.keyboard_arrow_up,
+                                        color: whiteColor, size: 30),
+                                  ),
+                                  padding: EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: whiteColor.withAlpha(32)),
+                                )
+                              : RadiantGradientMask(
+                                  child: Icon(Icons.keyboard_arrow_down,
+                                      color: whiteColor, size: 30),
+                                ),
+                          onExpansionChanged: (t1) {
+                            isExpanded = !isExpanded;
+                            setState(() {});
+                          },
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: whiteColor, boxShadow: null),
+                              padding: EdgeInsets.all(8),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  timeslots.length > 0
+                                      ? ListView.builder(
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          padding: EdgeInsets.only(
+                                              top: 16, bottom: 16),
+                                          itemCount: timeslots.length,
+                                          itemBuilder: (context, index) {
+                                            return Row(
+                                              children: <Widget>[
+                                                Theme(
+                                                  data: Theme.of(context)
+                                                      .copyWith(
+                                                          unselectedWidgetColor:
+                                                              blackColor),
+                                                  child: Radio(
+                                                    value: timeslots[index]
+                                                            ['tm_start_time'] +
+                                                        " - " +
+                                                        timeslots[index]
+                                                            ['tm_end_time'],
+                                                    groupValue: isTimeCheck,
+                                                    fillColor:
+                                                        MaterialStateColor
+                                                            .resolveWith(
+                                                                (states) =>
+                                                                    syanColor),
+                                                    onChanged: (dynamic value) {
+                                                      timeslots[index][
+                                                                  'active_flag'] ==
+                                                              1
+                                                          ? value = 0
+                                                          : setState(() {
+                                                              isTimeCheck =
+                                                                  value;
+                                                              selected_timeid =
+                                                                  int.parse(timeslots[
+                                                                          index]
+                                                                      [
+                                                                      'tm_id']);
+                                                              selected_timeslot = timeFormatter(
+                                                                      timeslots[
+                                                                              index]
+                                                                          [
+                                                                          'tm_start_time']) +
+                                                                  " - " +
+                                                                  timeFormatter(
+                                                                      timeslots[
+                                                                              index]
+                                                                          [
+                                                                          'tm_end_time']);
+                                                            });
+                                                    },
+                                                  ),
+                                                ),
+                                                timeslots[index]
+                                                            ['active_flag'] ==
+                                                        1
+                                                    ? Text(
+                                                        timeFormatter(
+                                                                timeslots[index]
+                                                                    [
+                                                                    'tm_start_time']) +
+                                                            " - " +
+                                                            timeFormatter(
+                                                                timeslots[index]
+                                                                    [
+                                                                    'tm_end_time']) +
+                                                            "\n" +
+                                                            ST
+                                                                .of(context)
+                                                                .slot_is_full,
+                                                        style: montserratLight
+                                                            .copyWith(
+                                                          fontSize: 14,
+                                                          color: blackColor,
+                                                        ),
+                                                      )
+                                                    : Text(
+                                                        timeFormatter(timeslots[
+                                                                    index][
+                                                                'tm_start_time']) +
+                                                            " - " +
+                                                            timeFormatter(
+                                                                timeslots[index]
+                                                                    [
+                                                                    'tm_end_time']),
+                                                        style: montserratLight
+                                                            .copyWith(
+                                                          fontSize: 14,
+                                                          color: blackColor,
+                                                        ),
+                                                      ),
+                                              ],
+                                            );
+                                          })
+                                      : Text(
+                                          ST.of(context).no_time_slot_available,
+                                          style: montserratLight.copyWith(
+                                            fontSize: 14,
+                                            color: blackColor,
+                                          ),
+                                        ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                     SizedBox(
                       height: 16,
@@ -1378,7 +1599,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           ),
                           Container(
                             height: height * 0.075,
-                            width: height * 0.4,
+                            width: height * 0.45,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               shape: BoxShape.rectangle,
@@ -1395,7 +1616,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             ),
                             child: !isproceeding
                                 ? Text(
-                                    "PROCEED",
+                                    ST.of(context).proceed,
                                     style: montserratSemiBold.copyWith(
                                         color: Colors.white),
                                   )
@@ -1421,6 +1642,27 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class RadiantGradientMask extends StatelessWidget {
+  final Widget child;
+  RadiantGradientMask({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (bounds) => RadialGradient(
+        center: Alignment.center,
+        radius: 0.5,
+        colors: [
+          lightblueColor,
+          syanColor,
+        ],
+        tileMode: TileMode.mirror,
+      ).createShader(bounds),
+      child: child,
     );
   }
 }

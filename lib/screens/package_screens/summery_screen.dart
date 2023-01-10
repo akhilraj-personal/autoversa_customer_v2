@@ -2,10 +2,15 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
+import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/main.dart';
+import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
+import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
@@ -144,124 +149,123 @@ class SummeryPageState extends State<SummeryPage> {
         isproceeding = false;
       });
       print(e.toString());
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: whiteColor);
     }
   }
 
   createPayment(data, payment) async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var billingDetails = BillingDetails(
-    //   name: prefs.getString('name'),
-    //   email: prefs.getString('email'),
-    //   phone: prefs.getString('phone'),
-    //   address: Address(
-    //     city: 'Abu Dhabi',
-    //     country: 'AE',
-    //     line1: 'Mussafah',
-    //     line2: '',
-    //     state: 'Abu Dhabi',
-    //     postalCode: '',
-    //   ),
-    // );
-    // await Stripe.instance.initPaymentSheet(
-    //   paymentSheetParameters: SetupPaymentSheetParameters(
-    //     // Main params
-    //     paymentIntentClientSecret: payment['client_secret'],
-    //     merchantDisplayName: 'AutoVersa',
-    //     // Customer params
-    //     customerId: payment['customer'],
-    //     customerEphemeralKeySecret: payment['ephemeralKey']['secret'],
-    //     // Extra params
-    //     applePay: const PaymentSheetApplePay(
-    //       merchantCountryCode: 'AE',
-    //     ),
-    //     googlePay: const PaymentSheetGooglePay(
-    //       merchantCountryCode: 'AE',
-    //       testEnv: true,
-    //     ),
-    //     style: ThemeMode.light,
-    //     appearance: const PaymentSheetAppearance(
-    //       colors: PaymentSheetAppearanceColors(
-    //           background: Colors.white,
-    //           primary: CPPrimaryColor,
-    //           componentBorder: Colors.red,
-    //           primaryText: Colors.black,
-    //           secondaryText: Colors.black,
-    //           componentBackground: Colors.white,
-    //           placeholderText: Colors.black87,
-    //           componentText: Colors.black87,
-    //           icon: Colors.black87),
-    //       shapes: PaymentSheetShape(
-    //         borderWidth: 4,
-    //         borderRadius: 10.00,
-    //         shadow: PaymentSheetShadowParams(color: Colors.red),
-    //       ),
-    //       primaryButton: PaymentSheetPrimaryButtonAppearance(
-    //         shapes: PaymentSheetPrimaryButtonShape(blurRadius: 8),
-    //         colors: PaymentSheetPrimaryButtonTheme(
-    //           light: PaymentSheetPrimaryButtonThemeColors(
-    //             background: CPPrimaryColor,
-    //             text: Colors.white,
-    //             border: Color.fromARGB(255, 235, 92, 30),
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //     billingDetails: billingDetails,
-    //   ),
-    // );
-    // try {
-    //   await Stripe.instance.presentPaymentSheet();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var billingDetails = BillingDetails(
+      name: prefs.getString('name'),
+      email: prefs.getString('email'),
+      phone: prefs.getString('phone'),
+      address: Address(
+        city: 'Abu Dhabi',
+        country: 'AE',
+        line1: 'Mussafah',
+        line2: '',
+        state: 'Abu Dhabi',
+        postalCode: '',
+      ),
+    );
+    await Stripe.instance.initPaymentSheet(
+      paymentSheetParameters: SetupPaymentSheetParameters(
+        // Main params
+        paymentIntentClientSecret: payment['client_secret'],
+        merchantDisplayName: 'AutoVersa',
+        // Customer params
+        customerId: payment['customer'],
+        customerEphemeralKeySecret: payment['ephemeralKey']['secret'],
+        // Extra params
+        applePay: const PaymentSheetApplePay(
+          merchantCountryCode: 'AE',
+        ),
+        googlePay: const PaymentSheetGooglePay(
+          merchantCountryCode: 'AE',
+          testEnv: true,
+        ),
+        style: ThemeMode.light,
+        appearance: const PaymentSheetAppearance(
+          colors: PaymentSheetAppearanceColors(
+              background: Colors.white,
+              primary: Colors.blue,
+              componentBorder: Colors.red,
+              primaryText: Colors.black,
+              secondaryText: Colors.black,
+              componentBackground: Colors.white,
+              placeholderText: Colors.black87,
+              componentText: Colors.black87,
+              icon: Colors.black87),
+          shapes: PaymentSheetShape(
+            borderWidth: 4,
+            borderRadius: 10.00,
+            shadow: PaymentSheetShadowParams(color: Colors.red),
+          ),
+          primaryButton: PaymentSheetPrimaryButtonAppearance(
+            shapes: PaymentSheetPrimaryButtonShape(blurRadius: 8),
+            colors: PaymentSheetPrimaryButtonTheme(
+              light: PaymentSheetPrimaryButtonThemeColors(
+                background: Colors.blue,
+                text: Colors.white,
+                border: Color.fromARGB(255, 235, 92, 30),
+              ),
+            ),
+          ),
+        ),
+        billingDetails: billingDetails,
+      ),
+    );
+    try {
+      await Stripe.instance.presentPaymentSheet();
 
-    //   final prefs = await SharedPreferences.getInstance();
-    //   Map<String, dynamic> booking = {
-    //     'custId': prefs.getString('cust_id'),
-    //     'book_id': bookId,
-    //     'tot_amount': totalamount,
-    //     'trxn_id': trnxId,
-    //     'audiofile': audiofile,
-    //     'slot': slot,
-    //     'bookingdate': bookingdate,
-    //     'complaint': complaint
-    //   };
-    //   await confirmbookingpayment(booking).then((value) {
-    //     if (value['ret_data'] == "success") {
-    //     } else {
-    //       print(value);
-    //       setState(() => isproceeding = false);
-    //       toasty(context, value['ret_data'],
-    //           bgColor: Color.fromARGB(255, 255, 47, 0),
-    //           textColor: whiteColor,
-    //           gravity: ToastGravity.BOTTOM,
-    //           length: Toast.LENGTH_LONG);
-    //     }
-    //   });
+      final prefs = await SharedPreferences.getInstance();
+      Map<String, dynamic> booking = {
+        'custId': prefs.getString('cust_id'),
+        'book_id': bookId,
+        'tot_amount': totalamount,
+        'trxn_id': trnxId,
+        'audiofile': audiofile,
+        'slot': slot,
+        'bookingdate': bookingdate,
+        'complaint': complaint
+      };
+      await confirmbookingpayment(booking).then((value) {
+        if (value['ret_data'] == "success") {
+        } else {
+          print(value);
+          setState(() => isproceeding = false);
+          showCustomToast(context, value['ret_data'],
+              bgColor: errorcolor, textColor: whiteColor);
+        }
+      });
 
-    //   setState(() {
-    //     showDialog(
-    //       barrierDismissible: false,
-    //       context: context,
-    //       builder: (BuildContext context) => CustomSuccess(),
-    //     );
-    //   });
-    // } on Exception catch (e) {
-    //   if (e is StripeException) {
-    //     setState(() => isproceeding = false);
-    //     setState(() {
-    //       showDialog(
-    //         barrierDismissible: false,
-    //         context: context,
-    //         builder: (BuildContext context) => CustomWarning(),
-    //       );
-    //     });
-    //   } else {
-    //     setState(() => isproceeding = false);
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text('Unforeseen error: ${e}'),
-    //       ),
-    //     );
-    //   }
-    // }
+      setState(() {
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) => CustomSuccess(),
+        );
+      });
+    } on Exception catch (e) {
+      if (e is StripeException) {
+        setState(() => isproceeding = false);
+        setState(() {
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) => CustomWarning(),
+          );
+        });
+      } else {
+        setState(() => isproceeding = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Unforeseen error: ${e}'),
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -906,5 +910,162 @@ class SummeryPageState extends State<SummeryPage> {
             ),
           )),
         ));
+  }
+}
+
+class CustomWarning extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: new BoxDecoration(
+          color: whiteColor,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(0),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0)),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To make the card compact
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(height: 150, color: Colors.orange),
+                Column(
+                  children: [
+                    Image(
+                        image: AssetImage("images/automobile/warning.png"),
+                        height: 50,
+                        color: whiteColor,
+                        fit: BoxFit.cover),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text("Awaiting Payment",
+                        textAlign: TextAlign.center,
+                        style: montserratSemiBold.copyWith(
+                            fontSize: 18, color: whiteColor)),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Text(
+                    "Please check dashboard to complete payment for further proceedings.",
+                    style: montserratRegular.copyWith(fontSize: 14))),
+            SizedBox(
+              height: 16,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacementNamed(context, Routes.bottombar);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Text('OK',
+                    style: montserratRegular.copyWith(color: whiteColor)),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomSuccess extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: new BoxDecoration(
+          color: whiteColor,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(0),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0)),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To make the card compact
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(height: 150, color: Colors.green),
+                Column(
+                  children: [
+                    Image(
+                        image: AssetImage("images/automobile/success.png"),
+                        height: 50,
+                        color: whiteColor,
+                        fit: BoxFit.cover),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text("Booking Successfull",
+                        textAlign: TextAlign.center,
+                        style: montserratSemiBold.copyWith(
+                            fontSize: 14, color: whiteColor)),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Text("Please check dashboard for booking status",
+                    style: montserratRegular.copyWith(fontSize: 14))),
+            SizedBox(
+              height: 16,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacementNamed(context, Routes.bottombar);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Text('OK',
+                    style: montserratSemiBold.copyWith(color: whiteColor)),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
