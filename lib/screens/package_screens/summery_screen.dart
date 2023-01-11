@@ -235,8 +235,11 @@ class SummeryPageState extends State<SummeryPage> {
         } else {
           print(value);
           setState(() => isproceeding = false);
-          showCustomToast(context, value['ret_data'],
-              bgColor: errorcolor, textColor: whiteColor);
+          // toasty(context, value['ret_data'],
+          //     bgColor: Color.fromARGB(255, 255, 47, 0),
+          //     textColor: whiteColor,
+          //     gravity: ToastGravity.BOTTOM,
+          //     length: Toast.LENGTH_LONG);
         }
       });
 
@@ -533,7 +536,7 @@ class SummeryPageState extends State<SummeryPage> {
                               ),
                             ),
                             child: Image.asset(
-                              ImageConst.music,
+                              ImageConst.location_icon,
                               scale: 4.5,
                             ),
                           ),
@@ -600,7 +603,7 @@ class SummeryPageState extends State<SummeryPage> {
                               ),
                             ),
                             child: Image.asset(
-                              ImageConst.music,
+                              ImageConst.location_icon,
                               scale: 4.5,
                             ),
                           ),
@@ -667,7 +670,7 @@ class SummeryPageState extends State<SummeryPage> {
                               ),
                             ),
                             child: Image.asset(
-                              ImageConst.music,
+                              ImageConst.date_icon,
                               scale: 4.5,
                             ),
                           ),
@@ -719,7 +722,7 @@ class SummeryPageState extends State<SummeryPage> {
                               ),
                             ),
                             child: Image.asset(
-                              ImageConst.music,
+                              ImageConst.time,
                               scale: 4.5,
                             ),
                           ),
@@ -792,17 +795,22 @@ class SummeryPageState extends State<SummeryPage> {
                               ),
                             ),
                             child: Image.asset(
-                              ImageConst.music,
+                              ImageConst.comments_icon,
                               scale: 4.5,
                             ),
                           ),
                           SizedBox(
                             width: 8,
                           ),
-                          Text(
-                            packdata['complaint'] ?? "",
-                            style: montserratLight.copyWith(
-                                color: blackColor, fontSize: 14),
+                          Flexible(
+                            child: Container(
+                              child: Text(
+                                packdata['complaint'] ?? "",
+                                overflow: TextOverflow.clip,
+                                style: montserratLight.copyWith(
+                                    color: blackColor, fontSize: 14),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -970,7 +978,7 @@ class CustomWarning extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, Routes.bottombar);
               },
               child: Container(
@@ -1048,7 +1056,7 @@ class CustomSuccess extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, Routes.bottombar);
               },
               child: Container(

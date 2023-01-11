@@ -6,11 +6,13 @@ import 'package:autoversa/main.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:intl/intl.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookingStatusFlow extends StatefulWidget {
@@ -121,7 +123,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             maxChildSize: 1,
             builder: (context, scrollController) {
               return Container(
-                color: whiteColor,
+                color: white,
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: SingleChildScrollView(
                   controller: scrollController,
@@ -135,7 +137,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                           padding: EdgeInsets.all(8),
                           width: width * 1.85,
                           decoration: BoxDecoration(
-                            color: whiteColor,
+                            color: white,
                             borderRadius: BorderRadius.circular(16),
                           ),
                           duration: Duration(milliseconds: 1000),
@@ -151,7 +153,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                       margin: EdgeInsets.all(8),
                                       height: 950,
                                       decoration: BoxDecoration(
-                                          color: whiteColor,
+                                          color: white,
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(8))),
                                       child: Column(
@@ -166,7 +168,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                     "Cancel Reason" + "*",
                                                     style: montserratLight
                                                         .copyWith(
-                                                            color: blackColor,
+                                                            color: black,
                                                             fontSize: 14),
                                                     textAlign: TextAlign.center,
                                                   ),
@@ -202,7 +204,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                     height: height * 0.075,
                                                     width: height * 0.4,
                                                     decoration: BoxDecoration(
-                                                      color: whiteColor,
+                                                      color: white,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               12),
@@ -234,7 +236,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                               style: montserratLight
                                                                   .copyWith(
                                                                       color:
-                                                                          blackColor,
+                                                                          black,
                                                                       fontSize:
                                                                           14),
                                                               decoration: InputDecoration(
@@ -251,14 +253,14 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                   hintStyle: montserratRegular
                                                                       .copyWith(
                                                                           color:
-                                                                              blackColor,
+                                                                              black,
                                                                           fontSize:
                                                                               14),
                                                                   border:
                                                                       InputBorder
                                                                           .none,
                                                                   fillColor:
-                                                                      whiteColor),
+                                                                      white),
                                                               focusNode:
                                                                   cancelFocus,
                                                               onChanged:
@@ -283,7 +285,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                 showCustomToast(
                                                     context, "Enter Reason",
                                                     bgColor: warningcolor,
-                                                    textColor: whiteColor);
+                                                    textColor: white);
                                               } else {
                                                 try {
                                                   setState(
@@ -310,8 +312,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                       showCustomToast(context,
                                                           "Booking Canceled",
                                                           bgColor: warningcolor,
-                                                          textColor:
-                                                              whiteColor);
+                                                          textColor: white);
                                                       setState(() {
                                                         Navigator
                                                             .pushReplacementNamed(
@@ -426,7 +427,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             maxChildSize: 1,
             builder: (context, scrollController) {
               return Container(
-                color: whiteColor,
+                color: white,
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: SingleChildScrollView(
                   controller: scrollController,
@@ -440,7 +441,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                           padding: EdgeInsets.all(8),
                           width: width * 1.85,
                           decoration: BoxDecoration(
-                            color: whiteColor,
+                            color: white,
                             borderRadius: BorderRadius.circular(16),
                           ),
                           duration: Duration(milliseconds: 1000),
@@ -456,7 +457,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                       margin: EdgeInsets.all(8),
                                       height: 950,
                                       decoration: BoxDecoration(
-                                          color: whiteColor,
+                                          color: white,
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(8))),
                                       child: Column(
@@ -503,7 +504,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                     height: height * 0.075,
                                                     width: height * 0.4,
                                                     decoration: BoxDecoration(
-                                                      color: whiteColor,
+                                                      color: white,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               12),
@@ -535,7 +536,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                               style: montserratLight
                                                                   .copyWith(
                                                                       color:
-                                                                          blackColor,
+                                                                          black,
                                                                       fontSize:
                                                                           14),
                                                               decoration: InputDecoration(
@@ -552,14 +553,14 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                   hintStyle: montserratRegular
                                                                       .copyWith(
                                                                           color:
-                                                                              blackColor,
+                                                                              black,
                                                                           fontSize:
                                                                               14),
                                                                   border:
                                                                       InputBorder
                                                                           .none,
                                                                   fillColor:
-                                                                      whiteColor),
+                                                                      white),
                                                               focusNode:
                                                                   cancelFocus,
                                                               onChanged:
@@ -583,7 +584,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                 showCustomToast(
                                                     context, "Enter Reason",
                                                     bgColor: warningcolor,
-                                                    textColor: whiteColor);
+                                                    textColor: white);
                                               } else {
                                                 try {
                                                   setState(
@@ -610,8 +611,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                       showCustomToast(context,
                                                           "Booking is under hold",
                                                           bgColor: warningcolor,
-                                                          textColor:
-                                                              whiteColor);
+                                                          textColor: white);
                                                       setState(() {
                                                         Navigator
                                                             .pushReplacementNamed(
@@ -715,8 +715,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
       SnackBar(
         backgroundColor: Colors.green,
         content: Text('Unhold Booking.?',
-            style:
-                montserratSemiBold.copyWith(color: blackColor, fontSize: 21)),
+            style: montserratSemiBold.copyWith(color: black, fontSize: 21)),
         action: SnackBarAction(
             label: 'Unhold',
             textColor: Colors.white,
@@ -734,7 +733,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 await booking_unhold(req).then((value) {
                   if (value['ret_data'] == "success") {
                     showCustomToast(context, "Booking hold removed",
-                        bgColor: warningcolor, textColor: whiteColor);
+                        bgColor: warningcolor, textColor: white);
                     setState(() {
                       Navigator.pushReplacementNamed(context, Routes.bottombar);
                     });
@@ -820,9 +819,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'images/automobile/booking.png',
+                "icon": 'assets/icons/booking_created_active.png',
                 "color": activecolor,
-                "active_flag": true
+                "active_flag": true,
+                "hold_flag": false
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -839,9 +839,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'images/automobile/driver_logo.png',
+                "icon": 'assets/icons/driver_enrouted_active.png',
                 "color": activecolor,
-                "active_flag": true
+                "active_flag": true,
+                "hold_flag": false
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -858,9 +859,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'images/automobile/pickup.png',
+                "icon": 'assets/icons/pickedup_active.png',
                 "color": activecolor,
-                "active_flag": true
+                "active_flag": true,
+                "hold_flag": false
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -877,9 +879,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'images/automobile/enrouted_to_workshop.png',
+                "icon": 'assets/icons/pickedup_active.png',
                 "color": activecolor,
-                "active_flag": true
+                "active_flag": true,
+                "hold_flag": false
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -896,9 +899,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'images/automobile/at_worksop.png',
+                "icon": 'assets/icons/pickedup_active.png',
                 "color": activecolor,
-                "active_flag": true
+                "active_flag": true,
+                "hold_flag": false
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -915,9 +919,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'images/automobile/work_progress.png',
+                "icon": 'assets/icons/work_in_progress_active.png',
                 "color": activecolor,
-                "active_flag": true
+                "active_flag": true,
+                "hold_flag": false
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -934,9 +939,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'images/automobile/drop_location.png',
+                "icon": 'assets/icons/location_icon.png',
                 "color": activecolor,
-                "active_flag": true
+                "active_flag": true,
+                "hold_flag": false
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -953,9 +959,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'images/automobile/car_ready.png',
+                "icon": 'assets/icons/ready_delivery_active.png',
                 "color": activecolor,
-                "active_flag": true
+                "active_flag": true,
+                "hold_flag": false
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -972,9 +979,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'images/automobile/enrouted_to_workshop.png',
+                "icon": 'assets/icons/enrouted_drop_active.png',
                 "color": activecolor,
-                "active_flag": true
+                "active_flag": true,
+                "hold_flag": false
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -991,9 +999,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'images/automobile/success.png',
+                "icon": 'assets/icons/delivery_complete_active.png',
                 "color": activecolor,
-                "active_flag": true
+                "active_flag": true,
+                "hold_flag": false
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -1012,9 +1021,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'images/automobile/hold.png',
-                "color": Colors.orange,
-                "active_flag": true
+                "icon": 'assets/icons/hold.png',
+                "color": Colors.transparent,
+                "active_flag": true,
+                "hold_flag": true
               };
               statusflow.add(temp);
             }
@@ -1038,9 +1048,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "status": "Driver Enroute to Location",
                 "time": "",
                 "code": "",
-                "icon": 'images/automobile/waiting.png',
+                "icon": 'assets/icons/driver_enrouted_inactive.png',
                 "color": Colors.transparent,
-                "active_flag": false
+                "active_flag": false,
+                "hold_flag": false
               };
               statusflow.add(temp);
             }
@@ -1049,9 +1060,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "status": "Pickup In Progress",
                 "time": "",
                 "code": "",
-                "icon": 'images/automobile/waiting.png',
+                "icon": 'assets/icons/pickedup_inactive.png',
                 "color": Colors.transparent,
-                "active_flag": false
+                "active_flag": false,
+                "hold_flag": false
               };
               statusflow.add(temp);
             }
@@ -1060,9 +1072,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "status": "Pickedup & Enroute to Workshop",
                 "time": "",
                 "code": "",
-                "icon": 'images/automobile/waiting.png',
+                "icon": 'assets/icons/pickedup_inactive.png',
                 "color": Colors.grey.withOpacity(0.5),
-                "active_flag": false
+                "active_flag": false,
+                "hold_flag": false
               };
               statusflow.add(temp);
             }
@@ -1071,9 +1084,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "status": "Vehicle @ Workshop",
                 "time": "",
                 "code": "",
-                "icon": 'images/automobile/waiting.png',
+                "icon": 'assets/icons/pickedup_inactive.png',
                 "color": Colors.transparent,
-                "active_flag": false
+                "active_flag": false,
+                "hold_flag": false
               };
               statusflow.add(temp);
             }
@@ -1082,9 +1096,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "status": "Work In Progress",
                 "time": "",
                 "code": "",
-                "icon": 'images/automobile/waiting.png',
+                "icon": 'assets/icons/work_in_progress_inactive.png',
                 "color": Colors.transparent,
-                "active_flag": false
+                "active_flag": false,
+                "hold_flag": false
               };
               statusflow.add(temp);
             }
@@ -1093,9 +1108,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "status": "Confirm Drop\nLocation",
                 "time": "",
                 "code": "",
-                "icon": 'images/automobile/waiting.png',
+                "icon": 'assets/icons/location_icon_inactive.png',
                 "color": Colors.transparent,
-                "active_flag": false
+                "active_flag": false,
+                "hold_flag": false
               };
               statusflow.add(temp);
             }
@@ -1104,9 +1120,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "status": "Ready for Delivery",
                 "time": "",
                 "code": "",
-                "icon": 'images/automobile/waiting.png',
+                "icon": 'assets/icons/ready_delivery_inactive.png',
                 "color": Colors.transparent,
-                "active_flag": false
+                "active_flag": false,
+                "hold_flag": false
               };
               statusflow.add(temp);
             }
@@ -1115,9 +1132,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "status": "Driver Enroute for\nDelivery",
                 "time": "",
                 "code": "",
-                "icon": 'images/automobile/waiting.png',
+                "icon": 'assets/icons/enrouted_drop_inactive.png',
                 "color": Colors.transparent,
-                "active_flag": false
+                "active_flag": false,
+                "hold_flag": false
               };
               statusflow.add(temp);
             }
@@ -1126,9 +1144,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "status": "Delivery Completed",
                 "time": "",
                 "code": "",
-                "icon": 'images/automobile/waiting.png',
+                "icon": 'assets/icons/delivery_complete_inactive.png',
                 "color": Colors.transparent,
-                "active_flag": false
+                "active_flag": false,
+                "hold_flag": false
               };
               statusflow.add(temp);
               setState(() {});
@@ -1139,30 +1158,81 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
     });
   }
 
-  Widget statusView(String? title, String? icon, String? time, bool isActive) {
+  Widget statusView(
+      String? title, String? icon, String? time, bool isActive, bool ishold) {
     return Row(
       children: [
+        // Container(
+        //   height: height * 0.065,
+        //   width: height * 0.065,
+        //   decoration: BoxDecoration(
+        //     shape: BoxShape.circle,
+        //     gradient: LinearGradient(
+        //       begin: Alignment.topRight,
+        //       end: Alignment.bottomRight,
+        //       colors: [
+        //         lightblueColor,
+        //         syanColor,
+        //       ],
+        //     ),
+        //   ),
+        //   child: Image.asset(icon.validate(), width: 30, fit: BoxFit.cover),
+        // ),
         // commonCacheImageWidget(icon, 30,
         //     width: 30, fit: BoxFit.cover),
-        Container(
-          height: height * 0.065,
-          width: height * 0.065,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomRight,
-              colors: [
-                lightblueColor,
-                syanColor,
-              ],
+        if (isActive && !ishold) ...[
+          Container(
+            height: height * 0.065,
+            width: height * 0.065,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomRight,
+                colors: [
+                  lightblueColor,
+                  syanColor,
+                ],
+              ),
             ),
+            child: Image.asset(icon.validate(), width: 30, fit: BoxFit.cover),
+          )
+        ] else if (!isActive) ...[
+          Container(
+            height: height * 0.065,
+            width: height * 0.065,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.grey.shade200,
+                  Colors.grey.shade200,
+                ],
+              ),
+            ),
+            child: Image.asset(icon.validate(), width: 30, fit: BoxFit.cover),
           ),
-          child: Image.asset(
-            ImageConst.music,
-            scale: 3.5,
-          ),
-        ),
+        ] else if (ishold && isActive) ...[
+          Container(
+            height: height * 0.065,
+            width: height * 0.065,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomRight,
+                colors: [
+                  lightorangeColor,
+                  holdorangeColor,
+                ],
+              ),
+            ),
+            child: Image.asset(icon.validate(), width: 30, fit: BoxFit.cover),
+          )
+        ],
+
         SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1206,9 +1276,9 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
-            backgroundColor: whiteColor,
-            shadowColor: whiteColor,
-            iconTheme: IconThemeData(color: whiteColor),
+            backgroundColor: white,
+            shadowColor: white,
+            iconTheme: IconThemeData(color: white),
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarIconBrightness: Brightness.dark,
             ),
@@ -1309,7 +1379,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                               : "",
                                           overflow: TextOverflow.clip,
                                           style: montserratSemiBold.copyWith(
-                                              color: blackColor, fontSize: 14)),
+                                              color: black, fontSize: 14)),
                                     ),
                                   ),
                                 ],
@@ -1329,7 +1399,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                               : "",
                                           overflow: TextOverflow.clip,
                                           style: montserratRegular.copyWith(
-                                              color: blackColor, fontSize: 12)),
+                                              color: black, fontSize: 12)),
                                     ),
                                   ),
                                 ],
@@ -1352,7 +1422,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                               : "",
                                           overflow: TextOverflow.clip,
                                           style: montserratRegular.copyWith(
-                                              color: blackColor, fontSize: 12)),
+                                              color: black, fontSize: 12)),
                                     ),
                                   ),
                                 ],
@@ -1378,7 +1448,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                               : "",
                                           overflow: TextOverflow.clip,
                                           style: montserratRegular.copyWith(
-                                              color: blackColor, fontSize: 12)),
+                                              color: black, fontSize: 12)),
                                     ),
                                   ),
                                 ],
@@ -1395,7 +1465,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                       child: Text(widget.vehname,
                                           overflow: TextOverflow.clip,
                                           style: montserratRegular.copyWith(
-                                              color: blackColor, fontSize: 12)),
+                                              color: black, fontSize: 12)),
                                     ),
                                   ),
                                 ],
@@ -1434,7 +1504,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                   child: Text('Cancel',
                                                       style: montserratRegular
                                                           .copyWith(
-                                                              color: blackColor,
+                                                              color: black,
                                                               fontSize: width *
                                                                   0.021)),
                                                 ),
@@ -1491,7 +1561,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                   child: Text('Unhold',
                                                       style: montserratRegular
                                                           .copyWith(
-                                                              color: blackColor,
+                                                              color: black,
                                                               fontSize: width *
                                                                   0.021)),
                                                 ),
@@ -1554,7 +1624,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                   child: Text('Reschedule',
                                                       style: montserratRegular
                                                           .copyWith(
-                                                              color: blackColor,
+                                                              color: black,
                                                               fontSize: width *
                                                                   0.021)),
                                                 ),
@@ -1595,7 +1665,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                   child: Text('Cancel',
                                                       style: montserratRegular
                                                           .copyWith(
-                                                              color: blackColor,
+                                                              color: black,
                                                               fontSize: width *
                                                                   0.021)),
                                                 ),
@@ -1652,7 +1722,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                   child: Text('Hold',
                                                       style: montserratRegular
                                                           .copyWith(
-                                                              color: blackColor,
+                                                              color: black,
                                                               fontSize: width *
                                                                   0.021)),
                                                 ),
@@ -1716,7 +1786,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                   child: Text('Reschedule',
                                                       style: montserratRegular
                                                           .copyWith(
-                                                              color: blackColor,
+                                                              color: black,
                                                               fontSize: width *
                                                                   0.021)),
                                                 ),
@@ -1741,7 +1811,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                       child: Container(
                         child: Text('Order Status',
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 17)),
+                                color: black, fontSize: 17)),
                       ),
                     ),
                   ],
@@ -1813,7 +1883,9 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                     statusflow[index]["icon"],
                                                     statusflow[index]["time"],
                                                     statusflow[index]
-                                                        ["active_flag"]),
+                                                        ["active_flag"],
+                                                    statusflow[index]
+                                                        ["hold_flag"]),
                                               ),
                                               statusflow[index]['code'] ==
                                                       "DRPC"
@@ -2132,13 +2204,13 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                           'Schedule Delivery',
                                                                           style: montserratRegular.copyWith(
                                                                               color:
-                                                                                  blackColor,
+                                                                                  black,
                                                                               fontSize:
                                                                                   12))
                                                                       : Text(
                                                                           'Pending Payment',
                                                                           style: montserratRegular.copyWith(
-                                                                              color: blackColor,
+                                                                              color: black,
                                                                               fontSize: 12)),
                                                                 )
                                                               ],
@@ -2193,7 +2265,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                 style: montserratRegular
                                                                     .copyWith(
                                                                         color:
-                                                                            blackColor,
+                                                                            black,
                                                                         fontSize:
                                                                             12)),
                                                           )))
@@ -2219,4 +2291,43 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
           ),
         ));
   }
+}
+
+Widget commonCacheImageWidget(String? url, double height,
+    {double? width, BoxFit? fit}) {
+  if (url.validate().startsWith('http')) {
+    if (isMobile) {
+      return CachedNetworkImage(
+        placeholder:
+            placeholderWidgetFn() as Widget Function(BuildContext, String)?,
+        imageUrl: '$url',
+        height: height,
+        width: width,
+        fit: fit ?? BoxFit.cover,
+        errorWidget: (_, __, ___) {
+          return SizedBox(height: height, width: width);
+        },
+      );
+    } else {
+      return Image.network(url!,
+          height: height, width: width, fit: fit ?? BoxFit.cover);
+    }
+  } else {
+    return Image.asset(url!,
+        height: height, width: width, fit: fit ?? BoxFit.cover);
+  }
+}
+
+Widget? Function(BuildContext, String) placeholderWidgetFn() =>
+    (_, s) => placeholderWidget();
+
+Widget placeholderWidget() =>
+    Image.asset('images/app/placeholder.jpg', fit: BoxFit.cover);
+
+BoxConstraints dynamicBoxConstraints({double? maxWidth}) {
+  return BoxConstraints(maxWidth: maxWidth ?? width);
+}
+
+double dynamicWidth(BuildContext context) {
+  return isMobile ? context.width() : width;
 }

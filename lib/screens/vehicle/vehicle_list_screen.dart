@@ -2,6 +2,7 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/model/model.dart';
+import 'package:autoversa/screens/vehicle/vehicle_add_page.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -574,6 +575,15 @@ class VehiclelistState extends State<Vehiclelist> {
                     ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => VehicleAddPage()));
+          },
+          heroTag: 'Add Vehicle',
+          child: Icon(Icons.add, color: Colors.white),
+          backgroundColor: syanColor,
         ),
       ),
     );
