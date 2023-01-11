@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
+  Stripe.publishableKey = dotenv.env['STRIPE_PAYMENT_PUBLISH_KEY']!;
   if (Platform.isIOS || Platform.isAndroid) {
     try {
       await OneSignal.shared.setAppId("71139c93-b725-4209-9a36-619ce631f943");

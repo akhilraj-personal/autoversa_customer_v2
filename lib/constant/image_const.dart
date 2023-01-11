@@ -40,6 +40,12 @@ class ImageConst {
 
   static const insurance = baseIconURl + 'insurance.png';
   static const music = baseIconURl + 'music.png';
+  static const comments_icon = baseIconURl + 'comments_icon.png';
+  static const location_icon = baseIconURl + 'location_icon.png';
+  static const date_icon = baseIconURl + 'date_icon.png';
+  static const time = baseIconURl + 'time_icon.png';
+  static const booking_created = baseIconURl + 'booking_created.png';
+  static const driver_enrouted = baseIconURl + 'driver_enrouted.png';
   static const notification = baseIconURl + 'notification.png';
   static const person = baseIconURl + 'person.png';
   static const right_arrow = baseIconURl + 'right_arrow.png';

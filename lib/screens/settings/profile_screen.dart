@@ -431,38 +431,38 @@ class ProfilePageState extends State<ProfilePage> {
                     nameProfile = name;
                     setState(() {});
                   }),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  lightblueColor,
-                                  syanColor,
-                                ],
-                              ),
-                            ),
-                            child:
-                                Icon(Icons.list, color: Colors.white, size: 20),
-                          ),
-                          16.width,
-                          Text("My Invoices",
-                              style: montserratSemiBold.copyWith()),
-                        ],
-                      ).paddingOnly(left: 16),
-                      Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
-                          .paddingOnly(right: 16),
-                    ],
-                  ).onTap(() async {}),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Row(
+                  //       children: [
+                  //         Container(
+                  //           alignment: Alignment.center,
+                  //           margin: EdgeInsets.symmetric(vertical: 8),
+                  //           padding: EdgeInsets.all(10),
+                  //           decoration: BoxDecoration(
+                  //             shape: BoxShape.circle,
+                  //             gradient: LinearGradient(
+                  //               begin: Alignment.topRight,
+                  //               end: Alignment.bottomRight,
+                  //               colors: [
+                  //                 lightblueColor,
+                  //                 syanColor,
+                  //               ],
+                  //             ),
+                  //           ),
+                  //           child:
+                  //               Icon(Icons.list, color: Colors.white, size: 20),
+                  //         ),
+                  //         16.width,
+                  //         Text("My Invoices",
+                  //             style: montserratSemiBold.copyWith()),
+                  //       ],
+                  //     ).paddingOnly(left: 16),
+                  //     Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
+                  //         .paddingOnly(right: 16),
+                  //   ],
+                  // ).onTap(() async {}),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -536,42 +536,42 @@ class ProfilePageState extends State<ProfilePage> {
                           .paddingOnly(right: 16),
                     ],
                   ).onTap(() async {}),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  lightblueColor,
-                                  syanColor,
-                                ],
-                              ),
-                            ),
-                            child: Icon(MaterialCommunityIcons.google_translate,
-                                color: Colors.white, size: 20),
-                          ),
-                          16.width,
-                          Text("Language",
-                              style: montserratSemiBold.copyWith()),
-                        ],
-                      ).paddingOnly(left: 16),
-                      Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
-                          .paddingOnly(right: 16),
-                    ],
-                  ).onTap(() async {
-                    LanguageSelection()
-                        .launch(context)
-                        .then((value) => setState(() {}));
-                  }),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Row(
+                  //       children: [
+                  //         Container(
+                  //           alignment: Alignment.center,
+                  //           margin: EdgeInsets.symmetric(vertical: 8),
+                  //           padding: EdgeInsets.all(10),
+                  //           decoration: BoxDecoration(
+                  //             shape: BoxShape.circle,
+                  //             gradient: LinearGradient(
+                  //               begin: Alignment.topRight,
+                  //               end: Alignment.bottomRight,
+                  //               colors: [
+                  //                 lightblueColor,
+                  //                 syanColor,
+                  //               ],
+                  //             ),
+                  //           ),
+                  //           child: Icon(MaterialCommunityIcons.google_translate,
+                  //               color: Colors.white, size: 20),
+                  //         ),
+                  //         16.width,
+                  //         Text("Language",
+                  //             style: montserratSemiBold.copyWith()),
+                  //       ],
+                  //     ).paddingOnly(left: 16),
+                  //     Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
+                  //         .paddingOnly(right: 16),
+                  //   ],
+                  // ).onTap(() async {
+                  //   LanguageSelection()
+                  //       .launch(context)
+                  //       .then((value) => setState(() {}));
+                  // }),
                 ],
               ),
               Align(
