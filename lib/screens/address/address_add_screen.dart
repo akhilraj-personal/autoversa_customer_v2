@@ -3,13 +3,16 @@ import 'dart:async';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/screens/address/address_list_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
+import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class AddressAdd extends StatefulWidget {
   const AddressAdd({super.key});
@@ -19,8 +22,8 @@ class AddressAdd extends StatefulWidget {
 }
 
 class AddressAddState extends State<AddressAdd> {
-  late List cityList = [];
-  late List arealist = [];
+  late List citylist = [];
+  late List areaList = [];
   List<String?> SelectCityList = <String?>["Select City"];
   List<String?> SelectAreaList = <String?>["Select Area"];
   var emirates = 0, city = 0;
@@ -31,13 +34,12 @@ class AddressAddState extends State<AddressAdd> {
   var Marklat = 0.0;
   var Marklong = 0.0;
   var AddressType = "Home";
-  bool isgooglemap = false;
   bool isDefaultAddressChecked = true;
+  bool isgooglemap = false;
   CameraPosition _initialPosition =
       CameraPosition(target: LatLng(24.3547, 54.5020), zoom: 13);
   Completer<GoogleMapController> _controller = Completer();
   bool issubmitted = false;
-  StreamSubscription? internetconnection;
   bool isoffline = false;
   final _formKey = GlobalKey<FormState>();
   List<Marker> myMarker = [];
@@ -61,7 +63,6 @@ class AddressAddState extends State<AddressAdd> {
 
   @override
   void dispose() {
-    internetconnection!.cancel();
     super.dispose();
   }
 
@@ -72,7 +73,7 @@ class AddressAddState extends State<AddressAdd> {
       };
       await getStateList(country).then((value) {
         if (value['ret_data'] == "success") {
-          cityList = value['statelist'];
+          citylist = value['statelist'];
           for (var state in value['statelist']) {
             SelectCityList.add(state['state_name']);
           }
@@ -86,9 +87,8 @@ class AddressAddState extends State<AddressAdd> {
 
   getcitylist(data) async {
     if (SelectCityList.indexOf(data) > 0) {
-      var temp = cityList[SelectCityList.indexOf(data) - 1];
+      var temp = citylist[SelectCityList.indexOf(data) - 1];
       emirates = int.parse(temp['state_id']);
-
       Map state = {
         "stateId": temp['state_id'],
       };
@@ -106,19 +106,24 @@ class AddressAddState extends State<AddressAdd> {
       SelectAreaList.length = 1;
       await getCityList(state).then((value) {
         if (value['ret_data'] == "success") {
-          arealist = value['citylist'];
+          setState(() {
+            areaList = value['citylist'];
+            SelectAreaList = <String?>["Select Area"];
+          });
+          areaList = value['citylist'];
           for (var city in value['citylist']) {
             SelectAreaList.add(city['city_name']);
           }
         }
       });
-      setState(() {});
     }
   }
 
   getarealist(data) async {
+    // areaKey.currentState!.reset();
     if (SelectAreaList.indexOf(data.toString()) > 0) {
-      var temp = arealist[SelectAreaList.indexOf(data.toString()) - 1];
+      setState(() {});
+      var temp = areaList[SelectAreaList.indexOf(data.toString()) - 1];
       CameraPosition _kLake = CameraPosition(
         target: LatLng(double.parse(temp['city_lattitude']),
             double.parse(temp['city_longitude'])),
@@ -146,9 +151,9 @@ class AddressAddState extends State<AddressAdd> {
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
-            backgroundColor: whiteColor,
-            shadowColor: whiteColor,
-            iconTheme: IconThemeData(color: whiteColor),
+            backgroundColor: white,
+            shadowColor: white,
+            iconTheme: IconThemeData(color: white),
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarIconBrightness: Brightness.dark,
             ),
@@ -199,20 +204,20 @@ class AddressAddState extends State<AddressAdd> {
                 children: [
                   Container(
                     margin: EdgeInsets.all(16),
-                    height: 850,
+                    height: 1000,
                     child: Form(
                       key: _formKey,
                       child: Column(
                         children: [
                           Container(
-                            margin: EdgeInsets.only(top: 16.0),
+                            margin: EdgeInsets.only(top: 16.0, left: 20.0),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
                                   "Select City*",
                                   style: montserratLight.copyWith(
-                                      color: blackColor, fontSize: 14),
+                                      color: black, fontSize: 14),
                                 ),
                               ],
                             ),
@@ -245,7 +250,7 @@ class AddressAddState extends State<AddressAdd> {
                                           height: height * 0.075,
                                           width: height * 0.4,
                                           decoration: BoxDecoration(
-                                            color: whiteColor,
+                                            color: white,
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             border: Border.all(
@@ -271,11 +276,13 @@ class AddressAddState extends State<AddressAdd> {
                                                             Alignment.center,
                                                         child: Text(
                                                           "Select City",
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color:
-                                                                      blackColor,
-                                                                  fontSize: 14),
+                                                          style:
+                                                              montserratRegular
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          14),
                                                         )),
                                                     items: SelectCityList.map(
                                                         (String? value) {
@@ -310,14 +317,14 @@ class AddressAddState extends State<AddressAdd> {
                             height: 8,
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 16.0),
+                            margin: EdgeInsets.only(top: 16.0, left: 20.0),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
                                   "Select State*",
                                   style: montserratLight.copyWith(
-                                      color: blackColor, fontSize: 14),
+                                      color: black, fontSize: 14),
                                 ),
                               ],
                             ),
@@ -350,7 +357,7 @@ class AddressAddState extends State<AddressAdd> {
                                           height: height * 0.075,
                                           width: height * 0.4,
                                           decoration: BoxDecoration(
-                                            color: whiteColor,
+                                            color: white,
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             border: Border.all(
@@ -367,7 +374,6 @@ class AddressAddState extends State<AddressAdd> {
                                                   child:
                                                       DropdownButtonFormField(
                                                     key: areaKey,
-                                                    value: SelectAreaList[0],
                                                     isExpanded: true,
                                                     decoration: InputDecoration
                                                         .collapsed(
@@ -377,11 +383,13 @@ class AddressAddState extends State<AddressAdd> {
                                                             Alignment.center,
                                                         child: Text(
                                                           "Select State",
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color:
-                                                                      blackColor,
-                                                                  fontSize: 14),
+                                                          style:
+                                                              montserratRegular
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          14),
                                                         )),
                                                     items: SelectAreaList.map(
                                                         (String? value) {
@@ -399,6 +407,7 @@ class AddressAddState extends State<AddressAdd> {
                                                     onChanged: (value) {
                                                       getarealist(value);
                                                     },
+                                                    value: SelectAreaList[0],
                                                   ),
                                                 ),
                                               ),
@@ -412,45 +421,45 @@ class AddressAddState extends State<AddressAdd> {
                           SizedBox(
                             height: 8,
                           ),
-                          isgooglemap
-                              ? Container(
-                                  height: 200,
-                                  width: width,
-                                  color: blackColor,
-                                  child: GoogleMap(
-                                    initialCameraPosition: _initialPosition,
-                                    myLocationEnabled: true,
-                                    markers: Set.from(myMarker),
-                                    onTap: _handleTap,
-                                    myLocationButtonEnabled: true,
-                                    onMapCreated:
-                                        (GoogleMapController controller) {
-                                      _controller.complete(controller);
-                                    },
-                                  ),
-                                )
-                              : Container(
-                                  color: Colors.transparent,
-                                  height: 200,
-                                  alignment: Alignment.center,
-                                  width: width,
-                                  child: Text(
-                                      'Google Maps support is coming soon',
-                                      style: montserratRegular.copyWith(
-                                          fontSize: 14)),
-                                ),
+                          // isgooglemap
+                          //     ? Container(
+                          //         height: 200,
+                          //         width: width,
+                          //         color: blackColor,
+                          //         child: GoogleMap(
+                          //           initialCameraPosition: _initialPosition,
+                          //           myLocationEnabled: true,
+                          //           markers: Set.from(myMarker),
+                          //           onTap: _handleTap,
+                          //           myLocationButtonEnabled: true,
+                          //           onMapCreated:
+                          //               (GoogleMapController controller) {
+                          //             _controller.complete(controller);
+                          //           },
+                          //         ),
+                          //       )
+                          //     : Container(
+                          //         color: Colors.transparent,
+                          //         height: 200,
+                          //         alignment: Alignment.center,
+                          //         width: width,
+                          //         child: Text(
+                          //             'Google Maps support is coming soon',
+                          //             style: montserratRegular.copyWith(
+                          //                 fontSize: 14)),
+                          //       ),
                           SizedBox(
                             height: 8,
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 16.0),
+                            margin: EdgeInsets.only(top: 16.0, left: 20.0),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
                                   "Address*",
                                   style: montserratLight.copyWith(
-                                      color: blackColor, fontSize: 14),
+                                      color: black, fontSize: 14),
                                 ),
                               ],
                             ),
@@ -475,7 +484,7 @@ class AddressAddState extends State<AddressAdd> {
                                 height: height * 0.075,
                                 width: height * 0.4,
                                 decoration: BoxDecoration(
-                                  color: whiteColor,
+                                  color: white,
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(color: borderGreyColor),
                                 ),
@@ -495,7 +504,7 @@ class AddressAddState extends State<AddressAdd> {
                                           maxLength: 80,
                                           maxLines: 3,
                                           style: montserratLight.copyWith(
-                                              color: blackColor, fontSize: 14),
+                                              color: black, fontSize: 14),
                                           decoration: InputDecoration(
                                               errorStyle: TextStyle(
                                                   fontSize: 12,
@@ -505,10 +514,10 @@ class AddressAddState extends State<AddressAdd> {
                                               hintText: "Address",
                                               hintStyle:
                                                   montserratRegular.copyWith(
-                                                      color: blackColor,
+                                                      color: black,
                                                       fontSize: 14),
                                               border: InputBorder.none,
-                                              fillColor: whiteColor),
+                                              fillColor: white),
                                           onFieldSubmitted: (value) {
                                             FocusScope.of(context)
                                                 .requestFocus(flatnoFocus);
@@ -526,7 +535,100 @@ class AddressAddState extends State<AddressAdd> {
                                           },
                                           textCapitalization:
                                               TextCapitalization.sentences,
-                                          enabled: false,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                          ]),
+
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 16.0, left: 20.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Building Name/Flat No",
+                                  style: montserratLight.copyWith(
+                                      color: black, fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Stack(alignment: Alignment.bottomCenter, children: [
+                            Container(
+                              height: height * 0.045,
+                              width: height * 0.37,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 16,
+                                        color: syanColor.withOpacity(.5),
+                                        spreadRadius: 0,
+                                        blurStyle: BlurStyle.outer,
+                                        offset: Offset(0, 0)),
+                                  ]),
+                            ),
+                            Container(
+                                height: height * 0.075,
+                                width: height * 0.4,
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: borderGreyColor),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            right: width * 0.025,
+                                            left: width * 0.025),
+                                        child: TextFormField(
+                                          maxLength: 60,
+                                          focusNode: flatnoFocus,
+                                          style: montserratLight.copyWith(
+                                              color: black, fontSize: 14),
+                                          decoration: InputDecoration(
+                                              errorStyle:
+                                                  montserratRegular.copyWith(
+                                                      fontSize: 12,
+                                                      color: warningcolor),
+                                              counterText: "",
+                                              filled: true,
+                                              hintText: "Building Name/Flat No",
+                                              hintStyle:
+                                                  montserratRegular.copyWith(
+                                                      color: black,
+                                                      fontSize: 14),
+                                              border: InputBorder.none,
+                                              fillColor: white),
+                                          onChanged: (value) {
+                                            if (value != "") {
+                                              var ret =
+                                                  buildingValidation(value);
+                                              if (ret == null) {
+                                                setState(() {
+                                                  landmark = value;
+                                                });
+                                              } else {
+                                                showCustomToast(context,
+                                                    "Enter valid details",
+                                                    bgColor: errorcolor,
+                                                    textColor: white);
+                                              }
+                                            }
+                                          },
+                                          textCapitalization:
+                                              TextCapitalization.sentences,
                                         ),
                                       ),
                                     ),
@@ -594,85 +696,56 @@ class AddressAddState extends State<AddressAdd> {
                           SizedBox(
                             height: 8,
                           ),
-                          Container(
-                            margin: EdgeInsets.only(top: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Building Name/Flat No",
-                                  style: montserratLight.copyWith(
-                                      color: blackColor, fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Stack(alignment: Alignment.bottomCenter, children: [
-                            Container(
-                              height: height * 0.045,
-                              width: height * 0.37,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 16,
-                                        color: syanColor.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurStyle: BlurStyle.outer,
-                                        offset: Offset(0, 0)),
-                                  ]),
-                            ),
-                            Container(
-                                height: height * 0.075,
-                                width: height * 0.4,
-                                decoration: BoxDecoration(
-                                  color: whiteColor,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: borderGreyColor),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.only(
-                                            right: width * 0.025,
-                                            left: width * 0.025),
-                                        child: TextFormField(
-                                          maxLength: 60,
-                                          focusNode: flatnoFocus,
-                                          style: montserratLight.copyWith(
-                                              color: blackColor, fontSize: 14),
-                                          decoration: InputDecoration(
-                                              errorStyle: TextStyle(
-                                                  fontSize: 12,
-                                                  color: warningcolor),
-                                              counterText: "",
-                                              filled: true,
-                                              hintText: "Building Name/Flat No",
-                                              hintStyle:
-                                                  montserratRegular.copyWith(
-                                                      color: blackColor,
-                                                      fontSize: 14),
-                                              border: InputBorder.none,
-                                              fillColor: whiteColor),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              landmark = value;
-                                            });
-                                          },
-                                          textCapitalization:
-                                              TextCapitalization.sentences,
-                                          enabled: false,
-                                        ),
+                          isgooglemap
+                              ? Container(
+                                  margin:
+                                      EdgeInsets.only(top: 16.0, left: 20.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Tap to mark location",
+                                        style: montserratLight.copyWith(
+                                            color: black, fontSize: 14),
                                       ),
-                                    ),
-                                  ],
-                                ))
-                          ]),
+                                    ],
+                                  ),
+                                )
+                              : Row(),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          isgooglemap
+                              ? isMobile
+                                  ? Container(
+                                      margin:
+                                          EdgeInsets.only(top: 8.0, left: 20.0),
+                                      height: 200,
+                                      width: context.width(),
+                                      color: white,
+                                      child: GoogleMap(
+                                        initialCameraPosition: _initialPosition,
+                                        myLocationEnabled: true,
+                                        markers: Set.from(myMarker),
+                                        onTap: _handleTap,
+                                        myLocationButtonEnabled: true,
+                                        onMapCreated:
+                                            (GoogleMapController controller) {
+                                          _controller.complete(controller);
+                                        },
+                                      ),
+                                    )
+                                  : Container(
+                                      color: Colors.transparent,
+                                      height: 200,
+                                      alignment: Alignment.center,
+                                      width: width,
+                                      child: Text(
+                                          'Google Maps support is coming soon',
+                                          style: montserratRegular.copyWith(
+                                              fontSize: 14)),
+                                    )
+                              : Row(),
                           SizedBox(
                             height: 8,
                           ),
@@ -695,7 +768,7 @@ class AddressAddState extends State<AddressAdd> {
                                 overflow: TextOverflow.clip,
                                 style: montserratRegular.copyWith(
                                   fontSize: 14,
-                                  color: blackColor,
+                                  color: black,
                                 ),
                               ),
                             ],
@@ -703,10 +776,65 @@ class AddressAddState extends State<AddressAdd> {
                           SizedBox(height: height * 0.07),
                           GestureDetector(
                             onTap: () async {
-                              // setState(() {
-                              //   Navigator.pushReplacementNamed(
-                              //       context, Routes.bottombar);
-                              // });
+                              if (_formKey.currentState!.validate()) {
+                                if (emirates == 0) {
+                                  setState(() => issubmitted = false);
+                                  showCustomToast(context, "Select City",
+                                      bgColor: errorcolor, textColor: white);
+                                } else if (city == 0) {
+                                  setState(() => issubmitted = false);
+                                  showCustomToast(context, "Select Area",
+                                      bgColor: errorcolor, textColor: white);
+                                } else if (address == "") {
+                                  setState(() => issubmitted = false);
+                                  showCustomToast(context, "Enter Address",
+                                      bgColor: errorcolor, textColor: white);
+                                } else {
+                                  final prefs =
+                                      await SharedPreferences.getInstance();
+                                  try {
+                                    // if (issubmitted) return;
+                                    setState(() => issubmitted = true);
+                                    await Future.delayed(
+                                        Duration(milliseconds: 1000));
+                                    Map req = {
+                                      "countryId": 1,
+                                      "stateId": emirates,
+                                      "cityId": city,
+                                      "address": address,
+                                      "landmark": landmark,
+                                      "add_type": AddressType,
+                                      "lattitude":
+                                          Marklat != 0.0 ? Marklat : Statelat,
+                                      "longitude": Marklong != 0.0
+                                          ? Marklong
+                                          : Statelong,
+                                      "cust_id": prefs.getString("cust_id")
+                                    };
+                                    await saveCustomerAddress(req)
+                                        .then((value) {
+                                      if (value['ret_data'] == "success") {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return AddressList();
+                                            },
+                                          ),
+                                        );
+                                        setState(() => isgooglemap = false);
+                                        setState(() => issubmitted = false);
+                                      } else {
+                                        setState(() => issubmitted = false);
+                                      }
+                                    });
+                                  } catch (e) {
+                                    setState(() => issubmitted = false);
+                                    print(e.toString());
+                                  }
+                                }
+                              }
+                              ;
                             },
                             child: Stack(
                               alignment: Alignment.bottomCenter,

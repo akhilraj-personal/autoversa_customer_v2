@@ -32,6 +32,15 @@ addressValidation(value, context) {
   return null;
 }
 
+buildingValidation(value) {
+  String pattern = r'(^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$)';
+  RegExp regExp = new RegExp(pattern);
+  if (!regExp.hasMatch(value)) {
+    return "Enter valid data";
+  }
+  return null;
+}
+
 fullNameValidation(value, context) {
   String pattern = r'^[A-Za-z -]+$';
   RegExp regExp = new RegExp(pattern);
