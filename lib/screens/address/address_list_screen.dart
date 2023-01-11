@@ -247,7 +247,7 @@ class AddressListState extends State<AddressList> {
                                             ),
                                           ],
                                           borderRadius:
-                                              BorderRadius.circular(16),
+                                              BorderRadius.circular(12),
                                         ),
                                         child: Row(
                                           children: <Widget>[

@@ -166,3 +166,8 @@ Future create_payment_for_job_workcard(Map req) async {
 Future getServicePackageDetails(Map req) async {
   return handleResponse(await securedPostRequest('getDynamicPackgeDatas', req));
 }
+
+Future saveCustomerAddress(Map req) async {
+  return handleResponse(
+      await securedPostRequest('Customer/CustomerAddressController', req));
+}

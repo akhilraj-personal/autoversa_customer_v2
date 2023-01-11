@@ -178,13 +178,6 @@ class SummeryPageState extends State<SummeryPage> {
         customerId: payment['customer'],
         customerEphemeralKeySecret: payment['ephemeralKey']['secret'],
         // Extra params
-        applePay: const PaymentSheetApplePay(
-          merchantCountryCode: 'AE',
-        ),
-        googlePay: const PaymentSheetGooglePay(
-          merchantCountryCode: 'AE',
-          testEnv: true,
-        ),
         style: ThemeMode.light,
         appearance: const PaymentSheetAppearance(
           colors: PaymentSheetAppearanceColors(

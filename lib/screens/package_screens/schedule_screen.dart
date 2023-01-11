@@ -1418,14 +1418,15 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           ),
                           title: Text(ST.of(context).select_a_time_slot,
                               overflow: TextOverflow.ellipsis,
-                              style:
-                                  montserratLight.copyWith(color: blackColor),
+                              style: montserratLight.copyWith(
+                                  color: blackColor, fontSize: 14),
                               maxLines: 3),
                           subtitle: Text(
                               selected_timeslot == ""
                                   ? ST.of(context).select_a_time_slot + "*"
                                   : selected_timeslot,
-                              style: TextStyle(color: blackColor)),
+                              style: montserratLight.copyWith(
+                                  color: blackColor, fontSize: 14)),
                           textColor: blackColor,
                           trailing: isExpanded
                               ? Container(
