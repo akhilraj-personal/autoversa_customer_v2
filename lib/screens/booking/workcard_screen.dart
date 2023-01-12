@@ -13,7 +13,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Workcard extends StatefulWidget {
   final int click_id;
@@ -456,16 +455,16 @@ class WorkcardState extends State<Workcard> {
                     children: [
                       const SizedBox(height: 12),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.only(left: 20.0),
                             child: Text(
                               widget.click_id == 1
-                                  ? "Work In Progress"
+                                  ? "Work Card"
                                   : "Pending Payment",
                               style: montserratSemiBold.copyWith(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   color: widget.click_id == 1 ? black : black),
                             ),
                           ),
@@ -474,18 +473,6 @@ class WorkcardState extends State<Workcard> {
                       Container(
                         margin: EdgeInsets.all(16.0),
                         width: context.width() * 1.95,
-                        decoration: boxDecorationWithRoundedCorners(
-                          borderRadius: BorderRadius.circular(16),
-                          backgroundColor: black,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.8),
-                              offset: Offset(0.1, 0.1),
-                              blurRadius: 8,
-                              spreadRadius: 0.2,
-                            ),
-                          ],
-                        ),
                         child: Row(
                           children: <Widget>[
                             SizedBox(width: 16.0),
@@ -497,6 +484,9 @@ class WorkcardState extends State<Workcard> {
                                   width: width / 8, height: 50),
                             ] else if (vehicle['cv_make'] == 'Skoda') ...[
                               Image.asset(ImageConst.skod_ico,
+                                  width: width / 8, height: 50),
+                            ] else if (vehicle['cv_make'] == 'Audi') ...[
+                              Image.asset(ImageConst.aud_ico,
                                   width: width / 8, height: 50),
                             ] else ...[
                               Image.asset(ImageConst.defcar_ico,
@@ -514,22 +504,15 @@ class WorkcardState extends State<Workcard> {
                                     children: <Widget>[
                                       Flexible(
                                         child: Container(
-                                          decoration: BoxDecoration(
-                                            color: syanColor,
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(16.0),
-                                                bottomRight:
-                                                    Radius.circular(16.0)),
-                                          ),
-                                          padding: const EdgeInsets.fromLTRB(
-                                              10, 2, 10, 2),
-                                          child: Text(
-                                              booking['bk_number'] != null
-                                                  ? booking['bk_number']
-                                                  : "",
-                                              style: montserratRegular.copyWith(
-                                                  color: white, fontSize: 12)),
-                                        ),
+                                            child: Text(
+                                                booking['bk_number'] != null
+                                                    ? "Booking ID: " +
+                                                        booking['bk_number']
+                                                    : "",
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        color: black,
+                                                        fontSize: 14))),
                                       ),
                                     ],
                                   ),
@@ -583,10 +566,42 @@ class WorkcardState extends State<Workcard> {
                           ],
                         ),
                       ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              booking['bk_booking_date'] != null
+                                  ? "Date" +
+                                      ": " +
+                                      DateFormat('dd-MM-yyyy').format(
+                                          DateTime.tryParse(
+                                              booking['bk_booking_date'])!)
+                                  : "",
+                              style: montserratRegular.copyWith(
+                                  fontSize: 12, color: black),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              booking['bk_booking_date'] != null
+                                  ? "Date" +
+                                      ": " +
+                                      DateFormat('dd-MM-yyyy').format(
+                                          DateTime.tryParse(
+                                              booking['bk_booking_date'])!)
+                                  : "",
+                              style: montserratRegular.copyWith(
+                                  fontSize: 12, color: black),
+                            ),
+                          ),
+                        ],
+                      ),
                       Container(
                         padding: EdgeInsets.all(16.0),
                         decoration: boxDecorationWithRoundedCorners(
-                          backgroundColor: black,
+                          backgroundColor: white,
                           borderRadius: radius(8),
                         ),
                         child: Column(

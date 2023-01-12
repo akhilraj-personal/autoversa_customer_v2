@@ -18,6 +18,7 @@ class ImageConst {
   static const signup_icon = baseImageURl + 'signup_icon.png';
   static const fb_icon = baseImageURl + 'fb_icon.png';
   static const default_pro_pic = baseImageURl + 'default_profile.png';
+  static const default_inspection_pic = baseImageURl + 'inspection_pic.png';
   static const camera = baseImageURl + 'camera.png';
   static const no_data_found = baseImageURl + 'no_data_found.png';
   static const g_icon = baseImageURl + 'g_icon.png';

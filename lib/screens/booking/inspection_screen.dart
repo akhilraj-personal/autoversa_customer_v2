@@ -199,108 +199,130 @@ class InspectionScreenState extends State<InspectionScreen>
                   children: [
                     Container(
                       margin: EdgeInsets.all(16.0),
-                      padding: EdgeInsets.only(top: 6, bottom: 6),
-                      width: context.width() * 1.95,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(16.0),
                       ),
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 16.0),
-                          if (widget.vehmake == 'Mercedes Benz') ...[
-                            Image.asset(ImageConst.benz_ico,
-                                width: width / 8, height: 50),
-                          ] else if (widget.vehmake == 'BMW') ...[
-                            Image.asset(ImageConst.bmw_ico,
-                                width: width / 8, height: 50),
-                          ] else if (widget.vehmake == 'Skoda') ...[
-                            Image.asset(ImageConst.skod_ico,
-                                width: width / 8, height: 50),
-                          ] else ...[
-                            Image.asset(ImageConst.defcar_ico,
-                                width: width / 8, height: 50)
-                          ],
-                          SizedBox(width: 16.0),
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: syanColor,
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(16.0),
-                                            bottomRight: Radius.circular(16.0)),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Row(
+                          children: <Widget>[
+                            if (widget.vehmake == 'Mercedes Benz') ...[
+                              Image.asset(ImageConst.benz_ico,
+                                  width: width / 8, height: 50),
+                            ] else if (widget.vehmake == 'BMW') ...[
+                              Image.asset(ImageConst.bmw_ico,
+                                  width: width / 8, height: 50),
+                            ] else if (widget.vehmake == 'Skoda') ...[
+                              Image.asset(ImageConst.skod_ico,
+                                  width: width / 8, height: 50),
+                            ] else if (widget.vehmake == 'Audi') ...[
+                              Image.asset(ImageConst.aud_ico,
+                                  width: width / 8, height: 50),
+                            ] else ...[
+                              Image.asset(ImageConst.defcar_ico,
+                                  width: width / 8, height: 50)
+                            ],
+                            SizedBox(width: 8.0),
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Flexible(
+                                        child: Container(
+                                            child: Text(
+                                                widget.pkgname != null
+                                                    ? "Booking ID: " +
+                                                        widget.booknum
+                                                    : "",
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        color: black,
+                                                        fontSize: 14))),
                                       ),
-                                      padding:
-                                          EdgeInsets.fromLTRB(10, 2, 10, 2),
-                                      child: Text(
-                                          widget.pkgname != null
-                                              ? "Booking ID: " + widget.booknum
-                                              : "",
-                                          style: montserratSemiBold.copyWith(
-                                              color: black, fontSize: 14)),
-                                    ),
-                                  ],
-                                ),
-                                4.height,
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(widget.pkgname,
-                                        style: montserratRegular.copyWith(
-                                            color: black, fontSize: 12)),
-                                  ],
-                                ),
-                                4.height,
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                        "Date :" +
-                                            DateFormat('dd-MM-yyyy').format(
-                                                DateTime.tryParse(
-                                                    widget.bookdate)!),
-                                        style: montserratRegular.copyWith(
-                                            color: black, fontSize: 12)),
-                                  ],
-                                ),
-                                4.height,
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text("Time: " + widget.booktime,
-                                        style: montserratRegular.copyWith(
-                                            color: black, fontSize: 12)),
-                                  ],
-                                ),
-                                4.height,
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Flexible(
-                                      child: Container(
-                                        child: Text(widget.vehname,
-                                            overflow: TextOverflow.clip,
-                                            style: montserratRegular.copyWith(
-                                                color: black, fontSize: 12)),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Flexible(
+                                        child: Container(
+                                          child: Text(widget.pkgname,
+                                              overflow: TextOverflow.clip,
+                                              style: montserratRegular.copyWith(
+                                                  color: black, fontSize: 12)),
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Flexible(
+                                        child: Container(
+                                          child: Text(
+                                              "Date :" +
+                                                  DateFormat('dd-MM-yyyy')
+                                                      .format(DateTime.tryParse(
+                                                          widget.bookdate)!),
+                                              style: montserratRegular.copyWith(
+                                                  color: black, fontSize: 12)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Flexible(
+                                        child: Container(
+                                          child: Text(
+                                              "Time: " + widget.booktime,
+                                              style: montserratRegular.copyWith(
+                                                  color: black, fontSize: 12)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Flexible(
+                                        child: Container(
+                                          child: Text(widget.vehname,
+                                              overflow: TextOverflow.clip,
+                                              style: montserratRegular.copyWith(
+                                                  color: black, fontSize: 12)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 10.0),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     AnimatedContainer(
@@ -319,47 +341,31 @@ class InspectionScreenState extends State<InspectionScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: EdgeInsets.only(left: 20.0),
+                                padding: EdgeInsets.only(left: 10.0),
                                 child: Text(
                                   "Inspection Details",
                                   style: montserratSemiBold.copyWith(
-                                      fontSize: 16, color: black),
+                                      fontSize: 14, color: black),
                                 ),
                               ),
                             ],
                           ),
                           Container(
                             margin: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  topRight: Radius.circular(5),
-                                  bottomLeft: Radius.circular(5),
-                                  bottomRight: Radius.circular(5)),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Color(0xFF808080).withOpacity(0.3),
-                                    offset: Offset(0.0, 1.0),
-                                    blurRadius: 2.0)
-                              ],
-                            ),
                             child: Row(
                               children: <Widget>[
                                 Column(
                                   children: <Widget>[],
                                 ),
                                 Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8)),
                                   margin: EdgeInsets.only(left: 0, right: 16),
                                   width: 80,
                                   height: 80,
                                   child: Image.asset(
-                                      "images/automobile/inspection_pic.png"),
+                                      ImageConst.default_inspection_pic),
                                   padding: EdgeInsets.all(width / 30),
                                 ),
                                 Expanded(
@@ -386,7 +392,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                                           'cv_plate_number']
                                                   : "",
                                               style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 14)),
+                                                  color: black, fontSize: 12)),
                                         ],
                                       ),
                                       const SizedBox(
@@ -406,7 +412,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.clip,
                                             style: montserratRegular.copyWith(
-                                              fontSize: 14,
+                                              fontSize: 12,
                                               color: black,
                                             ),
                                           ),
@@ -431,7 +437,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.clip,
                                             style: montserratRegular.copyWith(
-                                              fontSize: 14,
+                                              fontSize: 12,
                                               color: black,
                                             ),
                                           ),
@@ -446,7 +452,7 @@ class InspectionScreenState extends State<InspectionScreen>
                               ],
                             ),
                           ),
-                          8.height,
+                          4.height,
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 12, horizontal: 12),
@@ -458,7 +464,8 @@ class InspectionScreenState extends State<InspectionScreen>
                                 Text("Images",
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.clip,
-                                    style: montserratSemiBold.copyWith()),
+                                    style: montserratSemiBold.copyWith(
+                                        fontSize: 14)),
                                 vehicleimages.length > 0
                                     ? TextButton(
                                         onPressed: () {
@@ -468,7 +475,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                         },
                                         child: Text("Show all",
                                             style: montserratLight.copyWith(
-                                                color: syanColor)),
+                                                color: black, fontSize: 12)),
                                       )
                                     : Row(),
                               ],
@@ -504,14 +511,12 @@ class InspectionScreenState extends State<InspectionScreen>
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.max,
-                                    children: const [
+                                    children: [
                                       Text("No Vehicle Images",
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.clip,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontStyle: FontStyle.normal,
-                                            fontSize: 14,
+                                          style: montserratRegular.copyWith(
+                                            fontSize: 12,
                                             color: Color(0xff000000),
                                           )),
                                     ],
@@ -529,7 +534,8 @@ class InspectionScreenState extends State<InspectionScreen>
                                 Text("Video",
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.clip,
-                                    style: montserratSemiBold.copyWith()),
+                                    style: montserratSemiBold.copyWith(
+                                        fontSize: 14)),
                               ],
                             ),
                           ),
@@ -690,7 +696,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.clip,
                                           style: montserratRegular.copyWith(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             color: black,
                                           )),
                                     ],
@@ -708,7 +714,8 @@ class InspectionScreenState extends State<InspectionScreen>
                                 Text("Registration Card",
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.clip,
-                                    style: montserratSemiBold.copyWith()),
+                                    style: montserratSemiBold.copyWith(
+                                        fontSize: 14)),
                               ],
                             ),
                           ),
@@ -724,6 +731,9 @@ class InspectionScreenState extends State<InspectionScreen>
                                           unselectedWidgetColor: black),
                                       child: Radio(
                                           value: '0',
+                                          fillColor:
+                                              MaterialStateColor.resolveWith(
+                                                  (states) => syanColor),
                                           groupValue: getinspection[
                                               'bki_reg_card_flag'],
                                           onChanged: (value) {
@@ -752,6 +762,9 @@ class InspectionScreenState extends State<InspectionScreen>
                                       data: Theme.of(context).copyWith(
                                           unselectedWidgetColor: black),
                                       child: Radio(
+                                        fillColor:
+                                            MaterialStateColor.resolveWith(
+                                                (states) => syanColor),
                                         value: '1',
                                         groupValue:
                                             getinspection['bki_reg_card_flag'],
@@ -783,6 +796,8 @@ class InspectionScreenState extends State<InspectionScreen>
                               //             unselectedWidgetColor:
                               //                 appStore.textPrimaryColor),
                               //         child: Radio(
+                              // fillColor: MaterialStateColor.resolveWith(
+                              //         (states) => syanColor),
                               //           value: '2',
                               //           groupValue:
                               //               getinspection['bki_reg_card_flag'],
@@ -837,7 +852,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                         : "",
                                     textAlign: TextAlign.start,
                                     style: montserratRegular.copyWith(
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       color: black,
                                     ),
                                   ),
@@ -886,7 +901,8 @@ class InspectionScreenState extends State<InspectionScreen>
                                 Text("Contents In Vehicle",
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.clip,
-                                    style: montserratSemiBold.copyWith()),
+                                    style: montserratSemiBold.copyWith(
+                                        fontSize: 14)),
                               ],
                             ),
                           ),
@@ -912,7 +928,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                                 textAlign: TextAlign.start,
                                                 style:
                                                     montserratRegular.copyWith(
-                                                  fontSize: 14,
+                                                  fontSize: 12,
                                                   color: black,
                                                 ),
                                               ),
@@ -967,7 +983,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                 ),
                                 Container(
                                   height: height * 0.075,
-                                  width: height * 0.4,
+                                  width: width,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
@@ -994,7 +1010,7 @@ class InspectionScreenState extends State<InspectionScreen>
                         ],
                       ),
                     ),
-                    80.height,
+                    20.height,
                   ],
                 ),
               ],
