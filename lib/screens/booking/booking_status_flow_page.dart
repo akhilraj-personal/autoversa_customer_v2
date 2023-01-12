@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/main.dart';
+import 'package:autoversa/screens/booking/inspection_screen.dart';
+import 'package:autoversa/screens/booking/workcard_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -1988,26 +1990,26 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                             ),
                                                             onPressed:
                                                                 () async {
-                                                              // Navigator.push(
-                                                              //     context,
-                                                              //     MaterialPageRoute(
-                                                              //         builder: (context) => AMInspectionScreen(
-                                                              //             bookid: widget
-                                                              //                 .bk_id,
-                                                              //             booknum: booking[
-                                                              //                 'bk_number'],
-                                                              //             bookdate: booking[
-                                                              //                 'bk_booking_date'],
-                                                              //             booktime: timeFormatter(pickup_timeslot['tm_start_time']) +
-                                                              //                 " - " +
-                                                              //                 timeFormatter(pickup_timeslot[
-                                                              //                     'tm_end_time']),
-                                                              //             pkgname: booking_package[
-                                                              //                 'pkg_name'],
-                                                              //             vehname: widget
-                                                              //                 .vehname,
-                                                              //             vehmake:
-                                                              //                 vehicle['cv_make'])));
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) => InspectionScreen(
+                                                                          bookid: widget
+                                                                              .bk_id,
+                                                                          booknum: booking[
+                                                                              'bk_number'],
+                                                                          bookdate: booking[
+                                                                              'bk_booking_date'],
+                                                                          booktime: timeFormatter(pickup_timeslot['tm_start_time']) +
+                                                                              " - " +
+                                                                              timeFormatter(pickup_timeslot[
+                                                                                  'tm_end_time']),
+                                                                          pkgname: booking_package[
+                                                                              'pkg_name'],
+                                                                          vehname: widget
+                                                                              .vehname,
+                                                                          vehmake:
+                                                                              vehicle['cv_make'])));
                                                             },
                                                             child: Stack(
                                                               children: <
@@ -2077,18 +2079,18 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                             ),
                                                             onPressed:
                                                                 () async {
-                                                              // Navigator.push(
-                                                              //     context,
-                                                              //     MaterialPageRoute(
-                                                              //         builder: (context) =>
-                                                              //             AMWorkCard(
-                                                              //                 click_id: 1,
-                                                              //                 booking_id:
-                                                              //                     widget.bk_id,
-                                                              //                 vehname: widget
-                                                              //                     .vehname,
-                                                              //                 vehmake: vehicle[
-                                                              //                     'cv_make'])));
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) => Workcard(
+                                                                          click_id:
+                                                                              1,
+                                                                          booking_id: widget
+                                                                              .bk_id,
+                                                                          vehname: widget
+                                                                              .vehname,
+                                                                          vehmake:
+                                                                              vehicle['cv_make'])));
                                                             },
                                                             child: Stack(
                                                               children: <
