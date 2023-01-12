@@ -376,95 +376,25 @@ class WorkcardState extends State<Workcard> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 8),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <
-                  Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0),
-                  child: Text(
-                    booking['bk_number'] != null
-                        ? "ID: " + booking['bk_number']
-                        : "",
-                    style: montserratRegular.copyWith(
-                        fontSize: 14.0, color: black),
-                  ),
-                ),
-                const SizedBox(
-                  width: 20.0,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 20.0),
-                  child: Text(
-                    booking['bk_booking_date'] != null
-                        ? "Date" +
-                            ": " +
-                            DateFormat('dd-MM-yyyy').format(
-                                DateTime.tryParse(booking['bk_booking_date'])!)
-                        : "",
-                    style:
-                        montserratRegular.copyWith(fontSize: 12, color: black),
-                  ),
-                ),
-              ]),
-              SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Flexible(
-                    child: Container(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        service_advisor['us_firstname'] != null
-                            ? "Service Advisor: " +
-                                service_advisor['us_firstname']
-                            : "Service Advisor: Not Assigned",
-                        style: montserratRegular.copyWith(
-                            fontSize: 12, color: black),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 20.0,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(right: 20.0),
-                    child: Text(
-                      service_advisor['us_phone'] != null
-                          ? "Contact" + ": " + service_advisor['us_phone']
-                          : "",
-                      style: montserratRegular.copyWith(
-                          fontSize: 12.0, color: black),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Container(
-                margin: EdgeInsets.all(0),
-                padding: EdgeInsets.all(0),
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: context.cardColor,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(32.0),
-                      topRight: Radius.circular(32.0)),
-                ),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.only(left: 20.0),
+                            padding: EdgeInsets.only(
+                              left: 12.0,
+                            ),
                             child: Text(
                               widget.click_id == 1
                                   ? "Work Card"
                                   : "Pending Payment",
                               style: montserratSemiBold.copyWith(
-                                  fontSize: 14,
+                                  fontSize: 16,
                                   color: widget.click_id == 1 ? black : black),
                             ),
                           ),
@@ -545,61 +475,76 @@ class WorkcardState extends State<Workcard> {
                                               color: black, fontSize: 12)),
                                     ],
                                   ),
+                                  // 4.height,
+                                  // Row(
+                                  //   mainAxisAlignment:
+                                  //       MainAxisAlignment.spaceBetween,
+                                  //   children: <Widget>[
+                                  //     Text(
+                                  //         booking['bk_odometer'] != null
+                                  //             ? "Odometer: " +
+                                  //                 booking['bk_odometer']
+                                  //             : "",
+                                  //         style: montserratRegular.copyWith(
+                                  //             color: black, fontSize: 12)),
+                                  //   ],
+                                  // ),
+                                  // 4.height,
+                                  // Row(
+                                  //   mainAxisAlignment:
+                                  //       MainAxisAlignment.spaceBetween,
+                                  //   children: <Widget>[
+                                  //     Text(
+                                  //         booking['bk_booking_date'] != null
+                                  //             ? "Date" +
+                                  //                 ": " +
+                                  //                 DateFormat('dd-MM-yyyy').format(
+                                  //                     DateTime.tryParse(booking[
+                                  //                         'bk_booking_date'])!)
+                                  //             : "",
+                                  //         style: montserratRegular.copyWith(
+                                  //             color: black, fontSize: 12)),
+                                  //   ],
+                                  // ),
+                                  // 4.height,
+                                  // Row(
+                                  //   mainAxisAlignment:
+                                  //       MainAxisAlignment.spaceBetween,
+                                  //   children: <Widget>[
+                                  //     Text(
+                                  //         service_advisor['us_firstname'] !=
+                                  //                 null
+                                  //             ? "Service Advisor: " +
+                                  //                 service_advisor[
+                                  //                     'us_firstname']
+                                  //             : "Service Advisor: Not Assigned",
+                                  //         style: montserratRegular.copyWith(
+                                  //             color: black, fontSize: 12)),
+                                  //   ],
+                                  // ),
                                   4.height,
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                          booking['bk_odometer'] != null
-                                              ? "Odometer: " +
-                                                  booking['bk_odometer']
+                                          service_advisor['us_phone'] != null
+                                              ? "Contact" +
+                                                  ": " +
+                                                  service_advisor['us_phone']
                                               : "",
                                           style: montserratRegular.copyWith(
                                               color: black, fontSize: 12)),
                                     ],
                                   ),
-                                  SizedBox(height: 10.0),
                                 ],
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              booking['bk_booking_date'] != null
-                                  ? "Date" +
-                                      ": " +
-                                      DateFormat('dd-MM-yyyy').format(
-                                          DateTime.tryParse(
-                                              booking['bk_booking_date'])!)
-                                  : "",
-                              style: montserratRegular.copyWith(
-                                  fontSize: 12, color: black),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              booking['bk_booking_date'] != null
-                                  ? "Date" +
-                                      ": " +
-                                      DateFormat('dd-MM-yyyy').format(
-                                          DateTime.tryParse(
-                                              booking['bk_booking_date'])!)
-                                  : "",
-                              style: montserratRegular.copyWith(
-                                  fontSize: 12, color: black),
-                            ),
-                          ),
-                        ],
-                      ),
                       Container(
-                        padding: EdgeInsets.all(16.0),
+                        padding: EdgeInsets.all(12.0),
                         decoration: boxDecorationWithRoundedCorners(
                           backgroundColor: white,
                           borderRadius: radius(8),
@@ -640,12 +585,12 @@ class WorkcardState extends State<Workcard> {
                                     Container(
                                         padding: EdgeInsets.all(8),
                                         child: Text('Cost (AED)',
-                                            style: montserratRegular.copyWith(
+                                            style: montserratSemiBold.copyWith(
                                                 fontSize: 12,
                                                 color: warningcolor))),
                                     8.width,
                                     Text('Status',
-                                        style: montserratRegular.copyWith(
+                                        style: montserratSemiBold.copyWith(
                                             fontSize: 12, color: black)),
                                   ],
                                 ),
@@ -685,14 +630,14 @@ class WorkcardState extends State<Workcard> {
                                               ? packagebooking[
                                                   'bkp_cust_amount']
                                               : "",
-                                          style: montserratRegular.copyWith(
+                                          style: montserratSemiBold.copyWith(
                                               fontSize: 12,
                                               color: warningcolor)),
                                     ),
                                     8.width,
                                     Text("PAID",
-                                        style: montserratSemiBold.copyWith(
-                                            fontSize: 12, color: Colors.black)),
+                                        style: montserratRegular.copyWith(
+                                            fontSize: 12, color: Colors.green)),
                                   ],
                                 ),
                               ],
@@ -711,7 +656,7 @@ class WorkcardState extends State<Workcard> {
                                             maxLines: 3,
                                             style: montserratRegular.copyWith(
                                               fontSize: 12,
-                                              color: warningcolor,
+                                              color: black,
                                             )),
                                       ),
                                     ),
@@ -725,14 +670,14 @@ class WorkcardState extends State<Workcard> {
                                           pickupcost.toString() == "0.0"
                                               ? "FREE"
                                               : (pickupcost.toStringAsFixed(2)),
-                                          style: montserratRegular.copyWith(
+                                          style: montserratSemiBold.copyWith(
                                               fontSize: 12,
-                                              color: Colors.black)),
+                                              color: warningcolor)),
                                     ),
                                     8.width,
                                     Text("PAID",
                                         style: montserratRegular.copyWith(
-                                            fontSize: 12, color: Colors.black)),
+                                            fontSize: 12, color: Colors.green)),
                                   ],
                                 ),
                               ],
@@ -793,11 +738,11 @@ class WorkcardState extends State<Workcard> {
                                                           ? approvedjobs[i]
                                                               ['bkj_cust_cost']
                                                           : "",
-                                                      style: montserratRegular
+                                                      style: montserratSemiBold
                                                           .copyWith(
                                                               fontSize: 12,
-                                                              color: Colors
-                                                                  .black)),
+                                                              color:
+                                                                  warningcolor)),
                                                 ),
                                                 8.width,
                                                 approvedjobs[i][
@@ -813,7 +758,7 @@ class WorkcardState extends State<Workcard> {
                                                         style: boldTextStyle(
                                                             size: 12,
                                                             color:
-                                                                Colors.black)),
+                                                                Colors.green)),
                                               ],
                                             )
                                           ],
@@ -829,7 +774,7 @@ class WorkcardState extends State<Workcard> {
                           : Container(
                               padding: EdgeInsets.all(16.0),
                               decoration: boxDecorationWithRoundedCorners(
-                                backgroundColor: black,
+                                backgroundColor: white,
                                 borderRadius: radius(8),
                               ),
                               child: Column(
@@ -840,9 +785,7 @@ class WorkcardState extends State<Workcard> {
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.clip,
                                     style: montserratSemiBold.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontStyle: FontStyle.normal,
-                                      fontSize: 15,
+                                      fontSize: 14,
                                       color: black,
                                     ),
                                   ),
@@ -874,7 +817,7 @@ class WorkcardState extends State<Workcard> {
                                           Container(
                                               padding: EdgeInsets.all(8),
                                               child: Text('Cost (AED)',
-                                                  style: montserratRegular
+                                                  style: montserratSemiBold
                                                       .copyWith(
                                                           fontSize: 12,
                                                           color: black))),
@@ -883,7 +826,7 @@ class WorkcardState extends State<Workcard> {
                                             padding: EdgeInsets.all(8),
                                             child: Text('Action',
                                                 style:
-                                                    montserratRegular.copyWith(
+                                                    montserratSemiBold.copyWith(
                                                         fontSize: 12,
                                                         color: black)),
                                           ),
@@ -916,7 +859,8 @@ class WorkcardState extends State<Workcard> {
                                                 child: Container(
                                                   child: Text(
                                                       pendingjobs[i]
-                                                          ['bkj_jobname'],
+                                                              ['bkj_jobname']
+                                                          .toUpperCase(),
                                                       overflow:
                                                           TextOverflow.clip,
                                                       maxLines: 3,
@@ -935,7 +879,7 @@ class WorkcardState extends State<Workcard> {
                                                 child: Text(
                                                   pendingjobs[i]
                                                       ['bkj_cust_cost'],
-                                                  style: montserratRegular
+                                                  style: montserratSemiBold
                                                       .copyWith(
                                                     color: warningcolor,
                                                     fontSize: 12,
@@ -1087,37 +1031,40 @@ class WorkcardState extends State<Workcard> {
                       //   ),
                       // ),
                       Container(
-                        padding: EdgeInsets.only(right: 16.0),
-                        decoration: boxDecorationWithRoundedCorners(
-                          backgroundColor: white,
-                          borderRadius: radius(8),
-                        ),
+                        padding: EdgeInsets.only(right: 12.0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            Text(""),
                             Text(
-                              "Grand Total: " + grandtotal.toString(),
-                              style: montserratRegular.copyWith(
-                                  color: black, fontSize: 12),
+                              "Grand Total: ",
+                              style: montserratSemiBold.copyWith(
+                                  color: black, fontSize: 14),
+                            ),
+                            Text(
+                              grandtotal.toString(),
+                              style: montserratSemiBold.copyWith(
+                                  color: warningcolor, fontSize: 14),
                             ),
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: 4,
+                      ),
                       Container(
-                        padding: EdgeInsets.only(right: 16.0),
-                        decoration: boxDecorationWithRoundedCorners(
-                          backgroundColor: white,
-                          borderRadius: radius(8),
-                        ),
+                        padding: EdgeInsets.only(right: 12.0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            Text(""),
                             Text(
-                              "Amount to pay" + ": " + amounttopay.toString(),
-                              style: montserratRegular.copyWith(
-                                  color: black, fontSize: 12),
+                              "Amount To Pay: ",
+                              style: montserratSemiBold.copyWith(
+                                  color: black, fontSize: 14),
+                            ),
+                            Text(
+                              amounttopay.toString(),
+                              style: montserratSemiBold.copyWith(
+                                  color: warningcolor, fontSize: 14),
                             ),
                           ],
                         ),

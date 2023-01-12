@@ -861,7 +861,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'assets/icons/pickedup_active.png',
+                "icon": 'assets/icons/pickup_progress_active.png',
                 "color": activecolor,
                 "active_flag": true,
                 "hold_flag": false
@@ -901,7 +901,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'assets/icons/pickedup_active.png',
+                "icon": 'assets/icons/vehicle_workshop_active.png',
                 "color": activecolor,
                 "active_flag": true,
                 "hold_flag": false
@@ -1062,7 +1062,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "status": "Pickup In Progress",
                 "time": "",
                 "code": "",
-                "icon": 'assets/icons/pickedup_inactive.png',
+                "icon": 'assets/icons/pickup_progress_inactive.png',
                 "color": Colors.transparent,
                 "active_flag": false,
                 "hold_flag": false
@@ -1086,7 +1086,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "status": "Vehicle @ Workshop",
                 "time": "",
                 "code": "",
-                "icon": 'assets/icons/pickedup_inactive.png',
+                "icon": 'assets/icons/vehicle_workshop_inactive.png',
                 "color": Colors.transparent,
                 "active_flag": false,
                 "hold_flag": false
