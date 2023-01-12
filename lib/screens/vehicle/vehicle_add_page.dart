@@ -666,11 +666,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                       fontSize: 14),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
-                                          validator: (value) {
-                                            return mobileNumberValidation(
-                                                value, context);
-                                          },
-                                          enabled: false,
                                         ),
                                       ),
                                     ),
@@ -680,10 +675,13 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                           SizedBox(height: height * 0.04),
                           GestureDetector(
                             onTap: () async {
-                              setState(() {
-                                Navigator.pushReplacementNamed(
-                                    context, Routes.bottombar);
-                              });
+                              if (_formKey.currentState!.validate()) {
+                                if (issubmitted) return;
+                                setState(() => issubmitted = true);
+                                await Future.delayed(
+                                    Duration(milliseconds: 1000));
+                                saveCustomerVehicle();
+                              }
                             },
                             child: Stack(
                               alignment: Alignment.bottomCenter,

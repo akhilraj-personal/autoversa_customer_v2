@@ -623,7 +623,7 @@ class ServiceListState extends State<ServiceList> {
                               child: Stack(
                                 children: [
                                   Image.asset(
-                                    ImageConst.adrresslist_logo,
+                                    ImageConst.no_data_found,
                                     height: MediaQuery.of(context).size.height,
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.fitWidth,
