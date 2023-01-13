@@ -793,19 +793,9 @@ class CarRepairState extends State<CarRepair> {
                                                     ? Container(
                                                         margin:
                                                             EdgeInsets.all(5),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              radius(10),
-                                                          color:
-                                                              context.cardColor,
-                                                          border: Border.all(
-                                                            color: white,
-                                                          ),
-                                                        ),
                                                         child: ExpansionTile(
                                                           childrenPadding:
-                                                              EdgeInsets.all(8),
+                                                              EdgeInsets.all(0),
                                                           leading: Container(
                                                             width: 25,
                                                             height: 25,

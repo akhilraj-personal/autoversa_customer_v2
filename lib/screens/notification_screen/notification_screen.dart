@@ -9,6 +9,7 @@ import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -73,7 +74,7 @@ class NotificationPageState extends State<NotificationPage> {
         isActive = false;
       });
       showCustomToast(context, ST.of(context).toast_application_error,
-          bgColor: errorcolor, textColor: whiteColor);
+          bgColor: errorcolor, textColor: white);
     });
   }
 
@@ -111,9 +112,9 @@ class NotificationPageState extends State<NotificationPage> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: whiteColor,
-          shadowColor: whiteColor,
-          iconTheme: IconThemeData(color: whiteColor),
+          backgroundColor: white,
+          shadowColor: white,
+          iconTheme: IconThemeData(color: white),
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarIconBrightness: Brightness.dark,
           ),
@@ -245,18 +246,18 @@ class NotificationPageState extends State<NotificationPage> {
                               },
                             )
                           : Container(
-                              height: height(),
+                              height: height,
                               child: Stack(
                                 children: [
                                   Image.asset(
-                                    'images/automobile/no_data_found.png',
+                                    ImageConst.no_data_found,
                                     height: MediaQuery.of(context).size.height,
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.fitWidth,
                                   ),
                                 ],
                               ),
-                            ),
+                            ).center(),
                     ),
             ],
           ),
@@ -321,13 +322,10 @@ class Notification extends StatelessWidget {
                   //                           ")"
                   //                   : "",
                   //             )));
-                } else {
-                  print(value);
-                }
+                } else {}
               }).catchError((e) {
-                print(e.toString());
                 showCustomToast(context, ST.of(context).toast_application_error,
-                    bgColor: errorcolor, textColor: whiteColor);
+                    bgColor: errorcolor, textColor: white);
               });
             } else if (model.nt_read == "1") {
               // Navigator.push(
@@ -372,11 +370,11 @@ class Notification extends StatelessWidget {
                         (DateFormat('d')
                             .format(DateTime.tryParse(model.nt_created_on)!)),
                         style: montserratSemiBold.copyWith(
-                            color: blackColor, fontSize: 20)),
+                            color: black, fontSize: 20)),
                     Text(
                         (DateFormat('MMM')
                             .format(DateTime.tryParse(model.nt_created_on)!)),
-                        style: montserratSemiBold.copyWith(color: whiteColor)),
+                        style: montserratSemiBold.copyWith(color: white)),
                   ],
                 ),
               ),
@@ -485,10 +483,8 @@ class Notification extends StatelessWidget {
       //         //                   : "",
       //         //             )));
       //       } else {
-      //         print(value);
       //       }
       //     }).catchError((e) {
-      //       print(e.toString());
       //       showCustomToast(context, S.of(context).toast_application_error,
       //           bgColor: errorcolor, textColor: whiteColor);
       //     });

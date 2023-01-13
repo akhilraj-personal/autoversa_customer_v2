@@ -919,10 +919,10 @@ class EditprofieState extends State<Editprofie> {
                       child: IconButton(
                           icon: Image.asset(
                             ImageConst.camera,
-                            width: 15,
-                            height: 15,
+                            width: 20,
+                            height: 20,
                             fit: BoxFit.fill,
-                            color: context.iconColor,
+                            color: white,
                           ),
                           onPressed: () async {
                             profilepictureclick();
