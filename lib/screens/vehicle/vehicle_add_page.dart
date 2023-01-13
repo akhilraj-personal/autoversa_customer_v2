@@ -60,7 +60,13 @@ class VehicleAddPageState extends State<VehicleAddPage> {
           data = value['brands'];
           brands = data
               .map((item) => DropdownMenuItem(
-                  child: Text(item['veh_brand']),
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        item['veh_brand'],
+                        style: montserratRegular.copyWith(
+                            color: blackColor, fontSize: 12),
+                      )),
                   value: item['veh_brand'].toString()))
               .toList();
           models = [];
@@ -92,7 +98,13 @@ class VehicleAddPageState extends State<VehicleAddPage> {
           data = value['models'];
           models = data
               .map((item) => DropdownMenuItem(
-                  child: Text(item['veh_model']),
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        item['veh_model'],
+                        style: montserratRegular.copyWith(
+                            color: blackColor, fontSize: 12),
+                      )),
                   value: item['veh_model'].toString()))
               .toList();
         });
@@ -121,7 +133,13 @@ class VehicleAddPageState extends State<VehicleAddPage> {
           data = value['variants'];
           variants = data
               .map((item) => DropdownMenuItem(
-                  child: Text(item['veh_variant']),
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        item['veh_variant'],
+                        style: montserratRegular.copyWith(
+                            color: blackColor, fontSize: 12),
+                      )),
                   value: item['veh_variant'].toString()))
               .toList();
         });
@@ -159,8 +177,15 @@ class VehicleAddPageState extends State<VehicleAddPage> {
             data.add(i.toString());
           }
           modyears = data
-              .map((item) =>
-                  DropdownMenuItem(child: Text(item), value: item.toString()))
+              .map((item) => DropdownMenuItem(
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        item,
+                        style: montserratRegular.copyWith(
+                            color: blackColor, fontSize: 12),
+                      )),
+                  value: item.toString()))
               .toList();
         });
       } else {}
@@ -198,8 +223,15 @@ class VehicleAddPageState extends State<VehicleAddPage> {
             data.add(i.toString());
           }
           modyears = data
-              .map((item) =>
-                  DropdownMenuItem(child: Text(item), value: item.toString()))
+              .map((item) => DropdownMenuItem(
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        item,
+                        style: montserratRegular.copyWith(
+                            color: blackColor, fontSize: 12),
+                      )),
+                  value: item.toString()))
               .toList();
         });
       }

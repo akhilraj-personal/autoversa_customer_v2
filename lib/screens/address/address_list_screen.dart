@@ -437,13 +437,21 @@ class AddressListState extends State<AddressList> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          child: Container(
+            width: 60,
+            height: 60,
+            child: Icon(
+              Icons.add,
+            ),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(colors: [lightblueColor, syanColor])),
+          ),
           onPressed: () {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AddressAdd()));
           },
           heroTag: 'Add Address',
-          child: Icon(Icons.add, color: Colors.white),
-          backgroundColor: syanColor,
         ),
       ),
     );

@@ -18,6 +18,7 @@ class ImageConst {
   static const signup_icon = baseImageURl + 'signup_icon.png';
   static const fb_icon = baseImageURl + 'fb_icon.png';
   static const default_pro_pic = baseImageURl + 'default_profile.png';
+
   static const default_inspection_pic = baseImageURl + 'inspection_pic.png';
   static const camera = baseImageURl + 'camera.png';
   static const no_data_found = baseImageURl + 'no_data_found.png';
@@ -44,6 +45,7 @@ class ImageConst {
   static const comments_icon = baseIconURl + 'comments_icon.png';
   static const location_icon = baseIconURl + 'location_icon.png';
   static const date_icon = baseIconURl + 'date_icon.png';
+  static const default_service_list = baseIconURl + 'service_list_icon.png';
   static const time = baseIconURl + 'time_icon.png';
   static const booking_created = baseIconURl + 'booking_created.png';
   static const driver_enrouted = baseIconURl + 'driver_enrouted.png';
