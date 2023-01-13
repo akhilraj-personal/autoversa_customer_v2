@@ -344,7 +344,7 @@ class InspectionScreenState extends State<InspectionScreen>
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: EdgeInsets.only(left: 10.0),
+                                padding: EdgeInsets.only(top: 4, left: 10.0),
                                 child: Text(
                                   "Inspection Details",
                                   style: montserratSemiBold.copyWith(
@@ -1007,6 +1007,9 @@ class InspectionScreenState extends State<InspectionScreen>
                               ],
                             ),
                           ),
+                          SizedBox(
+                            height: 4,
+                          )
                         ],
                       ),
                     ),
