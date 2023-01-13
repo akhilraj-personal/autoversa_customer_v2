@@ -157,18 +157,31 @@ class AddressListState extends State<AddressList> {
                   ? Expanded(
                       child: ListView.builder(
                           scrollDirection: Axis.vertical,
-                          padding:
-                              EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                          itemCount: 5,
+                          itemCount: 4,
                           itemBuilder: (context, index) {
                             return Shimmer.fromColors(
-                              baseColor: Colors.grey,
-                              highlightColor: Colors.grey,
+                              baseColor: lightGreyColor,
+                              highlightColor: greyColor,
                               child: Container(
+                                height: height * 0.220,
+                                margin: EdgeInsets.only(
+                                    left: width * 0.05,
+                                    right: width * 0.05,
+                                    top: height * 0.01,
+                                    bottom: height * 0.01),
                                 decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.black, width: 1.0))),
+                                  borderRadius: BorderRadius.circular(12),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      white,
+                                      white,
+                                      white,
+                                      borderGreyColor,
+                                    ],
+                                  ),
+                                ),
                                 child: Column(
                                   children: <Widget>[
                                     SizedBox(height: 30),
@@ -447,6 +460,9 @@ class AddressListState extends State<AddressList> {
                                 );
                               })
                           : Container(
+                              decoration: BoxDecoration(
+                                color: white,
+                              ),
                               height: context.height(),
                               child: Stack(
                                 children: [
