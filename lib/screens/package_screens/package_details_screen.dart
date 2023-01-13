@@ -674,18 +674,33 @@ class PackageDetailsState extends State<PackageDetails> {
                                           scrollDirection: Axis.vertical,
                                           shrinkWrap: true,
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
+                                              horizontal: 4),
                                           itemCount: 3,
                                           itemBuilder: (context, index) {
                                             return Shimmer.fromColors(
-                                              baseColor: Colors.grey,
-                                              highlightColor: Colors.grey,
+                                              baseColor: lightGreyColor,
+                                              highlightColor: greyColor,
                                               child: Container(
+                                                height: height * 0.075,
+                                                margin: EdgeInsets.only(
+                                                    left: width * 0.01,
+                                                    right: width * 0.01,
+                                                    top: height * 0.01,
+                                                    bottom: height * 0.01),
                                                 decoration: BoxDecoration(
-                                                    border: Border(
-                                                        bottom: BorderSide(
-                                                            color: Colors.black,
-                                                            width: 1.0))),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  gradient: LinearGradient(
+                                                    begin: Alignment.topCenter,
+                                                    end: Alignment.bottomCenter,
+                                                    colors: [
+                                                      white,
+                                                      white,
+                                                      white,
+                                                      borderGreyColor,
+                                                    ],
+                                                  ),
+                                                ),
                                                 child: Column(
                                                   children: <Widget>[
                                                     SizedBox(height: 30),
