@@ -24,10 +24,10 @@ class ImageConst {
   static const no_data_found = baseImageURl + 'no_data_found.png';
   static const g_icon = baseImageURl + 'g_icon.png';
 
-  static const benz_ico = baseImageURl + 'cp_benz.png';
+  static const benz_ico = baseImageURl + 'benz_icon.png';
   static const aud_ico = baseImageURl + 'audi_icon.png';
-  static const skod_ico = baseImageURl + 'skoda.png';
-  static const bmw_ico = baseImageURl + 'cp_bmw.png';
+  static const skod_ico = baseImageURl + 'skoda_icon.png';
+  static const bmw_ico = baseImageURl + 'bmw_icon.png';
   static const defcar_ico = baseImageURl + 'no_logo_car.png';
 
 ////-----------------icons---------------

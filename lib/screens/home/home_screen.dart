@@ -307,249 +307,216 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  RefreshIndicator(
-                      child: Container(
-                        margin: EdgeInsets.only(
-                            top: height * 0.02,
-                            left: width * 0.04,
-                            right: width * 0.03,
-                            bottom: height * 0.02),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              bookingList.length > 0
-                                  ? Container(
-                                      child: Text(
-                                        TextConst.myActive,
-                                        style: montserratSemiBold.copyWith(
-                                            color: whiteColor,
-                                            fontSize: width * 0.04),
+                  Container(
+                    margin: EdgeInsets.only(
+                        top: height * 0.02,
+                        left: width * 0.04,
+                        right: width * 0.03,
+                        bottom: height * 0.02),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          bookingList.length > 0
+                              ? Container(
+                                  child: Text(
+                                    TextConst.myActive,
+                                    style: montserratSemiBold.copyWith(
+                                        color: whiteColor,
+                                        fontSize: width * 0.04),
+                                  ),
+                                )
+                              : SizedBox(),
+                          bookingList.length > 0
+                              ? ListView.builder(
+                                  padding: EdgeInsets.only(top: 0),
+                                  itemCount: bookingList.length,
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Container(
+                                      margin:
+                                          EdgeInsets.only(top: height * 0.02),
+                                      decoration: BoxDecoration(
+                                          color: whiteColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      padding: EdgeInsets.only(
+                                        left: width * 0.04,
+                                        right: width * 0.03,
+                                        top: height * 0.012,
+                                        bottom: height * 0.012,
                                       ),
-                                    )
-                                  : SizedBox(),
-                              bookingList.length > 0
-                                  ? ListView.builder(
-                                      padding: EdgeInsets.only(top: 0),
-                                      itemCount: bookingList.length,
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Container(
-                                          margin: EdgeInsets.only(
-                                              top: height * 0.02),
-                                          decoration: BoxDecoration(
-                                              color: whiteColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          padding: EdgeInsets.only(
-                                            left: width * 0.04,
-                                            right: width * 0.03,
-                                            top: height * 0.012,
-                                            bottom: height * 0.012,
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                              ///--------- first text -------------
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  ///--------- first text -------------
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        bookingList[index][
-                                                                    'pkg_name'] !=
-                                                                null
-                                                            ? bookingList[index]
-                                                                    [
-                                                                    'pkg_name'] +
-                                                                " (" +
-                                                                bookingList[
-                                                                        index][
-                                                                    'bk_number'] +
-                                                                ")"
-                                                            : "",
-                                                        style: montserratSemiBold
-                                                            .copyWith(
+                                                  Text(
+                                                    bookingList[index]
+                                                                ['pkg_name'] !=
+                                                            null
+                                                        ? bookingList[index]
+                                                                ['pkg_name'] +
+                                                            " (" +
+                                                            bookingList[index]
+                                                                ['bk_number'] +
+                                                            ")"
+                                                        : "",
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                            color: blackColor,
+                                                            fontSize:
+                                                                width * 0.034),
+                                                  ),
+                                                  Text(
+                                                    bookingList[index][
+                                                                'custstatus'] !=
+                                                            null
+                                                        ? bookingList[index]
+                                                            ['custstatus']
+                                                        : "",
+                                                    style:
+                                                        montserratBold.copyWith(
+                                                            color: syanColor,
+                                                            fontSize:
+                                                                width * 0.031),
+                                                  ),
+                                                  Container(
+                                                    child: Text(
+                                                      bookingList[index]
+                                                              ['cv_make'] +
+                                                          " " +
+                                                          bookingList[index]
+                                                              ['cv_model'],
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: montserratRegular
+                                                          .copyWith(
+                                                              color: blackColor,
+                                                              fontSize: width *
+                                                                  0.029),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+
+                                              ///--------- up down arrow -------------
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    isExpanded = !isExpanded;
+                                                    if (bookingList[index]
+                                                            ['detail_flag'] ==
+                                                        true) {
+                                                      bookingList[index]
+                                                              ['detail_flag'] =
+                                                          false;
+                                                    } else {
+                                                      bookingList[index]
+                                                              ['detail_flag'] =
+                                                          true;
+                                                    }
+                                                  });
+                                                },
+                                                child: Image.asset(
+                                                  bookingList[index]
+                                                              ['detail_flag'] !=
+                                                          null
+                                                      ? bookingList[index][
+                                                                  'detail_flag'] ==
+                                                              true
+                                                          ? ImageConst.upArrow
+                                                          : ImageConst.downarrow
+                                                      : ImageConst.downarrow,
+                                                  scale: 4,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          isExpanded == true
+                                              ? bookingList[index]
+                                                          ['detail_flag'] ==
+                                                      true
+                                                  ? Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        ///--------- Package -------------
+                                                        Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  top: height *
+                                                                      0.03),
+                                                          child: Text(
+                                                            bookingList[index]
+                                                                        [
+                                                                        'cv_variant'] !=
+                                                                    null
+                                                                ? bookingList[
+                                                                            index]
+                                                                        [
+                                                                        'cv_make'] +
+                                                                    " " +
+                                                                    bookingList[
+                                                                            index]
+                                                                        [
+                                                                        'cv_model'] +
+                                                                    " " +
+                                                                    bookingList[
+                                                                            index]
+                                                                        [
+                                                                        'cv_variant'] +
+                                                                    " (" +
+                                                                    bookingList[
+                                                                            index]
+                                                                        [
+                                                                        'cv_year'] +
+                                                                    ")"
+                                                                : bookingList[
+                                                                            index]
+                                                                        [
+                                                                        'cv_make'] +
+                                                                    " " +
+                                                                    bookingList[
+                                                                            index]
+                                                                        [
+                                                                        'cv_model'] +
+                                                                    " (" +
+                                                                    bookingList[
+                                                                            index]
+                                                                        [
+                                                                        'cv_year'] +
+                                                                    ")",
+                                                            style: montserratRegular.copyWith(
                                                                 color:
                                                                     blackColor,
                                                                 fontSize:
                                                                     width *
-                                                                        0.034),
-                                                      ),
-                                                      Text(
-                                                        bookingList[index][
-                                                                    'custstatus'] !=
-                                                                null
-                                                            ? bookingList[index]
-                                                                ['custstatus']
-                                                            : "",
-                                                        style: montserratBold
-                                                            .copyWith(
-                                                                color:
-                                                                    syanColor,
-                                                                fontSize:
-                                                                    width *
-                                                                        0.031),
-                                                      ),
-                                                      Container(
-                                                        child: Text(
-                                                          bookingList[index]
-                                                                  ['cv_make'] +
-                                                              " " +
-                                                              bookingList[index]
-                                                                  ['cv_model'],
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color:
-                                                                      blackColor,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.029),
+                                                                        0.037),
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
 
-                                                  ///--------- up down arrow -------------
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        isExpanded =
-                                                            !isExpanded;
-                                                        if (bookingList[index][
-                                                                'detail_flag'] ==
-                                                            true) {
-                                                          bookingList[index][
-                                                                  'detail_flag'] =
-                                                              false;
-                                                        } else {
-                                                          bookingList[index][
-                                                                  'detail_flag'] =
-                                                              true;
-                                                        }
-                                                      });
-                                                    },
-                                                    child: Image.asset(
-                                                      bookingList[index][
-                                                                  'detail_flag'] !=
-                                                              null
-                                                          ? bookingList[index][
-                                                                      'detail_flag'] ==
-                                                                  true
-                                                              ? ImageConst
-                                                                  .upArrow
-                                                              : ImageConst
-                                                                  .downarrow
-                                                          : ImageConst
-                                                              .downarrow,
-                                                      scale: 4,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              isExpanded == true
-                                                  ? bookingList[index]
-                                                              ['detail_flag'] ==
-                                                          true
-                                                      ? Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            ///--------- Package -------------
-                                                            Container(
-                                                              margin: EdgeInsets
-                                                                  .only(
-                                                                      top: height *
-                                                                          0.03),
-                                                              child: Text(
-                                                                bookingList[
-                                                                                index]
-                                                                            [
-                                                                            'cv_variant'] !=
-                                                                        null
-                                                                    ? bookingList[index]['cv_make'] +
-                                                                        " " +
-                                                                        bookingList[index]
-                                                                            [
-                                                                            'cv_model'] +
-                                                                        " " +
-                                                                        bookingList[index]
-                                                                            [
-                                                                            'cv_variant'] +
-                                                                        " (" +
-                                                                        bookingList[index]
-                                                                            [
-                                                                            'cv_year'] +
-                                                                        ")"
-                                                                    : bookingList[index]['cv_make'] +
-                                                                        " " +
-                                                                        bookingList[index]
-                                                                            [
-                                                                            'cv_model'] +
-                                                                        " (" +
-                                                                        bookingList[index]
-                                                                            [
-                                                                            'cv_year'] +
-                                                                        ")",
-                                                                style: montserratRegular.copyWith(
-                                                                    color:
-                                                                        blackColor,
-                                                                    fontSize:
-                                                                        width *
-                                                                            0.037),
-                                                              ),
-                                                            ),
-
-                                                            ///--------- Date -------------
-                                                            Container(
-                                                                margin: EdgeInsets.only(
-                                                                    top: height *
-                                                                        0.007,
-                                                                    bottom:
-                                                                        height *
-                                                                            0.007),
-                                                                child: RichText(
-                                                                  text:
-                                                                      TextSpan(
-                                                                    text:
-                                                                        "Date: ",
-                                                                    style: montserratSemiBold.copyWith(
-                                                                        color:
-                                                                            blackColor,
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034),
-                                                                    children: <
-                                                                        TextSpan>[
-                                                                      TextSpan(
-                                                                          text: bookingList[index]['bk_booking_date'] != null
-                                                                              ? DateFormat('dd-MM-yyyy').format(DateTime.tryParse(bookingList[index][
-                                                                                  'bk_booking_date'])!)
-                                                                              : "",
-                                                                          style: montserratRegular.copyWith(
-                                                                              color: blackColor,
-                                                                              fontSize: width * 0.034)),
-                                                                    ],
-                                                                  ),
-                                                                )),
-
-                                                            ///--------- time -------------
-                                                            RichText(
+                                                        ///--------- Date -------------
+                                                        Container(
+                                                            margin: EdgeInsets.only(
+                                                                top: height *
+                                                                    0.007,
+                                                                bottom: height *
+                                                                    0.007),
+                                                            child: RichText(
                                                               text: TextSpan(
-                                                                text: "Time: ",
+                                                                text: "Date: ",
                                                                 style: montserratSemiBold.copyWith(
                                                                     color:
                                                                         blackColor,
@@ -559,13 +526,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 children: <
                                                                     TextSpan>[
                                                                   TextSpan(
-                                                                      text: bookingList[index][
-                                                                                  'tm_start_time'] !=
-                                                                              null
-                                                                          ? timeFormatter(bookingList[index]['tm_start_time']) +
-                                                                              " - " +
-                                                                              timeFormatter(bookingList[index][
-                                                                                  'tm_end_time'])
+                                                                      text: bookingList[index]['bk_booking_date'] != null
+                                                                          ? DateFormat('dd-MM-yyyy').format(DateTime.tryParse(bookingList[index]
+                                                                              [
+                                                                              'bk_booking_date'])!)
                                                                           : "",
                                                                       style: montserratRegular.copyWith(
                                                                           color:
@@ -574,11 +538,45 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               width * 0.034)),
                                                                 ],
                                                               ),
-                                                            ),
+                                                            )),
 
-                                                            ///--------- divider -------------
-                                                            Container(
-                                                              margin: EdgeInsets.only(
+                                                        ///--------- time -------------
+                                                        RichText(
+                                                          text: TextSpan(
+                                                            text: "Time: ",
+                                                            style: montserratSemiBold.copyWith(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034),
+                                                            children: <
+                                                                TextSpan>[
+                                                              TextSpan(
+                                                                  text: bookingList[index][
+                                                                              'tm_start_time'] !=
+                                                                          null
+                                                                      ? timeFormatter(bookingList[index][
+                                                                              'tm_start_time']) +
+                                                                          " - " +
+                                                                          timeFormatter(bookingList[index]
+                                                                              [
+                                                                              'tm_end_time'])
+                                                                      : "",
+                                                                  style: montserratRegular.copyWith(
+                                                                      color:
+                                                                          blackColor,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.034)),
+                                                            ],
+                                                          ),
+                                                        ),
+
+                                                        ///--------- divider -------------
+                                                        Container(
+                                                          margin:
+                                                              EdgeInsets.only(
                                                                   top: height *
                                                                       0.02,
                                                                   bottom:
@@ -588,71 +586,76 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       0.01,
                                                                   right: width *
                                                                       0.01),
-                                                              height: 1,
-                                                              width: width,
-                                                              color: greyColor,
-                                                            ),
+                                                          height: 1,
+                                                          width: width,
+                                                          color: greyColor,
+                                                        ),
 
-                                                            ///--------- currentOrder status -------------
-                                                            Container(
-                                                              margin: EdgeInsets.only(
+                                                        ///--------- currentOrder status -------------
+                                                        Container(
+                                                          margin:
+                                                              EdgeInsets.only(
                                                                   bottom:
                                                                       height *
                                                                           0.008),
+                                                          child: Text(
+                                                            TextConst
+                                                                .currentOrder,
+                                                            style: montserratSemiBold.copyWith(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034),
+                                                          ),
+                                                        ),
+
+                                                        ///--------- car image -------------
+
+                                                        Row(
+                                                          children: [
+                                                            Image.asset(
+                                                              ImageConst.car,
+                                                              scale: 4,
+                                                            ),
+
+                                                            ///--------- vehicle at workshop -------------
+
+                                                            Container(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                      left: width *
+                                                                          0.02),
                                                               child: Text(
-                                                                TextConst
-                                                                    .currentOrder,
-                                                                style: montserratSemiBold.copyWith(
+                                                                bookingList[index]
+                                                                            [
+                                                                            'custstatus'] !=
+                                                                        null
+                                                                    ? bookingList[
+                                                                            index]
+                                                                        [
+                                                                        'custstatus']
+                                                                    : "",
+                                                                style: montserratRegular.copyWith(
                                                                     color:
                                                                         blackColor,
                                                                     fontSize:
                                                                         width *
                                                                             0.034),
                                                               ),
-                                                            ),
+                                                            )
+                                                          ],
+                                                        ),
 
-                                                            ///--------- car image -------------
+                                                        ///--------- view details -------------
 
-                                                            Row(
-                                                              children: [
-                                                                Image.asset(
-                                                                  ImageConst
-                                                                      .car,
-                                                                  scale: 4,
-                                                                ),
-
-                                                                ///--------- vehicle at workshop -------------
-
-                                                                Container(
-                                                                  margin: EdgeInsets.only(
-                                                                      left: width *
-                                                                          0.02),
-                                                                  child: Text(
-                                                                    bookingList[index]['custstatus'] !=
-                                                                            null
-                                                                        ? bookingList[index]
-                                                                            [
-                                                                            'custstatus']
-                                                                        : "",
-                                                                    style: montserratRegular.copyWith(
-                                                                        color:
-                                                                            blackColor,
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-
-                                                            ///--------- view details -------------
-
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) =>
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
                                                                             BookingStatusFlow(
                                                                               bk_id: bookingList[index]['bk_id'],
                                                                               vehname: bookingList[index]['cv_make'] != null
@@ -662,126 +665,123 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                                   : "",
                                                                               make: bookingList[index]['cv_make'],
                                                                             )));
-                                                              },
-                                                              child: Container(
-                                                                margin: EdgeInsets.only(
+                                                          },
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.only(
                                                                     top: height *
                                                                         0.02,
                                                                     bottom:
                                                                         height *
                                                                             0.01),
-                                                                width:
-                                                                    width / 3,
-                                                                padding: EdgeInsets
-                                                                    .all(height *
-                                                                        0.014),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color:
-                                                                      lightGreyColor,
-                                                                  border: Border
-                                                                      .all(
-                                                                          color:
-                                                                              greyColor),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
+                                                            width: width / 3,
+                                                            padding:
+                                                                EdgeInsets.all(
                                                                     height *
-                                                                        0.1,
-                                                                  ),
-                                                                ),
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    Text(
-                                                                      TextConst
-                                                                          .view,
-                                                                      style: montserratSemiBold.copyWith(
-                                                                          color:
-                                                                              blackColor,
-                                                                          fontSize:
-                                                                              width * 0.034),
-                                                                    ),
-                                                                    Image.asset(
-                                                                      ImageConst
-                                                                          .right_arrow,
-                                                                      color:
-                                                                          greyColor,
-                                                                      scale: 4,
-                                                                    )
-                                                                  ],
-                                                                ),
+                                                                        0.014),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  lightGreyColor,
+                                                              border: Border.all(
+                                                                  color:
+                                                                      greyColor),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                height * 0.1,
                                                               ),
-                                                            )
-                                                          ],
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  TextConst
+                                                                      .view,
+                                                                  style: montserratSemiBold.copyWith(
+                                                                      color:
+                                                                          blackColor,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.034),
+                                                                ),
+                                                                Image.asset(
+                                                                  ImageConst
+                                                                      .right_arrow,
+                                                                  color:
+                                                                      greyColor,
+                                                                  scale: 4,
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
                                                         )
-                                                      : Container()
-                                                  : Container(),
-                                            ],
-                                          ),
-                                        );
-                                      })
-                                  : Container(),
-                              isVehicleLoaded && customerVehList.length > 0
-                                  ? Container(
-                                      margin: EdgeInsets.only(
-                                          top: bookingList.length > 0
-                                              ? height * 0.02
-                                              : height * 0.01),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            TextConst.myVehicles,
-                                            style: montserratSemiBold.copyWith(
-                                                color: whiteColor,
-                                                fontSize: width * 0.04),
-                                          ),
-                                          //------------------add new ---------------
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            VehicleAddPage()));
-                                              });
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  TextConst.addNew,
-                                                  style: montserratSemiBold
-                                                      .copyWith(
-                                                          color: whiteColor,
-                                                          fontSize:
-                                                              width * 0.04),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: width * 0.02),
-                                                  child: Image.asset(
-                                                    ImageConst.add,
-                                                    scale: 4.7,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
+                                                      ],
+                                                    )
+                                                  : Container()
+                                              : Container(),
                                         ],
                                       ),
-                                    )
-                                  : Container(),
-                            ]),
-                      ),
-                      onRefresh: refresh),
+                                    );
+                                  })
+                              : Container(),
+                          isVehicleLoaded && customerVehList.length > 0
+                              ? Container(
+                                  margin: EdgeInsets.only(
+                                      top: bookingList.length > 0
+                                          ? height * 0.02
+                                          : height * 0.01),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        TextConst.myVehicles,
+                                        style: montserratSemiBold.copyWith(
+                                            color: whiteColor,
+                                            fontSize: width * 0.04),
+                                      ),
+                                      //------------------add new ---------------
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        VehicleAddPage()));
+                                          });
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              TextConst.addNew,
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: whiteColor,
+                                                      fontSize: width * 0.04),
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  left: width * 0.02),
+                                              child: Image.asset(
+                                                ImageConst.add,
+                                                scale: 4.7,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Container(),
+                        ]),
+                  ),
                 ]),
               ]),
               Container(

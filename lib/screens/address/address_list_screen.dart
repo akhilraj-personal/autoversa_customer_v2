@@ -234,188 +234,215 @@ class AddressListState extends State<AddressList> {
                               itemBuilder: (context, index) {
                                 return Stack(
                                   children: [
-                                    Container(
-                                        margin: EdgeInsets.all(16.0),
-                                        padding: EdgeInsets.all(8.0),
-                                        decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.1),
-                                              blurRadius: 0.1,
-                                              spreadRadius: 0,
-                                            ),
-                                          ],
-                                          borderRadius:
-                                              BorderRadius.circular(12),
+                                    Stack(
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.all(17.5),
+                                          padding: EdgeInsets.all(8.5),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    blurRadius: 12,
+                                                    color: syanColor
+                                                        .withOpacity(.9),
+                                                    spreadRadius: 0,
+                                                    blurStyle: BlurStyle.outer,
+                                                    offset: Offset(0, 0)),
+                                              ]),
                                         ),
-                                        child: Row(
-                                          children: <Widget>[
-                                            SizedBox(width: 16.0),
-                                            Image.asset(
-                                                ImageConst.adrresslist_logo,
-                                                width: width / 8,
-                                                height: 50),
-                                            SizedBox(width: 16.0),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
+                                        Container(
+                                            margin: EdgeInsets.all(12.0),
+                                            padding: EdgeInsets.all(8.0),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.white,
+                                                  blurRadius: 0.1,
+                                                  spreadRadius: 0,
+                                                ),
+                                              ],
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              border: Border.all(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.19)),
+                                            ),
+                                            child: Row(
+                                              children: <Widget>[
+                                                SizedBox(width: 16.0),
+                                                Image.asset(
+                                                    ImageConst.adrresslist_logo,
+                                                    width: width / 8,
+                                                    height: 50),
+                                                SizedBox(width: 16.0),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: <Widget>[
-                                                      Flexible(
-                                                        child: new Container(
-                                                          padding:
-                                                              new EdgeInsets
-                                                                      .only(
-                                                                  right: 13.0),
-                                                          child: new Text(
-                                                            custAddressList[index]
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Flexible(
+                                                            child:
+                                                                new Container(
+                                                              padding:
+                                                                  new EdgeInsets
+                                                                          .only(
+                                                                      right:
+                                                                          13.0),
+                                                              child: new Text(
+                                                                custAddressList[index]
+                                                                            [
+                                                                            'cad_address'] !=
+                                                                        null
+                                                                    ? custAddressList[
+                                                                            index]
                                                                         [
-                                                                        'cad_address'] !=
-                                                                    null
-                                                                ? custAddressList[
-                                                                        index][
-                                                                    'cad_address']
-                                                                : "",
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .clip,
-                                                            style:
-                                                                new TextStyle(
-                                                              fontSize: 13.0,
-                                                              color: black,
+                                                                        'cad_address']
+                                                                    : "",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .clip,
+                                                                style:
+                                                                    new TextStyle(
+                                                                  fontSize:
+                                                                      13.0,
+                                                                  color: black,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                  4.height,
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      Text(
-                                                          custAddressList[index]
-                                                                      [
-                                                                      'state_name'] !=
-                                                                  null
-                                                              ? "City" +
-                                                                  ": " +
-                                                                  custAddressList[
-                                                                          index]
-                                                                      [
-                                                                      'state_name']
-                                                              : "",
-                                                          style:
-                                                              montserratRegular
+                                                      4.height,
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          Text(
+                                                              custAddressList[index]
+                                                                          [
+                                                                          'state_name'] !=
+                                                                      null
+                                                                  ? "City" +
+                                                                      ": " +
+                                                                      custAddressList[
+                                                                              index]
+                                                                          [
+                                                                          'state_name']
+                                                                  : "",
+                                                              style: montserratRegular
                                                                   .copyWith(
                                                                       color:
                                                                           black,
                                                                       fontSize:
                                                                           12)),
-                                                    ],
-                                                  ),
-                                                  4.height,
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      Text(
-                                                          custAddressList[index]
-                                                                      [
-                                                                      'city_name'] !=
-                                                                  null
-                                                              ? "Area" +
-                                                                  ": " +
-                                                                  custAddressList[
-                                                                          index]
-                                                                      [
-                                                                      'city_name']
-                                                              : "",
-                                                          style:
-                                                              montserratRegular
+                                                        ],
+                                                      ),
+                                                      4.height,
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          Text(
+                                                              custAddressList[index]
+                                                                          [
+                                                                          'city_name'] !=
+                                                                      null
+                                                                  ? "Area" +
+                                                                      ": " +
+                                                                      custAddressList[
+                                                                              index]
+                                                                          [
+                                                                          'city_name']
+                                                                  : "",
+                                                              style: montserratRegular
                                                                   .copyWith(
                                                                       color:
                                                                           black,
                                                                       fontSize:
                                                                           12)),
-                                                    ],
-                                                  ),
-                                                  4.height,
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      Text(
-                                                          custAddressList[index]
-                                                                      [
-                                                                      'cad_landmark'] !=
-                                                                  null
-                                                              ? "Building Name/Flat No" +
-                                                                  ": " +
-                                                                  custAddressList[
-                                                                          index]
-                                                                      [
-                                                                      'cad_landmark']
-                                                              : "",
-                                                          maxLines: 5,
-                                                          overflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
-                                                          textDirection:
-                                                              TextDirection.rtl,
-                                                          textAlign:
-                                                              TextAlign.justify,
-                                                          style:
-                                                              montserratRegular
+                                                        ],
+                                                      ),
+                                                      4.height,
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          Text(
+                                                              custAddressList[
+                                                                              index][
+                                                                          'cad_landmark'] !=
+                                                                      null
+                                                                  ? "Building Name/Flat No" +
+                                                                      ": " +
+                                                                      custAddressList[
+                                                                              index]
+                                                                          [
+                                                                          'cad_landmark']
+                                                                  : "",
+                                                              maxLines: 5,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              textDirection:
+                                                                  TextDirection
+                                                                      .rtl,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .justify,
+                                                              style: montserratRegular
                                                                   .copyWith(
                                                                       color:
                                                                           black,
                                                                       fontSize:
                                                                           12)),
-                                                    ],
-                                                  ),
-                                                  4.height,
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      Text(
-                                                          custAddressList[index]
-                                                                      [
-                                                                      'cad_address_type'] !=
-                                                                  null
-                                                              ? "Type" +
-                                                                  ": " +
-                                                                  custAddressList[
-                                                                          index]
-                                                                      [
-                                                                      'cad_address_type']
-                                                              : "",
-                                                          style:
-                                                              montserratRegular
+                                                        ],
+                                                      ),
+                                                      4.height,
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          Text(
+                                                              custAddressList[index]
+                                                                          [
+                                                                          'cad_address_type'] !=
+                                                                      null
+                                                                  ? "Type" +
+                                                                      ": " +
+                                                                      custAddressList[
+                                                                              index]
+                                                                          [
+                                                                          'cad_address_type']
+                                                                  : "",
+                                                              style: montserratRegular
                                                                   .copyWith(
                                                                       color:
                                                                           black,
                                                                       fontSize:
                                                                           13)),
+                                                        ],
+                                                      ),
                                                     ],
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ))
+                                                ),
+                                              ],
+                                            )),
+                                      ],
+                                    ),
                                   ],
                                 );
                               })

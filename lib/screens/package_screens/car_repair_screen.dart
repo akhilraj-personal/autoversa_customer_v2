@@ -366,277 +366,319 @@ class CarRepairState extends State<CarRepair> {
                                     initialPage: widget.selectedVeh),
                                 items: widget.custvehlist
                                     .map((item) => Container(
-                                          child: Container(
-                                            margin: EdgeInsets.all(5.0),
-                                            child: ClipRRect(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5.0)),
-                                                child: Stack(
-                                                  children: <Widget>[
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16),
-                                                      ),
-                                                      child: Card(
-                                                        semanticContainer: true,
-                                                        clipBehavior: Clip
-                                                            .antiAliasWithSaveLayer,
-                                                        color: Colors.white,
-                                                        shape:
-                                                            RoundedRectangleBorder(
+                                            child: Stack(
+                                          alignment: Alignment.bottomCenter,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.all(16),
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        blurRadius: 12,
+                                                        color: syanColor
+                                                            .withOpacity(.9),
+                                                        spreadRadius: 0,
+                                                        blurStyle:
+                                                            BlurStyle.outer,
+                                                        offset: Offset(0, 0)),
+                                                  ]),
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.all(5.0),
+                                              child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(5.0)),
+                                                  child: Stack(
+                                                    children: <Widget>[
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(
-                                                                      15.0),
+                                                                  .circular(16),
                                                         ),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .stretch,
-                                                          children: <Widget>[
-                                                            Expanded(
-                                                              child: Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .fromLTRB(
-                                                                            5,
-                                                                            0,
-                                                                            5,
-                                                                            0),
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .center,
-                                                                  children: <
-                                                                      Widget>[
-                                                                    Row(
-                                                                      children: <
-                                                                          Widget>[
-                                                                        SizedBox(
-                                                                            width:
-                                                                                5),
-                                                                        Image
-                                                                            .asset(
-                                                                          item['cv_make'] == 'Mercedes Benz'
-                                                                              ? ImageConst.benz_ico
-                                                                              : item['cv_make'] == 'BMW'
-                                                                                  ? ImageConst.bmw_ico
-                                                                                  : item['cv_make'] == 'Skoda'
-                                                                                      ? ImageConst.skod_ico
-                                                                                      : item['cv_make'] == 'Audi'
-                                                                                          ? ImageConst.aud_ico
-                                                                                          : ImageConst.defcar_ico,
-                                                                          width:
-                                                                              width * 0.12,
-                                                                        ),
-                                                                        SizedBox(
-                                                                            width:
-                                                                                5),
-                                                                        Expanded(
-                                                                          child:
-                                                                              Container(
-                                                                            padding:
-                                                                                EdgeInsets.only(left: 4),
-                                                                            child:
-                                                                                Column(
-                                                                              mainAxisAlignment: MainAxisAlignment.end,
-                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              children: <Widget>[
-                                                                                item['cv_plate_number'] != "" && item['cv_plate_number'] != null ? Text(item['cv_plate_number'], style: montserratSemiBold.copyWith(color: black, fontSize: 12), maxLines: 2) : SizedBox(),
-                                                                                item['cv_variant'] != "" && item['cv_variant'] != null ? Text(item['cv_make'] + " " + item['cv_model'] + " " + item['cv_variant'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: 12), maxLines: 5) : Text(item['cv_make'] + item['cv_model'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: 12), maxLines: 5),
-                                                                                Text(
-                                                                                  isPriceShow ? widget.currency + " " + (totalCost.round()).toString() : "Loading",
-                                                                                  style: montserratSemiBold.copyWith(color: warningcolor, fontSize: 17),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(width: 5),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
-                                        ))
-                                    .toList(),
-                              ))
-                            : Container(
-                                padding: EdgeInsets.all(16),
-                                width: context.width() * 0.85,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
-                                      spreadRadius: 1,
-                                      blurRadius: 10,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
-                                  borderRadius: BorderRadius.circular(16),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(0),
-                                  child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              SizedBox(width: 30),
-                                              if (widget.custvehlist[0]
-                                                      ['cv_make'] ==
-                                                  'Mercedes Benz') ...[
-                                                Image.asset(
-                                                  ImageConst.benz_ico,
-                                                  width: width * 0.18,
-                                                ),
-                                              ] else if (widget.custvehlist[0]
-                                                      ['cv_make'] ==
-                                                  'BMW') ...[
-                                                Image.asset(
-                                                  ImageConst.bmw_ico,
-                                                  width: width * 0.18,
-                                                ),
-                                              ] else if (widget.custvehlist[0]
-                                                      ['cv_make'] ==
-                                                  'Skoda') ...[
-                                                Image.asset(
-                                                  ImageConst.skod_ico,
-                                                  width: width * 0.18,
-                                                ),
-                                              ] else if (widget.custvehlist[0]
-                                                      ['cv_make'] ==
-                                                  'Audi') ...[
-                                                Image.asset(
-                                                  ImageConst.aud_ico,
-                                                  width: width * 0.18,
-                                                ),
-                                              ] else ...[
-                                                Image.asset(
-                                                  ImageConst.defcar_ico,
-                                                  width: width * 0.18,
-                                                ),
-                                              ],
-                                              SizedBox(width: 30),
-                                              Padding(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      1, 0, 1, 0),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: <Widget>[
-                                                      widget.custvehlist[0][
-                                                                      'cv_plate_number'] !=
-                                                                  "" &&
-                                                              widget.custvehlist[
-                                                                          0][
-                                                                      'cv_plate_number'] !=
-                                                                  null
-                                                          ? Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: <
-                                                                  Widget>[
-                                                                Container(
+                                                        child: Card(
+                                                          semanticContainer:
+                                                              true,
+                                                          clipBehavior: Clip
+                                                              .antiAliasWithSaveLayer,
+                                                          color: Colors.white,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15.0),
+                                                          ),
+                                                          child: Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .stretch,
+                                                            children: <Widget>[
+                                                              Expanded(
+                                                                child: Padding(
                                                                   padding: EdgeInsets
                                                                       .fromLTRB(
-                                                                          22,
-                                                                          2,
-                                                                          22,
-                                                                          2),
-                                                                  child: Text(
-                                                                    widget.custvehlist[
-                                                                            0][
-                                                                        'cv_plate_number'],
-                                                                    style: montserratSemiBold.copyWith(
-                                                                        color:
-                                                                            black,
-                                                                        fontSize:
-                                                                            14),
+                                                                          5,
+                                                                          0,
+                                                                          5,
+                                                                          0),
+                                                                  child: Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Row(
+                                                                        children: <
+                                                                            Widget>[
+                                                                          SizedBox(
+                                                                              width: 5),
+                                                                          Image
+                                                                              .asset(
+                                                                            item['cv_make'] == 'Mercedes Benz'
+                                                                                ? ImageConst.benz_ico
+                                                                                : item['cv_make'] == 'BMW'
+                                                                                    ? ImageConst.bmw_ico
+                                                                                    : item['cv_make'] == 'Skoda'
+                                                                                        ? ImageConst.skod_ico
+                                                                                        : item['cv_make'] == 'Audi'
+                                                                                            ? ImageConst.aud_ico
+                                                                                            : ImageConst.defcar_ico,
+                                                                            width:
+                                                                                width * 0.12,
+                                                                          ),
+                                                                          SizedBox(
+                                                                              width: 5),
+                                                                          Expanded(
+                                                                            child:
+                                                                                Container(
+                                                                              padding: EdgeInsets.only(left: 4),
+                                                                              child: Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: <Widget>[
+                                                                                  item['cv_plate_number'] != "" && item['cv_plate_number'] != null ? Text(item['cv_plate_number'], style: montserratSemiBold.copyWith(color: black, fontSize: 12), maxLines: 2) : SizedBox(),
+                                                                                  item['cv_variant'] != "" && item['cv_variant'] != null ? Text(item['cv_make'] + " " + item['cv_model'] + " " + item['cv_variant'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: 12), maxLines: 5) : Text(item['cv_make'] + item['cv_model'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: 12), maxLines: 5),
+                                                                                  Text(
+                                                                                    isPriceShow ? widget.currency + " " + (totalCost.round()).toString() : "Loading",
+                                                                                    style: montserratSemiBold.copyWith(color: warningcolor, fontSize: 17),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
                                                                   ),
                                                                 ),
-                                                              ],
-                                                            )
-                                                          : SizedBox(),
-                                                      Text(
-                                                        widget.custvehlist[0]
-                                                                ['cv_make'] +
-                                                            " ( " +
+                                                              ),
+                                                              SizedBox(
+                                                                  width: 5),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )),
+                                            ),
+                                          ],
+                                        )))
+                                    .toList(),
+                              ))
+                            : Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.all(17.5),
+                                    padding: EdgeInsets.all(8.5),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              blurRadius: 12,
+                                              color: syanColor.withOpacity(.9),
+                                              spreadRadius: 0,
+                                              blurStyle: BlurStyle.outer,
+                                              offset: Offset(0, 0)),
+                                        ]),
+                                  ),
+                                  Container(
+                                    // padding: EdgeInsets.only(top: 8.0),
+                                    margin:
+                                        EdgeInsets.only(top: 12, bottom: 12),
+                                    width: width * 0.90,
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.4),
+                                          spreadRadius: 1,
+                                          blurRadius: 10,
+                                          offset: Offset(0, 3),
+                                        ),
+                                      ],
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: Colors.white,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  SizedBox(width: 5),
+                                                  if (widget.custvehlist[0]
+                                                          ['cv_make'] ==
+                                                      'Mercedes Benz') ...[
+                                                    Image.asset(
+                                                      ImageConst.benz_ico,
+                                                      width: width * 0.12,
+                                                    ),
+                                                  ] else if (widget
+                                                              .custvehlist[0]
+                                                          ['cv_make'] ==
+                                                      'BMW') ...[
+                                                    Image.asset(
+                                                      ImageConst.bmw_ico,
+                                                      width: width * 0.12,
+                                                    ),
+                                                  ] else if (widget
+                                                              .custvehlist[0]
+                                                          ['cv_make'] ==
+                                                      'Skoda') ...[
+                                                    Image.asset(
+                                                      ImageConst.skod_ico,
+                                                      width: width * 0.12,
+                                                    ),
+                                                  ] else if (widget
+                                                              .custvehlist[0]
+                                                          ['cv_make'] ==
+                                                      'Audi') ...[
+                                                    Image.asset(
+                                                      ImageConst.aud_ico,
+                                                      width: width * 0.12,
+                                                    ),
+                                                  ] else ...[
+                                                    Image.asset(
+                                                      ImageConst.defcar_ico,
+                                                      width: width * 0.12,
+                                                    ),
+                                                  ],
+                                                  SizedBox(width: 15),
+                                                  Padding(
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                              1, 0, 1, 0),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          widget.custvehlist[0][
+                                                                          'cv_plate_number'] !=
+                                                                      "" &&
+                                                                  widget.custvehlist[
+                                                                              0]
+                                                                          [
+                                                                          'cv_plate_number'] !=
+                                                                      null
+                                                              ? Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Container(
+                                                                      child:
+                                                                          Text(
+                                                                        widget.custvehlist[0]
+                                                                            [
+                                                                            'cv_plate_number'],
+                                                                        style: montserratSemiBold.copyWith(
+                                                                            color:
+                                                                                black,
+                                                                            fontSize:
+                                                                                14),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                              : SizedBox(),
+                                                          Text(
                                                             widget.custvehlist[
-                                                                0]['cv_year'] +
-                                                            " )",
-                                                        style:
-                                                            montserratSemiBold
+                                                                        0][
+                                                                    'cv_make'] +
+                                                                " ( " +
+                                                                widget.custvehlist[
+                                                                        0][
+                                                                    'cv_year'] +
+                                                                " )",
+                                                            style: montserratSemiBold
                                                                 .copyWith(
                                                                     color:
                                                                         black,
                                                                     fontSize:
                                                                         14),
-                                                      ),
-                                                      Text(
-                                                          widget.custvehlist[0]
-                                                                  ['cv_model'] +
-                                                              " ",
-                                                          style:
-                                                              montserratSemiBold
+                                                          ),
+                                                          Text(
+                                                              widget.custvehlist[
+                                                                          0][
+                                                                      'cv_model'] +
+                                                                  " ",
+                                                              style: montserratSemiBold
                                                                   .copyWith(
                                                                       color:
                                                                           black,
                                                                       fontSize:
                                                                           10),
-                                                          maxLines: 2),
-                                                      Text(
-                                                          widget.custvehlist[0][
-                                                                          'cv_variant'] !=
-                                                                      "" &&
-                                                                  widget.custvehlist[
-                                                                              0]
-                                                                          [
-                                                                          'cv_variant'] !=
-                                                                      null
-                                                              ? widget.custvehlist[
-                                                                      0][
-                                                                  'cv_variant']
-                                                              : "",
-                                                          style:
-                                                              montserratSemiBold
+                                                              maxLines: 2),
+                                                          Text(
+                                                              widget.custvehlist[0]
+                                                                              [
+                                                                              'cv_variant'] !=
+                                                                          "" &&
+                                                                      widget.custvehlist[0]
+                                                                              [
+                                                                              'cv_variant'] !=
+                                                                          null
+                                                                  ? widget.custvehlist[
+                                                                          0][
+                                                                      'cv_variant']
+                                                                  : "",
+                                                              style: montserratSemiBold
                                                                   .copyWith(
                                                                       color:
                                                                           black,
                                                                       fontSize:
                                                                           10),
-                                                          maxLines: 2),
-                                                    ],
-                                                  )),
-                                              const SizedBox(width: 5),
-                                            ]),
-                                      ]),
-                                ),
+                                                              maxLines: 2),
+                                                        ],
+                                                      )),
+                                                  const SizedBox(width: 5),
+                                                ]),
+                                          ]),
+                                    ),
+                                  ),
+                                ],
                               )
                         : Row(),
                     Row(
@@ -654,774 +696,818 @@ class CarRepairState extends State<CarRepair> {
                         ),
                       ],
                     ),
-                    Container(
-                      margin: EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          12.height,
-                          isServicing
-                              ? serviceList.isEmpty
-                                  ? ListView.builder(
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
-                                      itemCount: 3,
-                                      itemBuilder: (context, index) {
-                                        return Shimmer.fromColors(
-                                          baseColor: Colors.grey,
-                                          highlightColor: Colors.grey,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                border: Border(
-                                                    bottom: BorderSide(
-                                                        color: Colors.black,
-                                                        width: 1.0))),
-                                            child: Column(
-                                              children: <Widget>[
-                                                SizedBox(height: 30),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
+                    Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(17.5),
+                          padding: EdgeInsets.all(8.5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 12,
+                                    color: syanColor.withOpacity(.9),
+                                    spreadRadius: 0,
+                                    blurStyle: BlurStyle.outer,
+                                    offset: Offset(0, 0)),
+                              ]),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: white,
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              12.height,
+                              isServicing
+                                  ? serviceList.isEmpty
+                                      ? ListView.builder(
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16),
+                                          itemCount: 3,
+                                          itemBuilder: (context, index) {
+                                            return Shimmer.fromColors(
+                                              baseColor: Colors.grey,
+                                              highlightColor: Colors.grey,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    border: Border(
+                                                        bottom: BorderSide(
+                                                            color: Colors.black,
+                                                            width: 1.0))),
+                                                child: Column(
                                                   children: <Widget>[
-                                                    Expanded(
-                                                      child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: <Widget>[
-                                                            Container(
-                                                              height: 15,
-                                                              color:
-                                                                  Colors.grey,
-                                                            ),
-                                                          ]),
+                                                    SizedBox(height: 30),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Expanded(
+                                                          child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: <
+                                                                  Widget>[
+                                                                Container(
+                                                                  height: 15,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                ),
+                                                              ]),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      })
-                                  : Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
-                                      child: ListView.builder(
-                                          itemCount: serviceList.length,
-                                          scrollDirection: Axis.vertical,
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return serviceList[index]
-                                                        .serdesctypeid ==
-                                                    "4"
-                                                ? Container(
-                                                    margin: EdgeInsets.all(5),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: radius(10),
-                                                      color: context.cardColor,
-                                                      border: Border.all(
-                                                        color: white,
-                                                      ),
-                                                    ),
-                                                    child: ExpansionTile(
-                                                      childrenPadding:
-                                                          EdgeInsets.all(8),
-                                                      leading: Container(
-                                                        width: 25,
-                                                        height: 25,
+                                              ),
+                                            );
+                                          })
+                                      : Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16),
+                                          child: ListView.builder(
+                                              itemCount: serviceList.length,
+                                              scrollDirection: Axis.vertical,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return serviceList[index]
+                                                            .serdesctypeid ==
+                                                        "4"
+                                                    ? Container(
+                                                        margin:
+                                                            EdgeInsets.all(5),
                                                         decoration:
-                                                            new BoxDecoration(
-                                                          border: Border.all(
-                                                            width: 1,
-                                                            color: black,
-                                                          ),
+                                                            BoxDecoration(
                                                           borderRadius:
-                                                              new BorderRadius
-                                                                  .circular(10),
+                                                              radius(10),
+                                                          color:
+                                                              context.cardColor,
+                                                          border: Border.all(
+                                                            color: white,
+                                                          ),
                                                         ),
-                                                        child: Theme(
-                                                          data: ThemeData(
-                                                            unselectedWidgetColor:
-                                                                Colors
+                                                        child: ExpansionTile(
+                                                          childrenPadding:
+                                                              EdgeInsets.all(8),
+                                                          leading: Container(
+                                                            width: 25,
+                                                            height: 25,
+                                                            decoration:
+                                                                new BoxDecoration(
+                                                              border:
+                                                                  Border.all(
+                                                                width: 1,
+                                                                color: black,
+                                                              ),
+                                                              borderRadius:
+                                                                  new BorderRadius
+                                                                      .circular(10),
+                                                            ),
+                                                            child: Theme(
+                                                              data: ThemeData(
+                                                                unselectedWidgetColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                              ),
+                                                              child: Checkbox(
+                                                                value: serviceList[
+                                                                        index]
+                                                                    .isPackageCheck,
+                                                                onChanged:
+                                                                    (package) {
+                                                                  setState(() {
+                                                                    serviceList[index]
+                                                                            .isPackageCheck =
+                                                                        package!;
+                                                                    updatePackCost();
+                                                                  });
+                                                                },
+                                                                activeColor: Colors
                                                                     .transparent,
+                                                                checkColor:
+                                                                    syanColor,
+                                                                materialTapTargetSize:
+                                                                    MaterialTapTargetSize
+                                                                        .padded,
+                                                              ),
+                                                            ),
                                                           ),
-                                                          child: Checkbox(
-                                                            value: serviceList[
-                                                                    index]
-                                                                .isPackageCheck,
-                                                            onChanged:
-                                                                (package) {
-                                                              setState(() {
-                                                                serviceList[index]
-                                                                        .isPackageCheck =
-                                                                    package!;
-                                                                updatePackCost();
-                                                              });
-                                                            },
-                                                            activeColor: Colors
-                                                                .transparent,
-                                                            checkColor:
-                                                                syanColor,
-                                                            materialTapTargetSize:
-                                                                MaterialTapTargetSize
-                                                                    .padded,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      title: Text(
-                                                          serviceList[index]
-                                                              .sername,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style:
-                                                              montserratSemiBold
+                                                          title: Text(
+                                                              serviceList[index]
+                                                                  .sername,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: montserratSemiBold
                                                                   .copyWith(
                                                                       color:
                                                                           black,
                                                                       fontSize:
                                                                           14),
-                                                          maxLines: 5),
-                                                      subtitle: serviceList[index]
-                                                                  .ser_type ==
-                                                              "givenservice"
-                                                          ? Text(
-                                                              widget.currency +
-                                                                  ": " +
-                                                                  (serviceList[index]
-                                                                          .sercost
-                                                                          .round())
-                                                                      .toString(),
-                                                              style: montserratSemiBold.copyWith(
-                                                                  color:
-                                                                      warningcolor,
-                                                                  fontSize: 11))
-                                                          : Text(
-                                                              widget.currency +
-                                                                  ": " +
-                                                                  (serviceList[index]
-                                                                          .packcost
-                                                                          .round())
-                                                                      .toString(),
-                                                              style: montserratSemiBold.copyWith(
-                                                                  color:
-                                                                      warningcolor,
-                                                                  fontSize: 11)),
-                                                      textColor: black,
-                                                      trailing: isExpanded
-                                                          ? Container(
-                                                              child: Icon(
+                                                              maxLines: 5),
+                                                          subtitle: serviceList[index]
+                                                                      .ser_type ==
+                                                                  "givenservice"
+                                                              ? Text(
+                                                                  widget.currency +
+                                                                      ": " +
+                                                                      (serviceList[index].sercost.round())
+                                                                          .toString(),
+                                                                  style: montserratSemiBold.copyWith(
+                                                                      color:
+                                                                          warningcolor,
+                                                                      fontSize:
+                                                                          11))
+                                                              : Text(
+                                                                  widget.currency +
+                                                                      ": " +
+                                                                      (serviceList[index]
+                                                                              .packcost
+                                                                              .round())
+                                                                          .toString(),
+                                                                  style: montserratSemiBold.copyWith(
+                                                                      color:
+                                                                          warningcolor,
+                                                                      fontSize:
+                                                                          11)),
+                                                          textColor: black,
+                                                          trailing: isExpanded
+                                                              ? Container(
+                                                                  child: Icon(
+                                                                      Icons
+                                                                          .keyboard_arrow_up,
+                                                                      color: context
+                                                                          .iconColor,
+                                                                      size: 30),
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              4),
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius:
+                                                                          radius(
+                                                                              100),
+                                                                      color: context
+                                                                          .accentColor
+                                                                          .withAlpha(
+                                                                              32)),
+                                                                )
+                                                              : Icon(
                                                                   Icons
-                                                                      .keyboard_arrow_up,
+                                                                      .keyboard_arrow_down,
                                                                   color: context
                                                                       .iconColor,
                                                                   size: 30),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(4),
-                                                              decoration: BoxDecoration(
-                                                                  borderRadius:
-                                                                      radius(
-                                                                          100),
-                                                                  color: context
-                                                                      .accentColor
-                                                                      .withAlpha(
-                                                                          32)),
-                                                            )
-                                                          : Icon(
-                                                              Icons
-                                                                  .keyboard_arrow_down,
-                                                              color: context
-                                                                  .iconColor,
-                                                              size: 30),
-                                                      onExpansionChanged: (t) {
-                                                        isExpanded =
-                                                            !isExpanded;
-                                                        setState(() {});
-                                                      },
-                                                      children: [
-                                                        serviceList[index]
-                                                                    .ser_type ==
-                                                                "givenservice"
-                                                            ? Container(
-                                                                decoration: boxDecorationDefault(
-                                                                    color: context
-                                                                        .cardColor,
-                                                                    boxShadow:
-                                                                        null),
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Container(
-                                                                      child: ListView
-                                                                          .builder(
-                                                                        itemCount: serviceList[index]
-                                                                            .ser_desc
-                                                                            .length,
-                                                                        scrollDirection:
-                                                                            Axis.vertical,
-                                                                        shrinkWrap:
-                                                                            true,
-                                                                        itemBuilder:
-                                                                            (BuildContext context,
-                                                                                int i) {
-                                                                          return Row(
-                                                                            children: <Widget>[
-                                                                              Checkbox(
-                                                                                value: serviceList[index].ser_desc[i]["flag"],
-                                                                                fillColor: MaterialStateProperty.all(syanColor),
-                                                                                onChanged: (value) {
-                                                                                  setState(
-                                                                                    () {
-                                                                                      serviceList[index].ser_desc[i]["flag"] = value!;
+                                                          onExpansionChanged:
+                                                              (t) {
+                                                            isExpanded =
+                                                                !isExpanded;
+                                                            setState(() {});
+                                                          },
+                                                          children: [
+                                                            serviceList[index]
+                                                                        .ser_type ==
+                                                                    "givenservice"
+                                                                ? Container(
+                                                                    decoration: boxDecorationDefault(
+                                                                        color: context
+                                                                            .cardColor,
+                                                                        boxShadow:
+                                                                            null),
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Container(
+                                                                          child:
+                                                                              ListView.builder(
+                                                                            itemCount:
+                                                                                serviceList[index].ser_desc.length,
+                                                                            scrollDirection:
+                                                                                Axis.vertical,
+                                                                            shrinkWrap:
+                                                                                true,
+                                                                            itemBuilder:
+                                                                                (BuildContext context, int i) {
+                                                                              return Row(
+                                                                                children: <Widget>[
+                                                                                  Checkbox(
+                                                                                    value: serviceList[index].ser_desc[i]["flag"],
+                                                                                    fillColor: MaterialStateProperty.all(syanColor),
+                                                                                    onChanged: (value) {
+                                                                                      setState(
+                                                                                        () {
+                                                                                          serviceList[index].ser_desc[i]["flag"] = value!;
+                                                                                        },
+                                                                                      );
                                                                                     },
-                                                                                  );
-                                                                                },
-                                                                              ),
-                                                                              Expanded(
-                                                                                child: Text(
-                                                                                  serviceList[index].ser_desc[i]["name"],
-                                                                                  maxLines: 10,
-                                                                                  style: montserratRegular.copyWith(
-                                                                                    fontSize: 11,
-                                                                                    color: greyColor,
                                                                                   ),
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          );
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              )
-                                                            : Container(
-                                                                decoration: boxDecorationDefault(
-                                                                    color: Colors
-                                                                        .white
-                                                                        .withAlpha(
-                                                                            7),
-                                                                    boxShadow:
-                                                                        null),
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Container(
-                                                                      child: UL(
-                                                                        symbolType:
-                                                                            SymbolType.Bullet,
-                                                                        symbolColor:
-                                                                            Colors.white,
-                                                                        spacing:
-                                                                            24,
-                                                                        children:
-                                                                            List.generate(
-                                                                          serviceList[index]
-                                                                              .ser_pack_desc
-                                                                              .length,
-                                                                          (ij) => Text(
-                                                                              serviceList[index].ser_pack_desc[ij]!,
-                                                                              style: montserratRegular.copyWith(fontSize: 11, color: black)),
+                                                                                  Expanded(
+                                                                                    child: Text(
+                                                                                      serviceList[index].ser_desc[i]["name"],
+                                                                                      maxLines: 10,
+                                                                                      style: montserratRegular.copyWith(
+                                                                                        fontSize: 11,
+                                                                                        color: greyColor,
+                                                                                      ),
+                                                                                    ),
+                                                                                  )
+                                                                                ],
+                                                                              );
+                                                                            },
+                                                                          ),
                                                                         ),
-                                                                      ),
+                                                                      ],
                                                                     ),
-                                                                  ],
+                                                                  )
+                                                                : Container(
+                                                                    decoration: boxDecorationDefault(
+                                                                        color: Colors
+                                                                            .white
+                                                                            .withAlpha(
+                                                                                7),
+                                                                        boxShadow:
+                                                                            null),
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Container(
+                                                                          child:
+                                                                              UL(
+                                                                            symbolType:
+                                                                                SymbolType.Bullet,
+                                                                            symbolColor:
+                                                                                Colors.white,
+                                                                            spacing:
+                                                                                24,
+                                                                            children:
+                                                                                List.generate(
+                                                                              serviceList[index].ser_pack_desc.length,
+                                                                              (ij) => Text(serviceList[index].ser_pack_desc[ij]!, style: montserratRegular.copyWith(fontSize: 11, color: black)),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Container(
+                                                        margin:
+                                                            EdgeInsets.all(5),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              radius(10),
+                                                          color:
+                                                              context.cardColor,
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                        child: Row(
+                                                          children: <Widget>[
+                                                            Container(
+                                                              margin: EdgeInsets
+                                                                  .all(16),
+                                                              width: 25,
+                                                              height: 25,
+                                                              decoration:
+                                                                  new BoxDecoration(
+                                                                border:
+                                                                    Border.all(
+                                                                  width: 1,
+                                                                  color: black,
+                                                                ),
+                                                                borderRadius:
+                                                                    new BorderRadius
+                                                                        .circular(10),
+                                                              ),
+                                                              child: Theme(
+                                                                data: ThemeData(
+                                                                  unselectedWidgetColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                ),
+                                                                child: Checkbox(
+                                                                  value: serviceList[
+                                                                          index]
+                                                                      .isPackageCheck,
+                                                                  onChanged:
+                                                                      (package) {
+                                                                    setState(
+                                                                        () {
+                                                                      serviceList[index]
+                                                                              .isPackageCheck =
+                                                                          package!;
+                                                                      updatePackCost();
+                                                                      // package != true ? packagelist.add:
+                                                                    });
+                                                                  },
+                                                                  activeColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  checkColor:
+                                                                      syanColor,
+                                                                  materialTapTargetSize:
+                                                                      MaterialTapTargetSize
+                                                                          .padded,
                                                                 ),
                                                               ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : Container(
-                                                    margin: EdgeInsets.all(5),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: radius(10),
-                                                      color: context.cardColor,
-                                                      border: Border.all(
-                                                          color: Colors.white),
-                                                    ),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Container(
-                                                          margin:
-                                                              EdgeInsets.all(
-                                                                  16),
-                                                          width: 25,
-                                                          height: 25,
-                                                          decoration:
-                                                              new BoxDecoration(
-                                                            border: Border.all(
-                                                              width: 1,
-                                                              color: black,
                                                             ),
-                                                            borderRadius:
-                                                                new BorderRadius
-                                                                    .circular(10),
-                                                          ),
-                                                          child: Theme(
-                                                            data: ThemeData(
-                                                              unselectedWidgetColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                            ),
-                                                            child: Checkbox(
-                                                              value: serviceList[
-                                                                      index]
-                                                                  .isPackageCheck,
-                                                              onChanged:
-                                                                  (package) {
-                                                                setState(() {
-                                                                  serviceList[index]
-                                                                          .isPackageCheck =
-                                                                      package!;
-                                                                  updatePackCost();
-                                                                  // package != true ? packagelist.add:
-                                                                });
-                                                              },
-                                                              activeColor: Colors
-                                                                  .transparent,
-                                                              checkColor:
-                                                                  syanColor,
-                                                              materialTapTargetSize:
-                                                                  MaterialTapTargetSize
-                                                                      .padded,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 16.0),
-                                                        Expanded(
-                                                          flex: 2,
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: <Widget>[
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
+                                                            SizedBox(
+                                                                width: 16.0),
+                                                            Expanded(
+                                                              flex: 2,
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
                                                                 children: <
                                                                     Widget>[
-                                                                  Flexible(
-                                                                    child:
-                                                                        Container(
-                                                                      child: Text(
-                                                                          serviceList[index]
-                                                                              .sername,
-                                                                          overflow: TextOverflow
-                                                                              .ellipsis,
-                                                                          style: montserratSemiBold.copyWith(
-                                                                              color:
-                                                                                  black,
-                                                                              fontSize:
-                                                                                  14),
-                                                                          maxLines:
-                                                                              5),
-                                                                    ),
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Flexible(
+                                                                        child:
+                                                                            Container(
+                                                                          child: Text(
+                                                                              serviceList[index].sername,
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              style: montserratSemiBold.copyWith(color: black, fontSize: 14),
+                                                                              maxLines: 5),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  4.height,
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      serviceList[index].ser_type ==
+                                                                              "givenservice"
+                                                                          ? Text(
+                                                                              widget.currency + ": " + (serviceList[index].sercost.round()).toString(),
+                                                                              style: montserratSemiBold.copyWith(color: warningcolor, fontSize: 11))
+                                                                          : Text(widget.currency + ": " + (serviceList[index].packcost.round()).toString(), style: montserratSemiBold.copyWith(color: warningcolor, fontSize: 11)),
+                                                                    ],
                                                                   ),
                                                                 ],
                                                               ),
-                                                              4.height,
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: <
-                                                                    Widget>[
-                                                                  serviceList[index]
-                                                                              .ser_type ==
-                                                                          "givenservice"
-                                                                      ? Text(
-                                                                          widget.currency +
-                                                                              ": " +
-                                                                              (serviceList[index].sercost.round())
-                                                                                  .toString(),
-                                                                          style: montserratSemiBold.copyWith(
-                                                                              color:
-                                                                                  warningcolor,
-                                                                              fontSize:
-                                                                                  11))
-                                                                      : Text(
-                                                                          widget.currency +
-                                                                              ": " +
-                                                                              (serviceList[index].packcost.round())
-                                                                                  .toString(),
-                                                                          style: montserratSemiBold.copyWith(
-                                                                              color: warningcolor,
-                                                                              fontSize: 11)),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ));
-                                          }),
-                                    ).paddingBottom(5)
-                              : Container(
-                                  padding: const EdgeInsets.all(15),
-                                  child: Text(serviceMsg,
-                                      maxLines: 10,
-                                      textAlign: TextAlign.center,
-                                      style: montserratRegular.copyWith(
-                                          fontSize: 14, color: black))),
-                          8.height,
-                          isServicing
-                              ? Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(padding: EdgeInsets.only(left: 16)),
-                                    Text(ST.of(context).additional_queries,
-                                        maxLines: 10,
-                                        style: montserratRegular.copyWith(
-                                            color: black, fontSize: 14))
-                                  ],
-                                )
-                              : Container(),
-                          isServicing
-                              ? Padding(
-                                  padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(16)),
-                                        color: white),
-                                    child: TextField(
-                                        keyboardType: TextInputType.multiline,
-                                        minLines: 1,
-                                        maxLines: 5,
-                                        maxLength: 500,
-                                        textInputAction:
-                                            TextInputAction.newline,
-                                        controller: complaint,
-                                        decoration: InputDecoration(
-                                            counterText: "",
-                                            hintText: ST
-                                                .of(context)
-                                                .your_message_here,
-                                            hintStyle:
-                                                montserratRegular.copyWith(
-                                                    color: black, fontSize: 12),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: greyColor, width: 0.5),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: greyColor, width: 0.5),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ))),
-                                    alignment: Alignment.center,
-                                  ),
-                                )
-                              : SizedBox(),
-                          isServicing
-                              ? Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 3,
+                                                            ),
+                                                          ],
+                                                        ));
+                                              }),
+                                        ).paddingBottom(5)
+                                  : Container(
+                                      padding: const EdgeInsets.all(15),
+                                      child: Text(serviceMsg,
+                                          maxLines: 10,
+                                          textAlign: TextAlign.center,
+                                          style: montserratRegular.copyWith(
+                                              fontSize: 14, color: black))),
+                              8.height,
+                              isServicing
+                                  ? Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 16)),
+                                        Text(ST.of(context).additional_queries,
+                                            maxLines: 10,
+                                            style: montserratRegular.copyWith(
+                                                color: black, fontSize: 14))
+                                      ],
+                                    )
+                                  : Container(),
+                              isServicing
+                                  ? Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(16, 16, 16, 0),
                                       child: Container(
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              14, 0, 14, 14),
-                                          child: Text(
-                                              ST
-                                                  .of(context)
-                                                  .press_record_dialogue,
-                                              style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 12)),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              AvatarGlow(
-                                                endRadius: 60,
-                                                glowColor: Colors.green,
-                                                animate: animate,
-                                                repeatPauseDuration:
-                                                    Duration(milliseconds: 100),
-                                                child: CircleAvatar(
-                                                  radius: 22,
-                                                  backgroundColor: isRecording
-                                                      ? Colors.red
-                                                      : black,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      CircleAvatar(
-                                                        radius: 20,
-                                                        backgroundColor:
-                                                            isRecording
-                                                                ? Colors.red
-                                                                : white,
-                                                        child:
-                                                            RadiantGradientMask(
-                                                          child: IconButton(
-                                                            icon: Icon(icon,
-                                                                color: white,
-                                                                size: 25),
-                                                            onPressed:
-                                                                () async {
-                                                              await recorder
-                                                                  .toggleRecording();
-
-                                                              final isRecording =
-                                                                  recorder
-                                                                      .isRecording;
-                                                              recordPending =
-                                                                  recorder
-                                                                      .isRecording;
-                                                              setState(() {});
-
-                                                              if (isRecording) {
-                                                                timeController
-                                                                    .startTimer();
-                                                              } else {
-                                                                timeController
-                                                                    .stopTimer();
-                                                                setState(() {
-                                                                  recordLocation =
-                                                                      true;
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      AMTimerWidget(
-                                                          controller:
-                                                              timeController),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : SizedBox(),
-                          recordLocation == true
-                              ? Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 4,
-                                      child: Container(
-                                        margin: const EdgeInsets.fromLTRB(
-                                            14.0, 0, 0, 0),
                                         decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.white.withOpacity(0.2),
-                                              blurRadius: 0.1,
-                                              spreadRadius: 0,
-                                            ),
-                                          ],
-                                          border: Border.all(color: syanColor),
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                        ),
-                                        padding: const EdgeInsets.all(8),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Row(
-                                              children: <Widget>[
-                                                Padding(
-                                                    padding: EdgeInsets.all(4)),
-                                                Container(
-                                                  alignment: Alignment.center,
-                                                  padding: EdgeInsets.all(8),
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    gradient: LinearGradient(
-                                                      begin: Alignment.topRight,
-                                                      end:
-                                                          Alignment.bottomRight,
-                                                      colors: [
-                                                        lightblueColor,
-                                                        syanColor,
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  child: Icon(
-                                                      Icons
-                                                          .record_voice_over_outlined,
-                                                      color: Colors.white,
-                                                      size: 20),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(16)),
+                                            color: white),
+                                        child: TextField(
+                                            keyboardType:
+                                                TextInputType.multiline,
+                                            minLines: 1,
+                                            maxLines: 5,
+                                            maxLength: 500,
+                                            textInputAction:
+                                                TextInputAction.newline,
+                                            controller: complaint,
+                                            decoration: InputDecoration(
+                                                counterText: "",
+                                                hintText: ST
+                                                    .of(context)
+                                                    .your_message_here,
+                                                hintStyle:
+                                                    montserratRegular.copyWith(
+                                                        color: black,
+                                                        fontSize: 12),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: greyColor,
+                                                      width: 0.5),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
                                                 ),
-                                                SizedBox(
-                                                  width: 16,
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(playrecordtext,
-                                                        style: montserratRegular
-                                                            .copyWith(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 12)),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                            CircleAvatar(
-                                              radius: 20,
-                                              backgroundColor: Colors.white,
-                                              child: IconButton(
-                                                icon: Icon(playrecordicon,
-                                                    color: Colors.black),
-                                                onPressed: () async {
-                                                  await player.togglePlaying(
-                                                      whenFinished: () =>
-                                                          setState(() {}));
-                                                  setState(() {});
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: CircleAvatar(
-                                        radius: 20,
-                                        backgroundColor: Colors.white,
-                                        child: IconButton(
-                                          icon: Icon(
-                                              Icons.delete_forever_outlined,
-                                              color: Colors.grey,
-                                              size: 32),
-                                          onPressed: () {
-                                            setState(() {
-                                              recordLocation = false;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Container(),
-                          4.height,
-                          isServicing && recordPending == false
-                              ? GestureDetector(
-                                  onTap: () async {
-                                    if (isbooked) return;
-                                    setState(() => isbooked = true);
-                                    await Future.delayed(
-                                        Duration(milliseconds: 1000));
-                                    proceedbooking();
-                                  },
-                                  child: Stack(
-                                    alignment: Alignment.bottomCenter,
-                                    children: [
-                                      Container(
-                                        height: height * 0.045,
-                                        width: height * 0.37,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 16,
-                                                  color:
-                                                      syanColor.withOpacity(.6),
-                                                  spreadRadius: 0,
-                                                  blurStyle: BlurStyle.outer,
-                                                  offset: Offset(0, 0)),
-                                            ]),
-                                      ),
-                                      Container(
-                                        height: height * 0.075,
-                                        width: height * 0.4,
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: greyColor,
+                                                      width: 0.5),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ))),
                                         alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.rectangle,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(14)),
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                            colors: [
-                                              syanColor,
-                                              lightblueColor,
-                                            ],
+                                      ),
+                                    )
+                                  : SizedBox(),
+                              isServicing
+                                  ? Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 3,
+                                          child: Container(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      14, 0, 14, 14),
+                                              child: Text(
+                                                  ST
+                                                      .of(context)
+                                                      .press_record_dialogue,
+                                                  style: montserratRegular
+                                                      .copyWith(
+                                                          color: black,
+                                                          fontSize: 12)),
+                                            ),
                                           ),
                                         ),
-                                        child: !isbooked
-                                            ? Text(
-                                                ST.of(context).book_now,
-                                                style:
-                                                    montserratSemiBold.copyWith(
-                                                        color: Colors.white),
-                                              )
-                                            : Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Transform.scale(
-                                                    scale: 0.7,
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      color: white,
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  AvatarGlow(
+                                                    endRadius: 60,
+                                                    glowColor: Colors.green,
+                                                    animate: animate,
+                                                    repeatPauseDuration:
+                                                        Duration(
+                                                            milliseconds: 100),
+                                                    child: CircleAvatar(
+                                                      radius: 22,
+                                                      backgroundColor:
+                                                          isRecording
+                                                              ? Colors.red
+                                                              : black,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          CircleAvatar(
+                                                            radius: 20,
+                                                            backgroundColor:
+                                                                isRecording
+                                                                    ? Colors.red
+                                                                    : white,
+                                                            child:
+                                                                RadiantGradientMask(
+                                                              child: IconButton(
+                                                                icon: Icon(icon,
+                                                                    color:
+                                                                        white,
+                                                                    size: 25),
+                                                                onPressed:
+                                                                    () async {
+                                                                  await recorder
+                                                                      .toggleRecording();
+
+                                                                  final isRecording =
+                                                                      recorder
+                                                                          .isRecording;
+                                                                  recordPending =
+                                                                      recorder
+                                                                          .isRecording;
+                                                                  setState(
+                                                                      () {});
+
+                                                                  if (isRecording) {
+                                                                    timeController
+                                                                        .startTimer();
+                                                                  } else {
+                                                                    timeController
+                                                                        .stopTimer();
+                                                                    setState(
+                                                                        () {
+                                                                      recordLocation =
+                                                                          true;
+                                                                    });
+                                                                  }
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          AMTimerWidget(
+                                                              controller:
+                                                                  timeController),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox(),
+                              recordLocation == true
+                                  ? Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 4,
+                                          child: Container(
+                                            margin: const EdgeInsets.fromLTRB(
+                                                14.0, 0, 0, 0),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.white
+                                                      .withOpacity(0.2),
+                                                  blurRadius: 0.1,
+                                                  spreadRadius: 0,
+                                                ),
+                                              ],
+                                              border:
+                                                  Border.all(color: syanColor),
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            padding: const EdgeInsets.all(8),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Row(
+                                                  children: <Widget>[
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.all(4)),
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      padding:
+                                                          EdgeInsets.all(8),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        gradient:
+                                                            LinearGradient(
+                                                          begin: Alignment
+                                                              .topRight,
+                                                          end: Alignment
+                                                              .bottomRight,
+                                                          colors: [
+                                                            lightblueColor,
+                                                            syanColor,
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      child: Icon(
+                                                          Icons
+                                                              .record_voice_over_outlined,
+                                                          color: Colors.white,
+                                                          size: 20),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 16,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Text(playrecordtext,
+                                                            style: montserratRegular
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        12)),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                                CircleAvatar(
+                                                  radius: 20,
+                                                  backgroundColor: Colors.white,
+                                                  child: IconButton(
+                                                    icon: Icon(playrecordicon,
+                                                        color: Colors.black),
+                                                    onPressed: () async {
+                                                      await player.togglePlaying(
+                                                          whenFinished: () =>
+                                                              setState(() {}));
+                                                      setState(() {});
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor: Colors.white,
+                                            child: IconButton(
+                                              icon: Icon(
+                                                  Icons.delete_forever_outlined,
+                                                  color: Colors.grey,
+                                                  size: 32),
+                                              onPressed: () {
+                                                setState(() {
+                                                  recordLocation = false;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                              4.height,
+                              isServicing && recordPending == false
+                                  ? GestureDetector(
+                                      onTap: () async {
+                                        if (isbooked) return;
+                                        setState(() => isbooked = true);
+                                        await Future.delayed(
+                                            Duration(milliseconds: 1000));
+                                        proceedbooking();
+                                      },
+                                      child: Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                          Container(
+                                            height: height * 0.045,
+                                            width: height * 0.37,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(14),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      blurRadius: 16,
+                                                      color: syanColor
+                                                          .withOpacity(.6),
+                                                      spreadRadius: 0,
+                                                      blurStyle:
+                                                          BlurStyle.outer,
+                                                      offset: Offset(0, 0)),
+                                                ]),
+                                          ),
+                                          Container(
+                                            height: height * 0.075,
+                                            width: height * 0.4,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.rectangle,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(14)),
+                                              gradient: LinearGradient(
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                                colors: [
+                                                  syanColor,
+                                                  lightblueColor,
+                                                ],
+                                              ),
+                                            ),
+                                            child: !isbooked
+                                                ? Text(
+                                                    ST.of(context).book_now,
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                            color:
+                                                                Colors.white),
+                                                  )
+                                                : Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Transform.scale(
+                                                        scale: 0.7,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: white,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                )
-                              : SizedBox(),
-                          SizedBox(
-                            height: 20,
-                          )
-                        ],
-                      ),
+                                    )
+                                  : SizedBox(),
+                              SizedBox(
+                                height: 20,
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
