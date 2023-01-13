@@ -959,6 +959,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             color: blackColor,
                                                             fontSize:
                                                                 width * 0.034),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
                                                   customerVehList[0]
                                                               ['cv_variant'] !=
@@ -980,6 +982,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 fontSize:
                                                                     width *
                                                                         0.034),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
                                                         )
                                                       : SizedBox(),
@@ -1088,6 +1093,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             " (" +
                                             customerVehList[index]['cv_year'] +
                                             ")",
+                                        overflow: TextOverflow.ellipsis,
                                         style: montserratRegular.copyWith(
                                             color: blackColor,
                                             fontSize: width * 0.034),
