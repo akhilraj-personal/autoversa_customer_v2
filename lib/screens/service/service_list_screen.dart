@@ -12,14 +12,14 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ServiceList extends StatefulWidget {
-  const ServiceList({super.key});
+  final int click_id;
+  const ServiceList({required this.click_id, super.key});
 
   @override
   State<ServiceList> createState() => ServiceListState();
 }
 
 class ServiceListState extends State<ServiceList> {
-  // List<ServiceListdata> data = [];
   var bookingList = [];
   bool isActive = true;
   bool isoffline = false;
@@ -29,6 +29,7 @@ class ServiceListState extends State<ServiceList> {
     init();
     Future.delayed(Duration.zero, () {
       getBookings();
+      print(widget.click_id);
     });
   }
 
@@ -149,8 +150,8 @@ class ServiceListState extends State<ServiceList> {
                           itemCount: 5,
                           itemBuilder: (context, index) {
                             return Shimmer.fromColors(
-                              baseColor: Colors.grey,
-                              highlightColor: Colors.grey,
+                              baseColor: Colors.grey.shade400,
+                              highlightColor: Colors.grey.shade400,
                               child: Container(
                                 decoration: BoxDecoration(
                                     border: Border(
@@ -228,7 +229,7 @@ class ServiceListState extends State<ServiceList> {
                                       decoration:
                                           boxDecorationRoundedWithShadow(
                                         8,
-                                        backgroundColor: black,
+                                        backgroundColor: white,
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
@@ -246,7 +247,8 @@ class ServiceListState extends State<ServiceList> {
                                               borderRadius: radius(8),
                                             ),
                                             child: Image.asset(
-                                                (ImageConst.default_pro_pic)
+                                                (ImageConst
+                                                        .default_service_list)
                                                     .validate(),
                                                 fit: BoxFit.fill),
                                           ),
@@ -260,7 +262,7 @@ class ServiceListState extends State<ServiceList> {
                                               Text(
                                                 bookingList[index]['pkg_name'],
                                                 style:
-                                                    montserratRegular.copyWith(
+                                                    montserratSemiBold.copyWith(
                                                         color: black,
                                                         fontSize: 14),
                                               ),
@@ -320,7 +322,9 @@ class ServiceListState extends State<ServiceList> {
                                                                 .toString(),
                                                           )!),
                                                       style: montserratRegular
-                                                          .copyWith()),
+                                                          .copyWith(
+                                                              fontSize: 12,
+                                                              color: black)),
                                                   (bookingList[index]
                                                                   ['st_code'] !=
                                                               null &&
@@ -367,254 +371,6 @@ class ServiceListState extends State<ServiceList> {
                                         ],
                                       ),
                                     )
-                                    // Container(
-                                    //   margin: EdgeInsets.only(top: 8.0),
-                                    //   decoration:
-                                    //       boxDecorationWithRoundedCorners(
-                                    //     backgroundColor: Colors.grey.shade50,
-                                    //     borderRadius: radius(12),
-                                    //   ),
-                                    //   child: Column(
-                                    //     children: [
-                                    //       20.height,
-                                    //       Row(
-                                    //         children: [
-                                    //           Container(
-                                    //             height: 75,
-                                    //             width: 75,
-                                    //             decoration:
-                                    //                 boxDecorationWithRoundedCorners(
-                                    //               backgroundColor: Colors.blue,
-                                    //               borderRadius: radius(12),
-                                    //             ),
-                                    //             child: Column(
-                                    //               mainAxisAlignment:
-                                    //                   MainAxisAlignment.center,
-                                    //               children: [
-                                    //                 Text(
-                                    //                     (DateFormat('d').format(
-                                    //                         DateTime.tryParse(
-                                    //                             bookingList[
-                                    //                                     index][
-                                    //                                 'bk_booking_date'])!)),
-                                    //                     style: boldTextStyle(
-                                    //                         size: 32,
-                                    //                         color: white)),
-                                    //                 Text(
-                                    //                     (DateFormat('MMM').format(
-                                    //                         DateTime.tryParse(
-                                    //                             bookingList[
-                                    //                                     index][
-                                    //                                 'bk_booking_date'])!)),
-                                    //                     style:
-                                    //                         secondaryTextStyle(
-                                    //                             color: white)),
-                                    //               ],
-                                    //             ),
-                                    //           ),
-                                    //           8.width,
-                                    //           Row(
-                                    //             mainAxisAlignment:
-                                    //                 MainAxisAlignment
-                                    //                     .spaceBetween,
-                                    //             children: [
-                                    //               Column(
-                                    //                 crossAxisAlignment:
-                                    //                     CrossAxisAlignment
-                                    //                         .start,
-                                    //                 children: [
-                                    //                   Text(
-                                    //                       bookingList[index]
-                                    //                           ['pkg_name'],
-                                    //                       style: boldTextStyle(
-                                    //                           size: 18)),
-                                    //                   8.height,
-                                    //                   Text(
-                                    //                       bookingList[index]
-                                    //                                   [
-                                    //                                   'cv_make'] !=
-                                    //                               null
-                                    //                           ? bookingList[
-                                    //                                       index]
-                                    //                                   [
-                                    //                                   'cv_make'] +
-                                    //                               " " +
-                                    //                               bookingList[
-                                    //                                       index]
-                                    //                                   [
-                                    //                                   'cv_model']
-                                    //                           : "",
-                                    //                       overflow:
-                                    //                           TextOverflow
-                                    //                               .ellipsis,
-                                    //                       style: TextStyle(
-                                    //                           color: appStore
-                                    //                                   .isDarkModeOn
-                                    //                               ? white
-                                    //                               : black,
-                                    //                           fontSize: 13)),
-                                    //                   8.height,
-                                    //                   Text(
-                                    //                       bookingList[index]
-                                    //                                   [
-                                    //                                   'cv_variant'] !=
-                                    //                               null
-                                    //                           ? bookingList[
-                                    //                                       index]
-                                    //                                   [
-                                    //                                   'cv_variant'] +
-                                    //                               " (" +
-                                    //                               bookingList[
-                                    //                                       index]
-                                    //                                   [
-                                    //                                   'cv_year'] +
-                                    //                               ")"
-                                    //                           : " (" +
-                                    //                               bookingList[
-                                    //                                       index]
-                                    //                                   [
-                                    //                                   'cv_year'] +
-                                    //                               ")",
-                                    //                       overflow:
-                                    //                           TextOverflow
-                                    //                               .ellipsis,
-                                    //                       style: TextStyle(
-                                    //                           color: appStore
-                                    //                                   .isDarkModeOn
-                                    //                               ? white
-                                    //                               : black,
-                                    //                           fontSize: 13)),
-                                    //                   8.height,
-                                    //                   Text(
-                                    //                       'Date: ' +
-                                    //                           DateFormat(
-                                    //                                   'dd-MM-yyyy')
-                                    //                               .format(DateTime
-                                    //                                   .tryParse(
-                                    //                             bookingList[index]
-                                    //                                     [
-                                    //                                     'bk_booking_date']
-                                    //                                 .toString(),
-                                    //                           )!),
-                                    //                       style:
-                                    //                           secondaryTextStyle()),
-                                    //                   8.height,
-                                    //                   Container(
-                                    //                     decoration:
-                                    //                         BoxDecoration(
-                                    //                       color: bookingList[
-                                    //                                       index]
-                                    //                                   [
-                                    //                                   'st_code'] ==
-                                    //                               "CANC"
-                                    //                           ? Colors.orange
-                                    //                           : Colors.white,
-                                    //                       borderRadius: const BorderRadius
-                                    //                               .only(
-                                    //                           bottomLeft:
-                                    //                               Radius
-                                    //                                   .circular(
-                                    //                                       12.0),
-                                    //                           topLeft:
-                                    //                               Radius
-                                    //                                   .circular(
-                                    //                                       12.0),
-                                    //                           bottomRight:
-                                    //                               Radius
-                                    //                                   .circular(
-                                    //                                       12.0),
-                                    //                           topRight: Radius
-                                    //                               .circular(
-                                    //                                   12.0)),
-                                    //                     ),
-                                    //                     padding:
-                                    //                         EdgeInsets.fromLTRB(
-                                    //                             10, 2, 10, 2),
-                                    //                     child: bookingList[
-                                    //                                     index][
-                                    //                                 'st_code'] ==
-                                    //                             "CANC"
-                                    //                         ? Text("Cancelled",
-                                    //                             style: primaryTextStyle(
-                                    //                                 color:
-                                    //                                     white,
-                                    //                                 fontFamily:
-                                    //                                     fontBold,
-                                    //                                 size: 13))
-                                    //                         : Row(),
-                                    //                   ),
-                                    //                 ],
-                                    //               ),
-                                    //             ],
-                                    //           ).expand(),
-                                    //         ],
-                                    //       ).paddingOnly(
-                                    //           right: 16.0, left: 16.0),
-                                    //       8.height,
-                                    //       Divider(thickness: 0.5),
-                                    //       8.height,
-                                    //       Row(
-                                    //         children: [
-                                    //           Row(
-                                    //             mainAxisAlignment:
-                                    //                 MainAxisAlignment.end,
-                                    //             children: [
-                                    //               bookingList[index]
-                                    //                           ['st_code'] ==
-                                    //                       "CANC"
-                                    //                   ? Text(
-                                    //                       "Cancelled Details",
-                                    //                       style:
-                                    //                           secondaryTextStyle(
-                                    //                               color: Colors
-                                    //                                   .orange))
-                                    //                   : Text(
-                                    //                       language!
-                                    //                           .lblServiceDetailsMessage,
-                                    //                       style:
-                                    //                           secondaryTextStyle(
-                                    //                               color: Colors
-                                    //                                   .blue)),
-                                    //               4.width,
-                                    //               bookingList[index]
-                                    //                           ['st_code'] ==
-                                    //                       "CANC"
-                                    //                   ? Icon(
-                                    //                       Icons.arrow_forward,
-                                    //                       color: Colors.orange,
-                                    //                       size: 16)
-                                    //                   : Icon(
-                                    //                       Icons.arrow_forward,
-                                    //                       color: CPPrimaryColor,
-                                    //                       size: 16),
-                                    //             ],
-                                    //           ).onTap(
-                                    //             () {
-                                    //               bookingList[index]
-                                    //                           ['st_code'] ==
-                                    //                       "CANC"
-                                    //                   ? AMCancelledServiceHistoryDetails(
-                                    //                           bk_id:
-                                    //                               bookingList[
-                                    //                                   index],
-                                    //                           reason: bookingList[
-                                    //                                   index][
-                                    //                               'bkt_content'])
-                                    //                       .launch(context)
-                                    //                   : AMServiceHistoryDetails(
-                                    //                           bk_id:
-                                    //                               bookingList[
-                                    //                                   index])
-                                    //                       .launch(context);
-                                    //             },
-                                    //           ).expand()
-                                    //         ],
-                                    //       ).paddingOnly(
-                                    //           right: 16.0, left: 16.0),
-                                    //       16.height,
-                                    //     ],
-                                    //   ),
-                                    // )
                                   ],
                                 );
                               })

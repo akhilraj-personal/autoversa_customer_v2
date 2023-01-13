@@ -63,6 +63,7 @@
 import 'dart:async';
 
 import 'package:autoversa/screens/home/home_screen.dart';
+import 'package:autoversa/screens/service/service_list_screen.dart';
 import 'package:autoversa/screens/settings/profile_screen.dart';
 import 'package:autoversa/screens/support/support_screen.dart';
 import 'package:autoversa/screens/vehicle/vehicle_list_screen.dart';
@@ -104,7 +105,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     Support(),
     HomeScreen(),
     Vehiclelist(),
-    Container(),
+    ServiceList(click_id: 1),
     ProfilePage(),
   ];
 
