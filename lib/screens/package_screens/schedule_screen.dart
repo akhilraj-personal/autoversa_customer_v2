@@ -753,82 +753,146 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     SizedBox(
                       height: 8,
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Stack(alignment: Alignment.bottomCenter, children: [
-                          Container(
-                            height: height * 0.045,
-                            width: height * 0.37,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                boxShadow: [
-                                  BoxShadow(
-                                      blurRadius: 16,
-                                      color: syanColor.withOpacity(.5),
-                                      spreadRadius: 0,
-                                      blurStyle: BlurStyle.outer,
-                                      offset: Offset(0, 0)),
-                                ]),
+                    Stack(alignment: Alignment.bottomCenter, children: [
+                      Container(
+                        margin: EdgeInsets.all(16.0),
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 16,
+                                  color: syanColor.withOpacity(.5),
+                                  spreadRadius: 0,
+                                  blurStyle: BlurStyle.outer,
+                                  offset: Offset(0, 0)),
+                            ]),
+                      ),
+                      Container(
+                          margin: EdgeInsets.all(16.0),
+                          padding: EdgeInsets.all(8),
+                          width: width * 1.85,
+                          height: height * 0.075,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: borderGreyColor),
                           ),
-                          Container(
-                              height: height * 0.075,
-                              width: height * 0.46,
-                              decoration: BoxDecoration(
-                                color: whiteColor,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: borderGreyColor),
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Container(
-                                      padding: EdgeInsets.only(
-                                        left: width * 0.025,
-                                        right: width * 0.025,
-                                      ),
-                                      child: DropdownButtonFormField(
-                                        value:
-                                            SelectAddressList[selected_address],
-                                        isExpanded: true,
-                                        decoration: InputDecoration.collapsed(
-                                            hintText: ''),
-                                        hint: Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              ST.of(context).emirates,
-                                              style: montserratRegular.copyWith(
-                                                  color: blackColor,
-                                                  fontSize: 14),
-                                            )),
-                                        items: SelectAddressList.map(
-                                            (String? value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(
-                                              value!,
-                                              style: montserratRegular.copyWith(
-                                                  color: blackColor,
-                                                  fontSize: 14),
-                                            ),
-                                          );
-                                        }).toList(),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            pickupaddresschange(
-                                                SelectAddressList.indexOf(
-                                                    value.toString()));
-                                          });
-                                        },
-                                      ),
-                                    ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                      right: width * 0.025,
+                                      left: width * 0.025),
+                                  child: DropdownButtonFormField(
+                                    isExpanded: true,
+                                    value: SelectAddressList[selected_address],
+                                    decoration:
+                                        InputDecoration.collapsed(hintText: ''),
+                                    hint: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          ST.of(context).emirates,
+                                          style: montserratRegular.copyWith(
+                                              color: Colors.black,
+                                              fontSize: 14),
+                                        )),
+                                    items:
+                                        SelectAddressList.map((String? value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(
+                                          value!,
+                                          style: montserratRegular.copyWith(
+                                              color: blackColor, fontSize: 14),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    validator: (value) {},
+                                    onChanged: (value) {},
                                   ),
-                                ],
-                              ))
-                        ]),
-                      ],
-                    ),
+                                ),
+                              ),
+                            ],
+                          ))
+                    ]),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: <Widget>[
+                    //     Stack(alignment: Alignment.bottomCenter, children: [
+                    //       Container(
+                    //         height: height * 0.045,
+                    //         width: height * 0.37,
+                    //         decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(14),
+                    //             boxShadow: [
+                    //               BoxShadow(
+                    //                   blurRadius: 16,
+                    //                   color: syanColor.withOpacity(.5),
+                    //                   spreadRadius: 0,
+                    //                   blurStyle: BlurStyle.outer,
+                    //                   offset: Offset(0, 0)),
+                    //             ]),
+                    //       ),
+                    //       Container(
+                    //           height: height * 0.075,
+                    //           width: height * 0.46,
+                    //           decoration: BoxDecoration(
+                    //             color: whiteColor,
+                    //             borderRadius: BorderRadius.circular(12),
+                    //             border: Border.all(color: borderGreyColor),
+                    //           ),
+                    //           child: Row(
+                    //             children: <Widget>[
+                    //               Expanded(
+                    //                 child: Container(
+                    //                   padding:
+                    //                       EdgeInsets.only(left: 4, right: 4),
+                    //                   child: DropdownButtonFormField(
+                    //                     value:
+                    //                         SelectAddressList[selected_address],
+                    //                     isExpanded: true,
+                    //                     decoration: InputDecoration.collapsed(
+                    //                         hintText: ''),
+                    //                     hint: Align(
+                    //                         alignment: Alignment.center,
+                    //                         child: Text(
+                    //                           ST.of(context).emirates,
+                    //                           style: montserratRegular.copyWith(
+                    //                               color: blackColor,
+                    //                               fontSize: 14),
+                    //                         )),
+                    //                     items: SelectAddressList.map(
+                    //                         (String? value) {
+                    //                       return DropdownMenuItem<String>(
+                    //                         value: value,
+                    //                         child: Text(
+                    //                           value!,
+                    //                           style: montserratRegular.copyWith(
+                    //                               color: blackColor,
+                    //                               fontSize: 14),
+                    //                         ),
+                    //                       );
+                    //                     }).toList(),
+                    //                     onChanged: (value) {
+                    //                       setState(() {
+                    //                         pickupaddresschange(
+                    //                             SelectAddressList.indexOf(
+                    //                                 value.toString()));
+                    //                       });
+                    //                     },
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ],
+                    //           ))
+                    //     ]),
+                    //   ],
+                    // ),
                     SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
