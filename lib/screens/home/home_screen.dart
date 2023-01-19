@@ -1,4 +1,6 @@
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
+import 'package:autoversa/screens/booking/payment_waiting_screen.dart';
+import 'package:autoversa/screens/booking/reschedule_screen.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
 import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
@@ -129,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await getCustomerBookingList(req).then((value) {
       if (value['ret_data'] == "success") {
         for (var booklist in value['book_list']) {
-          if (booklist['st_code'] != "DLCC") {
+          if (booklist['st_code'] != "DLCC" && booklist['st_code'] != "CANC") {
             setState(() {
               bookingList.add(booklist);
               isBookingLoaded = true;
@@ -572,7 +574,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               scale: 4,
                                                                             ),
 
-                                                                            ///--------- vehicle at workshop -------------
+                                                                            ///--------- booking status -------------
 
                                                                             Container(
                                                                               margin: EdgeInsets.only(left: width * 0.02),
@@ -589,18 +591,45 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            Navigator.push(
-                                                                                context,
-                                                                                MaterialPageRoute(
-                                                                                    builder: (context) => BookingStatusFlow(
-                                                                                          bk_id: bookingList[index]['bk_id'],
-                                                                                          vehname: bookingList[index]['cv_make'] != null
-                                                                                              ? bookingList[index]['cv_variant'] != null
-                                                                                                  ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
-                                                                                                  : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
-                                                                                              : "",
-                                                                                          make: bookingList[index]['cv_make'],
-                                                                                        )));
+                                                                            if (bookingList[index]['st_code'] ==
+                                                                                "BAPC") {
+                                                                              if (DateTime.now().isBefore(DateTime.tryParse(bookingList[index]['bk_booking_date'])!)) {
+                                                                                Navigator.push(
+                                                                                    context,
+                                                                                    MaterialPageRoute(
+                                                                                        builder: (context) => PaymentWaitingScreen(
+                                                                                              bk_data: bookingList[index],
+                                                                                              custvehlist: customerVehList,
+                                                                                            )));
+                                                                              } else {
+                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh)));
+                                                                              }
+                                                                            } else {
+                                                                              Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                      builder: (context) => BookingStatusFlow(
+                                                                                            bk_id: bookingList[index]['bk_id'],
+                                                                                            vehname: bookingList[index]['cv_make'] != null
+                                                                                                ? bookingList[index]['cv_variant'] != null
+                                                                                                    ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
+                                                                                                    : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
+                                                                                                : "",
+                                                                                            make: bookingList[index]['cv_make'],
+                                                                                          )));
+                                                                            }
+                                                                            // Navigator.push(
+                                                                            //     context,
+                                                                            //     MaterialPageRoute(
+                                                                            //         builder: (context) => BookingStatusFlow(
+                                                                            //               bk_id: bookingList[index]['bk_id'],
+                                                                            //               vehname: bookingList[index]['cv_make'] != null
+                                                                            //                   ? bookingList[index]['cv_variant'] != null
+                                                                            //                       ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
+                                                                            //                       : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
+                                                                            //                   : "",
+                                                                            //               make: bookingList[index]['cv_make'],
+                                                                            //             )));
                                                                           },
                                                                           child:
                                                                               Container(

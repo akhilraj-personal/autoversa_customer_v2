@@ -1,732 +1,477 @@
-// import 'package:am_soft/automobile/screens/AMEstimateDetailsScreen.dart';
-// import 'package:am_soft/automobile/screens/AMTryoutCodeScreen.dart';
-// import 'package:am_soft/automobile/screens/AMWorkcardScreen.dart';
-// import 'package:am_soft/automobile/utils/AMConstant.dart';
-// import 'package:am_soft/automobile/utils/CPColors.dart';
-// import 'package:am_soft/fullApps/coinPro/screen/CPSearchScreen.dart';
-// import 'package:am_soft/main/utils/AppConstant.dart';
-// import 'package:am_soft/main/utils/AppWidget.dart';
-// import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_slidable/flutter_slidable.dart';
-// import 'package:nb_utils/nb_utils.dart';
-// import 'package:am_soft/fullApps/coinPro/model/CPModel.dart';
-// import 'package:am_soft/fullApps/coinPro/screen/CPAllCoinList.dart';
-// import 'package:am_soft/fullApps/coinPro/screen/CPMyWalletScreen.dart';
-// import 'package:am_soft/fullApps/coinPro/screen/CPQrScannerScreen.dart';
-// import 'package:am_soft/fullApps/coinPro/screen/CPStatisticScreen.dart';
-// import 'package:am_soft/fullApps/coinPro/utils/CPDataProvider.dart';
-// import 'package:am_soft/fullApps/coinPro/utils/CPImages.dart';
-// import 'package:am_soft/fullApps/coinPro/utils/CPWidgets.dart';
-// import 'package:am_soft/main.dart';
+import 'package:autoversa/constant/image_const.dart';
+import 'package:autoversa/constant/text_style.dart';
+import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/screens/service/service_details_screen.dart';
+import 'package:autoversa/services/post_auth_services.dart';
+import 'package:autoversa/utils/color_utils.dart';
+import 'package:autoversa/utils/common_utils.dart';
+import 'package:custom_clippers/custom_clippers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:shimmer/shimmer.dart';
 
-// import 'AMNotificationFragment.dart';
+class TryOut extends StatefulWidget {
+  final int click_id;
+  const TryOut({required this.click_id, super.key});
 
-// class AMHomeFragment extends StatefulWidget {
-//   @override
-//   AMHomeFragmentState createState() => AMHomeFragmentState();
-// }
+  @override
+  State<TryOut> createState() => TryOutState();
+}
 
-// class AMHomeFragmentState extends State<AMHomeFragment> {
-//   List<CPDataModel> tradeCrypto = getTradeCryptoDataModel();
-//   List<CPDataModel> tradeCryptoName = getTradeCryptoNameDataModel();
-//   List<CPDataModel> myPortFolio = getMyPortFolioDataModel();
+class TryOutState extends State<TryOut> {
+  var bookingList = [];
+  bool isActive = true;
+  bool isoffline = false;
+  @override
+  void initState() {
+    super.initState();
+    init();
+    Future.delayed(Duration.zero, () {
+      getBookings();
+      print(widget.click_id);
+    });
+  }
 
-//   int tradIndex = 0;
-//   String _name = '';
+  getBookings() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> send_data = {
+      'custId': prefs.getString('cust_id'),
+    };
+    bookingList = [];
+    await get_service_history(send_data).then((value) {
+      if (value['ret_data'] == "success") {
+        setState(() {
+          for (var bookings in value['book_list']) {
+            bookingList.add(bookings);
+          }
+          for (var cancelled in value['cancelled_list']) {
+            bookingList.add(cancelled);
+          }
+          isActive = false;
+          setState(() {});
+        });
+      } else {
+        isActive = false;
+        setState(() {});
+      }
+    }).catchError((e) {
+      setState(() {
+        isActive = false;
+      });
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: Colors.white);
+    });
+    ;
+  }
 
+  Future<void> init() async {
+    //
+  }
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     init();
-//   }
+  @override
+  void setState(fn) {
+    if (mounted) super.setState(fn);
+  }
 
-//   Future<void> init() async {
-//     setStatusBarColor(Colors.transparent);
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-//     setState(() {
-//       _name = "Welcome " + prefs.getString('name')!;
-//     });
-//   }
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
-//   @override
-//   void setState(fn) {
-//     if (mounted) super.setState(fn);
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     var height = MediaQuery.of(context).size.height;
-//     var width = MediaQuery.of(context).size.width;
-//     var categoryWidth = (width - 56) / 2;
-//     return Scaffold(
-//       appBar: AppBar(
-//         elevation: 0,
-//         title: Text(_name, style: boldTextStyle(size: 18)),
-//         centerTitle: false,
-//         backgroundColor: context.cardColor,
-//         automaticallyImplyLeading: false,
-//         actions: [
-//           Padding(
-//             padding: EdgeInsets.only(right: 8.0),
-//             child: IconButton(
-//                 onPressed: () {
-//                   Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                           builder: (context) => CPSearchScreen()));
-//                 },
-//                 icon: Icon(Icons.notifications_active_outlined,
-//                     color: appStore.isDarkModeOn ? white : black, size: 20)),
-//           ),
-//         ],
-//       ),
-//       body: SingleChildScrollView(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.start,
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           mainAxisSize: MainAxisSize.max,
-//           children: [
-//             Padding(
-//                 padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-//                 child: Container(
-//                   decoration: BoxDecoration(
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color: Colors.grey.withOpacity(0.4),
-//                         offset: Offset(0.1, 0.1),
-//                         blurRadius: 0.2,
-//                         spreadRadius: 0.2,
-//                       ),
-//                       BoxShadow(
-//                           color: context.cardColor,
-//                           offset: Offset(0.0, 0.0),
-//                           blurRadius: 0.0,
-//                           spreadRadius: 0.0),
-//                     ],
-//                     borderRadius: BorderRadius.circular(16.0),
-//                   ),
-//                   child: Stack(
-//                     children: <Widget>[
-//                       Container(
-//                         padding: EdgeInsets.all(16),
-//                         decoration: boxDecoration(bgColor: t12_cat2.withOpacity(0.1), radius: 16.0),
-//                         child: Column(
-//                           children: <Widget>[
-//                             Row(
-//                               children: <Widget>[
-//                                 Image.asset(
-//                                   'images/automobile/oil_png.png',
-//                                   height: 50,
-//                                   width: 60,
-//                                   fit: BoxFit.cover,
-//                                   alignment:  Alignment.center,
-//                                 ),
-//                                 Expanded(
-//                                   child: Container(
-//                                     padding: EdgeInsets.only(left: 16),
-//                                     child: Column(
-//                                       crossAxisAlignment:
-//                                           CrossAxisAlignment.start,
-//                                       children: <Widget>[
-//                                         Row(
-//                                           mainAxisAlignment:
-//                                               MainAxisAlignment.spaceBetween,
-//                                           children: <Widget>[
-//                                             text("OIL SERVICE",
-//                                                 textColor: CPPrimaryColor,
-//                                                 fontFamily: 'Bold',
-//                                                 fontSize: 20.0,
-//                                                 maxLine: 2),
-//                                             Container(
-//                                               decoration:
-//                                               BoxDecoration(
-//                                                 color: CPPlusCoinPer,
-//                                                 borderRadius:
-//                                                 BorderRadius.circular(
-//                                                         16.0),
-//                                               ),
-//                                               padding:
-//                                               EdgeInsets.fromLTRB(
-//                                                   8, 2, 8, 2),
-//                                               child: Text("Within 4 Hours",
-//                                                   style: TextStyle(
-//                                                     color: white,
-//                                                     fontSize: 10,
-//                                                     fontWeight:
-//                                                     FontWeight
-//                                                         .bold,
-//                                                   )),
-//                                             ),
-//                                             // text('Starting from AED300', textColor: appStore.textSecondaryColor, fontSize: textSizeMedium),
-//                                           ],
-//                                         ),
-//                                         text('Starting from AED300',
-//                                             fontSize: textSizeMedium,
-//                                             textColor:
-//                                                 appStore.textPrimaryColor,
-//                                             fontFamily: fontMedium),
-//                                       ],
-//                                     ),
-//                                   ),
-//                                 )
-//                               ],
-//                               mainAxisAlignment: MainAxisAlignment.start,
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                       // Container(
-//                       //   width: 4,
-//                       //   height: 35,
-//                       //   margin: EdgeInsets.only(top: 16),
-//                       //   color: pos % 2 == 0 ? t1TextColorPrimary : t1_colorPrimary,
-//                       // )
-//                     ],
-//                   ),
-//                 )),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   crossAxisAlignment: CrossAxisAlignment.center,
-//                   mainAxisSize: MainAxisSize.max,
-//                   children: [
-//                     Padding(
-//                       padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-//                       child:
-//                       Container(
-//                         width: categoryWidth,
-//                         decoration: boxDecoration(bgColor: t12_cat1.withOpacity(0.1), radius: spacing_standard),
-//                         child: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.center,
-//                           mainAxisSize: MainAxisSize.min,
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: <Widget>[
-//                             Image.asset(
-//                               "images/automobile/minor_png.png",
-//                               width: 140,
-//                               height: 80,
-//                               fit: BoxFit.contain,
-//                               alignment:  Alignment.center,
-//                             ),
-//                             text("Minor Service", fontFamily: 'Bold',
-//                                 fontSize: 18.0, textColor: appStore.textPrimaryColor),
-//                             Text(
-//                               "From AED 600",
-//                               textAlign: TextAlign.start,
-//                               overflow: TextOverflow.clip,
-//                               style: TextStyle(
-//                                 fontWeight: FontWeight.w400,
-//                                 fontStyle: FontStyle.normal,
-//                                 fontSize: 14,
-//                                 color: Color(0xffa8a8a8),
-//                               ),
-//                             ),
-
-//                             SizedBox(height: 10),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                     Padding(
-//                       padding: EdgeInsets.fromLTRB(0, 0, 16, 0),
-//                       child:
-//                       Container(
-//                         width: categoryWidth,
-//                         decoration: boxDecoration(bgColor: t12_cat3.withOpacity(0.1), radius: spacing_standard),
-//                         child: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.center,
-//                           mainAxisSize: MainAxisSize.min,
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: <Widget>[
-//                             Image.asset(
-//                               "images/automobile/major_png.png",
-//                               width: 140,
-//                               height: 80,
-//                               fit: BoxFit.contain,
-//                               alignment:  Alignment.center,
-//                             ),
-//                             text("Major Service", fontFamily: 'Bold',
-//                                 fontSize: 18.0, textColor: appStore.textPrimaryColor),
-//                             Text(
-//                               "From AED 800",
-//                               textAlign: TextAlign.start,
-//                               overflow: TextOverflow.clip,
-//                               style: TextStyle(
-//                                 fontWeight: FontWeight.w400,
-//                                 fontStyle: FontStyle.normal,
-//                                 fontSize: 14,
-//                                 color: Color(0xffa8a8a8),
-//                               ),
-//                             ),
-//                             SizedBox(height: 10),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-
-//             Container(
-//               margin: EdgeInsets.all(16),
-//               padding: EdgeInsets.all(8),
-//               width: MediaQuery.of(context).size.width,
-//               decoration: BoxDecoration(
-//                 color: Color(0xff2972ff),
-//                 shape: BoxShape.rectangle,
-//                 borderRadius: BorderRadius.circular(16.0),
-//               ),
-//               child: Padding(
-//                 padding: EdgeInsets.all(16),
-//                 child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.start,
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   mainAxisSize: MainAxisSize.max,
-//                   children: [
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       crossAxisAlignment: CrossAxisAlignment.center,
-//                       mainAxisSize: MainAxisSize.max,
-//                       children: [
-//                         Text(
-//                           "Your current balance",
-//                           textAlign: TextAlign.start,
-//                           overflow: TextOverflow.clip,
-//                           style: TextStyle(
-//                             fontWeight: FontWeight.w400,
-//                             fontStyle: FontStyle.normal,
-//                             fontSize: 14,
-//                             color: Color(0xfffffcfc),
-//                           ),
-//                         ),
-//                         Icon(Icons.remove_red_eye_outlined,
-//                                 color: Color(0xffffffff), size: 22)
-//                             .onTap(
-//                           () {
-//                             AMWorkCard().launch(context,
-//                                 pageRouteAnimation: PageRouteAnimation.Scale);
-//                           },
-//                         )
-//                       ],
-//                     ),
-//                     SizedBox(height: 16),
-//                     Text(
-//                       "\$235,554",
-//                       textAlign: TextAlign.start,
-//                       overflow: TextOverflow.clip,
-//                       style: TextStyle(
-//                         fontWeight: FontWeight.w800,
-//                         fontStyle: FontStyle.normal,
-//                         fontSize: 18,
-//                         color: Color(0xffffffff),
-//                       ),
-//                     ),
-//                     SizedBox(height: 16, width: 16),
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       crossAxisAlignment: CrossAxisAlignment.center,
-//                       mainAxisSize: MainAxisSize.max,
-//                       children: [
-//                         investType(icon: Icons.upgrade, text: "Deposit"),
-//                         investType(
-//                                 icon: Icons.download_outlined, text: "Estimate")
-//                             .onTap(
-//                           () {
-//                             AMEstimateDetails().launch(context,
-//                                 pageRouteAnimation: PageRouteAnimation.Scale);
-//                           },
-//                         ),
-//                         investType(icon: Icons.refresh_outlined, text: "Tryout")
-//                             .onTap(
-//                           () {
-//                             AMServiceHistoryDetailsNew().launch(context,
-//                                 pageRouteAnimation: PageRouteAnimation.Scale);
-//                           },
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 16, width: 16),
-//             Padding(
-//               padding: EdgeInsets.symmetric(horizontal: 16),
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 crossAxisAlignment: CrossAxisAlignment.center,
-//                 mainAxisSize: MainAxisSize.max,
-//                 children: [
-//                   Text(
-//                     "My Portfolio",
-//                     textAlign: TextAlign.start,
-//                     overflow: TextOverflow.clip,
-//                     style: TextStyle(
-//                       fontWeight: FontWeight.w800,
-//                       fontStyle: FontStyle.normal,
-//                       fontSize: 16,
-//                     ),
-//                   ),
-//                   InkWell(
-//                     onTap: () {
-//                       CPAllCoinList().launch(context,
-//                           pageRouteAnimation:
-//                               PageRouteAnimation.SlideBottomTop);
-//                     },
-//                     child: Text(
-//                       "See all",
-//                       textAlign: TextAlign.start,
-//                       overflow: TextOverflow.clip,
-//                       style: TextStyle(
-//                         fontWeight: FontWeight.w800,
-//                         fontStyle: FontStyle.normal,
-//                         fontSize: 14,
-//                         color: Color(0xc42972ff),
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//             Container(
-//               height: 160,
-//               alignment: Alignment.center,
-//               child: ListView.builder(
-//                 scrollDirection: Axis.horizontal,
-//                 itemCount: myPortFolio.length,
-//                 shrinkWrap: true,
-//                 padding: EdgeInsets.all(8),
-//                 itemBuilder: (context, index) {
-//                   CPDataModel data = myPortFolio[index];
-//                   return Container(
-//                     margin: EdgeInsets.all(8),
-//                     padding: EdgeInsets.all(4),
-//                     alignment: Alignment.center,
-//                     decoration: BoxDecoration(
-//                       boxShadow: [
-//                         BoxShadow(
-//                           color: Colors.grey.withOpacity(0.4),
-//                           offset: Offset(0.1, 0.1),
-//                           blurRadius: 0.2,
-//                           spreadRadius: 0.2,
-//                         ),
-//                         BoxShadow(
-//                             color: context.cardColor,
-//                             offset: Offset(0.0, 0.0),
-//                             blurRadius: 0.0,
-//                             spreadRadius: 0.0),
-//                       ],
-//                       borderRadius: BorderRadius.circular(16.0),
-//                     ),
-//                     child: Padding(
-//                       padding: EdgeInsets.all(8),
-//                       child: Column(
-//                         mainAxisAlignment: MainAxisAlignment.start,
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         mainAxisSize: MainAxisSize.max,
-//                         children: [
-//                           Row(
-//                             mainAxisAlignment: MainAxisAlignment.start,
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             mainAxisSize: MainAxisSize.max,
-//                             children: [
-//                               Container(
-//                                 height: 35,
-//                                 width: 35,
-//                                 padding: EdgeInsets.all(8),
-//                                 clipBehavior: Clip.antiAlias,
-//                                 decoration: BoxDecoration(
-//                                     shape: BoxShape.circle,
-//                                     color: data.bgColor),
-//                                 child:
-//                                     Image.asset(data.image!, fit: BoxFit.cover),
-//                               ),
-//                               SizedBox(width: 16),
-//                               Text(
-//                                 data.currencyUnit!,
-//                                 textAlign: TextAlign.start,
-//                                 overflow: TextOverflow.clip,
-//                                 style: TextStyle(
-//                                   fontWeight: FontWeight.bold,
-//                                   fontStyle: FontStyle.normal,
-//                                   fontSize: 14,
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                           SizedBox(height: 16),
-//                           Row(
-//                             mainAxisAlignment: MainAxisAlignment.start,
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             mainAxisSize: MainAxisSize.max,
-//                             children: [
-//                               Column(
-//                                 mainAxisAlignment: MainAxisAlignment.start,
-//                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                 mainAxisSize: MainAxisSize.max,
-//                                 children: [
-//                                   Text(
-//                                     data.totalAmount!,
-//                                     textAlign: TextAlign.start,
-//                                     overflow: TextOverflow.clip,
-//                                     style: TextStyle(
-//                                       fontWeight: FontWeight.w800,
-//                                       fontStyle: FontStyle.normal,
-//                                       fontSize: 14,
-//                                     ),
-//                                   ),
-//                                   SizedBox(height: 4, width: 16),
-//                                   Text(
-//                                     data.cardName!,
-//                                     textAlign: TextAlign.start,
-//                                     overflow: TextOverflow.clip,
-//                                     style: TextStyle(
-//                                       fontWeight: FontWeight.w400,
-//                                       fontStyle: FontStyle.normal,
-//                                       fontSize: 14,
-//                                       color: Color(0xffa8a8a8),
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                               SizedBox(height: 16, width: 16),
-//                               Image(
-//                                   image: AssetImage(cp_chart),
-//                                   height: 40,
-//                                   width: 40,
-//                                   fit: BoxFit.cover),
-//                             ],
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ).onTap(
-//                     () {
-//                       CPStatisticScreen(model: data).launch(context,
-//                           pageRouteAnimation: PageRouteAnimation.Slide);
-//                     },
-//                     hoverColor: Colors.transparent,
-//                     highlightColor: Colors.transparent,
-//                     splashColor: Colors.transparent,
-//                   );
-//                 },
-//               ),
-//             ),
-//             SizedBox(height: 16, width: 16),
-//             Padding(
-//               padding: EdgeInsets.only(left: 16),
-//               child: Text(
-//                 "Trade Crypto",
-//                 textAlign: TextAlign.start,
-//                 overflow: TextOverflow.clip,
-//                 style: TextStyle(
-//                   fontWeight: FontWeight.w800,
-//                   fontStyle: FontStyle.normal,
-//                   fontSize: 14,
-//                 ),
-//               ),
-//             ),
-//             Container(
-//               height: 55,
-//               child: ListView.builder(
-//                 scrollDirection: Axis.horizontal,
-//                 itemCount: tradeCrypto.length,
-//                 shrinkWrap: true,
-//                 padding: EdgeInsets.only(left: 8, right: 8, top: 8),
-//                 itemBuilder: (context, index) {
-//                   CPDataModel data = tradeCrypto[index];
-//                   return InkWell(
-//                     onTap: () {
-//                       tradIndex = index;
-//                       setState(() {});
-//                     },
-//                     child: Container(
-//                       margin: EdgeInsets.all(8),
-//                       alignment: Alignment.center,
-//                       padding:
-//                           EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-//                       decoration: BoxDecoration(
-//                         color: tradIndex == index
-//                             ? CPPrimaryColor
-//                             : Colors.grey.withOpacity(0.1),
-//                         shape: BoxShape.rectangle,
-//                         borderRadius: BorderRadius.circular(10.0),
-//                       ),
-//                       child: Text(
-//                         data.currencyUnit!,
-//                         textAlign: TextAlign.center,
-//                         overflow: TextOverflow.clip,
-//                         style: TextStyle(
-//                           fontWeight: FontWeight.bold,
-//                           fontStyle: FontStyle.normal,
-//                           fontSize: 12,
-//                           color: tradIndex == index
-//                               ? Colors.white
-//                               : appStore.isDarkModeOn
-//                                   ? white
-//                                   : Colors.black.withOpacity(0.6),
-//                         ),
-//                       ),
-//                     ).onTap(
-//                       () {
-//                         tradIndex = index;
-//                         setState(() {});
-//                       },
-//                       hoverColor: Colors.transparent,
-//                       highlightColor: Colors.transparent,
-//                       splashColor: Colors.transparent,
-//                     ),
-//                   );
-//                 },
-//               ),
-//             ),
-//             ListView.builder(
-//               scrollDirection: Axis.vertical,
-//               itemCount: tradeCryptoName.length,
-//               physics: NeverScrollableScrollPhysics(),
-//               shrinkWrap: true,
-//               padding: EdgeInsets.all(8),
-//               itemBuilder: (context, index) {
-//                 CPDataModel data = tradeCryptoName[index];
-//                 return Slidable(
-//                   actionPane: SlidableDrawerActionPane(),
-//                   actionExtentRatio: 0.17,
-//                   secondaryActions: [
-//                     Image.asset(cp_eye, height: 20, width: 20)
-//                   ],
-//                   child: InkWell(
-//                     borderRadius: BorderRadius.circular(16.0),
-//                     splashColor: Colors.transparent,
-//                     focusColor: Colors.transparent,
-//                     highlightColor: Colors.transparent,
-//                     onTap: () {
-//                       CPStatisticScreen(model: data).launch(context,
-//                           pageRouteAnimation: PageRouteAnimation.Slide);
-//                     },
-//                     child: Container(
-//                       margin: EdgeInsets.all(8),
-//                       padding: EdgeInsets.all(16),
-//                       width: MediaQuery.of(context).size.width,
-//                       decoration: BoxDecoration(
-//                         shape: BoxShape.rectangle,
-//                         color: Colors.white,
-//                         borderRadius: BorderRadius.circular(16.0),
-//                         boxShadow: [
-//                           BoxShadow(
-//                             color: Colors.grey.withOpacity(0.4),
-//                             offset: Offset(0.1, 0.1),
-//                             blurRadius: 0.2,
-//                             spreadRadius: 0.2,
-//                           ), //BoxShadow
-//                           BoxShadow(
-//                             color: Colors.white,
-//                             offset: Offset(0.0, 0.0),
-//                             blurRadius: 0.0,
-//                             spreadRadius: 0.0,
-//                           ), //BoxShadow
-//                         ],
-//                       ),
-//                       child: Row(
-//                         mainAxisAlignment: MainAxisAlignment.start,
-//                         crossAxisAlignment: CrossAxisAlignment.center,
-//                         mainAxisSize: MainAxisSize.max,
-//                         children: [
-//                           Container(
-//                             height: 40,
-//                             width: 40,
-//                             padding: EdgeInsets.all(8),
-//                             clipBehavior: Clip.antiAlias,
-//                             decoration: BoxDecoration(
-//                                 shape: BoxShape.circle, color: data.bgColor),
-//                             child: Image.asset(data.image!, fit: BoxFit.cover),
-//                           ),
-//                           SizedBox(height: 16, width: 16),
-//                           Expanded(
-//                             flex: 1,
-//                             child: Column(
-//                               mainAxisAlignment: MainAxisAlignment.center,
-//                               crossAxisAlignment: CrossAxisAlignment.start,
-//                               mainAxisSize: MainAxisSize.max,
-//                               children: [
-//                                 Text(
-//                                   data.currencyName!,
-//                                   textAlign: TextAlign.start,
-//                                   overflow: TextOverflow.clip,
-//                                   style: TextStyle(
-//                                     fontWeight: FontWeight.bold,
-//                                     fontStyle: FontStyle.normal,
-//                                     fontSize: 14,
-//                                   ),
-//                                 ),
-//                                 SizedBox(height: 4),
-//                                 Text(
-//                                   data.currencyUnit!,
-//                                   textAlign: TextAlign.start,
-//                                   overflow: TextOverflow.clip,
-//                                   style: TextStyle(
-//                                     fontWeight: FontWeight.bold,
-//                                     fontStyle: FontStyle.normal,
-//                                     fontSize: 14,
-//                                     color: Color(0xffacacac),
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-//                           ),
-//                           Column(
-//                             mainAxisAlignment: MainAxisAlignment.center,
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             mainAxisSize: MainAxisSize.max,
-//                             children: [
-//                               Text(
-//                                 data.totalAmount!,
-//                                 textAlign: TextAlign.start,
-//                                 overflow: TextOverflow.clip,
-//                                 style: TextStyle(
-//                                   fontWeight: FontWeight.bold,
-//                                   fontStyle: FontStyle.normal,
-//                                   fontSize: 16,
-//                                 ),
-//                               ),
-//                               SizedBox(height: 4, width: 16),
-//                               Container(
-//                                 width: 65,
-//                                 alignment: Alignment.center,
-//                                 padding: EdgeInsets.all(4),
-//                                 decoration: BoxDecoration(
-//                                   color: Color(0x1c969696),
-//                                   shape: BoxShape.rectangle,
-//                                   borderRadius: BorderRadius.circular(16.0),
-//                                   border: Border.all(
-//                                       color: Color(0x4dfffcfc), width: 1),
-//                                 ),
-//                                 child: Align(
-//                                   alignment: Alignment(-0.1, 0.0),
-//                                   child: Text(
-//                                     data.percentage!,
-//                                     textAlign: TextAlign.center,
-//                                     overflow: TextOverflow.clip,
-//                                     style: TextStyle(
-//                                       fontWeight: FontWeight.w800,
-//                                       fontStyle: FontStyle.normal,
-//                                       fontSize: 12,
-//                                       color: data.textColor,
-//                                     ),
-//                                   ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 );
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+        statusBarColor: Colors.white,
+        systemNavigationBarColor: Colors.white,
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: white,
+          shadowColor: white,
+          iconTheme: IconThemeData(color: white),
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarIconBrightness: Brightness.dark,
+          ),
+          actions: [
+            Center(
+              child: Row(
+                children: [
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    width: width,
+                    height: height * 0.12,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          lightblueColor,
+                          syanColor,
+                        ],
+                      ),
+                    ),
+                    child: ClipPath(
+                      clipper: SinCosineWaveClipper(
+                        verticalPosition: VerticalPosition.top,
+                      ),
+                      child: Container(
+                        height: height * 0.31,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            syanColor.withOpacity(0.3),
+                            Color.fromARGB(255, 176, 205, 210),
+                          ],
+                        )),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              isActive
+                  ? Expanded(
+                      child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: 4,
+                          itemBuilder: (context, index) {
+                            return Shimmer.fromColors(
+                              baseColor: lightGreyColor,
+                              highlightColor: greyColor,
+                              child: Container(
+                                height: height * 0.220,
+                                margin: EdgeInsets.only(
+                                    left: width * 0.05,
+                                    right: width * 0.05,
+                                    top: height * 0.01,
+                                    bottom: height * 0.01),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      white,
+                                      white,
+                                      white,
+                                      borderGreyColor,
+                                    ],
+                                  ),
+                                ),
+                                child: Column(
+                                  children: <Widget>[
+                                    SizedBox(height: 30),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        SizedBox(height: 40),
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                              left: 15, right: 10, top: 15),
+                                          height: 80,
+                                          width: 70,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.rectangle,
+                                              color: Colors.white),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Container(
+                                                  height: 18,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(height: 10),
+                                                Container(
+                                                  height: 14,
+                                                  width: 160,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(height: 10),
+                                                Container(
+                                                  height: 10,
+                                                  width: 100,
+                                                  color: Colors.grey,
+                                                ),
+                                              ]),
+                                        ),
+                                        Container(
+                                          height: 10,
+                                          color: Colors.grey,
+                                        ),
+                                        SizedBox(height: 15),
+                                      ],
+                                    ),
+                                    SizedBox(height: 30),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                    )
+                  : Expanded(
+                      child: bookingList.length > 0
+                          ? ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              padding: EdgeInsets.only(top: 16, bottom: 16),
+                              itemCount: bookingList.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                  child: Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.all(12),
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 12,
+                                                  color:
+                                                      syanColor.withOpacity(.9),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.all(8.0),
+                                        padding: EdgeInsets.all(4.0),
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.white,
+                                              blurRadius: 0.1,
+                                              spreadRadius: 0,
+                                            ),
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          border: Border.all(
+                                              color: Colors.grey
+                                                  .withOpacity(0.19)),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  left: 0, right: 8),
+                                              width: 75,
+                                              height: 75,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(8),
+                                                    topRight:
+                                                        Radius.circular(8),
+                                                    bottomLeft:
+                                                        Radius.circular(8),
+                                                    bottomRight:
+                                                        Radius.circular(8)),
+                                              ),
+                                              child: Image.asset(
+                                                  (ImageConst
+                                                          .default_service_list)
+                                                      .validate(),
+                                                  fit: BoxFit.fill),
+                                              padding:
+                                                  EdgeInsets.all(width / 30),
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  bookingList[index]
+                                                      ['pkg_name'],
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                          color: black,
+                                                          fontSize: 14),
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Text(
+                                                    bookingList[index]
+                                                                ['cv_make'] !=
+                                                            null
+                                                        ? bookingList[index]
+                                                                ['cv_make'] +
+                                                            " " +
+                                                            bookingList[index]
+                                                                ['cv_model']
+                                                        : "",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: montserratRegular
+                                                        .copyWith(
+                                                            color: black,
+                                                            fontSize: 12)),
+                                                8.height,
+                                                Text(
+                                                    bookingList[index][
+                                                                'cv_variant'] !=
+                                                            null
+                                                        ? bookingList[index]
+                                                                ['cv_variant'] +
+                                                            " (" +
+                                                            bookingList[index]
+                                                                ['cv_year'] +
+                                                            ")"
+                                                        : " (" +
+                                                            bookingList[index]
+                                                                ['cv_year'] +
+                                                            ")",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: montserratRegular
+                                                        .copyWith(
+                                                            color: black,
+                                                            fontSize: 12)),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                        'Date: ' +
+                                                            DateFormat(
+                                                                    'dd-MM-yyyy')
+                                                                .format(DateTime
+                                                                    .tryParse(
+                                                              bookingList[index]
+                                                                      [
+                                                                      'bk_booking_date']
+                                                                  .toString(),
+                                                            )!),
+                                                        style: montserratRegular
+                                                            .copyWith(
+                                                                fontSize: 12,
+                                                                color: black)),
+                                                    16.width,
+                                                    (bookingList[index][
+                                                                    'st_code'] !=
+                                                                null &&
+                                                            bookingList[index][
+                                                                    'st_code'] !=
+                                                                '')
+                                                        ? Container(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        2,
+                                                                    vertical:
+                                                                        4),
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                boxDecorationWithRoundedCorners(
+                                                              backgroundColor:
+                                                                  (bookingList[index]
+                                                                              [
+                                                                              'st_code'] ==
+                                                                          "CANC")
+                                                                      ? Colors
+                                                                          .grey
+                                                                      : Colors
+                                                                          .green,
+                                                              borderRadius:
+                                                                  radius(6),
+                                                            ),
+                                                            child: Text(
+                                                              "Completed",
+                                                              style: montserratRegular
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          12),
+                                                            ).paddingOnly(
+                                                                left: 8.0,
+                                                                right: 8.0),
+                                                          )
+                                                        : Container(
+                                                            width: 0,
+                                                            height: 0),
+                                                  ],
+                                                ),
+                                              ],
+                                            ).expand(),
+                                          ],
+                                        ).onTap(
+                                          () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ServicehistoryDetails(
+                                                            bk_id: bookingList[
+                                                                index])));
+                                            // bookingList[index]['st_code'] ==
+                                            //         "CANC"
+                                            //     ? AMCancelledServiceHistoryDetails(
+                                            //             bk_id:
+                                            //                 bookingList[index],
+                                            //             reason:
+                                            //                 bookingList[index]
+                                            //                     ['bkt_content'])
+                                            //         .launch(context)
+                                            //     :
+                                            //     ServicehistoryDetails(
+                                            //             bk_id:
+                                            //                 bookingList[index])
+                                            //         .launch(context);
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              })
+                          : Container(
+                              decoration: BoxDecoration(
+                                color: white,
+                              ),
+                              height: context.height(),
+                              child: Stack(
+                                children: [
+                                  Image.asset(
+                                    ImageConst.no_data_found,
+                                    height: MediaQuery.of(context).size.height,
+                                    width: MediaQuery.of(context).size.width,
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                ],
+                              ),
+                            ).center(),
+                    ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -171,3 +171,13 @@ Future saveCustomerAddress(Map req) async {
   return handleResponse(
       await securedPostRequest('Customer/CustomerAddressController', req));
 }
+
+Future createRescheduleBooking(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/createawaitingbooking', req));
+}
+
+Future submitdeliverydrop(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/save_droplocationforbooking', req));
+}

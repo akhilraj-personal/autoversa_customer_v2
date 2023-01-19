@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -12,44 +11,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:nb_utils/nb_utils.dart';
 
-class SummeryPage extends StatefulWidget {
-  final Map<String, dynamic> package_id;
+class ResummeryScreen extends StatefulWidget {
   final List<dynamic> custvehlist;
   final int selectedveh;
+  final Map<String, dynamic> bk_data;
   String currency;
-  SummeryPage(
-      {required this.package_id,
+  ResummeryScreen(
+      {required this.bk_data,
       required this.custvehlist,
       required this.selectedveh,
       required this.currency,
       super.key});
 
   @override
-  State<SummeryPage> createState() => SummeryPageState();
+  State<ResummeryScreen> createState() => ResummeryScreenState();
 }
 
-class SummeryPageState extends State<SummeryPage> {
+class ResummeryScreenState extends State<ResummeryScreen> {
+  TextEditingController couponController = TextEditingController();
+  TextEditingController applyController = TextEditingController();
   late Map<String, dynamic> packdata = {};
-  late double totalamount = 0.0;
+  late Map<String, dynamic> bookingdetails = {};
+  late Map<String, dynamic> booking_package = {};
+  late Map<String, dynamic> vehicle = {};
+  late Map<String, dynamic> audio = {};
+  var totalamount = 0.0;
   bool isoffline = false;
   bool isproceeding = false;
-  bool isLoading = false;
   int bookId = 0;
-  var audiofile;
   var trnxId;
-  var slot;
-  var complaint;
-  var bookingdate;
-
+  var vehiclename = "";
   @override
   void initState() {
     super.initState();
     init();
     Future.delayed(Duration.zero, () {
+      getBookingDetailsID();
       _setdatas();
     });
   }
@@ -79,74 +78,55 @@ class SummeryPageState extends State<SummeryPage> {
     super.dispose();
   }
 
+  getBookingDetailsID() async {
+    Map req = {"book_id": base64.encode(utf8.encode(widget.bk_data['bk_id']))};
+    print(req);
+    await getbookingdetails(req).then((value) {
+      if (value['ret_data'] == "success") {
+        setState(() {
+          bookingdetails = value['booking'];
+          vehicle = value['booking']['vehicle'];
+          booking_package = value['booking']['booking_package'];
+          value['audio'] != null ? audio = value['audio'] : "";
+        });
+        setState(() {
+          vehiclename = vehicle['cv_variant'] != null
+              ? vehicle['cv_make'] +
+                  vehicle['cv_model'] +
+                  vehicle['cv_variant'] +
+                  vehicle['cv_year']
+              : vehicle['cv_make'] + vehicle['cv_model'] + vehicle['cv_year'];
+        });
+      }
+    });
+  }
+
   createBooking() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      var audio;
-      if (prefs.getString('comp_audio') != null) {
-        audio = await MultipartFile.fromFile(prefs.getString('comp_audio')!,
-            filename: 'audio_test.aac');
-      } else {
-        audio = "";
-      }
-      var formData = FormData.fromMap({
-        'bookingattachment': audio,
+      Map<String, dynamic> booking = {
+        "bookid": bookingdetails['bk_id'],
         "custId": prefs.getString('cust_id'),
-        "cust_name": prefs.getString('name'),
         "vehId": packdata['vehicle_id'],
-        "bkurl": packdata['audio_location'],
+        "bookingdate": packdata['selected_date'],
+        "slot": packdata['selected_timeid'],
         "pickupaddress": packdata['pick_up_location_id'],
         "dropaddress": packdata['drop_location_id'],
-        "bookingdate": packdata['selected_date'],
-        "sub_packages": packdata['sub_packages'],
-        "services": packdata['services'],
-        "expenses": [],
-        "packid": packdata['package_id'],
-        "packtype": packdata['packtype'],
-        "packprice": packdata['package_cost'],
-        "total_amount": totalamount,
+        "pickuptype": packdata['pick_type_id'],
+        "pickupcost": packdata['pick_up_price'],
+        "complaint": packdata['complaint'],
         "advance": "0",
         "discount": "0",
-        "bk_branchid": 1,
-        'complaint': packdata['complaint'],
-        "slot": packdata['selected_timeid'],
-        "pickuptype": packdata['pick_type_id'],
-        "sourcetype": "MOB",
-        "bk_pickup_cost": packdata['pick_up_price'],
+        "total_amount": totalamount,
+      };
+      await createRescheduleBooking(booking).then((value) {
+        if (value['ret_data'] == "success") {
+          createPayment(bookingdetails['bk_id'], value['payment_details']);
+          trnxId = value['payment_details']['id'];
+        }
       });
-      String? token = prefs.getString('token');
-      var dio = Dio();
-      dio.options.headers['content-Type'] = 'application/json';
-      dio.options.headers["authorization"] = "Bearer ${token}";
-      var response = await dio.post(
-        dotenv.env['API_URL']! + 'Booking/BookingController/create',
-        data: formData,
-        options: Options(
-          followRedirects: false,
-          // will not throw errors
-          validateStatus: (status) => true,
-        ),
-      );
-      var retdata = jsonDecode(response.toString());
-      if (retdata['ret_data'] == "success") {
-        createPayment(retdata['booking_id'], retdata['payment_details']);
-        bookId = retdata['booking_id'];
-        audiofile = retdata['audio_file'];
-        trnxId = retdata['payment_details']['id'];
-        slot = packdata['selected_timeid'];
-        complaint = packdata['complaint'];
-        bookingdate = packdata['selected_date'];
-        await prefs.remove("booking_data");
-      } else {
-        showCustomToast(context, "Couldn't complete booking",
-            bgColor: errorcolor, textColor: whiteColor);
-      }
     } catch (e) {
-      setState(() {
-        isproceeding = false;
-      });
-      showCustomToast(context, ST.of(context).toast_application_error,
-          bgColor: errorcolor, textColor: whiteColor);
+      print(e.toString());
     }
   }
 
@@ -211,20 +191,20 @@ class SummeryPageState extends State<SummeryPage> {
       final prefs = await SharedPreferences.getInstance();
       Map<String, dynamic> booking = {
         'custId': prefs.getString('cust_id'),
-        'book_id': bookId,
+        'book_id': bookingdetails['bk_id'],
         'tot_amount': totalamount,
         'trxn_id': trnxId,
-        'audiofile': audiofile,
-        'slot': slot,
-        'bookingdate': bookingdate,
-        'complaint': complaint
+        'complaint': bookingdetails['bk_complaint'],
+        'slot': bookingdetails['bk_timeslot'],
+        'bookingdate': bookingdetails['bk_booking_date'],
+        'audiofile': audio != null ? audio['bka_url'] : ""
       };
       await confirmbookingpayment(booking).then((value) {
         if (value['ret_data'] == "success") {
         } else {
           setState(() => isproceeding = false);
           showCustomToast(context, value['ret_data'],
-              bgColor: errorcolor, textColor: whiteColor);
+              bgColor: errorcolor, textColor: white);
         }
       });
 
@@ -259,64 +239,64 @@ class SummeryPageState extends State<SummeryPage> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
-        value: SystemUiOverlayStyle(
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-          statusBarColor: Colors.white,
-          systemNavigationBarColor: Colors.white,
-        ),
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: whiteColor,
-            shadowColor: whiteColor,
-            iconTheme: IconThemeData(color: whiteColor),
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarIconBrightness: Brightness.dark,
-            ),
-            actions: [
-              Center(
-                child: Row(
-                  children: [
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      width: width,
-                      height: height * 0.12,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
+      value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+        statusBarColor: Colors.white,
+        systemNavigationBarColor: Colors.white,
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: white,
+          shadowColor: white,
+          iconTheme: IconThemeData(color: white),
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarIconBrightness: Brightness.dark,
+          ),
+          actions: [
+            Center(
+              child: Row(
+                children: [
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    width: width,
+                    height: height * 0.12,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          lightblueColor,
+                          syanColor,
+                        ],
+                      ),
+                    ),
+                    child: ClipPath(
+                      clipper: SinCosineWaveClipper(
+                        verticalPosition: VerticalPosition.top,
+                      ),
+                      child: Container(
+                        height: height * 0.31,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            lightblueColor,
-                            syanColor,
+                            syanColor.withOpacity(0.3),
+                            Color.fromARGB(255, 176, 205, 210),
                           ],
-                        ),
-                      ),
-                      child: ClipPath(
-                        clipper: SinCosineWaveClipper(
-                          verticalPosition: VerticalPosition.top,
-                        ),
-                        child: Container(
-                          height: height * 0.31,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              syanColor.withOpacity(0.3),
-                              Color.fromARGB(255, 176, 205, 210),
-                            ],
-                          )),
-                        ),
+                        )),
                       ),
                     ),
-                  ],
-                ),
-              )
-            ],
-          ),
-          body: SingleChildScrollView(
-              child: Container(
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Container(
             child: Stack(
               children: [
                 Column(
@@ -355,25 +335,24 @@ class SummeryPageState extends State<SummeryPage> {
                             children: <Widget>[
                               Padding(
                                   padding: EdgeInsets.only(top: 16, left: 8)),
-                              if (widget.custvehlist[widget.selectedveh]
-                                      ['cv_make'] ==
-                                  'Mercedes Benz') ...[
+                              if (vehicle['cv_make'] == 'Mercedes Benz') ...[
                                 Image.asset(
                                   ImageConst.benz_ico,
                                   width: width * 0.12,
                                 ),
-                              ] else if (widget.custvehlist[widget.selectedveh]
-                                      ['cv_make'] ==
-                                  'BMW') ...[
+                              ] else if (vehicle['cv_make'] == 'BMW') ...[
                                 Image.asset(
                                   ImageConst.bmw_ico,
                                   width: width * 0.12,
                                 ),
-                              ] else if (widget.custvehlist[widget.selectedveh]
-                                      ['cv_make'] ==
-                                  'Skoda') ...[
+                              ] else if (vehicle['cv_make'] == 'Skoda') ...[
                                 Image.asset(
                                   ImageConst.skod_ico,
+                                  width: width * 0.12,
+                                ),
+                              ] else if (vehicle['cv_make'] == 'Audi') ...[
+                                Image.asset(
+                                  ImageConst.aud_ico,
                                   width: width * 0.12,
                                 ),
                               ] else ...[
@@ -392,66 +371,38 @@ class SummeryPageState extends State<SummeryPage> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       SizedBox(height: 8),
-                                      widget.custvehlist[widget.selectedveh]
-                                                      ['cv_plate_number'] !=
-                                                  "" &&
-                                              widget.custvehlist[
-                                                          widget.selectedveh]
-                                                      ['cv_plate_number'] !=
-                                                  null
+                                      vehicle['cv_plate_number'] != "" &&
+                                              vehicle['cv_plate_number'] != null
                                           ? Text(
-                                              widget.custvehlist[
-                                                      widget.selectedveh]
-                                                      ['cv_plate_number']
+                                              vehicle['cv_plate_number']
                                                   .toUpperCase(),
                                               style:
                                                   montserratSemiBold.copyWith(
-                                                      color: blackColor,
+                                                      color: black,
                                                       fontSize: 14),
                                               maxLines: 2)
                                           : SizedBox(),
-                                      widget.custvehlist[widget.selectedveh]['cv_variant'] != "" && widget.custvehlist[widget.selectedveh]['cv_variant'] != null
-                                          ? Text(
-                                              widget.custvehlist[widget.selectedveh]['cv_make'] +
-                                                  " " +
-                                                  widget.custvehlist[widget.selectedveh]
-                                                      ['cv_model'] +
-                                                  " " +
-                                                  widget.custvehlist[widget.selectedveh]
-                                                      ['cv_variant'] +
-                                                  " ( " +
-                                                  widget.custvehlist[widget.selectedveh]
-                                                      ['cv_year'] +
-                                                  " )",
-                                              style: montserratRegular.copyWith(
-                                                  color: blackColor,
-                                                  fontSize: 12),
-                                              overflow: TextOverflow.clip,
-                                              maxLines: 5)
-                                          : Text(
-                                              widget.custvehlist[widget.selectedveh]['cv_make'] +
-                                                  " " +
-                                                  widget.custvehlist[widget.selectedveh]
-                                                      ['cv_model'] +
-                                                  " ( " +
-                                                  widget.custvehlist[widget.selectedveh]
-                                                      ['cv_year'] +
-                                                  " )",
-                                              style: montserratRegular.copyWith(color: blackColor, fontSize: 12),
-                                              overflow: TextOverflow.clip,
-                                              maxLines: 5),
+                                      Text(vehiclename,
+                                          style: montserratRegular.copyWith(
+                                              color: black, fontSize: 12),
+                                          overflow: TextOverflow.clip,
+                                          maxLines: 5),
                                       Divider(),
-                                      Text(widget.package_id['pkg_name'],
+                                      Text(
+                                          booking_package['pkg_name'] != null
+                                              ? booking_package['pkg_name']
+                                              : "",
                                           overflow: TextOverflow.ellipsis,
                                           style: montserratLight.copyWith(
-                                              color: blackColor, fontSize: 14)),
+                                              color: black, fontSize: 14)),
                                       Text(
-                                        packdata['package_cost'] != 0
-                                            ? widget.currency +
-                                                " " +
-                                                packdata['package_cost']
-                                                    .toString()
-                                            : "Based on Quotation",
+                                        packdata['package_cost'] != null
+                                            ? packdata['package_cost'] != 0
+                                                ? "AED " +
+                                                    packdata['package_cost']
+                                                        .toString()
+                                                : "Based on Quotation"
+                                            : "",
                                         style: montserratSemiBold.copyWith(
                                             color: warningcolor, fontSize: 14),
                                       ),
@@ -459,7 +410,7 @@ class SummeryPageState extends State<SummeryPage> {
                                       Text(
                                         packdata['pick_type_name'] ?? "",
                                         style: montserratLight.copyWith(
-                                            color: blackColor, fontSize: 14),
+                                            color: black, fontSize: 14),
                                       ),
                                       Text(
                                         packdata['pick_up_price'] != null
@@ -493,7 +444,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Pickup Location",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: black, fontSize: 14),
                           ),
                         ],
                       ),
@@ -534,7 +485,7 @@ class SummeryPageState extends State<SummeryPage> {
                                 packdata['pick_up_location'] ?? "",
                                 overflow: TextOverflow.clip,
                                 style: montserratLight.copyWith(
-                                    color: blackColor, fontSize: 14),
+                                    color: black, fontSize: 14),
                               ),
                             ),
                           ),
@@ -560,7 +511,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Drop Location",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: black, fontSize: 14),
                           ),
                         ],
                       ),
@@ -601,7 +552,7 @@ class SummeryPageState extends State<SummeryPage> {
                                 packdata['drop_location'] ?? "",
                                 overflow: TextOverflow.clip,
                                 style: montserratLight.copyWith(
-                                    color: blackColor, fontSize: 14),
+                                    color: black, fontSize: 14),
                               ),
                             ),
                           ),
@@ -627,7 +578,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Selected Date & Time",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: black, fontSize: 14),
                           ),
                         ],
                       ),
@@ -668,7 +619,7 @@ class SummeryPageState extends State<SummeryPage> {
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
                             style: montserratLight.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: black, fontSize: 14),
                           ),
                           SizedBox(
                             width: 8,
@@ -679,7 +630,7 @@ class SummeryPageState extends State<SummeryPage> {
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
                             style: montserratLight.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: black, fontSize: 14),
                           ),
                         ],
                       ),
@@ -720,7 +671,7 @@ class SummeryPageState extends State<SummeryPage> {
                                     "-"
                                 : "",
                             style: montserratLight.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: black, fontSize: 14),
                           ),
                           Text(
                             packdata['selected_timeslot'] != null
@@ -728,7 +679,7 @@ class SummeryPageState extends State<SummeryPage> {
                                     packdata['selected_timeslot'].split('- ')[1]
                                 : "",
                             style: montserratLight.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: black, fontSize: 14),
                           ),
                         ],
                       ),
@@ -752,7 +703,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Additional Comments",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: black, fontSize: 14),
                           ),
                         ],
                       ),
@@ -793,7 +744,7 @@ class SummeryPageState extends State<SummeryPage> {
                                 packdata['complaint'] ?? "",
                                 overflow: TextOverflow.clip,
                                 style: montserratLight.copyWith(
-                                    color: blackColor, fontSize: 14),
+                                    color: black, fontSize: 14),
                               ),
                             ),
                           ),
@@ -819,7 +770,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Grand Total: ",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: black, fontSize: 14),
                           ),
                           Text(
                             widget.currency + " " + (totalamount).toString(),
@@ -885,7 +836,7 @@ class SummeryPageState extends State<SummeryPage> {
                                       Transform.scale(
                                         scale: 0.7,
                                         child: CircularProgressIndicator(
-                                          color: whiteColor,
+                                          color: white,
                                         ),
                                       ),
                                     ],
@@ -896,13 +847,15 @@ class SummeryPageState extends State<SummeryPage> {
                     ),
                     SizedBox(
                       height: 20,
-                    )
+                    ),
                   ],
                 ),
               ],
             ),
-          )),
-        ));
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -914,7 +867,7 @@ class CustomWarning extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: new BoxDecoration(
-          color: whiteColor,
+          color: white,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(0),
           boxShadow: [
@@ -945,7 +898,7 @@ class CustomWarning extends StatelessWidget {
                     Text("Awaiting Payment",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
-                            fontSize: 14, color: whiteColor)),
+                            fontSize: 14, color: white)),
                   ],
                 )
               ],
@@ -959,7 +912,7 @@ class CustomWarning extends StatelessWidget {
                     "Please check dashboard to complete payment for further proceedings.",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
-                        fontSize: 12, color: blackColor))),
+                        fontSize: 12, color: black))),
             SizedBox(
               height: 16,
             ),
@@ -981,7 +934,7 @@ class CustomWarning extends StatelessWidget {
                     )),
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Text('OK',
-                    style: montserratSemiBold.copyWith(color: whiteColor)),
+                    style: montserratSemiBold.copyWith(color: white)),
               ),
             ),
             SizedBox(
@@ -1002,7 +955,7 @@ class CustomSuccess extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: new BoxDecoration(
-          color: whiteColor,
+          color: white,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(0),
           boxShadow: [
@@ -1019,7 +972,7 @@ class CustomSuccess extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(height: 130, color: blackColor),
+                Container(height: 130, color: black),
                 Column(
                   children: [
                     Image.asset(
@@ -1033,7 +986,7 @@ class CustomSuccess extends StatelessWidget {
                     Text("Booking Successfull",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
-                            fontSize: 14, color: whiteColor)),
+                            fontSize: 14, color: white)),
                   ],
                 )
               ],
@@ -1046,7 +999,7 @@ class CustomSuccess extends StatelessWidget {
                 child: Text("Please check dashboard for booking status",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
-                        fontSize: 12, color: blackColor))),
+                        fontSize: 12, color: black))),
             SizedBox(
               height: 16,
             ),
@@ -1069,7 +1022,7 @@ class CustomSuccess extends StatelessWidget {
                     )),
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Text('OK',
-                    style: montserratSemiBold.copyWith(color: whiteColor)),
+                    style: montserratSemiBold.copyWith(color: white)),
               ),
             ),
             SizedBox(
