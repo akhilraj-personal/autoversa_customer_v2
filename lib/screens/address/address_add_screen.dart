@@ -322,7 +322,7 @@ class AddressAddState extends State<AddressAdd> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Select State*",
+                                  "Select Area*",
                                   style: montserratLight.copyWith(
                                       color: black, fontSize: 14),
                                 ),
@@ -382,7 +382,7 @@ class AddressAddState extends State<AddressAdd> {
                                                         alignment:
                                                             Alignment.center,
                                                         child: Text(
-                                                          "Select State",
+                                                          "Select Area",
                                                           style:
                                                               montserratRegular
                                                                   .copyWith(

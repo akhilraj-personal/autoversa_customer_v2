@@ -29,6 +29,8 @@ class ImageConst {
   static const skod_ico = baseImageURl + 'skoda_icon.png';
   static const bmw_ico = baseImageURl + 'bmw_icon.png';
   static const defcar_ico = baseImageURl + 'no_logo_car.png';
+  static const success = baseImageURl + 'success.png';
+  static const warning = baseImageURl + 'warning.png';
 
 ////-----------------icons---------------
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
@@ -7,12 +8,15 @@ import 'package:autoversa/screens/address/address_add_screen.dart';
 import 'package:autoversa/screens/package_screens/summery_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/AppWidgets.dart';
+import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -32,38 +36,79 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class ScheduleScreenState extends State<ScheduleScreen> {
-  bool isserviceble = false;
-  bool issubmitted = false;
-  bool isLocationCheck = true;
-  bool isdroplocation = false;
-  bool isproceeding = false;
-  bool isExpanded = false;
-
+  late double package_price = 0.0;
   late List custAddressList = [];
+
+  late List citylist = [];
+  late List areaList = [];
   late List pickup_options = [];
-  late List timeslots = [];
   late List temppickup_options = [];
+  late List timeslots = [];
+  List<Marker> myMarker = [];
+  final _formKey = GlobalKey<FormState>();
 
   List<String?> SelectAddressList = <String?>["Select Address"];
+  List<String?> SelectCityList = <String?>["Select City"];
+  List<String?> SelectAreaList = <String?>["Select Area"];
+
+  final GlobalKey<FormFieldState> areaKey = GlobalKey<FormFieldState>();
 
   var selected_address = 0;
   var selected_drop_address = 0;
-  var freeservicedistance = 0;
-  var servicedistance = 0;
-  var max_days = 0;
   var plocdistance = 0;
   var dlocdistance = 0;
-  var selected_timeid = 0;
-  late double package_price = 0.0;
   var selected_timeslot = "";
-  var pickupoption;
-  var isTimeCheck;
+  var selected_timeid = 0;
   var ptemp = "";
   var dtemp = "";
+  var isTimeCheck;
+  var freeservicedistance = 0;
+  var servicedistance = 0;
+  bool isdroplocation = false;
+  bool isLocationCheck = true;
+  bool isserviceble = false;
+  var pickupoption;
   var pickup_name = "";
   var pickup_cost = "";
+  var emirates = 0, city = 0;
+  var AddressType = "Home";
+  bool isDefaultAddressChecked = true;
+  var address = "";
+  var landmark = "";
+  var Statelat = "24.3547";
+  var Statelong = "54.5020";
+  var Marklat = 0.0;
+  var Marklong = 0.0;
+  var max_days = 0;
+
+  bool isgooglemap = false;
+  CameraPosition _initialPosition =
+      CameraPosition(target: LatLng(24.3547, 54.5020), zoom: 13);
+  Completer<GoogleMapController> _controller = Completer();
 
   DateTime selectedDate = DateTime.now();
+  bool isExpanded = false;
+  int scheduleappbarcolor = 0xFFFFF,
+      clippercolor = 0xFFFFF,
+      colorstatusbar = 0xFFFFF;
+  bool issubmitted = false;
+  bool isproceeding = false;
+  bool isoffline = false;
+  FocusNode addressFocus = FocusNode();
+  FocusNode landmarkFocusNode = FocusNode();
+
+  final GlobalKey<FormFieldState> pick_city = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> pick_area = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> drop_city = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> drop_area = GlobalKey<FormFieldState>();
+
+  _setdatas() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> packdata =
+        json.decode(prefs.get("booking_data").toString());
+    package_price = double.parse(packdata['package_cost'].toString());
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -75,89 +120,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     });
     setState(() => isserviceble = true);
   }
-
-  _setdatas() async {
-    final prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> packdata =
-        json.decode(prefs.get("booking_data").toString());
-    package_price = double.parse(packdata['package_cost'].toString());
-    setState(() {});
-  }
-
-  _fetchdatas(address_index, type) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      Map req = {"customerId": prefs.getString('cust_id')};
-      custAddressList = [];
-      pickup_options = [];
-      var temp_address = selected_address;
-      var temp_drop_address = selected_address;
-      selected_address = 0;
-      selected_drop_address = 0;
-      SelectAddressList = <String?>["Select Address"];
-      await getCustomerAddresses(req).then((value) {
-        if (value['ret_data'] == "success") {
-          custAddressList = value['cust_addressList'];
-          var ind = 1;
-          for (var add in value['cust_addressList']) {
-            SelectAddressList.add("#" +
-                ind.toString() +
-                ". " +
-                add['cad_address'] +
-                ", " +
-                add['city_name'] +
-                ", " +
-                add['state_name'] +
-                ", " +
-                add['country_code']);
-            ind++;
-          }
-        }
-      });
-      await getPickupOptions().then((value) {
-        freeservicedistance =
-            int.parse(value['settings']['gs_freeservicearea']);
-        servicedistance = int.parse(value['settings']['gs_service_area']);
-        max_days = int.parse(value['settings']['gs_nofdays']);
-        if (value['ret_data'] == "success") {
-          temppickup_options = value['active_pickuptype_list'];
-          for (var ptype in value['active_pickuptype_list']) {
-            var temp = {
-              "pk_id": ptype['pk_id'],
-              "pk_name": ptype['pk_name'],
-              "pk_cost": 'Select Address',
-              "pk_cost_value": '0'
-            };
-            pickup_options.add(temp);
-          }
-        }
-      });
-      setState(() {});
-      if (address_index == 0) {
-        selected_address = address_index;
-        selected_drop_address = 0;
-      } else {
-        if (type == 'p') {
-          selected_address = SelectAddressList.length - 1;
-          selected_drop_address = temp_drop_address;
-          pickupaddresschange(SelectAddressList.length - 1);
-        } else if (type == 'd') {
-          selected_address = temp_address;
-          selected_drop_address = SelectAddressList.length - 1;
-          dropaddresschange(SelectAddressList.length - 1);
-        }
-      }
-      setState(() {});
-      getTimeSlots(new DateTime.now());
-    } catch (e) {
-      // setState(() => issubmitted = false);
-      print(e.toString());
-      showCustomToast(context, ST.of(context).toast_application_error,
-          bgColor: errorcolor, textColor: whiteColor);
-    }
-  }
-
-  Future<void> init() async {}
 
   dropCostCalculation(
       totalDistance, serviceAvailability, message, freeFlag, rangestatus) {
@@ -195,8 +157,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   pickupaddresschange(pick_address) {
     if ((pick_address - 1) == -1) {
       dropCostCalculation(0, false, "Select Pickup", false, false);
-      showCustomToast(context, "Please select a pickup location",
-          bgColor: blackColor, textColor: whiteColor);
+      toast("Please select a pickup location");
     } else {
       setState(() {
         pickupoption = "";
@@ -243,8 +204,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         }
       } else {
         dropCostCalculation(0, false, "Select Drop", false, false);
-        showCustomToast(context, "Please select drop location",
-            bgColor: blackColor, textColor: whiteColor);
+        toast("Please select drop location");
       }
     }
   }
@@ -252,8 +212,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   dropaddresschange(drop_address) {
     if (drop_address - 1 == -1) {
       dropCostCalculation(0, false, "Select Drop", false, false);
-      showCustomToast(context, "Please select a drop location",
-          bgColor: blackColor, textColor: whiteColor);
+      toast("Please select a drop location");
     } else {
       setState(() {
         pickupoption = "";
@@ -285,10 +244,120 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         }
       } else {
         dropCostCalculation(0, false, "Select Pickup", false, false);
-        showCustomToast(context, "Please select pickup location",
-            bgColor: blackColor, textColor: whiteColor);
+        toast("Please select Pick up location");
       }
     }
+  }
+
+  getarealist(data) async {
+    // areaKey.currentState!.reset();
+    if (SelectAreaList.indexOf(data.toString()) > 0) {
+      setState(() {});
+      var temp = areaList[SelectAreaList.indexOf(data.toString()) - 1];
+      CameraPosition _kLake = CameraPosition(
+        target: LatLng(double.parse(temp['city_lattitude']),
+            double.parse(temp['city_longitude'])),
+        zoom: 15.4746,
+      );
+      final GoogleMapController controller = await _controller.future;
+      controller.moveCamera(CameraUpdate.newCameraPosition(_kLake));
+      setState(() {
+        city = int.parse(temp['city_id']);
+        Statelat = temp['city_lattitude'];
+        Statelong = temp['city_longitude'];
+      });
+    }
+  }
+
+  _fetchdatas(address_index, type) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      Map req = {"customerId": prefs.getString('cust_id')};
+      custAddressList = [];
+      pickup_options = [];
+      var temp_address = selected_address;
+      var temp_drop_address = selected_address;
+      selected_address = 0;
+      selected_drop_address = 0;
+      SelectAddressList = <String?>["Select Address"];
+      await getCustomerAddresses(req).then((value) {
+        if (value['ret_data'] == "success") {
+          custAddressList = value['cust_addressList'];
+          var ind = 1;
+          for (var add in value['cust_addressList']) {
+            SelectAddressList.add("#" +
+                ind.toString() +
+                ". " +
+                add['cad_address'] +
+                ", " +
+                add['city_name'] +
+                ", " +
+                add['state_name'] +
+                ", " +
+                add['country_code']);
+            ind++;
+          }
+        }
+      });
+      Map country = {
+        "countryId": 1,
+      };
+      await getStateList(country).then((value) {
+        if (value['ret_data'] == "success") {
+          citylist = value['statelist'];
+          for (var state in value['statelist']) {
+            SelectCityList.add(state['state_name']);
+          }
+        }
+      });
+      // if (address_index == 1) {
+      //   pickupaddresschange(address_index);
+      // }
+      await getPickupOptions().then((value) {
+        freeservicedistance =
+            int.parse(value['settings']['gs_freeservicearea']);
+        servicedistance = int.parse(value['settings']['gs_service_area']);
+        max_days = int.parse(value['settings']['gs_nofdays']);
+        if (value['ret_data'] == "success") {
+          temppickup_options = value['active_pickuptype_list'];
+          for (var ptype in value['active_pickuptype_list']) {
+            var temp = {
+              "pk_id": ptype['pk_id'],
+              "pk_name": ptype['pk_name'],
+              "pk_cost": 'Select Address',
+              "pk_cost_value": '0'
+            };
+            pickup_options.add(temp);
+          }
+        }
+      });
+      setState(() {});
+      if (address_index == 0) {
+        selected_address = address_index;
+        selected_drop_address = 0;
+      } else {
+        if (type == 'p') {
+          selected_address = SelectAddressList.length - 1;
+          selected_drop_address = temp_drop_address;
+          pickupaddresschange(SelectAddressList.length - 1);
+        } else if (type == 'd') {
+          selected_address = temp_address;
+          selected_drop_address = SelectAddressList.length - 1;
+          dropaddresschange(SelectAddressList.length - 1);
+        }
+      }
+      setState(() {});
+      getTimeSlots(new DateTime.now());
+    } catch (e) {
+      setState(() => issubmitted = false);
+      print(e.toString());
+      toast(e.toString());
+    }
+  }
+
+  Future<void> init() async {
+    setStatusBarColor(Color(colorstatusbar),
+        statusBarIconBrightness: Brightness.light);
   }
 
   timeFormatter(date_data) {
@@ -316,6 +385,16 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       time += t;
     }
     return time;
+  }
+
+  @override
+  void setState(fn) {
+    if (mounted) super.setState(fn);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   getTimeSlots(pickdate) async {
@@ -408,20 +487,20 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       if (ptemp == "" && dtemp == "") {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a location",
-            bgColor: errorcolor, textColor: whiteColor);
+            bgColor: errorcolor, textColor: white);
       } else if (pickup_name == "" || pickupoption == "") {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a pickup type",
-            bgColor: errorcolor, textColor: whiteColor);
+            bgColor: errorcolor, textColor: white);
       } else if (selected_timeid == 0) {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a time slot",
-            bgColor: errorcolor, textColor: whiteColor);
+            bgColor: errorcolor, textColor: white);
       } else if (isserviceble == false) {
         setState(() => isproceeding = false);
         showCustomToast(context,
             "Selected location not in our service area. Please choose another location",
-            bgColor: errorcolor, textColor: whiteColor);
+            bgColor: errorcolor, textColor: white);
       } else {
         packdata['pick_up_location'] = SelectAddressList[selected_address];
         packdata['pick_up_location_id'] = ptemp;
@@ -454,20 +533,20 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       if (ptemp == "" && dtemp == "") {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a location",
-            bgColor: errorcolor, textColor: whiteColor);
+            bgColor: errorcolor, textColor: white);
       } else if (pickup_name == "" || pickupoption == "") {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a pickup type",
-            bgColor: errorcolor, textColor: whiteColor);
+            bgColor: errorcolor, textColor: white);
       } else if (selected_timeid == 0) {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a time slot",
-            bgColor: errorcolor, textColor: whiteColor);
+            bgColor: errorcolor, textColor: white);
       } else if (isserviceble == false) {
         setState(() => isproceeding = false);
         showCustomToast(context,
             "Selected location not in our service area. Please choose another location",
-            bgColor: errorcolor, textColor: whiteColor);
+            bgColor: errorcolor, textColor: white);
       } else {
         packdata['pick_up_location'] = SelectAddressList[selected_address];
         packdata['pick_up_location_id'] = ptemp;
@@ -475,9 +554,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         packdata['drop_location'] = SelectAddressList[selected_drop_address];
         packdata['pick_up_price'] = pickup_cost;
         if (pickup_name == "") {
-          showCustomToast(context, "Choose a pickup type",
-              bgColor: errorcolor, textColor: whiteColor);
           setState(() => isproceeding = false);
+          showCustomToast(context, "Choose a pickup type",
+              bgColor: errorcolor, textColor: white);
         } else {
           packdata['pick_type_id'] = pickupoption.toString();
           packdata['pick_type_name'] = pickup_name;
@@ -501,7 +580,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           } else {
             setState(() => isproceeding = false);
             showCustomToast(context, "Choose a time slot",
-                bgColor: errorcolor, textColor: whiteColor);
+                bgColor: errorcolor, textColor: white);
           }
         }
       }
@@ -520,9 +599,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: whiteColor,
-          shadowColor: whiteColor,
-          iconTheme: IconThemeData(color: whiteColor),
+          backgroundColor: white,
+          shadowColor: white,
+          iconTheme: IconThemeData(color: white),
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarIconBrightness: Brightness.dark,
           ),
@@ -580,7 +659,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       children: [
                         Container(
                           margin: EdgeInsets.all(16.0),
-                          padding: EdgeInsets.all(8),
+                          padding: EdgeInsets.all(12),
+                          height: height * 0.045,
+                          width: height * 0.37,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
@@ -662,7 +743,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   .toUpperCase(),
                                               style:
                                                   montserratSemiBold.copyWith(
-                                                      color: blackColor,
+                                                      color: black,
                                                       fontSize: 14),
                                               maxLines: 2)
                                           : SizedBox(),
@@ -680,8 +761,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                       ['cv_year'] +
                                                   " )",
                                               style: montserratRegular.copyWith(
-                                                  color: blackColor,
-                                                  fontSize: 12),
+                                                  color: black, fontSize: 12),
                                               overflow: TextOverflow.clip,
                                               maxLines: 5)
                                           : Text(
@@ -693,7 +773,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   widget.custvehlist[widget.selectedveh]
                                                       ['cv_year'] +
                                                   " )",
-                                              style: montserratRegular.copyWith(color: blackColor, fontSize: 12),
+                                              style: montserratRegular.copyWith(color: black, fontSize: 12),
                                               overflow: TextOverflow.clip,
                                               maxLines: 5),
                                       Text(
@@ -721,14 +801,711 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           Text(
                             " ",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: width * 0.04),
+                                color: black, fontSize: width * 0.04),
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AddressAdd()));
+                              showModalBottomSheet(
+                                enableDrag: true,
+                                isDismissible: true,
+                                isScrollControlled: true,
+                                context: context,
+                                backgroundColor: Colors.transparent,
+                                builder: (builder) {
+                                  return StatefulBuilder(builder: (BuildContext
+                                          context,
+                                      StateSetter
+                                          setBottomState /*You can rename this!*/) {
+                                    getcitylist(data) async {
+                                      if (SelectCityList.indexOf(data) > 0) {
+                                        var temp = citylist[
+                                            SelectCityList.indexOf(data) - 1];
+                                        emirates = int.parse(temp['state_id']);
+                                        Map state = {
+                                          "stateId": temp['state_id'],
+                                        };
+                                        CameraPosition _kLake = CameraPosition(
+                                          target: LatLng(
+                                              double.parse(
+                                                  temp['state_lattitude']),
+                                              double.parse(
+                                                  temp['state_longitude'])),
+                                          zoom: 13.4746,
+                                        );
+                                        final GoogleMapController controller =
+                                            await _controller.future;
+                                        controller.moveCamera(
+                                            CameraUpdate.newCameraPosition(
+                                                _kLake));
+                                        setBottomState(() {
+                                          Statelat = temp['state_lattitude'];
+                                          Statelong = temp['state_longitude'];
+                                          SelectAreaList = <String?>[
+                                            "Select Area"
+                                          ];
+                                          drop_area.currentState?.reset();
+                                        });
+                                        SelectAreaList.length = 1;
+                                        await getCityList(state).then((value) {
+                                          if (value['ret_data'] == "success") {
+                                            setState(() {
+                                              areaList = [];
+                                              SelectAreaList = <String?>[
+                                                "Select Area"
+                                              ];
+                                            });
+                                            areaList = value['citylist'];
+                                            for (var city
+                                                in value['citylist']) {
+                                              SelectAreaList.add(
+                                                  city['city_name']);
+                                            }
+                                          }
+                                        });
+                                        setBottomState(() {});
+                                      }
+                                    }
+
+                                    return DraggableScrollableSheet(
+                                      initialChildSize: 0.6,
+                                      minChildSize: 0.2,
+                                      maxChildSize: 1,
+                                      builder: (context, scrollController) {
+                                        return Container(
+                                          color: context.cardColor,
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 16),
+                                          child: SingleChildScrollView(
+                                            controller: scrollController,
+                                            child: Form(
+                                              key: _formKey,
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  AnimatedContainer(
+                                                    margin:
+                                                        const EdgeInsets.all(8),
+                                                    padding: EdgeInsets.all(8),
+                                                    width: width * 1.85,
+                                                    decoration: BoxDecoration(
+                                                      color: context.cardColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              16),
+                                                      boxShadow:
+                                                          defaultBoxShadow(),
+                                                    ),
+                                                    duration: 1000.milliseconds,
+                                                    curve:
+                                                        Curves.linearToEaseOut,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: <Widget>[
+                                                        Container(
+                                                          child: Stack(
+                                                            children: [
+                                                              Container(
+                                                                margin:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            16),
+                                                                height: 850,
+                                                                decoration: BoxDecoration(
+                                                                    color: context
+                                                                        .scaffoldBackgroundColor,
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(8))),
+                                                                child: Column(
+                                                                  children: [
+                                                                    Column(
+                                                                      children: <
+                                                                          Widget>[
+                                                                        SizedBox(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          child:
+                                                                              Container(
+                                                                            child:
+                                                                                Text(
+                                                                              "Select City" + "*",
+                                                                              textAlign: TextAlign.left,
+                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    8.height,
+                                                                    DropdownButtonFormField(
+                                                                      value:
+                                                                          SelectCityList[
+                                                                              0],
+                                                                      key:
+                                                                          drop_city,
+                                                                      isExpanded:
+                                                                          true,
+                                                                      decoration: InputDecoration(
+                                                                          hintText: "Select City",
+                                                                          hintStyle: primaryTextStyle(
+                                                                            color:
+                                                                                black,
+                                                                          ),
+                                                                          focusedBorder: OutlineInputBorder(
+                                                                            borderSide:
+                                                                                const BorderSide(color: black, width: 0.5),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                          ),
+                                                                          enabledBorder: OutlineInputBorder(
+                                                                            borderSide:
+                                                                                const BorderSide(color: black, width: 0.5),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                          )),
+                                                                      items: SelectCityList.map(
+                                                                          (String?
+                                                                              value) {
+                                                                        return DropdownMenuItem<
+                                                                            String>(
+                                                                          value:
+                                                                              value,
+                                                                          child:
+                                                                              Text(
+                                                                            value!,
+                                                                            style:
+                                                                                montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                          ),
+                                                                        );
+                                                                      }).toList(),
+                                                                      onChanged:
+                                                                          (value) {
+                                                                        setBottomState(
+                                                                            () {
+                                                                          isgooglemap =
+                                                                              true;
+                                                                        });
+                                                                        getcitylist(
+                                                                            value);
+                                                                      },
+                                                                    ),
+                                                                    8.height,
+                                                                    Column(
+                                                                      children: <
+                                                                          Widget>[
+                                                                        SizedBox(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          child:
+                                                                              Container(
+                                                                            child:
+                                                                                Text(
+                                                                              "Select Area" + "*",
+                                                                              textAlign: TextAlign.left,
+                                                                              style: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    8.height,
+                                                                    DropdownButtonFormField(
+                                                                      key:
+                                                                          drop_area,
+                                                                      value:
+                                                                          SelectAreaList[
+                                                                              0],
+                                                                      isExpanded:
+                                                                          true,
+                                                                      decoration: InputDecoration(
+                                                                          hintText: "Select Area",
+                                                                          hintStyle: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                          focusedBorder: OutlineInputBorder(
+                                                                            borderSide:
+                                                                                const BorderSide(color: black, width: 0.5),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                          ),
+                                                                          enabledBorder: OutlineInputBorder(
+                                                                            borderSide:
+                                                                                const BorderSide(color: black, width: 0.5),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                          )),
+                                                                      items: SelectAreaList.map(
+                                                                          (String?
+                                                                              value) {
+                                                                        return DropdownMenuItem<
+                                                                            String>(
+                                                                          value:
+                                                                              value,
+                                                                          child: Text(
+                                                                              value!,
+                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                        );
+                                                                      }).toList(),
+                                                                      onChanged:
+                                                                          (value) {
+                                                                        getarealist(
+                                                                            value);
+                                                                      },
+                                                                    ),
+                                                                    8.height,
+                                                                    Column(
+                                                                      children: <
+                                                                          Widget>[
+                                                                        SizedBox(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          child:
+                                                                              Container(
+                                                                            child:
+                                                                                Text(
+                                                                              "Address",
+                                                                              textAlign: TextAlign.left,
+                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    8.height,
+                                                                    Padding(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              2),
+                                                                      child:
+                                                                          Container(
+                                                                        width: width *
+                                                                            0.85,
+                                                                        decoration: const BoxDecoration(
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(16)),
+                                                                            color: white),
+                                                                        child:
+                                                                            TextFormField(
+                                                                          keyboardType:
+                                                                              TextInputType.text,
+                                                                          minLines:
+                                                                              1,
+                                                                          maxLines:
+                                                                              2,
+                                                                          maxLength:
+                                                                              80,
+                                                                          onChanged:
+                                                                              (value) {
+                                                                            setState(() {
+                                                                              address = value;
+                                                                            });
+                                                                          },
+                                                                          validator:
+                                                                              (value) {
+                                                                            return addressValidation(value,
+                                                                                context);
+                                                                          },
+                                                                          onFieldSubmitted:
+                                                                              (value) {
+                                                                            FocusScope.of(context).requestFocus(landmarkFocusNode);
+                                                                          },
+                                                                          focusNode:
+                                                                              addressFocus,
+                                                                          textCapitalization:
+                                                                              TextCapitalization.sentences,
+                                                                          decoration: InputDecoration(
+                                                                              counterText: "",
+                                                                              hintText: "Address",
+                                                                              hintStyle: montserratRegular.copyWith(
+                                                                                color: black,
+                                                                              ),
+                                                                              focusedBorder: OutlineInputBorder(
+                                                                                borderSide: const BorderSide(color: black, width: 0.5),
+                                                                                borderRadius: BorderRadius.circular(10),
+                                                                              ),
+                                                                              enabledBorder: OutlineInputBorder(
+                                                                                borderSide: const BorderSide(color: black, width: 0.5),
+                                                                                borderRadius: BorderRadius.circular(10),
+                                                                              )),
+                                                                        ),
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                      ),
+                                                                    ),
+                                                                    12.height,
+                                                                    Column(
+                                                                      children: <
+                                                                          Widget>[
+                                                                        SizedBox(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          child:
+                                                                              Container(
+                                                                            child:
+                                                                                Text(
+                                                                              "Building Name/Flat No",
+                                                                              textAlign: TextAlign.left,
+                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    8.height,
+                                                                    Padding(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              2),
+                                                                      child:
+                                                                          Container(
+                                                                        width: width *
+                                                                            0.85,
+                                                                        decoration: const BoxDecoration(
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(16)),
+                                                                            color: white),
+                                                                        child: TextField(
+                                                                            keyboardType: TextInputType.multiline,
+                                                                            minLines: 1,
+                                                                            maxLength: 50,
+                                                                            onChanged: (value) {
+                                                                              if (value != "") {
+                                                                                var ret = buildingValidation(value);
+                                                                                if (ret == null) {
+                                                                                  setState(() {
+                                                                                    landmark = value;
+                                                                                  });
+                                                                                } else {
+                                                                                  showCustomToast(context, "Enter valid details", bgColor: errorcolor, textColor: white);
+                                                                                }
+                                                                              }
+                                                                            },
+                                                                            textCapitalization: TextCapitalization.sentences,
+                                                                            decoration: InputDecoration(
+                                                                                counterText: "",
+                                                                                hintText: "Building Name/Flat No",
+                                                                                hintStyle: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                                focusedBorder: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: black, width: 0.5),
+                                                                                  borderRadius: BorderRadius.circular(10),
+                                                                                ),
+                                                                                enabledBorder: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: black, width: 0.5),
+                                                                                  borderRadius: BorderRadius.circular(10),
+                                                                                ))),
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                      ),
+                                                                    ),
+                                                                    8.height,
+                                                                    Wrap(
+                                                                        crossAxisAlignment:
+                                                                            WrapCrossAlignment
+                                                                                .center,
+                                                                        alignment:
+                                                                            WrapAlignment
+                                                                                .start,
+                                                                        direction:
+                                                                            Axis.horizontal,
+                                                                        children: [
+                                                                          Theme(
+                                                                            data:
+                                                                                Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
+                                                                            child:
+                                                                                Radio(
+                                                                              value: 'Home',
+                                                                              groupValue: AddressType,
+                                                                              onChanged: (dynamic value) {
+                                                                                setBottomState(() {
+                                                                                  AddressType = value;
+                                                                                });
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                          Text(
+                                                                              "Home",
+                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                          Theme(
+                                                                            data:
+                                                                                Theme.of(context).copyWith(
+                                                                              unselectedWidgetColor: syanColor,
+                                                                            ),
+                                                                            child:
+                                                                                Radio(
+                                                                              value: 'Office',
+                                                                              groupValue: AddressType,
+                                                                              onChanged: (dynamic value) {
+                                                                                setBottomState(() {
+                                                                                  AddressType = value;
+                                                                                });
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                          Text(
+                                                                              "Office",
+                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                          Theme(
+                                                                            data:
+                                                                                Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
+                                                                            child:
+                                                                                Radio(
+                                                                              value: 'Other',
+                                                                              groupValue: AddressType,
+                                                                              onChanged: (dynamic value) {
+                                                                                setBottomState(() {
+                                                                                  AddressType = value;
+                                                                                });
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                          Text(
+                                                                              "Other",
+                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                        ]),
+                                                                    8.height,
+                                                                    isgooglemap
+                                                                        ? Column(
+                                                                            children: <Widget>[
+                                                                              SizedBox(
+                                                                                width: double.infinity,
+                                                                                child: Container(
+                                                                                  child: Text(
+                                                                                    "Tap to mark",
+                                                                                    textAlign: TextAlign.left,
+                                                                                    style: montserratSemiBold.copyWith(fontSize: 14, color: black),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          )
+                                                                        : Row(),
+                                                                    8.height,
+                                                                    isgooglemap
+                                                                        ? isMobile
+                                                                            ? Container(
+                                                                                height: 130,
+                                                                                width: width,
+                                                                                color: white,
+                                                                                child: GoogleMap(
+                                                                                  initialCameraPosition: _initialPosition,
+                                                                                  myLocationEnabled: true,
+                                                                                  markers: Set.from(myMarker),
+                                                                                  onTap: _handleTap,
+                                                                                  myLocationButtonEnabled: true,
+                                                                                  onMapCreated: (GoogleMapController controller) {
+                                                                                    _controller.complete(controller);
+                                                                                  },
+                                                                                ),
+                                                                              )
+                                                                            : Container(
+                                                                                color: Colors.transparent,
+                                                                                height: context.height(),
+                                                                                alignment: Alignment.center,
+                                                                                width: width,
+                                                                                child: Text("Google Map", style: montserratRegular.copyWith(fontSize: 14)),
+                                                                              )
+                                                                        : Row(),
+                                                                    8.height,
+                                                                    Row(
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Checkbox(
+                                                                          value:
+                                                                              isDefaultAddressChecked,
+                                                                          fillColor:
+                                                                              MaterialStateProperty.all(syanColor),
+                                                                          onChanged:
+                                                                              (value) {
+                                                                            setBottomState(
+                                                                              () {
+                                                                                isDefaultAddressChecked = value!;
+                                                                              },
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                        Text(
+                                                                          "Address",
+                                                                          textAlign:
+                                                                              TextAlign.start,
+                                                                          overflow:
+                                                                              TextOverflow.clip,
+                                                                          style:
+                                                                              montserratRegular.copyWith(
+                                                                            fontSize:
+                                                                                12,
+                                                                            color:
+                                                                                black,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    26.height,
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          () async {
+                                                                        if (emirates ==
+                                                                            0) {
+                                                                          setState(() =>
+                                                                              issubmitted = false);
+                                                                          showCustomToast(
+                                                                              context,
+                                                                              "Select City",
+                                                                              bgColor: errorcolor,
+                                                                              textColor: white);
+                                                                        } else if (city ==
+                                                                            0) {
+                                                                          setState(() =>
+                                                                              issubmitted = false);
+                                                                          showCustomToast(
+                                                                              context,
+                                                                              "Select Area",
+                                                                              bgColor: errorcolor,
+                                                                              textColor: white);
+                                                                        } else if (address ==
+                                                                            "") {
+                                                                          setState(() =>
+                                                                              issubmitted = false);
+                                                                          showCustomToast(
+                                                                              context,
+                                                                              "Enter Address",
+                                                                              bgColor: errorcolor,
+                                                                              textColor: white);
+                                                                        } else {
+                                                                          final prefs =
+                                                                              await SharedPreferences.getInstance();
+                                                                          try {
+                                                                            setState(() =>
+                                                                                issubmitted = true);
+                                                                            await Future.delayed(Duration(milliseconds: 1000));
+                                                                            Map req =
+                                                                                {
+                                                                              "countryId": 1,
+                                                                              "stateId": emirates,
+                                                                              "cityId": city,
+                                                                              "address": address,
+                                                                              "landmark": landmark,
+                                                                              "add_type": AddressType,
+                                                                              "lattitude": Marklat != 0.0 ? Marklat : Statelat,
+                                                                              "longitude": Marklong != 0.0 ? Marklong : Statelong,
+                                                                              "cust_id": prefs.getString("cust_id")
+                                                                            };
+                                                                            await saveCustomerAddress(req).then((value) {
+                                                                              if (value['ret_data'] == "success") {
+                                                                                emirates = 0;
+                                                                                city = 0;
+                                                                                address = "";
+                                                                                landmark = "";
+                                                                                issubmitted = false;
+                                                                                Marklat = 0.0;
+                                                                                Marklong = 0.0;
+                                                                                AddressType = "Home";
+                                                                                setBottomState(() {
+                                                                                  drop_city.currentState?.reset();
+                                                                                  drop_area.currentState?.reset();
+                                                                                  SelectCityList = <String?>[
+                                                                                    "Select City"
+                                                                                  ];
+                                                                                  SelectAreaList = <String?>[
+                                                                                    "Select Area"
+                                                                                  ];
+                                                                                });
+                                                                                setState(() {});
+                                                                                _fetchdatas(1, 'd');
+                                                                                setState(() => isgooglemap = false);
+                                                                              } else {
+                                                                                setState(() => issubmitted = false);
+                                                                              }
+                                                                            });
+                                                                          } catch (e) {
+                                                                            setState(() =>
+                                                                                issubmitted = false);
+                                                                            print(e.toString());
+                                                                          }
+                                                                          finish(
+                                                                              context);
+                                                                        }
+                                                                      },
+                                                                      child:
+                                                                          Stack(
+                                                                        alignment:
+                                                                            Alignment.bottomCenter,
+                                                                        children: [
+                                                                          Container(
+                                                                            height:
+                                                                                height * 0.045,
+                                                                            width:
+                                                                                height * 0.37,
+                                                                            decoration:
+                                                                                BoxDecoration(borderRadius: BorderRadius.circular(14), boxShadow: [
+                                                                              BoxShadow(blurRadius: 16, color: syanColor.withOpacity(.6), spreadRadius: 0, blurStyle: BlurStyle.outer, offset: Offset(0, 0)),
+                                                                            ]),
+                                                                          ),
+                                                                          Container(
+                                                                            height:
+                                                                                height * 0.075,
+                                                                            width:
+                                                                                height * 0.45,
+                                                                            alignment:
+                                                                                Alignment.center,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              shape: BoxShape.rectangle,
+                                                                              borderRadius: BorderRadius.all(Radius.circular(14)),
+                                                                              gradient: LinearGradient(
+                                                                                begin: Alignment.topLeft,
+                                                                                end: Alignment.bottomRight,
+                                                                                colors: [
+                                                                                  syanColor,
+                                                                                  lightblueColor,
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            child: !isproceeding
+                                                                                ? Text(
+                                                                                    ST.of(context).save,
+                                                                                    style: montserratSemiBold.copyWith(color: Colors.white),
+                                                                                  )
+                                                                                : Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                                    children: [
+                                                                                      Transform.scale(
+                                                                                        scale: 0.7,
+                                                                                        child: CircularProgressIndicator(
+                                                                                          color: white,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.all(8),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  });
+                                },
+                              );
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -736,7 +1513,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                 Text(
                                   ST.of(context).add_address + " ",
                                   style: montserratLight.copyWith(
-                                      color: blackColor, fontSize: 14),
+                                      color: black, fontSize: 14),
                                 ),
                                 Container(
                                   child: Image.asset(
@@ -795,7 +1572,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                     hint: Align(
                                         alignment: Alignment.center,
                                         child: Text(
-                                          ST.of(context).emirates,
+                                          "Select Address",
                                           style: montserratRegular.copyWith(
                                               color: Colors.black,
                                               fontSize: 14),
@@ -807,92 +1584,24 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                         child: Text(
                                           value!,
                                           style: montserratRegular.copyWith(
-                                              color: blackColor, fontSize: 14),
+                                              color: black, fontSize: 14),
                                         ),
                                       );
                                     }).toList(),
                                     validator: (value) {},
-                                    onChanged: (value) {},
+                                    onChanged: (value) {
+                                      setState(() {
+                                        pickupaddresschange(
+                                            SelectAddressList.indexOf(
+                                                value.toString()));
+                                      });
+                                    },
                                   ),
                                 ),
                               ),
                             ],
                           ))
                     ]),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.start,
-                    //   crossAxisAlignment: CrossAxisAlignment.center,
-                    //   children: <Widget>[
-                    //     Stack(alignment: Alignment.bottomCenter, children: [
-                    //       Container(
-                    //         height: height * 0.045,
-                    //         width: height * 0.37,
-                    //         decoration: BoxDecoration(
-                    //             borderRadius: BorderRadius.circular(14),
-                    //             boxShadow: [
-                    //               BoxShadow(
-                    //                   blurRadius: 16,
-                    //                   color: syanColor.withOpacity(.5),
-                    //                   spreadRadius: 0,
-                    //                   blurStyle: BlurStyle.outer,
-                    //                   offset: Offset(0, 0)),
-                    //             ]),
-                    //       ),
-                    //       Container(
-                    //           height: height * 0.075,
-                    //           width: height * 0.46,
-                    //           decoration: BoxDecoration(
-                    //             color: whiteColor,
-                    //             borderRadius: BorderRadius.circular(12),
-                    //             border: Border.all(color: borderGreyColor),
-                    //           ),
-                    //           child: Row(
-                    //             children: <Widget>[
-                    //               Expanded(
-                    //                 child: Container(
-                    //                   padding:
-                    //                       EdgeInsets.only(left: 4, right: 4),
-                    //                   child: DropdownButtonFormField(
-                    //                     value:
-                    //                         SelectAddressList[selected_address],
-                    //                     isExpanded: true,
-                    //                     decoration: InputDecoration.collapsed(
-                    //                         hintText: ''),
-                    //                     hint: Align(
-                    //                         alignment: Alignment.center,
-                    //                         child: Text(
-                    //                           ST.of(context).emirates,
-                    //                           style: montserratRegular.copyWith(
-                    //                               color: blackColor,
-                    //                               fontSize: 14),
-                    //                         )),
-                    //                     items: SelectAddressList.map(
-                    //                         (String? value) {
-                    //                       return DropdownMenuItem<String>(
-                    //                         value: value,
-                    //                         child: Text(
-                    //                           value!,
-                    //                           style: montserratRegular.copyWith(
-                    //                               color: blackColor,
-                    //                               fontSize: 14),
-                    //                         ),
-                    //                       );
-                    //                     }).toList(),
-                    //                     onChanged: (value) {
-                    //                       setState(() {
-                    //                         pickupaddresschange(
-                    //                             SelectAddressList.indexOf(
-                    //                                 value.toString()));
-                    //                       });
-                    //                     },
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ],
-                    //           ))
-                    //     ]),
-                    //   ],
-                    // ),
                     SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -931,7 +1640,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.clip,
                           style: montserratLight.copyWith(
-                              color: blackColor, fontSize: 14),
+                              color: black, fontSize: 14),
                         ),
                       ],
                     ),
@@ -988,7 +1697,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                             height: height * 0.075,
                                             width: height * 0.46,
                                             decoration: BoxDecoration(
-                                              color: whiteColor,
+                                              color: white,
                                               borderRadius:
                                                   BorderRadius.circular(12),
                                               border: Border.all(
@@ -1021,7 +1730,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                             style: montserratRegular
                                                                 .copyWith(
                                                                     color:
-                                                                        blackColor,
+                                                                        black,
                                                                     fontSize:
                                                                         14),
                                                           )),
@@ -1036,7 +1745,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                             style: montserratRegular
                                                                 .copyWith(
                                                                     color:
-                                                                        blackColor,
+                                                                        black,
                                                                     fontSize:
                                                                         14),
                                                           ),
@@ -1075,7 +1784,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           ST.of(context).pickup_options + "*",
                           textAlign: TextAlign.start,
                           style: montserratSemiBold.copyWith(
-                              color: blackColor, fontSize: 14),
+                              color: black, fontSize: 14),
                         ),
                       ],
                     ),
@@ -1109,8 +1818,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   unselectedWidgetColor:
                                                       Colors.grey[350])
                                               : Theme.of(context).copyWith(
-                                                  unselectedWidgetColor:
-                                                      blackColor),
+                                                  unselectedWidgetColor: black),
                                           child: pickup_options[index]
                                                       ['pk_id'] ==
                                                   "0"
@@ -1163,8 +1871,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 textAlign: TextAlign.center,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: montserratLight.copyWith(
-                                                    color: blackColor,
-                                                    fontSize: 14),
+                                                    color: black, fontSize: 14),
                                               ),
                                       ]),
                                   pickup_options[index]['pk_id'] == "0"
@@ -1177,7 +1884,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           textAlign: TextAlign.end,
                                           overflow: TextOverflow.clip,
                                           style: montserratLight.copyWith(
-                                              color: blackColor, fontSize: 14),
+                                              color: black, fontSize: 14),
                                         )
                                       : Text(
                                           pickup_options[index]['pk_cost'] ==
@@ -1199,216 +1906,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     // : Row(),
                     // isserviceble
                     //     ?
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.start,
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   children: <Widget>[
-                    //     Padding(padding: EdgeInsets.all(4)),
-                    //     Expanded(
-                    //       flex: 2,
-                    //       child: Card(
-                    //           shape: RoundedRectangleBorder(
-                    //               borderRadius: BorderRadius.circular(12),
-                    //               side: BorderSide(
-                    //                   width: 1, color: Colors.black)),
-                    //           elevation: 4,
-                    //           child: ListTile(
-                    //             trailing: IconButton(
-                    //               icon: Icon(
-                    //                 Icons.date_range,
-                    //                 color: syanColor,
-                    //               ),
-                    //               onPressed: () {
-                    //                 _selectDate(context);
-                    //               },
-                    //             ),
-                    //             onTap: () {
-                    //               _selectDate(context);
-                    //             },
-                    //             title: Text(
-                    //                 ST.of(context).select_booking_date + "*",
-                    //                 style: montserratLight.copyWith(
-                    //                     color: blackColor, fontSize: 12),
-                    //                 maxLines: 3),
-                    //             subtitle: Text(
-                    //               selectedDate == " "
-                    //                   ? " "
-                    //                   : DateFormat('dd-MM-yyyy')
-                    //                       .format(selectedDate),
-                    //               style: montserratLight.copyWith(
-                    //                   color: blackColor, fontSize: 12),
-                    //             ),
-                    //           )),
-                    //     ),
-                    //     Expanded(
-                    //       flex: 3,
-                    //       child: Container(
-                    //         margin: EdgeInsets.all(4.0),
-                    //         decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(12),
-                    //           color: whiteColor,
-                    //           border: Border.all(
-                    //             color: blackColor,
-                    //           ),
-                    //         ),
-                    //         child: ExpansionTile(
-                    //           leading: Container(
-                    //             child: Icon(Icons.av_timer_outlined,
-                    //                 color: syanColor, size: 25),
-                    //           ),
-                    //           title: Text(
-                    //               ST.of(context).select_a_time_slot + "*",
-                    //               style: montserratLight.copyWith(
-                    //                   color: blackColor, fontSize: 12),
-                    //               maxLines: 3),
-                    //           subtitle: Text(
-                    //               selected_timeslot == ""
-                    //                   ? " "
-                    //                   : selected_timeslot,
-                    //               style: montserratLight.copyWith(
-                    //                   color: blackColor, fontSize: 12)),
-                    //           textColor: blackColor,
-                    //           children: [
-                    //             Container(
-                    //               decoration: BoxDecoration(
-                    //                 borderRadius: BorderRadius.circular(12),
-                    //                 color: whiteColor,
-                    //                 border: Border.all(
-                    //                   color: whiteColor,
-                    //                 ),
-                    //               ),
-                    //               padding: EdgeInsets.all(8),
-                    //               child: Column(
-                    //                 mainAxisAlignment: MainAxisAlignment.center,
-                    //                 crossAxisAlignment:
-                    //                     CrossAxisAlignment.center,
-                    //                 children: [
-                    //                   timeslots.length > 0
-                    //                       ? ListView.builder(
-                    //                           scrollDirection: Axis.vertical,
-                    //                           shrinkWrap: true,
-                    //                           physics:
-                    //                               const NeverScrollableScrollPhysics(),
-                    //                           padding: EdgeInsets.only(
-                    //                               top: 16, bottom: 16),
-                    //                           itemCount: timeslots.length,
-                    //                           itemBuilder: (context, index) {
-                    //                             return Row(
-                    //                               children: <Widget>[
-                    //                                 Theme(
-                    //                                   data: Theme.of(context)
-                    //                                       .copyWith(
-                    //                                           unselectedWidgetColor:
-                    //                                               blackColor),
-                    //                                   child: Radio(
-                    //                                     value: timeslots[index][
-                    //                                             'tm_start_time'] +
-                    //                                         " - " +
-                    //                                         timeslots[index]
-                    //                                             ['tm_end_time'],
-                    //                                     groupValue: isTimeCheck,
-                    //                                     onChanged:
-                    //                                         (dynamic value) {
-                    //                                       timeslots[index][
-                    //                                                   'active_flag'] ==
-                    //                                               1
-                    //                                           ? value = 0
-                    //                                           : setState(() {
-                    //                                               isTimeCheck =
-                    //                                                   value;
-                    //                                               selected_timeid =
-                    //                                                   int.parse(
-                    //                                                       timeslots[index]
-                    //                                                           [
-                    //                                                           'tm_id']);
-                    //                                               selected_timeslot = timeFormatter(
-                    //                                                       timeslots[index]
-                    //                                                           [
-                    //                                                           'tm_start_time']) +
-                    //                                                   " - " +
-                    //                                                   timeFormatter(
-                    //                                                       timeslots[index]
-                    //                                                           [
-                    //                                                           'tm_end_time']);
-                    //                                             });
-                    //                                     },
-                    //                                   ),
-                    //                                 ),
-                    //                                 timeslots[index][
-                    //                                             'active_flag'] ==
-                    //                                         1
-                    //                                     ? Text(
-                    //                                         timeFormatter(
-                    //                                                 timeslots[
-                    //                                                         index]
-                    //                                                     [
-                    //                                                     'tm_start_time']) +
-                    //                                             " - " +
-                    //                                             timeFormatter(
-                    //                                                 timeslots[
-                    //                                                         index]
-                    //                                                     [
-                    //                                                     'tm_end_time']) +
-                    //                                             "\n" +
-                    //                                             ST
-                    //                                                 .of(context)
-                    //                                                 .slot_is_full,
-                    //                                         style:
-                    //                                             montserratRegular
-                    //                                                 .copyWith(
-                    //                                           fontSize: 14,
-                    //                                           color: errorcolor,
-                    //                                         ),
-                    //                                       )
-                    //                                     : Text(
-                    //                                         timeFormatter(timeslots[
-                    //                                                     index][
-                    //                                                 'tm_start_time']) +
-                    //                                             " - " +
-                    //                                             timeFormatter(
-                    //                                                 timeslots[
-                    //                                                         index]
-                    //                                                     [
-                    //                                                     'tm_end_time']),
-                    //                                         style:
-                    //                                             montserratRegular
-                    //                                                 .copyWith(
-                    //                                           fontSize: 14,
-                    //                                           color: blackColor,
-                    //                                         ),
-                    //                                       ),
-                    //                               ],
-                    //                             );
-                    //                           })
-                    //                       : Text(
-                    //                           ST
-                    //                               .of(context)
-                    //                               .no_time_slot_available,
-                    //                           style:
-                    //                               montserratSemiBold.copyWith(
-                    //                             fontSize: 14,
-                    //                             color: blackColor,
-                    //                           ),
-                    //                         ),
-                    //                   SizedBox(
-                    //                     height: 8,
-                    //                   )
-                    //                 ],
-                    //               ),
-                    //             )
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                     Row(
                       children: [
                         Padding(padding: EdgeInsets.all(12)),
                         Text(
                           ST.of(context).select_booking_date + "*",
                           style: montserratSemiBold.copyWith(
-                              fontSize: 14, color: blackColor),
+                              fontSize: 14, color: black),
                         ),
                       ],
                     ),
@@ -1424,7 +1928,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                               child: IconButton(
                                 icon: Icon(
                                   Icons.date_range,
-                                  color: whiteColor,
+                                  color: white,
                                 ),
                                 onPressed: () {
                                   _selectDate(context);
@@ -1437,7 +1941,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             title: Text(
                                 ST.of(context).select_booking_date + " ",
                                 style: montserratLight.copyWith(
-                                    color: blackColor, fontSize: 12),
+                                    color: black, fontSize: 12),
                                 maxLines: 3),
                             subtitle: Text(
                               selectedDate == " "
@@ -1445,7 +1949,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                   : DateFormat('dd-MM-yyyy')
                                       .format(selectedDate),
                               style: montserratLight.copyWith(
-                                  color: blackColor, fontSize: 12),
+                                  color: black, fontSize: 12),
                             ),
                           )),
                     ),
@@ -1455,7 +1959,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         Text(
                           ST.of(context).select_a_time_slot + "*",
                           style: montserratSemiBold.copyWith(
-                              fontSize: 14, color: blackColor),
+                              fontSize: 14, color: black),
                         ),
                       ],
                     ),
@@ -1465,9 +1969,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         margin: EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          color: whiteColor,
+                          color: white,
                           border: Border.all(
-                            color: blackColor,
+                            color: black,
                           ),
                         ),
                         child: ExpansionTile(
@@ -1477,35 +1981,35 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             height: 30,
                             child: RadiantGradientMask(
                               child: Icon(Icons.av_timer_outlined,
-                                  color: whiteColor, size: 28),
+                                  color: white, size: 28),
                             ),
                           ),
                           title: Text(ST.of(context).select_a_time_slot,
                               overflow: TextOverflow.ellipsis,
                               style: montserratLight.copyWith(
-                                  color: blackColor, fontSize: 14),
+                                  color: black, fontSize: 14),
                               maxLines: 3),
                           subtitle: Text(
                               selected_timeslot == ""
                                   ? ST.of(context).select_a_time_slot + "*"
                                   : selected_timeslot,
                               style: montserratLight.copyWith(
-                                  color: blackColor, fontSize: 14)),
-                          textColor: blackColor,
+                                  color: black, fontSize: 14)),
+                          textColor: black,
                           trailing: isExpanded
                               ? Container(
                                   child: RadiantGradientMask(
                                     child: Icon(Icons.keyboard_arrow_up,
-                                        color: whiteColor, size: 30),
+                                        color: white, size: 30),
                                   ),
                                   padding: EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
-                                      color: whiteColor.withAlpha(32)),
+                                      color: white.withAlpha(32)),
                                 )
                               : RadiantGradientMask(
                                   child: Icon(Icons.keyboard_arrow_down,
-                                      color: whiteColor, size: 30),
+                                      color: white, size: 30),
                                 ),
                           onExpansionChanged: (t1) {
                             isExpanded = !isExpanded;
@@ -1513,8 +2017,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           },
                           children: [
                             Container(
-                              decoration: BoxDecoration(
-                                  color: whiteColor, boxShadow: null),
+                              decoration:
+                                  BoxDecoration(color: white, boxShadow: null),
                               padding: EdgeInsets.all(8),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1536,7 +2040,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   data: Theme.of(context)
                                                       .copyWith(
                                                           unselectedWidgetColor:
-                                                              blackColor),
+                                                              black),
                                                   child: Radio(
                                                     value: timeslots[index]
                                                             ['tm_start_time'] +
@@ -1597,7 +2101,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                         style: montserratLight
                                                             .copyWith(
                                                           fontSize: 14,
-                                                          color: blackColor,
+                                                          color: black,
                                                         ),
                                                       )
                                                     : Text(
@@ -1612,7 +2116,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                         style: montserratLight
                                                             .copyWith(
                                                           fontSize: 14,
-                                                          color: blackColor,
+                                                          color: black,
                                                         ),
                                                       ),
                                               ],
@@ -1622,7 +2126,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           ST.of(context).no_time_slot_available,
                                           style: montserratLight.copyWith(
                                             fontSize: 14,
-                                            color: blackColor,
+                                            color: black,
                                           ),
                                         ),
                                   SizedBox(
@@ -1649,6 +2153,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         alignment: Alignment.bottomCenter,
                         children: [
                           Container(
+                            margin: EdgeInsets.all(16),
                             height: height * 0.045,
                             width: height * 0.37,
                             decoration: BoxDecoration(
@@ -1691,7 +2196,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                       Transform.scale(
                                         scale: 0.7,
                                         child: CircularProgressIndicator(
-                                          color: whiteColor,
+                                          color: white,
                                         ),
                                       ),
                                     ],
@@ -1708,6 +2213,16 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         ),
       ),
     );
+  }
+
+  _handleTap(LatLng tappedpoint) {
+    setState(() {
+      myMarker = [];
+      myMarker.add(Marker(
+          markerId: MarkerId(tappedpoint.toString()), position: tappedpoint));
+      Marklat = tappedpoint.latitude;
+      Marklong = tappedpoint.longitude;
+    });
   }
 }
 

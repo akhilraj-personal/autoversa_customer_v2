@@ -385,9 +385,8 @@ class VehiclelistState extends State<Vehiclelist> {
                                                                       top: 8),
                                                               child: Icon(
                                                                 Icons.delete,
-                                                                color:
-                                                                    greyColor,
-                                                                size: 16,
+                                                                color: black,
+                                                                size: 22,
                                                               )),
                                                         )
                                                       ],

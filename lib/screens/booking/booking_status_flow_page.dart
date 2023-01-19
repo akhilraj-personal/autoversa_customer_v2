@@ -4,6 +4,7 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/booking/inspection_screen.dart';
+import 'package:autoversa/screens/booking/schedule_drop_screen.dart';
 import 'package:autoversa/screens/booking/workcard_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -874,7 +875,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
               }
             } else if (statuslist["bkt_code"] == "PIWC") {
               var temp = {
-                "status": "Pickedup &\nenrouted to\nworkshop",
+                "status": "Pickedup & enrouted\nto workshop",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -934,7 +935,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
               }
             } else if (statuslist["bkt_code"] == "CDLC") {
               var temp = {
-                "status": "Confirm drop location",
+                "status": "Confirm\ndrop location",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -1047,7 +1048,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
           for (int i = (position + 1); i < cust_status_master.length; i++) {
             if (cust_status_master[i] == "DRPC") {
               var temp = {
-                "status": "Driver Enroute to Location",
+                "status": "Driver Enroute\nto Location",
                 "time": "",
                 "code": "",
                 "icon": 'assets/icons/driver_enrouted_inactive.png',
@@ -1071,11 +1072,11 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
             if (cust_status_master[i] == "PIWC") {
               var temp = {
-                "status": "Pickedup & Enroute to Workshop",
+                "status": "Pickedup & enrouted\nto workshop",
                 "time": "",
                 "code": "",
                 "icon": 'assets/icons/pickedup_inactive.png',
-                "color": Colors.grey.withOpacity(0.5),
+                "color": Colors.transparent,
                 "active_flag": false,
                 "hold_flag": false
               };
@@ -1107,7 +1108,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
             if (cust_status_master[i] == "CDLC") {
               var temp = {
-                "status": "Confirm Drop\nLocation",
+                "status": "Confirm\nDrop Location",
                 "time": "",
                 "code": "",
                 "icon": 'assets/icons/location_icon_inactive.png',
@@ -1131,7 +1132,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
             if (cust_status_master[i] == "DEDC") {
               var temp = {
-                "status": "Driver Enroute for\nDelivery",
+                "status": "Driver Enroute\nfor Delivery",
                 "time": "",
                 "code": "",
                 "icon": 'assets/icons/enrouted_drop_inactive.png',
@@ -1164,28 +1165,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
       String? title, String? icon, String? time, bool isActive, bool ishold) {
     return Row(
       children: [
-        // Container(
-        //   height: height * 0.065,
-        //   width: height * 0.065,
-        //   decoration: BoxDecoration(
-        //     shape: BoxShape.circle,
-        //     gradient: LinearGradient(
-        //       begin: Alignment.topRight,
-        //       end: Alignment.bottomRight,
-        //       colors: [
-        //         lightblueColor,
-        //         syanColor,
-        //       ],
-        //     ),
-        //   ),
-        //   child: Image.asset(icon.validate(), width: 30, fit: BoxFit.cover),
-        // ),
-        // commonCacheImageWidget(icon, 30,
-        //     width: 30, fit: BoxFit.cover),
         if (isActive && !ishold) ...[
           Container(
-            height: height * 0.065,
-            width: height * 0.065,
+            height: height * 0.05,
+            width: height * 0.05,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: LinearGradient(
@@ -1197,12 +1180,13 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 ],
               ),
             ),
-            child: Image.asset(icon.validate(), width: 30, fit: BoxFit.cover),
+            child: Image.asset(icon.validate(),
+                width: width * 0.12, fit: BoxFit.cover),
           )
         ] else if (!isActive) ...[
           Container(
-            height: height * 0.065,
-            width: height * 0.065,
+            height: height * 0.05,
+            width: height * 0.05,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: LinearGradient(
@@ -1214,12 +1198,13 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 ],
               ),
             ),
-            child: Image.asset(icon.validate(), width: 30, fit: BoxFit.cover),
+            child: Image.asset(icon.validate(),
+                width: width * 0.12, fit: BoxFit.cover),
           ),
         ] else if (ishold && isActive) ...[
           Container(
-            height: height * 0.065,
-            width: height * 0.065,
+            height: height * 0.05,
+            width: height * 0.05,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: LinearGradient(
@@ -1231,34 +1216,26 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 ],
               ),
             ),
-            child: Image.asset(icon.validate(), width: 30, fit: BoxFit.cover),
+            child: Image.asset(icon.validate(),
+                width: width * 0.12, fit: BoxFit.cover),
           )
         ],
-
         SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title!,
-                    overflow: TextOverflow.ellipsis,
-                    style: montserratSemiBold.copyWith(
-                        color: isActive
-                            ? Colors.black
-                            : Colors.grey.withOpacity(0.5),
-                        fontSize: 14)),
-                Text(time!,
-                    overflow: TextOverflow.clip,
-                    style: montserratRegular.copyWith(
-                        color: isActive
-                            ? Colors.black
-                            : Colors.grey.withOpacity(0.5),
-                        fontSize: 12)),
-              ],
-            ),
+            Text(title!,
+                overflow: TextOverflow.clip,
+                style: montserratSemiBold.copyWith(
+                    color:
+                        isActive ? Colors.black : Colors.grey.withOpacity(0.5),
+                    fontSize: 14)),
+            Text(time!,
+                overflow: TextOverflow.clip,
+                style: montserratRegular.copyWith(
+                    color:
+                        isActive ? Colors.black : Colors.grey.withOpacity(0.5),
+                    fontSize: 12)),
           ],
         ),
         SizedBox(height: 50),
@@ -1342,33 +1319,42 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                         padding: EdgeInsets.all(8.0),
                         child: Row(
                           children: <Widget>[
+                            Padding(padding: EdgeInsets.all(4)),
                             if (widget.make == 'Mercedes Benz') ...[
                               Image.asset(
                                 ImageConst.benz_ico,
-                                width: width * 0.18,
+                                width: width * 0.12,
                               ),
                             ] else if (widget.make == 'BMW') ...[
                               Image.asset(
                                 ImageConst.bmw_ico,
-                                width: width * 0.18,
+                                width: width * 0.12,
                               ),
                             ] else if (widget.make == 'Skoda') ...[
                               Image.asset(
                                 ImageConst.skod_ico,
-                                width: width * 0.18,
+                                width: width * 0.12,
+                              ),
+                            ] else if (widget.make == 'Audi') ...[
+                              Image.asset(
+                                ImageConst.aud_ico,
+                                width: width * 0.12,
                               ),
                             ] else ...[
                               Image.asset(
                                 ImageConst.defcar_ico,
-                                width: width * 0.18,
+                                width: width * 0.12,
                               ),
                             ],
-                            SizedBox(width: 8.0),
+                            SizedBox(width: 16.0),
                             Expanded(
                               flex: 2,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
+                                  SizedBox(
+                                    height: 4,
+                                  ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -1376,9 +1362,13 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                       Flexible(
                                         child: Container(
                                           child: Text(
-                                              booking['bk_number'] != null
-                                                  ? "Booking ID: " +
-                                                      booking['bk_number']
+                                              booking_package['pkg_name'] !=
+                                                      null
+                                                  ? booking_package[
+                                                          'pkg_name'] +
+                                                      " (" +
+                                                      booking['bk_number'] +
+                                                      ")"
                                                   : "",
                                               overflow: TextOverflow.clip,
                                               style:
@@ -1393,72 +1383,62 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                     height: 4,
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: Text(
-                                              booking_package['pkg_name'] !=
-                                                      null
-                                                  ? booking_package['pkg_name']
-                                                  : "",
-                                              overflow: TextOverflow.clip,
-                                              style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 12)),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Flexible(
+                                              child: Container(
+                                                child: Text(
+                                                    booking['bk_booking_date'] !=
+                                                            null
+                                                        ? DateFormat(
+                                                                'dd-MM-yyyy')
+                                                            .format(DateTime
+                                                                .tryParse(booking[
+                                                                    'bk_booking_date'])!)
+                                                        : "",
+                                                    overflow: TextOverflow.clip,
+                                                    style: montserratRegular
+                                                        .copyWith(
+                                                            color: black,
+                                                            fontSize: 12)),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: Text(
-                                              booking['bk_booking_date'] != null
-                                                  ? "Date: " +
-                                                      DateFormat('dd-MM-yyyy')
-                                                          .format(DateTime
-                                                              .tryParse(booking[
-                                                                  'bk_booking_date'])!)
-                                                  : "",
-                                              overflow: TextOverflow.clip,
-                                              style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 12)),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: Text(
-                                              pickup_timeslot[
-                                                          'tm_start_time'] !=
-                                                      null
-                                                  ? "Time: " +
-                                                      timeFormatter(
-                                                          pickup_timeslot[
-                                                              'tm_start_time']) +
-                                                      " - " +
-                                                      timeFormatter(
-                                                          pickup_timeslot[
-                                                              'tm_end_time'])
-                                                  : "",
-                                              overflow: TextOverflow.clip,
-                                              style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 12)),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Flexible(
+                                              child: Container(
+                                                child: Text(
+                                                    pickup_timeslot[
+                                                                'tm_start_time'] !=
+                                                            null
+                                                        ? timeFormatter(
+                                                                pickup_timeslot[
+                                                                    'tm_start_time']) +
+                                                            " - " +
+                                                            timeFormatter(
+                                                                pickup_timeslot[
+                                                                    'tm_end_time'])
+                                                        : "",
+                                                    overflow: TextOverflow.clip,
+                                                    style: montserratRegular
+                                                        .copyWith(
+                                                            color: black,
+                                                            fontSize: 12)),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
@@ -1941,7 +1921,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                   Row(
                                                     children: <Widget>[
                                                       Expanded(
-                                                        flex: 4,
+                                                        flex: 5,
                                                         child: statusView(
                                                             statusflow[index]
                                                                 ["status"],
@@ -1963,14 +1943,15 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                 alignment:
                                                                     Alignment
                                                                         .topRight,
-                                                                margin:
-                                                                    EdgeInsets
-                                                                        .all(8),
                                                                 child:
                                                                     OutlinedButton(
                                                                   onPressed:
-                                                                      () =>
-                                                                          null,
+                                                                      () async {
+                                                                    bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
+                                                                            'us_country_code'] +
+                                                                        drivercontact[
+                                                                            'us_phone']);
+                                                                  },
                                                                   style: OutlinedButton
                                                                       .styleFrom(
                                                                     side:
@@ -2008,17 +1989,16 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                             size:
                                                                                 16,
                                                                           )),
-                                                                      Align(
-                                                                          alignment: Alignment
-                                                                              .centerLeft,
-                                                                          child:
-                                                                              Text(
-                                                                            "Call",
-                                                                            style:
-                                                                                montserratRegular.copyWith(color: syanColor, fontSize: 12),
-                                                                            textAlign:
-                                                                                TextAlign.center,
-                                                                          ))
+                                                                      Text(
+                                                                        "Call",
+                                                                        style: montserratRegular.copyWith(
+                                                                            color:
+                                                                                syanColor,
+                                                                            fontSize:
+                                                                                12),
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                      )
                                                                     ],
                                                                   ),
                                                                 ),
@@ -2032,62 +2012,62 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           ? Expanded(
                                                               flex: 2,
                                                               child: Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .topRight,
-                                                                  child:
-                                                                      OutlinedButton(
-                                                                    style: OutlinedButton
-                                                                        .styleFrom(
+                                                                child:
+                                                                    OutlinedButton(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) => InspectionScreen(
+                                                                                bookid: widget.bk_id,
+                                                                                booknum: booking['bk_number'],
+                                                                                bookdate: booking['bk_booking_date'],
+                                                                                booktime: timeFormatter(pickup_timeslot['tm_start_time']) + " - " + timeFormatter(pickup_timeslot['tm_end_time']),
+                                                                                pkgname: booking_package['pkg_name'],
+                                                                                vehname: widget.vehname,
+                                                                                vehmake: vehicle['cv_make'])));
+                                                                  },
+                                                                  style: OutlinedButton
+                                                                      .styleFrom(
+                                                                    side:
+                                                                        BorderSide(
+                                                                      color:
+                                                                          syanColor, //Color of the border
+                                                                      style: BorderStyle
+                                                                          .solid, //Style of the border
+                                                                      width:
+                                                                          0.8, //width of the border
+                                                                    ),
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              30),
                                                                       side:
                                                                           BorderSide(
                                                                         color:
                                                                             syanColor,
-                                                                        style: BorderStyle
-                                                                            .solid, //Style of the border
-                                                                        width:
-                                                                            0.8, //width of the border
-                                                                      ),
-                                                                      shape:
-                                                                          RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(30),
-                                                                        side:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
                                                                       ),
                                                                     ),
-                                                                    onPressed:
-                                                                        () async {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => InspectionScreen(bookid: widget.bk_id, booknum: booking['bk_number'], bookdate: booking['bk_booking_date'], booktime: timeFormatter(pickup_timeslot['tm_start_time']) + " - " + timeFormatter(pickup_timeslot['tm_end_time']), pkgname: booking_package['pkg_name'], vehname: widget.vehname, vehmake: vehicle['cv_make'])));
-                                                                    },
-                                                                    child:
-                                                                        Stack(
-                                                                      children: <
-                                                                          Widget>[
-                                                                        Align(
-                                                                            alignment:
-                                                                                Alignment.centerRight,
-                                                                            child: Icon(
-                                                                              Icons.arrow_circle_right_outlined,
-                                                                              color: syanColor,
-                                                                              size: 16,
-                                                                            )),
-                                                                        Align(
-                                                                          alignment:
-                                                                              Alignment.centerLeft,
-                                                                          child: Text(
-                                                                              'Inspection Report',
-                                                                              style: montserratRegular.copyWith(color: syanColor, fontSize: 8)),
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                  )))
+                                                                  ),
+                                                                  child: Stack(
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Text(
+                                                                        'Inspection\nReport',
+                                                                        style: montserratRegular.copyWith(
+                                                                            color:
+                                                                                syanColor,
+                                                                            fontSize:
+                                                                                12),
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ))
                                                           : const SizedBox(
                                                               height: 0,
                                                             ),
@@ -2097,66 +2077,59 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           ? Expanded(
                                                               flex: 2,
                                                               child: Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .topRight,
-                                                                  margin:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              0),
-                                                                  child:
-                                                                      OutlinedButton(
-                                                                    style: OutlinedButton
-                                                                        .styleFrom(
+                                                                child:
+                                                                    OutlinedButton(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) => Workcard(
+                                                                                click_id: 1,
+                                                                                booking_id: widget.bk_id,
+                                                                                vehname: widget.vehname,
+                                                                                vehmake: vehicle['cv_make'])));
+                                                                  },
+                                                                  style: OutlinedButton
+                                                                      .styleFrom(
+                                                                    side:
+                                                                        BorderSide(
+                                                                      color:
+                                                                          syanColor, //Color of the border
+                                                                      style: BorderStyle
+                                                                          .solid, //Style of the border
+                                                                      width:
+                                                                          0.8, //width of the border
+                                                                    ),
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              30),
                                                                       side:
                                                                           BorderSide(
                                                                         color:
                                                                             syanColor,
-                                                                        style: BorderStyle
-                                                                            .solid, //Style of the border
-                                                                        width:
-                                                                            0.8, //width of the border
-                                                                      ),
-                                                                      shape:
-                                                                          RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(30),
-                                                                        side:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
                                                                       ),
                                                                     ),
-                                                                    onPressed:
-                                                                        () async {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => Workcard(click_id: 1, booking_id: widget.bk_id, vehname: widget.vehname, vehmake: vehicle['cv_make'])));
-                                                                    },
-                                                                    child:
-                                                                        Stack(
-                                                                      children: <
-                                                                          Widget>[
-                                                                        Align(
-                                                                            alignment:
-                                                                                Alignment.centerRight,
-                                                                            child: Icon(
-                                                                              Icons.arrow_circle_right_outlined,
-                                                                              color: syanColor,
-                                                                              size: 16,
-                                                                            )),
-                                                                        Align(
-                                                                          alignment:
-                                                                              Alignment.centerLeft,
-                                                                          child: Text(
-                                                                              'WorkCard',
-                                                                              style: montserratRegular.copyWith(color: syanColor, fontSize: 9)),
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                  )))
+                                                                  ),
+                                                                  child: Stack(
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Text(
+                                                                        'Work Card',
+                                                                        style: montserratRegular.copyWith(
+                                                                            color:
+                                                                                syanColor,
+                                                                            fontSize:
+                                                                                12),
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ))
                                                           : const SizedBox(
                                                               height: 0,
                                                             ),
@@ -2166,82 +2139,53 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           ? Expanded(
                                                               flex: 2,
                                                               child: Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .topRight,
-                                                                  margin:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              0),
-                                                                  child:
-                                                                      OutlinedButton(
-                                                                    style: OutlinedButton
-                                                                        .styleFrom(
+                                                                child:
+                                                                    OutlinedButton(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    temppendingjobs.length ==
+                                                                            0
+                                                                        ? Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(builder: (context) => ScheduleDropScreen(bk_id: widget.bk_id)))
+                                                                        : Navigator.push(context, MaterialPageRoute(builder: (context) => Workcard(click_id: 2, booking_id: widget.bk_id, vehname: widget.vehname, vehmake: vehicle['cv_make'])));
+                                                                  },
+                                                                  style: OutlinedButton
+                                                                      .styleFrom(
+                                                                    side:
+                                                                        BorderSide(
+                                                                      color:
+                                                                          syanColor, //Color of the border
+                                                                      style: BorderStyle
+                                                                          .solid, //Style of the border
+                                                                      width:
+                                                                          0.8, //width of the border
+                                                                    ),
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              30),
                                                                       side:
                                                                           BorderSide(
                                                                         color:
                                                                             syanColor,
-                                                                        style: BorderStyle
-                                                                            .solid, //Style of the border
-                                                                        width:
-                                                                            0.8, //width of the border
-                                                                      ),
-                                                                      shape:
-                                                                          RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(30),
-                                                                        side:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
                                                                       ),
                                                                     ),
-                                                                    onPressed:
-                                                                        () async {
-                                                                      // temppendingjobs.length == 0
-                                                                      //     ? Navigator.push(
-                                                                      //         context,
-                                                                      //         MaterialPageRoute(
-                                                                      //             builder: (context) =>
-                                                                      //                 ScheduleDropDelivery(
-                                                                      //                     bk_id: widget
-                                                                      //                         .bk_id)))
-                                                                      //     : Navigator.push(
-                                                                      //         context,
-                                                                      //         MaterialPageRoute(
-                                                                      //             builder: (context) => AMWorkCard(
-                                                                      //                 click_id: 2,
-                                                                      //                 booking_id:
-                                                                      //                     widget
-                                                                      //                         .bk_id,
-                                                                      //                 vehname: widget
-                                                                      //                     .vehname,
-                                                                      //                 vehmake: vehicle[
-                                                                      //                     'cv_make'])));
-                                                                    },
-                                                                    child:
-                                                                        Stack(
-                                                                      children: <
-                                                                          Widget>[
-                                                                        Align(
-                                                                            alignment:
-                                                                                Alignment.centerRight,
-                                                                            child: Icon(
-                                                                              Icons.location_pin,
-                                                                              color: syanColor,
-                                                                              size: 16,
-                                                                            )),
-                                                                        Align(
-                                                                          alignment:
-                                                                              Alignment.centerLeft,
-                                                                          child: temppendingjobs.length == 0
-                                                                              ? Text('Schedule Delivery', style: montserratRegular.copyWith(color: black, fontSize: 12))
-                                                                              : Text('Pending Payment', style: montserratRegular.copyWith(color: black, fontSize: 12)),
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                  )))
+                                                                  ),
+                                                                  child: Stack(
+                                                                    children: <
+                                                                        Widget>[
+                                                                      temppendingjobs.length ==
+                                                                              0
+                                                                          ? Text(
+                                                                              'Schedule\nDelivery',
+                                                                              style: montserratRegular.copyWith(color: syanColor, fontSize: 12))
+                                                                          : Text('Pending Payment', style: montserratRegular.copyWith(color: syanColor, fontSize: 12)),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ))
                                                           : const SizedBox(
                                                               height: 0,
                                                             ),
@@ -2251,52 +2195,46 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           ? Expanded(
                                                               flex: 2,
                                                               child: Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .topRight,
-                                                                  margin:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              0),
                                                                   child:
                                                                       OutlinedButton(
-                                                                    style: OutlinedButton
-                                                                        .styleFrom(
-                                                                      side:
-                                                                          BorderSide(
-                                                                        color:
-                                                                            syanColor,
-                                                                        style: BorderStyle
-                                                                            .solid, //Style of the border
-                                                                        width:
-                                                                            0.8, //width of the border
-                                                                      ),
-                                                                      shape:
-                                                                          RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(30),
-                                                                        side:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                      ),
+                                                                style: OutlinedButton
+                                                                    .styleFrom(
+                                                                  side:
+                                                                      BorderSide(
+                                                                    color:
+                                                                        syanColor,
+                                                                    style: BorderStyle
+                                                                        .solid, //Style of the border
+                                                                    width:
+                                                                        0.8, //width of the border
+                                                                  ),
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            30),
+                                                                    side:
+                                                                        BorderSide(
+                                                                      color: Colors
+                                                                          .grey,
                                                                     ),
-                                                                    onPressed:
-                                                                        () async {
-                                                                      bool?
-                                                                          res =
-                                                                          await FlutterPhoneDirectCaller.callNumber(drivercontact['us_country_code'] +
-                                                                              drivercontact['us_phone']);
-                                                                    },
-                                                                    child: Text(
-                                                                        'Call',
-                                                                        style: montserratRegular.copyWith(
-                                                                            color:
-                                                                                black,
-                                                                            fontSize:
-                                                                                12)),
-                                                                  )))
+                                                                  ),
+                                                                ),
+                                                                onPressed:
+                                                                    () async {
+                                                                  bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
+                                                                          'us_country_code'] +
+                                                                      drivercontact[
+                                                                          'us_phone']);
+                                                                },
+                                                                child: Text(
+                                                                    'Call',
+                                                                    style: montserratRegular.copyWith(
+                                                                        color:
+                                                                            black,
+                                                                        fontSize:
+                                                                            12)),
+                                                              )))
                                                           : const SizedBox(
                                                               height: 0,
                                                             ),
@@ -2308,7 +2246,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                     color: statusflow[index]
                                                         ["color"],
                                                     margin: EdgeInsets.only(
-                                                      left: 20,
+                                                      left: 25,
                                                     ),
                                                   ),
                                                 ]);

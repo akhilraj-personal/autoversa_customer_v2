@@ -24,13 +24,14 @@ class ServiceListState extends State<ServiceList> {
   var bookingList = [];
   bool isActive = true;
   bool isoffline = false;
+  var splittedreason;
+  var cancelreason;
   @override
   void initState() {
     super.initState();
     init();
     Future.delayed(Duration.zero, () {
       getBookings();
-      print(widget.click_id);
     });
   }
 
@@ -48,6 +49,10 @@ class ServiceListState extends State<ServiceList> {
           }
           for (var cancelled in value['cancelled_list']) {
             bookingList.add(cancelled);
+            splittedreason = cancelled['bkt_content'].split(':');
+            cancelreason = splittedreason[1].trim();
+            print("+++++++++++++");
+            print(cancelreason);
           }
           isActive = false;
           setState(() {});
@@ -273,12 +278,8 @@ class ServiceListState extends State<ServiceList> {
                                                   .withOpacity(0.19)),
                                         ),
                                         child: Row(
-                                          children: [
+                                          children: <Widget>[
                                             Container(
-                                              margin: EdgeInsets.only(
-                                                  left: 0, right: 8),
-                                              width: 75,
-                                              height: 75,
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.only(
                                                     topLeft: Radius.circular(8),
@@ -289,6 +290,10 @@ class ServiceListState extends State<ServiceList> {
                                                     bottomRight:
                                                         Radius.circular(8)),
                                               ),
+                                              margin: EdgeInsets.only(
+                                                  left: 0, right: 16),
+                                              width: 75,
+                                              height: 75,
                                               child: Image.asset(
                                                   (ImageConst
                                                           .default_service_list)
@@ -297,156 +302,263 @@ class ServiceListState extends State<ServiceList> {
                                               padding:
                                                   EdgeInsets.all(width / 30),
                                             ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  bookingList[index]
-                                                      ['pkg_name'],
-                                                  style: montserratSemiBold
-                                                      .copyWith(
-                                                          color: black,
-                                                          fontSize: 14),
-                                                ),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Text(
-                                                    bookingList[index]
-                                                                ['cv_make'] !=
-                                                            null
-                                                        ? bookingList[index]
-                                                                ['cv_make'] +
-                                                            " " +
-                                                            bookingList[index]
-                                                                ['cv_model']
-                                                        : "",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: montserratRegular
-                                                        .copyWith(
-                                                            color: black,
-                                                            fontSize: 12)),
-                                                8.height,
-                                                Text(
-                                                    bookingList[index][
-                                                                'cv_variant'] !=
-                                                            null
-                                                        ? bookingList[index]
-                                                                ['cv_variant'] +
-                                                            " (" +
-                                                            bookingList[index]
-                                                                ['cv_year'] +
-                                                            ")"
-                                                        : " (" +
-                                                            bookingList[index]
-                                                                ['cv_year'] +
-                                                            ")",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: montserratRegular
-                                                        .copyWith(
-                                                            color: black,
-                                                            fontSize: 12)),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                        'Date: ' +
-                                                            DateFormat(
-                                                                    'dd-MM-yyyy')
-                                                                .format(DateTime
-                                                                    .tryParse(
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                0, 8, 8, 0),
+                                                        child: Text(
+                                                          bookingList[index]
+                                                              ['pkg_name'],
+                                                          style:
+                                                              montserratSemiBold
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          14),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Flexible(
+                                                        child: Container(
+                                                          child: Text(
                                                               bookingList[index]
-                                                                      [
-                                                                      'bk_booking_date']
-                                                                  .toString(),
-                                                            )!),
-                                                        style: montserratRegular
-                                                            .copyWith(
-                                                                fontSize: 12,
-                                                                color: black)),
-                                                    16.width,
-                                                    (bookingList[index][
-                                                                    'st_code'] !=
-                                                                null &&
-                                                            bookingList[index][
-                                                                    'st_code'] !=
-                                                                '')
-                                                        ? Container(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        2,
-                                                                    vertical:
-                                                                        4),
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                boxDecorationWithRoundedCorners(
-                                                              backgroundColor:
-                                                                  (bookingList[index]
-                                                                              [
-                                                                              'st_code'] ==
-                                                                          "CANC")
-                                                                      ? Colors
-                                                                          .grey
-                                                                      : Colors
-                                                                          .green,
-                                                              borderRadius:
-                                                                  radius(6),
-                                                            ),
-                                                            child: Text(
-                                                              "Completed",
+                                                                          [
+                                                                          'cv_make'] !=
+                                                                      null
+                                                                  ? bookingList[
+                                                                              index]
+                                                                          [
+                                                                          'cv_make'] +
+                                                                      " " +
+                                                                      bookingList[
+                                                                              index]
+                                                                          [
+                                                                          'cv_model']
+                                                                  : "",
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
                                                               style: montserratRegular
                                                                   .copyWith(
                                                                       color:
                                                                           black,
                                                                       fontSize:
-                                                                          12),
-                                                            ).paddingOnly(
-                                                                left: 8.0,
-                                                                right: 8.0),
-                                                          )
-                                                        : Container(
-                                                            width: 0,
-                                                            height: 0),
-                                                  ],
-                                                ),
-                                              ],
-                                            ).expand(),
+                                                                          12)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                  ),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Flexible(
+                                                        child: Container(
+                                                          child: Text(
+                                                              bookingList[index]
+                                                                          [
+                                                                          'cv_variant'] !=
+                                                                      null
+                                                                  ? bookingList[
+                                                                              index]
+                                                                          [
+                                                                          'cv_variant'] +
+                                                                      " (" +
+                                                                      bookingList[
+                                                                              index]
+                                                                          [
+                                                                          'cv_year'] +
+                                                                      ")"
+                                                                  : " (" +
+                                                                      bookingList[
+                                                                              index]
+                                                                          [
+                                                                          'cv_year'] +
+                                                                      ")",
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: montserratRegular
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          12)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                          'Date: ' +
+                                                              DateFormat(
+                                                                      'dd-MM-yyyy')
+                                                                  .format(DateTime
+                                                                      .tryParse(
+                                                                bookingList[index]
+                                                                        [
+                                                                        'bk_booking_date']
+                                                                    .toString(),
+                                                              )!),
+                                                          style: montserratRegular
+                                                              .copyWith(
+                                                                  fontSize: 12,
+                                                                  color:
+                                                                      black)),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  bookingList[index]
+                                                              ['st_code'] ==
+                                                          "CANC"
+                                                      ? Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          2,
+                                                                      vertical:
+                                                                          4),
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  boxDecorationWithRoundedCorners(
+                                                                backgroundColor:
+                                                                    warningcolor,
+                                                                borderRadius:
+                                                                    radius(6),
+                                                              ),
+                                                              child: Text(
+                                                                "Cancelled",
+                                                                style: montserratRegular
+                                                                    .copyWith(
+                                                                        color:
+                                                                            black,
+                                                                        fontSize:
+                                                                            12),
+                                                              ).paddingOnly(
+                                                                  left: 8.0,
+                                                                  right: 8.0),
+                                                            ),
+                                                            GestureDetector(
+                                                              onTap: () {},
+                                                              child: Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          right:
+                                                                              8,
+                                                                          top:
+                                                                              8),
+                                                                  child: Icon(
+                                                                    Icons.info,
+                                                                    color:
+                                                                        black,
+                                                                    size: 22,
+                                                                  )),
+                                                            )
+                                                          ],
+                                                        )
+                                                      : Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          2,
+                                                                      vertical:
+                                                                          4),
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  boxDecorationWithRoundedCorners(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .green,
+                                                                borderRadius:
+                                                                    radius(6),
+                                                              ),
+                                                              child: Text(
+                                                                "Completed",
+                                                                style: montserratRegular
+                                                                    .copyWith(
+                                                                        color:
+                                                                            black,
+                                                                        fontSize:
+                                                                            12),
+                                                              ).paddingOnly(
+                                                                  left: 8.0,
+                                                                  right: 8.0),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                  SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                ],
+                                              ),
+                                            )
                                           ],
                                         ).onTap(
                                           () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ServicehistoryDetails(
-                                                            bk_id: bookingList[
-                                                                index])));
-                                            // bookingList[index]['st_code'] ==
-                                            //         "CANC"
-                                            //     ? AMCancelledServiceHistoryDetails(
-                                            //             bk_id:
-                                            //                 bookingList[index],
-                                            //             reason:
-                                            //                 bookingList[index]
-                                            //                     ['bkt_content'])
-                                            //         .launch(context)
-                                            //     :
-                                            //     ServicehistoryDetails(
-                                            //             bk_id:
-                                            //                 bookingList[index])
-                                            //         .launch(context);
+                                            bookingList[index]['st_code'] ==
+                                                    "CANC"
+                                                ? Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ServicehistoryDetails(
+                                                                bk_id:
+                                                                    bookingList[
+                                                                        index])))
+                                                : Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ServicehistoryDetails(
+                                                                bk_id:
+                                                                    bookingList[
+                                                                        index])));
                                           },
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 );
