@@ -40,7 +40,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
   late Map<String, dynamic> status = {};
   late Map<String, dynamic> backstatus = {};
   late Map<String, dynamic> drivercontact = {};
-  late Map<String, dynamic> dropdetails = {};
+  // late Map<String, dynamic> dropdetails = {};
   late Map<String, dynamic> vehicle = {};
   var cust_status_id;
   var back_status_id;
@@ -204,81 +204,73 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                 Offset(0, 0)),
                                                       ]),
                                                 ),
-                                                Container(
-                                                    height: height * 0.075,
-                                                    width: height * 0.4,
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      16, 16, 16, 0),
+                                                  child: Container(
                                                     decoration: BoxDecoration(
-                                                      color: white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      border: Border.all(
-                                                          color:
-                                                              borderGreyColor),
-                                                    ),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Expanded(
-                                                          child: Container(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    right: width *
-                                                                        0.025,
-                                                                    left: width *
-                                                                        0.025),
-                                                            child:
-                                                                TextFormField(
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .multiline,
-                                                              minLines: 1,
-                                                              maxLines: 5,
-                                                              maxLength: 500,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: montserratLight
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    16)),
+                                                        color: white),
+                                                    child: TextField(
+                                                      keyboardType:
+                                                          TextInputType
+                                                              .multiline,
+                                                      minLines: 1,
+                                                      maxLines: 5,
+                                                      maxLength: 500,
+                                                      textInputAction:
+                                                          TextInputAction
+                                                              .newline,
+                                                      decoration:
+                                                          InputDecoration(
+                                                              counterText: "",
+                                                              hintText:
+                                                                  "Enter Reason",
+                                                              hintStyle: montserratRegular
                                                                   .copyWith(
                                                                       color:
                                                                           black,
                                                                       fontSize:
-                                                                          14),
-                                                              decoration: InputDecoration(
-                                                                  errorStyle: TextStyle(
-                                                                      fontSize:
-                                                                          12,
-                                                                      color:
-                                                                          warningcolor),
-                                                                  counterText:
-                                                                      "",
-                                                                  filled: true,
-                                                                  hintText:
-                                                                      "Enter Reason",
-                                                                  hintStyle: montserratRegular
-                                                                      .copyWith(
-                                                                          color:
-                                                                              black,
-                                                                          fontSize:
-                                                                              14),
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  fillColor:
-                                                                      white),
-                                                              focusNode:
-                                                                  cancelFocus,
-                                                              onChanged:
-                                                                  (value) {
-                                                                setState(() {
-                                                                  cancel =
-                                                                      value;
-                                                                });
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ))
+                                                                          12),
+                                                              focusedBorder:
+                                                                  OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                        color:
+                                                                            greyColor,
+                                                                        width:
+                                                                            0.5),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              enabledBorder:
+                                                                  OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                        color:
+                                                                            greyColor,
+                                                                        width:
+                                                                            0.5),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              )),
+                                                      focusNode: cancelFocus,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          cancel = value;
+                                                        });
+                                                      },
+                                                    ),
+                                                    alignment: Alignment.center,
+                                                  ),
+                                                ),
                                               ]),
                                           SizedBox(height: 24),
                                           GestureDetector(
@@ -288,7 +280,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                     () => issubmitted = false);
                                                 showCustomToast(
                                                     context, "Enter Reason",
-                                                    bgColor: warningcolor,
+                                                    bgColor: errorcolor,
                                                     textColor: white);
                                               } else {
                                                 try {
@@ -315,7 +307,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                         "success") {
                                                       showCustomToast(context,
                                                           "Booking Canceled",
-                                                          bgColor: warningcolor,
+                                                          bgColor: black,
                                                           textColor: white);
                                                       setState(() {
                                                         Navigator
@@ -332,7 +324,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                 } catch (e) {
                                                   setState(() =>
                                                       issubmitted = false);
-                                                  print(e.toString());
                                                 }
                                                 // finish(context);
                                               }
@@ -475,6 +466,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                   child: Text(
                                                     "Hold Reason" + "*",
                                                     textAlign: TextAlign.center,
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                            fontSize: 14,
+                                                            color: black),
                                                   ),
                                                 ),
                                               ),
@@ -504,80 +499,73 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                 Offset(0, 0)),
                                                       ]),
                                                 ),
-                                                Container(
-                                                    height: height * 0.075,
-                                                    width: height * 0.4,
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      16, 16, 16, 0),
+                                                  child: Container(
                                                     decoration: BoxDecoration(
-                                                      color: white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      border: Border.all(
-                                                          color:
-                                                              borderGreyColor),
-                                                    ),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Expanded(
-                                                          child: Container(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    right: width *
-                                                                        0.025,
-                                                                    left: width *
-                                                                        0.025),
-                                                            child:
-                                                                TextFormField(
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .multiline,
-                                                              minLines: 1,
-                                                              maxLines: 5,
-                                                              maxLength: 500,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: montserratLight
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    16)),
+                                                        color: white),
+                                                    child: TextField(
+                                                      keyboardType:
+                                                          TextInputType
+                                                              .multiline,
+                                                      minLines: 1,
+                                                      maxLines: 5,
+                                                      maxLength: 500,
+                                                      textInputAction:
+                                                          TextInputAction
+                                                              .newline,
+                                                      decoration:
+                                                          InputDecoration(
+                                                              counterText: "",
+                                                              hintText:
+                                                                  "Enter Reason",
+                                                              hintStyle: montserratRegular
                                                                   .copyWith(
                                                                       color:
                                                                           black,
                                                                       fontSize:
-                                                                          14),
-                                                              decoration: InputDecoration(
-                                                                  errorStyle: TextStyle(
-                                                                      fontSize:
-                                                                          12,
-                                                                      color:
-                                                                          warningcolor),
-                                                                  counterText:
-                                                                      "",
-                                                                  filled: true,
-                                                                  hintText:
-                                                                      "Enter Reason",
-                                                                  hintStyle: montserratRegular
-                                                                      .copyWith(
-                                                                          color:
-                                                                              black,
-                                                                          fontSize:
-                                                                              14),
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  fillColor:
-                                                                      white),
-                                                              focusNode:
-                                                                  cancelFocus,
-                                                              onChanged:
-                                                                  (value) {
-                                                                setState(() {
-                                                                  hold = value;
-                                                                });
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ))
+                                                                          12),
+                                                              focusedBorder:
+                                                                  OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                        color:
+                                                                            greyColor,
+                                                                        width:
+                                                                            0.5),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              enabledBorder:
+                                                                  OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                        color:
+                                                                            greyColor,
+                                                                        width:
+                                                                            0.5),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              )),
+                                                      focusNode: holdFocus,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          hold = value;
+                                                        });
+                                                      },
+                                                    ),
+                                                    alignment: Alignment.center,
+                                                  ),
+                                                ),
                                               ]),
                                           SizedBox(height: 20),
                                           GestureDetector(
@@ -587,7 +575,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                     () => issubmitted = false);
                                                 showCustomToast(
                                                     context, "Enter Reason",
-                                                    bgColor: warningcolor,
+                                                    bgColor: errorcolor,
                                                     textColor: white);
                                               } else {
                                                 try {
@@ -614,7 +602,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                         "success") {
                                                       showCustomToast(context,
                                                           "Booking is under hold",
-                                                          bgColor: warningcolor,
+                                                          bgColor: black,
                                                           textColor: white);
                                                       setState(() {
                                                         Navigator
@@ -633,7 +621,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                       issubmitted = false);
                                                   print(e.toString());
                                                 }
-                                                Navigator.pop(context);
+                                                // Navigator.pop(context);
                                               }
                                             },
                                             child: Stack(
@@ -769,7 +757,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
           booking_package = value['booking']['booking_package'];
           pickup_timeslot = value['booking']['pickup_timeslot'];
           drivercontact = value['booking']['driver_contact'];
-          dropdetails = value['booking']['drop_address'];
+          // dropdetails = value['booking']['drop_address'];
           vehicle = value['booking']['vehicle'];
         });
       }

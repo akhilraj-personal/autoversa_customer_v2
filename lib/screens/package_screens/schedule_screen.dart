@@ -1644,132 +1644,135 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(padding: EdgeInsets.all(2)),
-                        isdroplocation
-                            ? Column(
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: Container(
-                                      child: Text(
-                                        ST.of(context).select_drop_address +
-                                            "*",
-                                        textAlign: TextAlign.left,
-                                        style: montserratSemiBold.copyWith(),
-                                      ),
+                    isdroplocation
+                        ? SizedBox(
+                            height: 4,
+                          )
+                        : SizedBox(),
+                    isdroplocation
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(padding: EdgeInsets.all(8)),
+                              Text(
+                                ST.of(context).select_drop_address + "*",
+                                textAlign: TextAlign.start,
+                                style: montserratSemiBold.copyWith(
+                                    color: black, fontSize: 14),
+                              ),
+                            ],
+                          )
+                        : Row(),
+                    isdroplocation
+                        ? SizedBox(
+                            height: 4,
+                          )
+                        : SizedBox(),
+                    isdroplocation
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.all(16),
+                                      height: height * 0.045,
+                                      width: height * 0.37,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 16,
+                                                color:
+                                                    syanColor.withOpacity(.5),
+                                                spreadRadius: 0,
+                                                blurStyle: BlurStyle.outer,
+                                                offset: Offset(0, 0)),
+                                          ]),
                                     ),
-                                  ),
-                                ],
-                              )
-                            : Column(),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        isdroplocation
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Stack(
-                                      alignment: Alignment.bottomCenter,
-                                      children: [
-                                        Container(
-                                          height: height * 0.045,
-                                          width: height * 0.37,
+                                    Padding(
+                                      padding: EdgeInsets.all(16),
+                                      child: Container(
+                                          height: height * 0.075,
+                                          width: height * 0.46,
                                           decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(14),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    blurRadius: 16,
-                                                    color: syanColor
-                                                        .withOpacity(.5),
-                                                    spreadRadius: 0,
-                                                    blurStyle: BlurStyle.outer,
-                                                    offset: Offset(0, 0)),
-                                              ]),
-                                        ),
-                                        Container(
-                                            height: height * 0.075,
-                                            width: height * 0.46,
-                                            decoration: BoxDecoration(
-                                              color: white,
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              border: Border.all(
-                                                  color: borderGreyColor),
-                                            ),
-                                            child: Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Container(
-                                                    padding: EdgeInsets.only(
-                                                      left: width * 0.025,
-                                                      right: width * 0.025,
-                                                    ),
-                                                    child:
-                                                        DropdownButtonFormField(
-                                                      value: SelectAddressList[
-                                                          selected_address],
-                                                      isExpanded: true,
-                                                      decoration:
-                                                          InputDecoration
-                                                              .collapsed(
-                                                                  hintText: ''),
-                                                      hint: Align(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Text(
-                                                            ST
-                                                                .of(context)
-                                                                .emirates,
-                                                            style: montserratRegular
-                                                                .copyWith(
-                                                                    color:
-                                                                        black,
-                                                                    fontSize:
-                                                                        14),
-                                                          )),
-                                                      items:
-                                                          SelectAddressList.map(
-                                                              (String? value) {
-                                                        return DropdownMenuItem<
-                                                            String>(
-                                                          value: value,
-                                                          child: Text(
-                                                            value!,
-                                                            style: montserratRegular
-                                                                .copyWith(
-                                                                    color:
-                                                                        black,
-                                                                    fontSize:
-                                                                        14),
-                                                          ),
-                                                        );
-                                                      }).toList(),
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          pickupaddresschange(
-                                                              SelectAddressList
-                                                                  .indexOf(value
-                                                                      .toString()));
-                                                        });
-                                                      },
-                                                    ),
+                                            color: white,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: borderGreyColor),
+                                          ),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.only(
+                                                    left: width * 0.025,
+                                                    right: width * 0.025,
+                                                  ),
+                                                  child:
+                                                      DropdownButtonFormField(
+                                                    value: SelectAddressList[
+                                                        selected_address],
+                                                    isExpanded: true,
+                                                    decoration: InputDecoration
+                                                        .collapsed(
+                                                            hintText: ''),
+                                                    hint: Align(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Text(
+                                                          ST
+                                                              .of(context)
+                                                              .emirates,
+                                                          style:
+                                                              montserratRegular
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          14),
+                                                        )),
+                                                    items:
+                                                        SelectAddressList.map(
+                                                            (String? value) {
+                                                      return DropdownMenuItem<
+                                                          String>(
+                                                        value: value,
+                                                        child: Text(
+                                                          value!,
+                                                          style:
+                                                              montserratRegular
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          14),
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        pickupaddresschange(
+                                                            SelectAddressList
+                                                                .indexOf(value
+                                                                    .toString()));
+                                                      });
+                                                    },
                                                   ),
                                                 ),
-                                              ],
-                                            ))
-                                      ]),
-                                ],
-                              )
-                            : Container(),
-                      ],
-                    ),
+                                              ),
+                                            ],
+                                          )),
+                                    )
+                                  ]),
+                            ],
+                          )
+                        : Container(),
                     SizedBox(
                       height: 12,
                     ),
@@ -1916,42 +1919,64 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(width: 1, color: Colors.black)),
-                          elevation: 4,
-                          child: ListTile(
-                            trailing: RadiantGradientMask(
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.date_range,
-                                  color: white,
+                    Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(16.0),
+                          padding: EdgeInsets.all(12),
+                          height: height * 0.045,
+                          width: height * 0.37,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 16,
+                                    color: syanColor.withOpacity(.6),
+                                    spreadRadius: 0,
+                                    blurStyle: BlurStyle.outer,
+                                    offset: Offset(0, 0)),
+                              ]),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: BorderSide(
+                                      width: 1, color: Colors.black)),
+                              elevation: 4,
+                              child: ListTile(
+                                trailing: RadiantGradientMask(
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.date_range,
+                                      color: white,
+                                    ),
+                                    onPressed: () {
+                                      _selectDate(context);
+                                    },
+                                  ),
                                 ),
-                                onPressed: () {
+                                onTap: () {
                                   _selectDate(context);
                                 },
-                              ),
-                            ),
-                            onTap: () {
-                              _selectDate(context);
-                            },
-                            title: Text(
-                                ST.of(context).select_booking_date + " ",
-                                style: montserratLight.copyWith(
-                                    color: black, fontSize: 12),
-                                maxLines: 3),
-                            subtitle: Text(
-                              selectedDate == " "
-                                  ? " "
-                                  : DateFormat('dd-MM-yyyy')
-                                      .format(selectedDate),
-                              style: montserratLight.copyWith(
-                                  color: black, fontSize: 12),
-                            ),
-                          )),
+                                title: Text(
+                                    ST.of(context).select_booking_date + " ",
+                                    style: montserratLight.copyWith(
+                                        color: black, fontSize: 12),
+                                    maxLines: 3),
+                                subtitle: Text(
+                                  selectedDate == " "
+                                      ? " "
+                                      : DateFormat('dd-MM-yyyy')
+                                          .format(selectedDate),
+                                  style: montserratLight.copyWith(
+                                      color: black, fontSize: 12),
+                                ),
+                              )),
+                        ),
+                      ],
                     ),
                     Row(
                       children: [
@@ -1963,181 +1988,210 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Container(
-                        margin: EdgeInsets.all(4.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: white,
-                          border: Border.all(
-                            color: black,
-                          ),
+                    Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(16.0),
+                          padding: EdgeInsets.all(12),
+                          height: height * 0.045,
+                          width: height * 0.37,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 16,
+                                    color: syanColor.withOpacity(.6),
+                                    spreadRadius: 0,
+                                    blurStyle: BlurStyle.outer,
+                                    offset: Offset(0, 0)),
+                              ]),
                         ),
-                        child: ExpansionTile(
-                          childrenPadding: EdgeInsets.all(8),
-                          leading: Container(
-                            width: 30,
-                            height: 30,
-                            child: RadiantGradientMask(
-                              child: Icon(Icons.av_timer_outlined,
-                                  color: white, size: 28),
+                        Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Container(
+                            margin: EdgeInsets.all(4.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: white,
+                              border: Border.all(
+                                color: black,
+                              ),
+                            ),
+                            child: ExpansionTile(
+                              childrenPadding: EdgeInsets.all(8),
+                              leading: Container(
+                                width: 30,
+                                height: 30,
+                                child: RadiantGradientMask(
+                                  child: Icon(Icons.av_timer_outlined,
+                                      color: white, size: 28),
+                                ),
+                              ),
+                              title: Text(ST.of(context).select_a_time_slot,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: montserratLight.copyWith(
+                                      color: black, fontSize: 14),
+                                  maxLines: 3),
+                              subtitle: Text(
+                                  selected_timeslot == ""
+                                      ? ST.of(context).select_a_time_slot + "*"
+                                      : selected_timeslot,
+                                  style: montserratLight.copyWith(
+                                      color: black, fontSize: 14)),
+                              textColor: black,
+                              trailing: isExpanded
+                                  ? Container(
+                                      child: RadiantGradientMask(
+                                        child: Icon(Icons.keyboard_arrow_up,
+                                            color: white, size: 30),
+                                      ),
+                                      padding: EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          color: white.withAlpha(32)),
+                                    )
+                                  : RadiantGradientMask(
+                                      child: Icon(Icons.keyboard_arrow_down,
+                                          color: white, size: 30),
+                                    ),
+                              onExpansionChanged: (t1) {
+                                isExpanded = !isExpanded;
+                                setState(() {});
+                              },
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: white, boxShadow: null),
+                                  padding: EdgeInsets.all(8),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      timeslots.length > 0
+                                          ? ListView.builder(
+                                              scrollDirection: Axis.vertical,
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              padding: EdgeInsets.only(
+                                                  top: 16, bottom: 16),
+                                              itemCount: timeslots.length,
+                                              itemBuilder: (context, index) {
+                                                return Row(
+                                                  children: <Widget>[
+                                                    Theme(
+                                                      data: Theme.of(context)
+                                                          .copyWith(
+                                                              unselectedWidgetColor:
+                                                                  black),
+                                                      child: Radio(
+                                                        value: timeslots[index][
+                                                                'tm_start_time'] +
+                                                            " - " +
+                                                            timeslots[index]
+                                                                ['tm_end_time'],
+                                                        groupValue: isTimeCheck,
+                                                        fillColor:
+                                                            MaterialStateColor
+                                                                .resolveWith(
+                                                                    (states) =>
+                                                                        syanColor),
+                                                        onChanged:
+                                                            (dynamic value) {
+                                                          timeslots[index][
+                                                                      'active_flag'] ==
+                                                                  1
+                                                              ? value = 0
+                                                              : setState(() {
+                                                                  isTimeCheck =
+                                                                      value;
+                                                                  selected_timeid =
+                                                                      int.parse(
+                                                                          timeslots[index]
+                                                                              [
+                                                                              'tm_id']);
+                                                                  selected_timeslot = timeFormatter(
+                                                                          timeslots[index]
+                                                                              [
+                                                                              'tm_start_time']) +
+                                                                      " - " +
+                                                                      timeFormatter(
+                                                                          timeslots[index]
+                                                                              [
+                                                                              'tm_end_time']);
+                                                                });
+                                                        },
+                                                      ),
+                                                    ),
+                                                    timeslots[index][
+                                                                'active_flag'] ==
+                                                            1
+                                                        ? Text(
+                                                            timeFormatter(
+                                                                    timeslots[
+                                                                            index]
+                                                                        [
+                                                                        'tm_start_time']) +
+                                                                " - " +
+                                                                timeFormatter(
+                                                                    timeslots[
+                                                                            index]
+                                                                        [
+                                                                        'tm_end_time']) +
+                                                                "\n" +
+                                                                ST
+                                                                    .of(context)
+                                                                    .slot_is_full,
+                                                            style:
+                                                                montserratLight
+                                                                    .copyWith(
+                                                              fontSize: 14,
+                                                              color: black,
+                                                            ),
+                                                          )
+                                                        : Text(
+                                                            timeFormatter(timeslots[
+                                                                        index][
+                                                                    'tm_start_time']) +
+                                                                " - " +
+                                                                timeFormatter(
+                                                                    timeslots[
+                                                                            index]
+                                                                        [
+                                                                        'tm_end_time']),
+                                                            style:
+                                                                montserratLight
+                                                                    .copyWith(
+                                                              fontSize: 14,
+                                                              color: black,
+                                                            ),
+                                                          ),
+                                                  ],
+                                                );
+                                              })
+                                          : Text(
+                                              ST
+                                                  .of(context)
+                                                  .no_time_slot_available,
+                                              style: montserratLight.copyWith(
+                                                fontSize: 14,
+                                                color: black,
+                                              ),
+                                            ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                          title: Text(ST.of(context).select_a_time_slot,
-                              overflow: TextOverflow.ellipsis,
-                              style: montserratLight.copyWith(
-                                  color: black, fontSize: 14),
-                              maxLines: 3),
-                          subtitle: Text(
-                              selected_timeslot == ""
-                                  ? ST.of(context).select_a_time_slot + "*"
-                                  : selected_timeslot,
-                              style: montserratLight.copyWith(
-                                  color: black, fontSize: 14)),
-                          textColor: black,
-                          trailing: isExpanded
-                              ? Container(
-                                  child: RadiantGradientMask(
-                                    child: Icon(Icons.keyboard_arrow_up,
-                                        color: white, size: 30),
-                                  ),
-                                  padding: EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: white.withAlpha(32)),
-                                )
-                              : RadiantGradientMask(
-                                  child: Icon(Icons.keyboard_arrow_down,
-                                      color: white, size: 30),
-                                ),
-                          onExpansionChanged: (t1) {
-                            isExpanded = !isExpanded;
-                            setState(() {});
-                          },
-                          children: [
-                            Container(
-                              decoration:
-                                  BoxDecoration(color: white, boxShadow: null),
-                              padding: EdgeInsets.all(8),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  timeslots.length > 0
-                                      ? ListView.builder(
-                                          scrollDirection: Axis.vertical,
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                              top: 16, bottom: 16),
-                                          itemCount: timeslots.length,
-                                          itemBuilder: (context, index) {
-                                            return Row(
-                                              children: <Widget>[
-                                                Theme(
-                                                  data: Theme.of(context)
-                                                      .copyWith(
-                                                          unselectedWidgetColor:
-                                                              black),
-                                                  child: Radio(
-                                                    value: timeslots[index]
-                                                            ['tm_start_time'] +
-                                                        " - " +
-                                                        timeslots[index]
-                                                            ['tm_end_time'],
-                                                    groupValue: isTimeCheck,
-                                                    fillColor:
-                                                        MaterialStateColor
-                                                            .resolveWith(
-                                                                (states) =>
-                                                                    syanColor),
-                                                    onChanged: (dynamic value) {
-                                                      timeslots[index][
-                                                                  'active_flag'] ==
-                                                              1
-                                                          ? value = 0
-                                                          : setState(() {
-                                                              isTimeCheck =
-                                                                  value;
-                                                              selected_timeid =
-                                                                  int.parse(timeslots[
-                                                                          index]
-                                                                      [
-                                                                      'tm_id']);
-                                                              selected_timeslot = timeFormatter(
-                                                                      timeslots[
-                                                                              index]
-                                                                          [
-                                                                          'tm_start_time']) +
-                                                                  " - " +
-                                                                  timeFormatter(
-                                                                      timeslots[
-                                                                              index]
-                                                                          [
-                                                                          'tm_end_time']);
-                                                            });
-                                                    },
-                                                  ),
-                                                ),
-                                                timeslots[index]
-                                                            ['active_flag'] ==
-                                                        1
-                                                    ? Text(
-                                                        timeFormatter(
-                                                                timeslots[index]
-                                                                    [
-                                                                    'tm_start_time']) +
-                                                            " - " +
-                                                            timeFormatter(
-                                                                timeslots[index]
-                                                                    [
-                                                                    'tm_end_time']) +
-                                                            "\n" +
-                                                            ST
-                                                                .of(context)
-                                                                .slot_is_full,
-                                                        style: montserratLight
-                                                            .copyWith(
-                                                          fontSize: 14,
-                                                          color: black,
-                                                        ),
-                                                      )
-                                                    : Text(
-                                                        timeFormatter(timeslots[
-                                                                    index][
-                                                                'tm_start_time']) +
-                                                            " - " +
-                                                            timeFormatter(
-                                                                timeslots[index]
-                                                                    [
-                                                                    'tm_end_time']),
-                                                        style: montserratLight
-                                                            .copyWith(
-                                                          fontSize: 14,
-                                                          color: black,
-                                                        ),
-                                                      ),
-                                              ],
-                                            );
-                                          })
-                                      : Text(
-                                          ST.of(context).no_time_slot_available,
-                                          style: montserratLight.copyWith(
-                                            fontSize: 14,
-                                            color: black,
-                                          ),
-                                        ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
                         ),
-                      ),
+                      ],
                     ),
                     SizedBox(
                       height: 16,
@@ -2167,40 +2221,44 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                       offset: Offset(0, 0)),
                                 ]),
                           ),
-                          Container(
-                            height: height * 0.075,
-                            width: height * 0.45,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(14)),
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  syanColor,
-                                  lightblueColor,
-                                ],
+                          Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Container(
+                              height: height * 0.075,
+                              width: height * 0.45,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(14)),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    syanColor,
+                                    lightblueColor,
+                                  ],
+                                ),
                               ),
-                            ),
-                            child: !isproceeding
-                                ? Text(
-                                    ST.of(context).proceed,
-                                    style: montserratSemiBold.copyWith(
-                                        color: Colors.white),
-                                  )
-                                : Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Transform.scale(
-                                        scale: 0.7,
-                                        child: CircularProgressIndicator(
-                                          color: white,
+                              child: !isproceeding
+                                  ? Text(
+                                      ST.of(context).proceed,
+                                      style: montserratSemiBold.copyWith(
+                                          color: Colors.white),
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Transform.scale(
+                                          scale: 0.7,
+                                          child: CircularProgressIndicator(
+                                            color: white,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
+                                      ],
+                                    ),
+                            ),
                           ),
                         ],
                       ),

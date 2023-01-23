@@ -724,7 +724,9 @@ class CarRepairState extends State<CarRepair> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              12.height,
+                              SizedBox(
+                                height: 12,
+                              ),
                               isServicing
                                   ? serviceList.isEmpty
                                       ? ListView.builder(
@@ -1146,7 +1148,9 @@ class CarRepairState extends State<CarRepair> {
                                           textAlign: TextAlign.center,
                                           style: montserratRegular.copyWith(
                                               fontSize: 14, color: black))),
-                              8.height,
+                              SizedBox(
+                                height: 12,
+                              ),
                               isServicing
                                   ? Row(
                                       crossAxisAlignment:
@@ -1432,7 +1436,7 @@ class CarRepairState extends State<CarRepair> {
                                       ],
                                     )
                                   : Container(),
-                              4.height,
+                              SizedBox(height: height * 0.04),
                               isServicing && recordPending == false
                                   ? GestureDetector(
                                       onTap: () async {

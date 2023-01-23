@@ -97,52 +97,52 @@ class ServiceListState extends State<ServiceList> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: white,
-          shadowColor: white,
-          iconTheme: IconThemeData(color: white),
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark,
-          ),
-          actions: [
-            Center(
-              child: Row(
-                children: [
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    width: width,
-                    height: height * 0.12,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          lightblueColor,
-                          syanColor,
-                        ],
-                      ),
-                    ),
-                    child: ClipPath(
-                      clipper: SinCosineWaveClipper(
-                        verticalPosition: VerticalPosition.top,
-                      ),
-                      child: Container(
-                        height: height * 0.31,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            syanColor.withOpacity(0.3),
-                            Color.fromARGB(255, 176, 205, 210),
-                          ],
-                        )),
-                      ),
-                    ),
-                  ),
+          flexibleSpace: Container(
+            alignment: Alignment.bottomCenter,
+            width: width,
+            height: height * 0.12,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  lightblueColor,
+                  syanColor,
                 ],
               ),
-            )
-          ],
+            ),
+            child: ClipPath(
+              clipper: SinCosineWaveClipper(
+                verticalPosition: VerticalPosition.top,
+              ),
+              child: Container(
+                height: height * 0.31,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    syanColor.withOpacity(0.3),
+                    Color.fromARGB(255, 176, 205, 210),
+                  ],
+                )),
+              ),
+            ),
+          ),
+          title: Text(
+            "Service History",
+            style: myriadproregular.copyWith(
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
+          // leading: IconButton(
+          //   onPressed: () {
+          //     Navigator.pop(context);
+          //   },
+          //   icon: const Icon(Icons.arrow_back, color: Colors.white),
+          //   iconSize: 18,
+          // ),
         ),
         body: Container(
           child: Column(
@@ -239,6 +239,22 @@ class ServiceListState extends State<ServiceList> {
                               padding: EdgeInsets.only(top: 16, bottom: 16),
                               itemCount: bookingList.length,
                               itemBuilder: (context, index) {
+                                AlertDialog Cancelreason = AlertDialog(
+                                  backgroundColor: context.cardColor,
+                                  title: Text(
+                                    "Cancel Reason",
+                                    style: montserratSemiBold.copyWith(
+                                        color: black, fontSize: 14),
+                                  ),
+                                  content: Text(
+                                    cancelreason != null
+                                        ? cancelreason.toUpperCase()
+                                        : "",
+                                    style: montserratRegular.copyWith(
+                                        color: black, fontSize: 12),
+                                  ),
+                                  actions: [],
+                                );
                                 return Padding(
                                   padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
                                   child: Stack(
@@ -475,7 +491,17 @@ class ServiceListState extends State<ServiceList> {
                                                                   right: 8.0),
                                                             ),
                                                             GestureDetector(
-                                                              onTap: () {},
+                                                              onTap: () {
+                                                                showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (BuildContext
+                                                                          context) {
+                                                                    return Cancelreason;
+                                                                  },
+                                                                );
+                                                              },
                                                               child: Padding(
                                                                   padding: EdgeInsets
                                                                       .only(

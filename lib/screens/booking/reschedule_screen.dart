@@ -523,9 +523,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                           padding: EdgeInsets.all(8),
                           width: width * 1.85,
                           decoration: BoxDecoration(
-                            color: context.cardColor,
+                            color: white,
                             borderRadius: BorderRadius.circular(16),
-                            boxShadow: defaultBoxShadow(),
                           ),
                           duration: 1000.milliseconds,
                           curve: Curves.linearToEaseOut,
@@ -546,7 +545,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                               Radius.circular(8))),
                                       child: Column(
                                         children: [
-                                          8.height,
+                                          SizedBox(height: 8),
                                           Column(
                                             children: <Widget>[
                                               SizedBox(
@@ -554,66 +553,108 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                 child: Container(
                                                   child: Text(
                                                     "Cancel Reason" + "*",
-                                                    textAlign: TextAlign.left,
+                                                    textAlign: TextAlign.center,
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                            fontSize: 14,
+                                                            color: black),
                                                   ),
                                                 ),
                                               ),
                                             ],
                                           ),
-                                          8.height,
-                                          Padding(
-                                            padding: EdgeInsets.all(2),
-                                            child: Container(
-                                              width: width * 0.85,
-                                              decoration: const BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(16)),
-                                                  color: white),
-                                              child: TextField(
-                                                  keyboardType:
-                                                      TextInputType.multiline,
-                                                  minLines: 1,
-                                                  maxLines: 5,
-                                                  maxLength: 500,
-                                                  textInputAction:
-                                                      TextInputAction.newline,
-                                                  focusNode: cancelFocus,
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      cancel = value;
-                                                    });
-                                                  },
-                                                  decoration: InputDecoration(
-                                                      counterText: "",
-                                                      hintText: "Enter Reason",
-                                                      hintStyle: montserratRegular
-                                                          .copyWith(
-                                                              color: black,
-                                                              fontSize: 12),
-                                                      focusedBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            const BorderSide(
-                                                                color: black,
-                                                                width: 0.5),
+                                          SizedBox(height: 8),
+                                          Stack(
+                                              alignment: Alignment.bottomCenter,
+                                              children: [
+                                                Container(
+                                                  height: height * 0.045,
+                                                  width: height * 0.37,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              14),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            blurRadius: 16,
+                                                            color: syanColor
+                                                                .withOpacity(
+                                                                    .5),
+                                                            spreadRadius: 0,
+                                                            blurStyle:
+                                                                BlurStyle.outer,
+                                                            offset:
+                                                                Offset(0, 0)),
+                                                      ]),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      16, 16, 16, 0),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            const BorderSide(
-                                                                color: black,
-                                                                width: 0.5),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ))),
-                                              alignment: Alignment.center,
-                                            ),
-                                          ),
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    16)),
+                                                        color: white),
+                                                    child: TextField(
+                                                      keyboardType:
+                                                          TextInputType
+                                                              .multiline,
+                                                      minLines: 1,
+                                                      maxLines: 5,
+                                                      maxLength: 500,
+                                                      textInputAction:
+                                                          TextInputAction
+                                                              .newline,
+                                                      decoration:
+                                                          InputDecoration(
+                                                              counterText: "",
+                                                              hintText:
+                                                                  "Enter Reason",
+                                                              hintStyle: montserratRegular
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          12),
+                                                              focusedBorder:
+                                                                  OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                        color:
+                                                                            greyColor,
+                                                                        width:
+                                                                            0.5),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              enabledBorder:
+                                                                  OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                        color:
+                                                                            greyColor,
+                                                                        width:
+                                                                            0.5),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              )),
+                                                      focusNode: cancelFocus,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          cancel = value;
+                                                        });
+                                                      },
+                                                    ),
+                                                    alignment: Alignment.center,
+                                                  ),
+                                                ),
+                                              ]),
                                           16.height,
                                           GestureDetector(
                                             onTap: () async {
@@ -667,7 +708,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                       iscancelsubmitted =
                                                           false);
                                                 }
-                                                finish(context);
+                                                // finish(context);
                                               }
                                             },
                                             child: Stack(
@@ -921,7 +962,9 @@ class RescheduleScreenState extends State<RescheduleScreen> {
             ),
           ),
           title: Text(
-            " ",
+            booking_package['pkg_name'] != null
+                ? booking_package['pkg_name']
+                : "Schedule Page",
             style: myriadproregular.copyWith(
               fontSize: 18,
               color: Colors.white,
