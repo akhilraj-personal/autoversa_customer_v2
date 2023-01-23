@@ -1,4 +1,5 @@
 import 'package:autoversa/constant/image_const.dart';
+import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
@@ -39,52 +40,52 @@ class ImageFullscreenState extends State<ImageFullscreen> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: whiteColor,
-          shadowColor: whiteColor,
-          iconTheme: IconThemeData(color: whiteColor),
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark,
-          ),
-          actions: [
-            Center(
-              child: Row(
-                children: [
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    width: width,
-                    height: height * 0.12,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          lightblueColor,
-                          syanColor,
-                        ],
-                      ),
-                    ),
-                    child: ClipPath(
-                      clipper: SinCosineWaveClipper(
-                        verticalPosition: VerticalPosition.top,
-                      ),
-                      child: Container(
-                        height: height * 0.31,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            syanColor.withOpacity(0.3),
-                            Color.fromARGB(255, 176, 205, 210),
-                          ],
-                        )),
-                      ),
-                    ),
-                  ),
+          flexibleSpace: Container(
+            alignment: Alignment.bottomCenter,
+            width: width,
+            height: height * 0.12,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  lightblueColor,
+                  syanColor,
                 ],
               ),
-            )
-          ],
+            ),
+            child: ClipPath(
+              clipper: SinCosineWaveClipper(
+                verticalPosition: VerticalPosition.top,
+              ),
+              child: Container(
+                height: height * 0.31,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    syanColor.withOpacity(0.3),
+                    Color.fromARGB(255, 176, 205, 210),
+                  ],
+                )),
+              ),
+            ),
+          ),
+          title: Text(
+            " ",
+            style: myriadproregular.copyWith(
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            iconSize: 18,
+          ),
         ),
         body: SingleChildScrollView(
           child: Column(

@@ -90,9 +90,6 @@ class RescheduleScreenState extends State<RescheduleScreen> {
 
   DateTime selectedDate = DateTime.now();
   bool isExpanded = false;
-  int scheduleappbarcolor = 0xFFFFF,
-      clippercolor = 0xFFFFF,
-      colorstatusbar = 0xFFFFF;
   bool issubmitted = false;
   bool isproceeding = false;
   bool isserviceble = false;
@@ -377,10 +374,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
     }
   }
 
-  Future<void> init() async {
-    // setStatusBarColor(Color(scheduleappbarcolor),
-    //     statusBarIconBrightness: Brightness.light);
-  }
+  Future<void> init() async {}
 
   timeFormatter(date_data) {
     var time = date_data;
@@ -894,52 +888,52 @@ class RescheduleScreenState extends State<RescheduleScreen> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: white,
-          shadowColor: white,
-          iconTheme: IconThemeData(color: white),
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark,
-          ),
-          actions: [
-            Center(
-              child: Row(
-                children: [
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    width: width,
-                    height: height * 0.12,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          lightblueColor,
-                          syanColor,
-                        ],
-                      ),
-                    ),
-                    child: ClipPath(
-                      clipper: SinCosineWaveClipper(
-                        verticalPosition: VerticalPosition.top,
-                      ),
-                      child: Container(
-                        height: height * 0.31,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            syanColor.withOpacity(0.3),
-                            Color.fromARGB(255, 176, 205, 210),
-                          ],
-                        )),
-                      ),
-                    ),
-                  ),
+          flexibleSpace: Container(
+            alignment: Alignment.bottomCenter,
+            width: width,
+            height: height * 0.12,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  lightblueColor,
+                  syanColor,
                 ],
               ),
-            )
-          ],
+            ),
+            child: ClipPath(
+              clipper: SinCosineWaveClipper(
+                verticalPosition: VerticalPosition.top,
+              ),
+              child: Container(
+                height: height * 0.31,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    syanColor.withOpacity(0.3),
+                    Color.fromARGB(255, 176, 205, 210),
+                  ],
+                )),
+              ),
+            ),
+          ),
+          title: Text(
+            " ",
+            style: myriadproregular.copyWith(
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            iconSize: 18,
+          ),
         ),
         body: SingleChildScrollView(
           child: Container(
