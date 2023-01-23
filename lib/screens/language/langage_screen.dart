@@ -13,6 +13,8 @@ class LanguageSelection extends StatefulWidget {
 }
 
 class LanguageSelectionState extends State<LanguageSelection> {
+  // AppStore appStore = AppStore();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -66,13 +68,13 @@ class LanguageSelectionState extends State<LanguageSelection> {
             )
           ],
         ),
-        // body: LanguageListWidget(
-        //   widgetType: WidgetType.LIST,
-        //   onLanguageChange: (v) async {
-        //     await v.languageCode!;
-        //     setState(() {});
-        //   },
-        // ),
+        body: LanguageListWidget(
+          widgetType: WidgetType.LIST,
+          onLanguageChange: (v) async {
+            // await appStore.setLanguage(v.languageCode!, context: context);
+            setState(() {});
+          },
+        ),
       ),
     );
   }

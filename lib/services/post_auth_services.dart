@@ -181,3 +181,8 @@ Future submitdeliverydrop(Map req) async {
   return handleResponse(await securedPostRequest(
       'Booking/BookingController/save_droplocationforbooking', req));
 }
+
+Future booking_reschedule(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/reschedule_booking', req));
+}
