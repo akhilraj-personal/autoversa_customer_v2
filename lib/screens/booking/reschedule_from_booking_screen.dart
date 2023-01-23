@@ -37,9 +37,6 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
   var isTimeCheck;
   var selected_timeid = 0;
   bool isproceeding = false;
-  int scheduleappbarcolor = 0xFFFFF,
-      clippercolor = 0xFFFFF,
-      colorstatusbar = 0xFFFFF;
 
   @override
   void initState() {
@@ -228,52 +225,52 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: white,
-          shadowColor: white,
-          iconTheme: IconThemeData(color: white),
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark,
-          ),
-          actions: [
-            Center(
-              child: Row(
-                children: [
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    width: width,
-                    height: height * 0.12,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          lightblueColor,
-                          syanColor,
-                        ],
-                      ),
-                    ),
-                    child: ClipPath(
-                      clipper: SinCosineWaveClipper(
-                        verticalPosition: VerticalPosition.top,
-                      ),
-                      child: Container(
-                        height: height * 0.31,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            syanColor.withOpacity(0.3),
-                            Color.fromARGB(255, 176, 205, 210),
-                          ],
-                        )),
-                      ),
-                    ),
-                  ),
+          flexibleSpace: Container(
+            alignment: Alignment.bottomCenter,
+            width: width,
+            height: height * 0.12,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  lightblueColor,
+                  syanColor,
                 ],
               ),
-            )
-          ],
+            ),
+            child: ClipPath(
+              clipper: SinCosineWaveClipper(
+                verticalPosition: VerticalPosition.top,
+              ),
+              child: Container(
+                height: height * 0.31,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    syanColor.withOpacity(0.3),
+                    Color.fromARGB(255, 176, 205, 210),
+                  ],
+                )),
+              ),
+            ),
+          ),
+          title: Text(
+            " ",
+            style: myriadproregular.copyWith(
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            iconSize: 18,
+          ),
         ),
         body: SingleChildScrollView(
           child: Container(

@@ -11,3 +11,4 @@ TextStyle montserratMedium =
 TextStyle montserratRegular =
     const TextStyle(fontFamily: 'Montserrat', fontWeight: FontWeight.w400);
 TextStyle montserratLight = const TextStyle(fontFamily: 'Montserrat');
+TextStyle myriadproregular = const TextStyle(fontFamily: 'MyriadPro-Regular');
