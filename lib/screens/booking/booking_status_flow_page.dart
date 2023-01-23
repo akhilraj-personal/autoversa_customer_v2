@@ -4,6 +4,7 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/booking/inspection_screen.dart';
+import 'package:autoversa/screens/booking/reschedule_from_booking_screen.dart';
 import 'package:autoversa/screens/booking/schedule_drop_screen.dart';
 import 'package:autoversa/screens/booking/workcard_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
@@ -1602,28 +1603,28 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                         ),
                                                       ),
                                                       onPressed: () {
-                                                        // status['st_code'] ==
-                                                        //                     "BKCC" ||
-                                                        //                 (status['st_code'] ==
-                                                        //                         "HOLDC" &&
-                                                        //                     pastcustomerstatus ==
-                                                        //                         "BKCC")
-                                                        //             ? Navigator.push(
-                                                        //                 context,
-                                                        //                 MaterialPageRoute(
-                                                        //                     builder: (context) => RescheduleFromBooking(
-                                                        //                         scheduletype:
-                                                        //                             3,
-                                                        //                         bk_id: widget
-                                                        //                             .bk_id)))
-                                                        //             : Navigator.push(
-                                                        //                 context,
-                                                        //                 MaterialPageRoute(
-                                                        //                     builder: (context) => RescheduleFromBooking(
-                                                        //                         scheduletype:
-                                                        //                             4,
-                                                        //                         bk_id: widget
-                                                        //                             .bk_id)));
+                                                        status['st_code'] ==
+                                                                    "BKCC" ||
+                                                                (status['st_code'] ==
+                                                                        "HOLDC" &&
+                                                                    pastcustomerstatus ==
+                                                                        "BKCC")
+                                                            ? Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder: (context) => ReschedulefromBooking(
+                                                                        scheduletype:
+                                                                            3,
+                                                                        bk_id: widget
+                                                                            .bk_id)))
+                                                            : Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder: (context) => ReschedulefromBooking(
+                                                                        scheduletype:
+                                                                            4,
+                                                                        bk_id: widget
+                                                                            .bk_id)));
                                                       },
                                                       child: Text('Reschedule',
                                                           style: montserratRegular
@@ -1781,28 +1782,28 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                         ),
                                                       ),
                                                       onPressed: () {
-                                                        // status['st_code'] ==
-                                                        //                     "BKCC" ||
-                                                        //                 (status['st_code'] ==
-                                                        //                         "HOLDC" &&
-                                                        //                     pastcustomerstatus ==
-                                                        //                         "BKCC")
-                                                        //             ? Navigator.push(
-                                                        //                 context,
-                                                        //                 MaterialPageRoute(
-                                                        //                     builder: (context) => RescheduleFromBooking(
-                                                        //                         scheduletype:
-                                                        //                             3,
-                                                        //                         bk_id: widget
-                                                        //                             .bk_id)))
-                                                        //             : Navigator.push(
-                                                        //                 context,
-                                                        //                 MaterialPageRoute(
-                                                        //                     builder: (context) => RescheduleFromBooking(
-                                                        //                         scheduletype:
-                                                        //                             4,
-                                                        //                         bk_id: widget
-                                                        //                             .bk_id)));
+                                                        status['st_code'] ==
+                                                                    "BKCC" ||
+                                                                (status['st_code'] ==
+                                                                        "HOLDC" &&
+                                                                    pastcustomerstatus ==
+                                                                        "BKCC")
+                                                            ? Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder: (context) => ReschedulefromBooking(
+                                                                        scheduletype:
+                                                                            3,
+                                                                        bk_id: widget
+                                                                            .bk_id)))
+                                                            : Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder: (context) => ReschedulefromBooking(
+                                                                        scheduletype:
+                                                                            4,
+                                                                        bk_id: widget
+                                                                            .bk_id)));
                                                       },
                                                       child: Text('Reschedule',
                                                           style: montserratRegular
@@ -2227,13 +2228,35 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                       drivercontact[
                                                                           'us_phone']);
                                                                 },
-                                                                child: Text(
-                                                                    'Call',
-                                                                    style: montserratRegular.copyWith(
-                                                                        color:
-                                                                            black,
-                                                                        fontSize:
-                                                                            12)),
+                                                                child: Stack(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Align(
+                                                                        alignment:
+                                                                            Alignment
+                                                                                .centerRight,
+                                                                        child:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .phone,
+                                                                          color:
+                                                                              syanColor,
+                                                                          size:
+                                                                              16,
+                                                                        )),
+                                                                    Text(
+                                                                      "Call",
+                                                                      style: montserratRegular.copyWith(
+                                                                          color:
+                                                                              syanColor,
+                                                                          fontSize:
+                                                                              12),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                    )
+                                                                  ],
+                                                                ),
                                                               )))
                                                           : const SizedBox(
                                                               height: 0,

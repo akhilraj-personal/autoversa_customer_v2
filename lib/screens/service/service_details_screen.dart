@@ -277,56 +277,64 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                       height: 4.0,
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        Flexible(
-                                          child: Container(
-                                            child: Text(
-                                                booking['bk_booking_date'] !=
-                                                        null
-                                                    ? "Date: " +
-                                                        DateFormat('dd-MM-yyyy')
-                                                            .format(DateTime
-                                                                .tryParse(booking[
-                                                                    'bk_booking_date'])!)
-                                                    : "",
-                                                overflow: TextOverflow.clip,
-                                                style:
-                                                    montserratRegular.copyWith(
-                                                        color: black,
-                                                        fontSize: 12)),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Flexible(
+                                                child: Container(
+                                                  child: Text(
+                                                      booking['bk_booking_date'] !=
+                                                              null
+                                                          ? DateFormat(
+                                                                  'dd-MM-yyyy')
+                                                              .format(DateTime
+                                                                  .tryParse(booking[
+                                                                      'bk_booking_date'])!)
+                                                          : "",
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      style: montserratRegular
+                                                          .copyWith(
+                                                              color: black,
+                                                              fontSize: 12)),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Flexible(
-                                          child: Container(
-                                            child: Text(
-                                                pickup_timeslot[
-                                                            'tm_start_time'] !=
-                                                        null
-                                                    ? "Time: " +
-                                                        timeFormatter(
-                                                            pickup_timeslot[
-                                                                'tm_start_time']) +
-                                                        " - " +
-                                                        timeFormatter(
-                                                            pickup_timeslot[
-                                                                'tm_end_time'])
-                                                    : "",
-                                                overflow: TextOverflow.clip,
-                                                style:
-                                                    montserratRegular.copyWith(
-                                                        color: black,
-                                                        fontSize: 12)),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Flexible(
+                                                child: Container(
+                                                  child: Text(
+                                                      pickup_timeslot[
+                                                                  'tm_start_time'] !=
+                                                              null
+                                                          ? timeFormatter(
+                                                                  pickup_timeslot[
+                                                                      'tm_start_time']) +
+                                                              " - " +
+                                                              timeFormatter(
+                                                                  pickup_timeslot[
+                                                                      'tm_end_time'])
+                                                          : "",
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      style: montserratRegular
+                                                          .copyWith(
+                                                              color: black,
+                                                              fontSize: 12)),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
