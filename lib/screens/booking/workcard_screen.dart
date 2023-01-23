@@ -11,7 +11,6 @@ import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class Workcard extends StatefulWidget {
@@ -226,20 +225,12 @@ class WorkcardState extends State<Workcard> {
         // Customer params
         customerId: payment['customer'],
         customerEphemeralKeySecret: payment['ephemeralKey']['secret'],
-        // Extra params
-        applePay: const PaymentSheetApplePay(
-          merchantCountryCode: 'AE',
-        ),
-        googlePay: const PaymentSheetGooglePay(
-          merchantCountryCode: 'AE',
-          testEnv: true,
-        ),
         style: ThemeMode.light,
         appearance: const PaymentSheetAppearance(
           colors: PaymentSheetAppearanceColors(
               background: Colors.white,
-              primary: Colors.blue,
-              componentBorder: Colors.red,
+              primary: Color(0xff31BBAC),
+              componentBorder: Colors.blue,
               primaryText: Colors.black,
               secondaryText: Colors.black,
               componentBackground: Colors.white,
@@ -249,15 +240,15 @@ class WorkcardState extends State<Workcard> {
           shapes: PaymentSheetShape(
             borderWidth: 4,
             borderRadius: 10.00,
-            shadow: PaymentSheetShadowParams(color: Colors.red),
+            shadow: PaymentSheetShadowParams(color: Colors.blue),
           ),
           primaryButton: PaymentSheetPrimaryButtonAppearance(
             shapes: PaymentSheetPrimaryButtonShape(blurRadius: 8),
             colors: PaymentSheetPrimaryButtonTheme(
               light: PaymentSheetPrimaryButtonThemeColors(
-                background: Colors.blue,
+                background: Color(0xff31BBAC),
                 text: Colors.white,
-                border: Color.fromARGB(255, 235, 92, 30),
+                border: Color.fromARGB(255, 30, 170, 235),
               ),
             ),
           ),
@@ -279,11 +270,8 @@ class WorkcardState extends State<Workcard> {
         if (value['ret_data'] == "success") {
         } else {
           setState(() => isproceeding = false);
-          toasty(context, value['ret_data'],
-              bgColor: Color.fromARGB(255, 255, 47, 0),
-              textColor: white,
-              gravity: ToastGravity.BOTTOM,
-              length: Toast.LENGTH_LONG);
+          showCustomToast(context, value['ret_data'],
+              bgColor: errorcolor, textColor: white);
         }
       });
       setState(() {
@@ -359,7 +347,7 @@ class WorkcardState extends State<Workcard> {
             ),
           ),
           title: Text(
-            " ",
+            "Work Card",
             style: myriadproregular.copyWith(
               fontSize: 18,
               color: Colors.white,
@@ -401,8 +389,11 @@ class WorkcardState extends State<Workcard> {
                         ],
                       ),
                       Container(
-                        margin: EdgeInsets.all(16.0),
-                        width: context.width() * 1.95,
+                        margin: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
                         child: Row(
                           children: <Widget>[
                             SizedBox(width: 16.0),
@@ -461,7 +452,9 @@ class WorkcardState extends State<Workcard> {
                                       ),
                                     ],
                                   ),
-                                  4.height,
+                                  SizedBox(
+                                    height: 4,
+                                  ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -522,7 +515,9 @@ class WorkcardState extends State<Workcard> {
                                   //             color: black, fontSize: 12)),
                                   //   ],
                                   // ),
-                                  4.height,
+                                  SizedBox(
+                                    height: 4,
+                                  ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -536,6 +531,9 @@ class WorkcardState extends State<Workcard> {
                                           style: montserratRegular.copyWith(
                                               color: black, fontSize: 12)),
                                     ],
+                                  ),
+                                  SizedBox(
+                                    height: 4,
                                   ),
                                 ],
                               ),
@@ -755,10 +753,11 @@ class WorkcardState extends State<Workcard> {
                                                                 color:
                                                                     Colors.red))
                                                     : Text("PAID",
-                                                        style: boldTextStyle(
-                                                            size: 12,
-                                                            color:
-                                                                Colors.green)),
+                                                        style: montserratRegular
+                                                            .copyWith(
+                                                                fontSize: 12,
+                                                                color: Colors
+                                                                    .green)),
                                               ],
                                             )
                                           ],
@@ -983,7 +982,7 @@ class WorkcardState extends State<Workcard> {
                                                                         context,
                                                                         "Approved and waiting for payment",
                                                                         bgColor:
-                                                                            errorcolor,
+                                                                            black,
                                                                         textColor:
                                                                             white);
                                                                   }),
@@ -1010,26 +1009,6 @@ class WorkcardState extends State<Workcard> {
                           color: black,
                         ),
                       ),
-                      // Container(
-                      //   padding: EdgeInsets.only(right: 16.0),
-                      //   decoration: boxDecorationWithRoundedCorners(
-                      //     backgroundColor:
-                      //         appStore.isDarkModeOn ? scaffoldDarkColor : white,
-                      //     borderRadius: radius(8),
-                      //   ),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     children: <Widget>[
-                      //       text(""),
-                      //       text(
-                      //         "Total amount" + ": AED " + totalamount.toString(),
-                      //         textColor: blackColor,
-                      //         fontFamily: fontMedium,
-                      //         fontSize: 12.0,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                       Container(
                         padding: EdgeInsets.only(right: 12.0),
                         child: Row(
@@ -1070,7 +1049,6 @@ class WorkcardState extends State<Workcard> {
                         ),
                       ),
                       const SizedBox(height: 20),
-
                       amounttopay.toString() != "0.0"
                           ? GestureDetector(
                               onTap: () async {
@@ -1116,7 +1094,7 @@ class WorkcardState extends State<Workcard> {
                                     ),
                                     child: !isproceeding
                                         ? Text(
-                                            "PROCEED",
+                                            "PAYMENT",
                                             style: montserratSemiBold.copyWith(
                                                 color: Colors.white),
                                           )
@@ -1159,7 +1137,7 @@ class CustomSuccess extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: new BoxDecoration(
-          color: context.cardColor,
+          color: white,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(0),
           boxShadow: [
@@ -1176,44 +1154,61 @@ class CustomSuccess extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(height: 150, color: Colors.green),
+                Container(height: 130, color: black),
                 Column(
                   children: [
-                    Image(
-                        image: AssetImage("images/automobile/success.png"),
-                        height: 50,
-                        color: white,
-                        fit: BoxFit.cover),
-                    16.height,
+                    Image.asset(
+                      ImageConst.success,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
                     Text("Success",
                         textAlign: TextAlign.center,
                         style: montserratRegular.copyWith(
-                            fontSize: 14, color: white)),
+                            fontSize: 12, color: white)),
                   ],
                 )
               ],
             ),
-            30.height,
+            SizedBox(
+              height: 30,
+            ),
             Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 child: Text("Transaction Completed Successfully.",
-                    style: secondaryTextStyle())),
-            16.height,
+                    textAlign: TextAlign.center,
+                    style: montserratRegular.copyWith(
+                        fontSize: 12, color: black))),
+            SizedBox(
+              height: 16,
+            ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, Routes.bottombar);
               },
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(14)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        lightblueColor,
+                        syanColor,
+                      ],
+                    )),
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child:
                     Text('OK', style: montserratRegular.copyWith(color: white)),
               ),
             ),
-            16.height,
+            SizedBox(
+              height: 16,
+            ),
           ],
         ),
       ),
@@ -1229,7 +1224,7 @@ class CustomWarning extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: new BoxDecoration(
-          color: context.cardColor,
+          color: white,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(0),
           boxShadow: [
@@ -1246,15 +1241,17 @@ class CustomWarning extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(height: 150, color: Colors.orange),
+                Container(height: 130, color: warningcolor),
                 Column(
                   children: [
-                    Image(
-                        image: AssetImage("images/automobile/success.png"),
-                        height: 50,
-                        color: white,
-                        fit: BoxFit.cover),
-                    16.height,
+                    Image.asset(
+                      ImageConst.warning,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
                     Text('Awaiting For Payment.',
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
@@ -1263,12 +1260,17 @@ class CustomWarning extends StatelessWidget {
                 )
               ],
             ),
-            30.height,
+            SizedBox(
+              height: 30,
+            ),
             Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 child: Text("Need to complete payment for further proceeding.",
-                    style: montserratRegular.copyWith(fontSize: 14))),
-            16.height,
+                    style: montserratRegular.copyWith(
+                        fontSize: 12, color: black))),
+            SizedBox(
+              height: 16,
+            ),
             GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
@@ -1276,8 +1278,16 @@ class CustomWarning extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(14)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        lightorangeColor,
+                        holdorangeColor,
+                      ],
+                    )),
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Text('OK',
                     style: montserratSemiBold.copyWith(color: white)),

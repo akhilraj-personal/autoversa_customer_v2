@@ -157,7 +157,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   pickupaddresschange(pick_address) {
     if ((pick_address - 1) == -1) {
       dropCostCalculation(0, false, "Select Pickup", false, false);
-      toast("Please select a pickup location");
+      showCustomToast(context, "Please select a pickup location",
+          bgColor: errorcolor, textColor: white);
     } else {
       setState(() {
         pickupoption = "";
@@ -204,7 +205,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         }
       } else {
         dropCostCalculation(0, false, "Select Drop", false, false);
-        toast("Please select drop location");
+        showCustomToast(context, "Please select drop location",
+            bgColor: errorcolor, textColor: white);
       }
     }
   }
@@ -212,7 +214,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   dropaddresschange(drop_address) {
     if (drop_address - 1 == -1) {
       dropCostCalculation(0, false, "Select Drop", false, false);
-      toast("Please select a drop location");
+      showCustomToast(context, "Please select drop location",
+          bgColor: errorcolor, textColor: white);
     } else {
       setState(() {
         pickupoption = "";
@@ -244,7 +247,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         }
       } else {
         dropCostCalculation(0, false, "Select Pickup", false, false);
-        toast("Please select Pick up location");
+        showCustomToast(context, "Please select pickup location",
+            bgColor: errorcolor, textColor: white);
       }
     }
   }
@@ -351,7 +355,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     } catch (e) {
       setState(() => issubmitted = false);
       print(e.toString());
-      toast(e.toString());
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: white);
     }
   }
 

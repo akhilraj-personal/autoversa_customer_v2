@@ -370,7 +370,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
       getTimeSlots(new DateTime.now());
     } catch (e) {
       setState(() => issubmitted = false);
-      toast(e.toString());
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: white);
     }
   }
 

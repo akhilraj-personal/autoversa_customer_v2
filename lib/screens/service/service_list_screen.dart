@@ -40,6 +40,7 @@ class ServiceListState extends State<ServiceList> {
     Map<String, dynamic> send_data = {
       'custId': prefs.getString('cust_id'),
     };
+    print(send_data);
     bookingList = [];
     await get_service_history(send_data).then((value) {
       if (value['ret_data'] == "success") {
@@ -136,13 +137,15 @@ class ServiceListState extends State<ServiceList> {
               color: Colors.white,
             ),
           ),
-          // leading: IconButton(
-          //   onPressed: () {
-          //     Navigator.pop(context);
-          //   },
-          //   icon: const Icon(Icons.arrow_back, color: Colors.white),
-          //   iconSize: 18,
-          // ),
+          leading: widget.click_id == 2
+              ? IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back, color: black),
+                  iconSize: 18,
+                )
+              : Row(),
         ),
         body: Container(
           child: Column(
@@ -571,17 +574,17 @@ class ServiceListState extends State<ServiceList> {
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             ServicehistoryDetails(
-                                                                bk_id:
-                                                                    bookingList[
-                                                                        index])))
+                                                                bk_id: bookingList[
+                                                                        index]
+                                                                    ['bk_id'])))
                                                 : Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             ServicehistoryDetails(
-                                                                bk_id:
-                                                                    bookingList[
-                                                                        index])));
+                                                                bk_id: bookingList[
+                                                                        index]
+                                                                    ['bk_id'])));
                                           },
                                         ),
                                       ),

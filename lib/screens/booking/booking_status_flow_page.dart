@@ -621,7 +621,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                       issubmitted = false);
                                                   print(e.toString());
                                                 }
-                                                // Navigator.pop(context);
                                               }
                                             },
                                             child: Stack(
@@ -752,6 +751,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
     });
     await getbookingdetails(req).then((value) async {
       if (value['ret_data'] == "success") {
+        print(value);
         setState(() {
           booking = value['booking'];
           booking_package = value['booking']['booking_package'];
@@ -1285,7 +1285,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             ),
             leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, Routes.bottombar);
               },
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               iconSize: 18,

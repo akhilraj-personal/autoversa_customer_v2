@@ -199,7 +199,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
       getTimeSlots(new DateTime.now());
     } catch (e) {
       setState(() => issubmitted = false);
-      toast(e.toString());
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: white);
     }
   }
 
@@ -237,7 +238,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   dropaddresschange(drop_address) {
     if (drop_address - 1 == -1) {
       dropCostCalculation(0, false, "Select Drop", false, false);
-      toast("Please select a drop location");
+      showCustomToast(context, "Please select a drop location",
+          bgColor: errorcolor, textColor: white);
     } else {
       setState(() {
         isTimeCheck = "";
@@ -265,7 +267,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
         }
       } else {
         dropCostCalculation(0, false, "Select Pickup", false, false);
-        toast("Please select Pick up location");
+        showCustomToast(context, "Please select Pick up location",
+            bgColor: errorcolor, textColor: white);
       }
     }
   }

@@ -1,8 +1,10 @@
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/main.dart';
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
+import 'package:autoversa/screens/service/service_details_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -23,7 +25,6 @@ class NotificationPage extends StatefulWidget {
 class NotificationPageState extends State<NotificationPage> {
   late List<NotificationModel> notificationList = [];
   bool isoffline = false;
-  // late List notificationlist = [];
   bool isActive = true;
 
   @override
@@ -59,16 +60,15 @@ class NotificationPageState extends State<NotificationPage> {
           noti.cv_model = notify['cv_model'];
           noti.cv_variant = notify['cv_variant'];
           noti.cv_year = notify['cv_year'];
+          noti.st_code = notify['st_code'];
           notificationList.add(noti);
         }
         setState(() {
-          // notificationlist = value['notification_list'];
           isActive = false;
         });
       } else {
         isActive = false;
         setState(() {});
-        // toasty(context, "No Notification");
       }
     }).catchError((e) {
       setState(() {
@@ -85,22 +85,25 @@ class NotificationPageState extends State<NotificationPage> {
   }
 
   clearNotification() async {
-    // Map req = {
-    //   "nt_id": notificationList,
-    //   "nt_header": "Delivery Completed",
-    //   "nt_content": " completed for the delivery for the booking-BK141",
-    //   "nt_read": "0",
-    //   "nt_bookid": "1",
-    //   "nt_stcode": "DECB",
-    //   "nt_created_on": "2022-12-05 17:33:59",
-    //   "nt_status": "2"
-    // };
-    // await clear_notification(req).then((value) {
-    //   if (value['ret_data'] == "success") {
-    //     toasty(context, "Notification Cleared");
-    //   }
-    // });
+    Map req = {};
+    await clear_notification(req).then((value) {
+      if (value['ret_data'] == "success") {
+        showCustomToast(context, "Notification Cleared",
+            bgColor: black, textColor: white);
+        Navigator.pushReplacementNamed(context, Routes.bottombar);
+      } else {
+        print(value['ret_data']);
+      }
+    }).catchError((e) {
+      print(e.toString());
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: white);
+      setState(() {
+        isActive = false;
+      });
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
@@ -415,64 +418,74 @@ class Notification extends StatelessWidget {
           ).expand()
         ],
       ).onTap(() async {
-        if (model.nt_read == "0") {
+        if (model.nt_read == "0" && model.st_code != "DLCC") {
           Map req = {"nt_id": model.nt_id};
           await read_notification(req).then((value) {
             if (value['ret_data'] == "success") {
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => BookingStatusFlow(
-              //               bk_id: model.nt_bookid,
-              //               vehname: model.cv_make != null
-              //                   ? model.cv_variant != null
-              //                       ? model.cv_make +
-              //                           " " +
-              //                           model.cv_model +
-              //                           " " +
-              //                           model.cv_variant +
-              //                           " ( " +
-              //                           model.cv_year +
-              //                           " )"
-              //                       : model.cv_make +
-              //                           " " +
-              //                           model.cv_model +
-              //                           " (" +
-              //                           model.cv_variant +
-              //                           ")"
-              //                   : "",
-              //             )));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => BookingStatusFlow(
+                            bk_id: model.nt_bookid,
+                            vehname: model.cv_make != null
+                                ? model.cv_variant != null
+                                    ? model.cv_make +
+                                        " " +
+                                        model.cv_model +
+                                        " " +
+                                        model.cv_variant +
+                                        " ( " +
+                                        model.cv_year +
+                                        " )"
+                                    : model.cv_make +
+                                        " " +
+                                        model.cv_model +
+                                        " (" +
+                                        model.cv_variant +
+                                        ")"
+                                : "",
+                            make: model.cv_make,
+                          )));
             } else {
-              print(value);
+              print(value['ret_data']);
             }
           }).catchError((e) {
             print(e.toString());
-            toasty(context, e.toString());
+            showCustomToast(context, ST.of(context).toast_application_error,
+                bgColor: errorcolor, textColor: white);
           });
-        } else if (model.nt_read == "1") {
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => AMBookingPackage(
-          //               bk_id: model.nt_bookid,
-          //               vehname: model.cv_make != null
-          //                   ? model.cv_variant != null
-          //                       ? model.cv_make +
-          //                           " " +
-          //                           model.cv_model +
-          //                           " " +
-          //                           model.cv_variant +
-          //                           " ( " +
-          //                           model.cv_year +
-          //                           " )"
-          //                       : model.cv_make +
-          //                           " " +
-          //                           model.cv_model +
-          //                           " (" +
-          //                           model.cv_variant +
-          //                           ")"
-          //                   : "",
-          //             )));
+        } else if (model.nt_read == "1" && model.st_code != "DLCC") {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BookingStatusFlow(
+                        bk_id: model.nt_bookid,
+                        vehname: model.cv_make != null
+                            ? model.cv_variant != null
+                                ? model.cv_make +
+                                    " " +
+                                    model.cv_model +
+                                    " " +
+                                    model.cv_variant +
+                                    " ( " +
+                                    model.cv_year +
+                                    " )"
+                                : model.cv_make +
+                                    " " +
+                                    model.cv_model +
+                                    " (" +
+                                    model.cv_variant +
+                                    ")"
+                            : "",
+                        make: model.cv_make,
+                      )));
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ServicehistoryDetails(
+                        bk_id: model.nt_bookid,
+                      )));
         }
       }),
     );
