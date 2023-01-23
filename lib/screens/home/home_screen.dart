@@ -20,7 +20,7 @@ import '../../services/post_auth_services.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/common_utils.dart';
 import '../../utils/text_utils.dart';
-import '../NextScreen.dart';
+// import '../NextScreen.dart';
 import '../vehicle/vehicle_add_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -277,11 +277,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      NextPage()));
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             NextPage()));
                                         },
                                         child: Image.asset(
                                           ImageConst.person,
@@ -1366,10 +1366,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => NextPage()));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => NextPage()));
                               },
                               child: Stack(
                                 alignment: Alignment.topRight,

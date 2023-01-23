@@ -2,6 +2,7 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/model/model.dart';
+import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -158,6 +159,22 @@ class NotificationPageState extends State<NotificationPage> {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             iconSize: 18,
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.delete, color: white),
+              onPressed: () {
+                showConfirmDialogCustom(
+                  context,
+                  title: 'Are you sure you want to clear all notifications.?',
+                  primaryColor: syanColor,
+                  onAccept: (v) async {
+                    clearNotification();
+                    setState(() {});
+                  },
+                );
+              },
+            )
+          ],
         ),
         body: SafeArea(
           child: Column(
@@ -301,53 +318,111 @@ class Notification extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: model.nt_read == "0"
-                ? Colors.grey.withOpacity(0.2)
+                ? Colors.grey.withOpacity(0.1)
                 : Colors.white.withOpacity(0.2),
             blurRadius: 0.1,
             spreadRadius: 0,
           ),
         ],
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: GestureDetector(
-          onTap: () async {
-            if (model.nt_read == "0") {
-              Map req = {"nt_id": model.nt_id};
-              await read_notification(req).then((value) {
-                if (value['ret_data'] == "success") {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => AMBookingPackage(
-                  //               bk_id: model.nt_bookid,
-                  //               vehname: model.cv_make != null
-                  //                   ? model.cv_variant != null
-                  //                       ? model.cv_make +
-                  //                           " " +
-                  //                           model.cv_model +
-                  //                           " " +
-                  //                           model.cv_variant +
-                  //                           " ( " +
-                  //                           model.cv_year +
-                  //                           " )"
-                  //                       : model.cv_make +
-                  //                           " " +
-                  //                           model.cv_model +
-                  //                           " (" +
-                  //                           model.cv_variant +
-                  //                           ")"
-                  //                   : "",
-                  //             )));
-                } else {}
-              }).catchError((e) {
-                showCustomToast(context, ST.of(context).toast_application_error,
-                    bgColor: errorcolor, textColor: white);
-              });
-            } else if (model.nt_read == "1") {
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: 60,
+            width: 60,
+            decoration: boxDecorationWithRoundedCorners(
+              backgroundColor: syanColor,
+              borderRadius: radius(12),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                    (DateFormat('d')
+                        .format(DateTime.tryParse(model.nt_created_on)!)),
+                    style: boldTextStyle(size: 20, color: white)),
+                Text(
+                    (DateFormat('MMM')
+                        .format(DateTime.tryParse(model.nt_created_on)!)),
+                    style: secondaryTextStyle(color: white)),
+              ],
+            ),
+          ),
+          6.width,
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Container(
+                      child: Text(
+                        model.nt_header,
+                        overflow: TextOverflow.clip,
+                        maxLines: 3,
+                        softWrap: true,
+                        style: montserratSemiBold.copyWith(
+                          fontSize: 14,
+                          color: black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  12.width,
+                  Text(
+                      DateFormat('h:mm a')
+                          .format(DateTime.tryParse(model.nt_created_on)!),
+                      style: montserratRegular.copyWith(
+                        fontSize: 12,
+                        color: black,
+                      )),
+                ],
+              ),
+              4.height,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(model.pkg_name,
+                      style: montserratRegular.copyWith(
+                        fontSize: 12,
+                        color: black,
+                      )),
+                ],
+              ),
+              4.height,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Container(
+                      child: Text(
+                        model.nt_content,
+                        overflow: TextOverflow.clip,
+                        maxLines: 3,
+                        style: montserratRegular.copyWith(
+                          fontSize: 12,
+                          color: black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ).expand()
+        ],
+      ).onTap(() async {
+        if (model.nt_read == "0") {
+          Map req = {"nt_id": model.nt_id};
+          await read_notification(req).then((value) {
+            if (value['ret_data'] == "success") {
               // Navigator.push(
               //     context,
               //     MaterialPageRoute(
-              //         builder: (context) => AMBookingPackage(
+              //         builder: (context) => BookingStatusFlow(
               //               bk_id: model.nt_bookid,
               //               vehname: model.cv_make != null
               //                   ? model.cv_variant != null
@@ -367,170 +442,39 @@ class Notification extends StatelessWidget {
               //                           ")"
               //                   : "",
               //             )));
+            } else {
+              print(value);
             }
-          },
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: 60,
-                width: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                        (DateFormat('d')
-                            .format(DateTime.tryParse(model.nt_created_on)!)),
-                        style: montserratSemiBold.copyWith(
-                            color: black, fontSize: 20)),
-                    Text(
-                        (DateFormat('MMM')
-                            .format(DateTime.tryParse(model.nt_created_on)!)),
-                        style: montserratSemiBold.copyWith(color: white)),
-                  ],
-                ),
-              ),
-              SizedBox(width: 6),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: Container(
-                          child: Text(
-                            model.nt_header,
-                            overflow: TextOverflow.clip,
-                            maxLines: 3,
-                            softWrap: true,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontStyle: FontStyle.normal,
-                              fontSize: 14,
-                              color: Color(0xff3a57e8),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Text(
-                          DateFormat('h:mm a')
-                              .format(DateTime.tryParse(model.nt_created_on)!),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                          )),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(model.pkg_name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontStyle: FontStyle.normal,
-                            fontSize: 12,
-                            color: Color(0xff000000),
-                          )),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: Container(
-                          child: Text(
-                            model.nt_content,
-                            overflow: TextOverflow.clip,
-                            maxLines: 3,
-                            style: TextStyle(
-                              fontStyle: FontStyle.normal,
-                              fontSize: 12,
-                              color: Color(0xff000000),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              )
-            ],
-          )),
-
-      // .onTap(() async {
-      //   if (model.nt_read == "0") {
-      //     Map req = {"nt_id": model.nt_id};
-      //     await read_notification(req).then((value) {
-      //       if (value['ret_data'] == "success") {
-      //         // Navigator.push(
-      //         //     context,
-      //         //     MaterialPageRoute(
-      //         //         builder: (context) => AMBookingPackage(
-      //         //               bk_id: model.nt_bookid,
-      //         //               vehname: model.cv_make != null
-      //         //                   ? model.cv_variant != null
-      //         //                       ? model.cv_make +
-      //         //                           " " +
-      //         //                           model.cv_model +
-      //         //                           " " +
-      //         //                           model.cv_variant +
-      //         //                           " ( " +
-      //         //                           model.cv_year +
-      //         //                           " )"
-      //         //                       : model.cv_make +
-      //         //                           " " +
-      //         //                           model.cv_model +
-      //         //                           " (" +
-      //         //                           model.cv_variant +
-      //         //                           ")"
-      //         //                   : "",
-      //         //             )));
-      //       } else {
-      //       }
-      //     }).catchError((e) {
-      //       showCustomToast(context, S.of(context).toast_application_error,
-      //           bgColor: errorcolor, textColor: whiteColor);
-      //     });
-      //   } else if (model.nt_read == "1") {
-      //     // Navigator.push(
-      //     //     context,
-      //     //     MaterialPageRoute(
-      //     //         builder: (context) => AMBookingPackage(
-      //     //               bk_id: model.nt_bookid,
-      //     //               vehname: model.cv_make != null
-      //     //                   ? model.cv_variant != null
-      //     //                       ? model.cv_make +
-      //     //                           " " +
-      //     //                           model.cv_model +
-      //     //                           " " +
-      //     //                           model.cv_variant +
-      //     //                           " ( " +
-      //     //                           model.cv_year +
-      //     //                           " )"
-      //     //                       : model.cv_make +
-      //     //                           " " +
-      //     //                           model.cv_model +
-      //     //                           " (" +
-      //     //                           model.cv_variant +
-      //     //                           ")"
-      //     //                   : "",
-      //     //             )));
-      //   }
-      // }
-      // ),
+          }).catchError((e) {
+            print(e.toString());
+            toasty(context, e.toString());
+          });
+        } else if (model.nt_read == "1") {
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => AMBookingPackage(
+          //               bk_id: model.nt_bookid,
+          //               vehname: model.cv_make != null
+          //                   ? model.cv_variant != null
+          //                       ? model.cv_make +
+          //                           " " +
+          //                           model.cv_model +
+          //                           " " +
+          //                           model.cv_variant +
+          //                           " ( " +
+          //                           model.cv_year +
+          //                           " )"
+          //                       : model.cv_make +
+          //                           " " +
+          //                           model.cv_model +
+          //                           " (" +
+          //                           model.cv_variant +
+          //                           ")"
+          //                   : "",
+          //             )));
+        }
+      }),
     );
   }
 }

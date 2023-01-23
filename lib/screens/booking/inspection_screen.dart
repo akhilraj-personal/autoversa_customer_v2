@@ -175,7 +175,7 @@ class InspectionScreenState extends State<InspectionScreen>
             ),
           ),
           title: Text(
-            " ",
+            "Inspection Details",
             style: myriadproregular.copyWith(
               fontSize: 18,
               color: Colors.white,
@@ -268,35 +268,47 @@ class InspectionScreenState extends State<InspectionScreen>
                                     height: 4,
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: Text(
-                                              "Date :" +
-                                                  DateFormat('dd-MM-yyyy')
-                                                      .format(DateTime.tryParse(
-                                                          widget.bookdate)!),
-                                              style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 12)),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Flexible(
+                                              child: Container(
+                                                child: Text(
+                                                    DateFormat('dd-MM-yyyy')
+                                                        .format(DateTime
+                                                            .tryParse(widget
+                                                                .bookdate)!),
+                                                    overflow: TextOverflow.clip,
+                                                    style: montserratRegular
+                                                        .copyWith(
+                                                            color: black,
+                                                            fontSize: 12)),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: Text(
-                                              "Time: " + widget.booktime,
-                                              style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 12)),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Flexible(
+                                              child: Container(
+                                                child: Text(widget.booktime,
+                                                    overflow: TextOverflow.clip,
+                                                    style: montserratRegular
+                                                        .copyWith(
+                                                            color: black,
+                                                            fontSize: 12)),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
@@ -387,10 +399,11 @@ class InspectionScreenState extends State<InspectionScreen>
                                               getinspection[
                                                           'cv_plate_number'] !=
                                                       null
-                                                  ? "Plate No: " +
+                                                  ? "Plate No" +
+                                                      ": " +
                                                       getinspection[
                                                           'cv_plate_number']
-                                                  : "",
+                                                  : "Plate No" + ": No details",
                                               style: montserratRegular.copyWith(
                                                   color: black, fontSize: 12)),
                                         ],
@@ -406,9 +419,10 @@ class InspectionScreenState extends State<InspectionScreen>
                                         children: <Widget>[
                                           Text(
                                             getinspection['bk_odometer'] != null
-                                                ? "Odometer: " +
+                                                ? "Odometer" +
+                                                    ": " +
                                                     getinspection['bk_odometer']
-                                                : "",
+                                                : "Odometer" + ": No details",
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.clip,
                                             style: montserratRegular.copyWith(
@@ -430,10 +444,11 @@ class InspectionScreenState extends State<InspectionScreen>
                                           Text(
                                             getinspection['us_firstname'] !=
                                                     null
-                                                ? "Inspection By: " +
+                                                ? "Inspection By" +
                                                     getinspection[
                                                         'us_firstname']
-                                                : "",
+                                                : "Inspection By" +
+                                                    ": No details",
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.clip,
                                             style: montserratRegular.copyWith(
@@ -832,7 +847,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                 Expanded(
                                   flex: 1,
                                   child: Text(
-                                    "Registration Validity Details: ",
+                                    "Registration Validity Details",
                                     textAlign: TextAlign.start,
                                     style: montserratSemiBold.copyWith(
                                       fontSize: 14,
@@ -849,7 +864,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                             DateFormat('dd-MM-yyyy').format(
                                                 DateTime.tryParse(getinspection[
                                                     'cv_registrationvalidity'])!)
-                                        : "",
+                                        : ": No details",
                                     textAlign: TextAlign.start,
                                     style: montserratRegular.copyWith(
                                       fontSize: 12,
@@ -968,6 +983,7 @@ class InspectionScreenState extends State<InspectionScreen>
                               alignment: Alignment.bottomCenter,
                               children: [
                                 Container(
+                                  margin: EdgeInsets.all(16),
                                   height: height * 0.045,
                                   width: height * 0.37,
                                   decoration: BoxDecoration(
@@ -981,27 +997,30 @@ class InspectionScreenState extends State<InspectionScreen>
                                             offset: Offset(0, 0)),
                                       ]),
                                 ),
-                                Container(
-                                  height: height * 0.075,
-                                  width: width,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(14)),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        syanColor,
-                                        lightblueColor,
-                                      ],
+                                Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Container(
+                                    height: height * 0.075,
+                                    width: width,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.rectangle,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(14)),
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          syanColor,
+                                          lightblueColor,
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  child: Text(
-                                    "CLOSE",
-                                    style: montserratSemiBold.copyWith(
-                                        color: Colors.white),
+                                    child: Text(
+                                      "CLOSE",
+                                      style: montserratSemiBold.copyWith(
+                                          color: Colors.white),
+                                    ),
                                   ),
                                 ),
                               ],

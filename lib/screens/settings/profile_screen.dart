@@ -127,13 +127,6 @@ class ProfilePageState extends State<ProfilePage> {
               color: Colors.white,
             ),
           ),
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            iconSize: 18,
-          ),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -583,6 +576,7 @@ class ProfilePageState extends State<ProfilePage> {
                   onTap: () {
                     showConfirmDialogCustom(
                       context,
+                      primaryColor: syanColor,
                       title: "Do you want to logout from the app?",
                       onAccept: (v) {
                         logout_user();

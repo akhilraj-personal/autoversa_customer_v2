@@ -179,7 +179,7 @@ class SummeryPageState extends State<SummeryPage> {
           colors: PaymentSheetAppearanceColors(
               background: Colors.white,
               primary: Color(0xff31BBAC),
-              componentBorder: Colors.red,
+              componentBorder: Colors.blue,
               primaryText: Colors.black,
               secondaryText: Colors.black,
               componentBackground: Colors.white,
@@ -189,7 +189,7 @@ class SummeryPageState extends State<SummeryPage> {
           shapes: PaymentSheetShape(
             borderWidth: 4,
             borderRadius: 10.00,
-            shadow: PaymentSheetShadowParams(color: Colors.red),
+            shadow: PaymentSheetShadowParams(color: Colors.blue),
           ),
           primaryButton: PaymentSheetPrimaryButtonAppearance(
             shapes: PaymentSheetPrimaryButtonShape(blurRadius: 8),
@@ -197,7 +197,7 @@ class SummeryPageState extends State<SummeryPage> {
               light: PaymentSheetPrimaryButtonThemeColors(
                 background: Color(0xff31BBAC),
                 text: Colors.white,
-                border: Color.fromARGB(255, 235, 92, 30),
+                border: Color.fromARGB(255, 30, 170, 235),
               ),
             ),
           ),
