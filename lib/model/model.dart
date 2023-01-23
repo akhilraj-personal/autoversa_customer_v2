@@ -10,6 +10,7 @@ class NotificationModel {
   var cv_model;
   var cv_variant;
   var cv_year;
+  var st_code;
 
   NotificationModel({
     this.nt_id,
@@ -23,6 +24,7 @@ class NotificationModel {
     this.cv_model,
     this.cv_variant,
     this.cv_year,
+    this.st_code,
   });
 }
 

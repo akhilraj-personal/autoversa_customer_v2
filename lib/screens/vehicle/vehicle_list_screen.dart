@@ -13,7 +13,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class Vehiclelist extends StatefulWidget {
-  const Vehiclelist({super.key});
+  final int click_id;
+  const Vehiclelist({required this.click_id, super.key});
 
   @override
   State<Vehiclelist> createState() => VehiclelistState();
@@ -146,13 +147,15 @@ class VehiclelistState extends State<Vehiclelist> {
                 color: Colors.white,
               ),
             ),
-            // leading: IconButton(
-            //   onPressed: () {
-            //     Navigator.pop(context);
-            //   },
-            //   icon: const Icon(Icons.arrow_back, color: Colors.white),
-            //   iconSize: 18,
-            // ),
+            leading: widget.click_id == 2
+                ? IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    iconSize: 18,
+                  )
+                : Row(),
           ),
           body: Container(
             child: Column(

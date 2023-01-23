@@ -374,7 +374,7 @@ class ProfilePageState extends State<ProfilePage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return Vehiclelist();
+                          return Vehiclelist(click_id: 2);
                         },
                       ),
                     );

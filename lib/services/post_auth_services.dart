@@ -78,12 +78,12 @@ Future getPackageDetails(Map req) async {
 
 Future read_notification(Map req) async {
   return handleResponse(await securedPostRequest(
-      'system/NotificationController/read_notification', req));
+      'System/NotificationController/read_notification', req));
 }
 
 Future getCustomerNotificationList() async {
   return handleResponse(
-      await securedGetRequest('system/NotificationController/'));
+      await securedGetRequest('System/NotificationController/'));
 }
 
 Future getCustomerAddresses(Map req) async {
@@ -185,4 +185,9 @@ Future submitdeliverydrop(Map req) async {
 Future booking_reschedule(Map req) async {
   return handleResponse(await securedPostRequest(
       'Booking/BookingController/reschedule_booking', req));
+}
+
+Future clear_notification(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'System/NotificationController/clear_customer_notifications', req));
 }

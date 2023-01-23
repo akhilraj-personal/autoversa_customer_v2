@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ServicehistoryDetails extends StatefulWidget {
-  final Map<String, dynamic> bk_id;
+  final String bk_id;
   const ServicehistoryDetails({required this.bk_id, super.key});
 
   @override
@@ -84,7 +84,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
   }
 
   getBookingDetailsID() async {
-    Map req = {"book_id": base64.encode(utf8.encode(widget.bk_id['bk_id']))};
+    Map req = {"book_id": base64.encode(utf8.encode(widget.bk_id))};
     print(req);
     await getbookingdetails(req).then((value) {
       if (value['ret_data'] == "success") {
@@ -100,7 +100,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
   }
 
   getCardJobDetails() async {
-    Map req = {"bookid": widget.bk_id['bk_id']};
+    Map req = {"bookid": widget.bk_id};
     pendingjobs = [];
     approvedjobs = [];
     await getcardjobdetails(req)
