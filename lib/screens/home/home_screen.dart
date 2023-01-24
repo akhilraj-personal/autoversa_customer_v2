@@ -569,10 +569,79 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                                                         Row(
                                                                           children: [
-                                                                            Image.asset(
-                                                                              ImageConst.car,
-                                                                              scale: 4,
-                                                                            ),
+                                                                            if (bookingList[index]['st_code'] ==
+                                                                                "BKCC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.booking_icon,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ] else if (bookingList[index]['st_code'] ==
+                                                                                "DRPC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.driver_enroute_icon,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ] else if (bookingList[index]['st_code'] ==
+                                                                                "PIPC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.pickup_icon,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ] else if (bookingList[index]['st_code'] ==
+                                                                                "PIWC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.pickup_enroute_icon,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ] else if (bookingList[index]['st_code'] ==
+                                                                                "VAWC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.vehicle_wrkshp_icon,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ] else if (bookingList[index]['st_code'] ==
+                                                                                "WIPC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.work_in_icon,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ] else if (bookingList[index]['st_code'] ==
+                                                                                "CDLC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.confirm_drop_icon,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ] else if (bookingList[index]['st_code'] ==
+                                                                                "RFDC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.ready_delivery_icon,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ] else if (bookingList[index]['st_code'] ==
+                                                                                "DEDC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.drop_enrouted,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ] else if (bookingList[index]['st_code'] ==
+                                                                                "DLCC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.delivery_icon,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ] else if (bookingList[index]['st_code'] ==
+                                                                                "HOLDC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.hold_icon,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ] else if (bookingList[index]['st_code'] ==
+                                                                                "BAPC") ...[
+                                                                              Image.asset(
+                                                                                ImageConst.awaiting_payment_icon,
+                                                                                scale: 4,
+                                                                              ),
+                                                                            ],
 
                                                                             ///--------- booking status -------------
 

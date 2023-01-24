@@ -38,8 +38,8 @@ class ImageConst {
   static const add = baseIconURl + 'add.png';
   static const add_black = baseIconURl + 'add_black.png';
   static const car = baseIconURl + 'car.png';
+  static const booking_icon = baseIconURl + 'booking_icon.png';
   static const downarrow = baseIconURl + 'downarrow.png';
-  static const rightarrow = baseIconURl + 'rightarrow.png';
   static const drive_car = baseIconURl + 'drive_car.png';
 
   static const insurance = baseIconURl + 'insurance.png';
@@ -50,6 +50,18 @@ class ImageConst {
   static const default_service_list = baseIconURl + 'service_list_icon.png';
   static const time = baseIconURl + 'time_icon.png';
   static const booking_created = baseIconURl + 'booking_created.png';
+  static const driver_enroute_icon = baseIconURl + 'driver_enroute_icon.png';
+  static const pickup_icon = baseIconURl + 'pickup_icon.png';
+  static const pickup_enroute_icon = baseIconURl + 'pickup_enroute_icon.png';
+  static const vehicle_wrkshp_icon = baseIconURl + 'vehicle_wrkshp_icon.png';
+  static const work_in_icon = baseIconURl + 'work_in_icon.png';
+  static const confirm_drop_icon = baseIconURl + 'confirm_drop_icon.png';
+  static const ready_delivery_icon = baseIconURl + 'ready_delivery_icon.png';
+  static const drop_enrouted = baseIconURl + 'drop_enrouted.png';
+  static const delivery_icon = baseIconURl + 'delivery_icon.png';
+  static const hold_icon = baseIconURl + 'hold.png';
+  static const awaiting_payment_icon =
+      baseIconURl + 'awaiting_payment_icon.png';
   static const driver_enrouted = baseIconURl + 'driver_enrouted.png';
   static const notification = baseIconURl + 'notification.png';
   static const person = baseIconURl + 'person.png';
@@ -65,7 +77,7 @@ class ImageConst {
   static const tool = baseIconURl + 'tool.png';
 
   static const setting = baseIconURl + 'setting.png';
-  static const adrresslist_logo = baseIconURl + 'address.png';
+  static const adrresslist_logo = baseIconURl + 'address_list_icon.png';
 }
 
 var height;

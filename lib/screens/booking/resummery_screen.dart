@@ -281,7 +281,9 @@ class ResummeryScreenState extends State<ResummeryScreen> {
             ),
           ),
           title: Text(
-            booking_package['pkg_name'],
+            booking_package['pkg_name'] != null
+                ? booking_package['pkg_name']
+                : "Summery Page",
             style: myriadproregular.copyWith(
               fontSize: 18,
               color: Colors.white,
