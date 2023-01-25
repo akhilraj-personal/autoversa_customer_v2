@@ -59,7 +59,7 @@ class ImageConst {
   static const ready_delivery_icon = baseIconURl + 'ready_delivery_icon.png';
   static const drop_enrouted = baseIconURl + 'drop_enrouted.png';
   static const delivery_icon = baseIconURl + 'delivery_icon.png';
-  static const hold_icon = baseIconURl + 'hold.png';
+  static const hold_icon = baseIconURl + 'hold_icon.png';
   static const awaiting_payment_icon =
       baseIconURl + 'awaiting_payment_icon.png';
   static const driver_enrouted = baseIconURl + 'driver_enrouted.png';
