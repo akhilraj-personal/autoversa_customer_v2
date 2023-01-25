@@ -45,7 +45,9 @@ class NotificationPageState extends State<NotificationPage> {
 
   _getNotificationList() async {
     notificationList = [];
-    await getCustomerNotificationList().then((value) {
+    Map req = {};
+    await getCustomerNotificationList(req).then((value) {
+      print(value);
       if (value['ret_data'] == "success") {
         for (var notify in value['notification_list']) {
           NotificationModel noti = new NotificationModel();
@@ -67,10 +69,12 @@ class NotificationPageState extends State<NotificationPage> {
           isActive = false;
         });
       } else {
+        print(value);
         isActive = false;
         setState(() {});
       }
     }).catchError((e) {
+      print(e.toString());
       setState(() {
         isActive = false;
       });

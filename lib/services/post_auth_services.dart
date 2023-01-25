@@ -81,9 +81,9 @@ Future read_notification(Map req) async {
       'System/NotificationController/read_notification', req));
 }
 
-Future getCustomerNotificationList() async {
-  return handleResponse(
-      await securedGetRequest('System/NotificationController/'));
+Future getCustomerNotificationList(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'System/NotificationController/get_customer_notifications', req));
 }
 
 Future getCustomerAddresses(Map req) async {
