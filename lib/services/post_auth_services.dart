@@ -191,3 +191,8 @@ Future clear_notification(Map req) async {
   return handleResponse(await securedPostRequest(
       'System/NotificationController/clear_customer_notifications', req));
 }
+
+Future deleteCustomerAddress(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Customer/CustomerAddressController/delete', req));
+}
