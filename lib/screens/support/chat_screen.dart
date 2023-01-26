@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:autoversa/constant/image_const.dart';
+import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/AppWidgets.dart';
+import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,6 +14,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+
+import '../../utils/color_utils.dart';
 
 class Chat extends StatefulWidget {
   static String tag = '/ChatScreen';
@@ -173,86 +178,135 @@ class ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: black),
-          title: Row(
-            children: <Widget>[
-              CircleAvatar(
-                  backgroundImage: AssetImage(widget.img!), radius: 16),
-              8.width,
-              Text(widget.name!, style: boldTextStyle()),
-            ],
-          ),
-        ),
-        body: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-              child: ListView.separated(
-                separatorBuilder: (_, i) => Divider(color: Colors.transparent),
-                shrinkWrap: true,
-                reverse: true,
-                controller: scrollController,
-                itemCount: msgListing.length,
-                padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 70),
-                itemBuilder: (_, index) {
-                  AMMessageModel data = msgListing[index];
-                  var isMe = data.senderId == AMSender_id;
-
-                  return ChatMessageWidget(isMe: isMe, data: data);
-                },
-              ),
-            ),
-            Align(
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+        statusBarColor: Colors.white,
+        systemNavigationBarColor: Colors.white,
+      ),
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            flexibleSpace: Container(
               alignment: Alignment.bottomCenter,
-              child: Container(
-                padding:
-                    EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
-                decoration: BoxDecoration(
-                    color: context.cardColor, boxShadow: defaultBoxShadow()),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    TextField(
-                      controller: msgController,
-                      focusNode: msgFocusNode,
-                      autofocus: true,
-                      textCapitalization: TextCapitalization.sentences,
-                      textInputAction: TextInputAction.done,
-                      decoration: InputDecoration.collapsed(
-                        hintText: personName.isNotEmpty
-                            ? 'Write to ${widget.name}'
-                            : 'Type a message',
-                        hintStyle: primaryTextStyle(),
-                        fillColor: context.cardColor,
-                        filled: true,
-                      ),
-                      style: primaryTextStyle(),
-                      onSubmitted: (s) {
-                        sendClick();
-                      },
-                    ).expand(),
-                    IconButton(
-                      icon: Icon(Icons.send, size: 25),
-                      onPressed: () async {
-                        sendClick();
-                      },
-                    ),
-                    // IconButton(
-                    //   icon: Icon(Icons.attach_file, size: 25),
-                    //   onPressed: () => pickImage(ImageSource.gallery),
-                    // ),
-                    // IconButton(
-                    //   icon: Icon(Icons.camera_alt, size: 25),
-                    //   onPressed: () => pickImage(ImageSource.camera),
-                    // ),
+              width: width,
+              height: height * 0.12,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    lightblueColor,
+                    syanColor,
                   ],
                 ),
               ),
+              child: ClipPath(
+                clipper: SinCosineWaveClipper(
+                  verticalPosition: VerticalPosition.top,
+                ),
+                child: Container(
+                  height: height * 0.31,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      syanColor.withOpacity(0.3),
+                      Color.fromARGB(255, 176, 205, 210),
+                    ],
+                  )),
+                ),
+              ),
             ),
-          ],
+            title: Row(
+              children: <Widget>[
+                CircleAvatar(
+                    backgroundImage: AssetImage(widget.img!), radius: 16),
+                8.width,
+                Text(widget.name!, style: boldTextStyle()),
+              ],
+            ),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              iconSize: 18,
+            ),
+          ),
+          body: Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+                child: ListView.separated(
+                  separatorBuilder: (_, i) =>
+                      Divider(color: Colors.transparent),
+                  shrinkWrap: true,
+                  reverse: true,
+                  controller: scrollController,
+                  itemCount: msgListing.length,
+                  padding:
+                      EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 70),
+                  itemBuilder: (_, index) {
+                    AMMessageModel data = msgListing[index];
+                    var isMe = data.senderId == AMSender_id;
+
+                    return ChatMessageWidget(isMe: isMe, data: data);
+                  },
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding:
+                      EdgeInsets.only(left: 12, right: 12, top: 8, bottom: 8),
+                  decoration: BoxDecoration(
+                      color: context.cardColor, boxShadow: defaultBoxShadow()),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      TextField(
+                        controller: msgController,
+                        focusNode: msgFocusNode,
+                        autofocus: true,
+                        textCapitalization: TextCapitalization.sentences,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration.collapsed(
+                          hintText: personName.isNotEmpty
+                              ? 'Write to ${widget.name}'
+                              : 'Type a message',
+                          hintStyle: montserratRegular.copyWith(),
+                          fillColor: context.cardColor,
+                          filled: true,
+                        ),
+                        style: montserratRegular.copyWith(),
+                        onSubmitted: (s) {
+                          sendClick();
+                        },
+                      ).expand(),
+                      IconButton(
+                        icon: Icon(Icons.send, size: 25),
+                        onPressed: () async {
+                          sendClick();
+                        },
+                      ),
+                      // IconButton(
+                      //   icon: Icon(Icons.attach_file, size: 25),
+                      //   onPressed: () => pickImage(ImageSource.gallery),
+                      // ),
+                      // IconButton(
+                      //   icon: Icon(Icons.camera_alt, size: 25),
+                      //   onPressed: () => pickImage(ImageSource.camera),
+                      // ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

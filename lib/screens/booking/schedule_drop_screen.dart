@@ -503,7 +503,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
             ),
           ),
           title: Text(
-            " ",
+            "Schedule Drop",
             style: myriadproregular.copyWith(
               fontSize: 18,
               color: Colors.white,

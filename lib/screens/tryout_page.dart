@@ -1,73 +1,35 @@
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
-import 'package:autoversa/screens/service/service_details_screen.dart';
+import 'package:autoversa/screens/address/address_add_screen.dart';
+import 'package:autoversa/screens/settings/profile_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
-class TryOut extends StatefulWidget {
-  final int click_id;
-  const TryOut({required this.click_id, super.key});
+class AddressList extends StatefulWidget {
+  const AddressList({super.key});
 
   @override
-  State<TryOut> createState() => TryOutState();
+  State<AddressList> createState() => AddressListState();
 }
 
-class TryOutState extends State<TryOut> {
-  var bookingList = [];
-  bool isActive = true;
+class AddressListState extends State<AddressList> {
+  late List custAddressList = [];
   bool isoffline = false;
+  bool isActive = true;
+
   @override
   void initState() {
     super.initState();
-    init();
     Future.delayed(Duration.zero, () {
-      getBookings();
-      print(widget.click_id);
+      addressList();
     });
-  }
-
-  getBookings() async {
-    final prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> send_data = {
-      'custId': prefs.getString('cust_id'),
-    };
-    bookingList = [];
-    await get_service_history(send_data).then((value) {
-      if (value['ret_data'] == "success") {
-        setState(() {
-          for (var bookings in value['book_list']) {
-            bookingList.add(bookings);
-          }
-          for (var cancelled in value['cancelled_list']) {
-            bookingList.add(cancelled);
-          }
-          isActive = false;
-          setState(() {});
-        });
-      } else {
-        isActive = false;
-        setState(() {});
-      }
-    }).catchError((e) {
-      setState(() {
-        isActive = false;
-      });
-      showCustomToast(context, ST.of(context).toast_application_error,
-          bgColor: errorcolor, textColor: Colors.white);
-    });
-    ;
-  }
-
-  Future<void> init() async {
-    //
   }
 
   @override
@@ -78,6 +40,60 @@ class TryOutState extends State<TryOut> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  addressList() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      Map req = {"customerId": prefs.getString('cust_id')};
+      custAddressList = [];
+      await getCustomerAddresses(req).then((value) {
+        if (value['ret_data'] == "success") {
+          custAddressList = value['cust_addressList'];
+          setState(() {
+            isActive = false;
+          });
+        } else {
+          setState(() {
+            isActive = false;
+          });
+        }
+      });
+    } catch (e) {
+      setState(() {
+        isActive = false;
+      });
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: Colors.white);
+    }
+  }
+
+  address_delete(id) async {
+    Map delreq = {"cad_id": id};
+    print(delreq);
+    await deleteCustomerAddress(delreq).then((value) {
+      if (value['ret_data'] == "success") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return AddressList();
+            },
+          ),
+        );
+        showCustomToast(context, "Address Deleted",
+            bgColor: Colors.black, textColor: Colors.white);
+      } else {
+        print(value);
+      }
+    }).catchError((e) {
+      print(e.toString());
+      setState(() {
+        isActive = false;
+      });
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: white);
+    });
   }
 
   @override
@@ -92,52 +108,59 @@ class TryOutState extends State<TryOut> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: white,
-          shadowColor: white,
-          iconTheme: IconThemeData(color: white),
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.dark,
-          ),
-          actions: [
-            Center(
-              child: Row(
-                children: [
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    width: width,
-                    height: height * 0.12,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          lightblueColor,
-                          syanColor,
-                        ],
-                      ),
-                    ),
-                    child: ClipPath(
-                      clipper: SinCosineWaveClipper(
-                        verticalPosition: VerticalPosition.top,
-                      ),
-                      child: Container(
-                        height: height * 0.31,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            syanColor.withOpacity(0.3),
-                            Color.fromARGB(255, 176, 205, 210),
-                          ],
-                        )),
-                      ),
-                    ),
-                  ),
+          flexibleSpace: Container(
+            alignment: Alignment.bottomCenter,
+            width: width,
+            height: height * 0.12,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  lightblueColor,
+                  syanColor,
                 ],
               ),
-            )
-          ],
+            ),
+            child: ClipPath(
+              clipper: SinCosineWaveClipper(
+                verticalPosition: VerticalPosition.top,
+              ),
+              child: Container(
+                height: height * 0.31,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    syanColor.withOpacity(0.3),
+                    Color.fromARGB(255, 176, 205, 210),
+                  ],
+                )),
+              ),
+            ),
+          ),
+          title: Text(
+            "Address List",
+            style: myriadproregular.copyWith(
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ProfilePage();
+                  },
+                ),
+              );
+            },
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            iconSize: 18,
+          ),
         ),
         body: Container(
           child: Column(
@@ -228,227 +251,261 @@ class TryOutState extends State<TryOut> {
                           }),
                     )
                   : Expanded(
-                      child: bookingList.length > 0
+                      child: custAddressList.length > 0
                           ? ListView.builder(
                               scrollDirection: Axis.vertical,
                               padding: EdgeInsets.only(top: 16, bottom: 16),
-                              itemCount: bookingList.length,
+                              itemCount: custAddressList.length,
                               itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
-                                  child: Stack(
-                                    alignment: Alignment.bottomCenter,
-                                    children: [
-                                      Container(
-                                        margin: EdgeInsets.all(12),
-                                        padding: EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+                                return Stack(
+                                  children: [
+                                    Stack(
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.all(17.5),
+                                          padding: EdgeInsets.all(8.5),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    blurRadius: 12,
+                                                    color: syanColor
+                                                        .withOpacity(.9),
+                                                    spreadRadius: 0,
+                                                    blurStyle: BlurStyle.outer,
+                                                    offset: Offset(0, 0)),
+                                              ]),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.all(12.0),
+                                          padding: EdgeInsets.all(8.0),
+                                          decoration: BoxDecoration(
                                             boxShadow: [
                                               BoxShadow(
-                                                  blurRadius: 12,
-                                                  color:
-                                                      syanColor.withOpacity(.9),
-                                                  spreadRadius: 0,
-                                                  blurStyle: BlurStyle.outer,
-                                                  offset: Offset(0, 0)),
-                                            ]),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.all(8.0),
-                                        padding: EdgeInsets.all(4.0),
-                                        decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.white,
-                                              blurRadius: 0.1,
-                                              spreadRadius: 0,
-                                            ),
-                                          ],
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: Colors.grey
-                                                  .withOpacity(0.19)),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.only(
-                                                  left: 0, right: 8),
-                                              width: 75,
-                                              height: 75,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft: Radius.circular(8),
-                                                    topRight:
-                                                        Radius.circular(8),
-                                                    bottomLeft:
-                                                        Radius.circular(8),
-                                                    bottomRight:
-                                                        Radius.circular(8)),
+                                                color: Colors.white,
+                                                blurRadius: 0.1,
+                                                spreadRadius: 0,
                                               ),
-                                              child: Image.asset(
-                                                  (ImageConst
-                                                          .default_service_list)
-                                                      .validate(),
-                                                  fit: BoxFit.fill),
-                                              padding:
-                                                  EdgeInsets.all(width / 30),
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  bookingList[index]
-                                                      ['pkg_name'],
-                                                  style: montserratSemiBold
-                                                      .copyWith(
-                                                          color: black,
-                                                          fontSize: 14),
-                                                ),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Text(
-                                                    bookingList[index]
-                                                                ['cv_make'] !=
-                                                            null
-                                                        ? bookingList[index]
-                                                                ['cv_make'] +
-                                                            " " +
-                                                            bookingList[index]
-                                                                ['cv_model']
-                                                        : "",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: montserratRegular
-                                                        .copyWith(
-                                                            color: black,
-                                                            fontSize: 12)),
-                                                8.height,
-                                                Text(
-                                                    bookingList[index][
-                                                                'cv_variant'] !=
-                                                            null
-                                                        ? bookingList[index]
-                                                                ['cv_variant'] +
-                                                            " (" +
-                                                            bookingList[index]
-                                                                ['cv_year'] +
-                                                            ")"
-                                                        : " (" +
-                                                            bookingList[index]
-                                                                ['cv_year'] +
-                                                            ")",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: montserratRegular
-                                                        .copyWith(
-                                                            color: black,
-                                                            fontSize: 12)),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                        'Date: ' +
-                                                            DateFormat(
-                                                                    'dd-MM-yyyy')
-                                                                .format(DateTime
-                                                                    .tryParse(
-                                                              bookingList[index]
-                                                                      [
-                                                                      'bk_booking_date']
-                                                                  .toString(),
-                                                            )!),
-                                                        style: montserratRegular
-                                                            .copyWith(
-                                                                fontSize: 12,
-                                                                color: black)),
-                                                    16.width,
-                                                    (bookingList[index][
-                                                                    'st_code'] !=
-                                                                null &&
-                                                            bookingList[index][
-                                                                    'st_code'] !=
-                                                                '')
-                                                        ? Container(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        2,
-                                                                    vertical:
-                                                                        4),
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                boxDecorationWithRoundedCorners(
-                                                              backgroundColor:
-                                                                  (bookingList[index]
-                                                                              [
-                                                                              'st_code'] ==
-                                                                          "CANC")
-                                                                      ? Colors
-                                                                          .grey
-                                                                      : Colors
-                                                                          .green,
-                                                              borderRadius:
-                                                                  radius(6),
-                                                            ),
+                                            ],
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: Colors.grey
+                                                    .withOpacity(0.19)),
+                                          ),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                flex: 1,
+                                                child: Image.asset(
+                                                    ImageConst.adrresslist_logo,
+                                                    width: width / 8,
+                                                    height: 50),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Expanded(
+                                                flex: 4,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Flexible(
+                                                          child: Container(
                                                             child: Text(
-                                                              "Completed",
-                                                              style: montserratRegular
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          12),
-                                                            ).paddingOnly(
-                                                                left: 8.0,
-                                                                right: 8.0),
-                                                          )
-                                                        : Container(
-                                                            width: 0,
-                                                            height: 0),
+                                                              custAddressList[
+                                                                      index][
+                                                                  'cad_address'],
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .clip,
+                                                              style:
+                                                                  montserratSemiBold
+                                                                      .copyWith(
+                                                                fontSize: 14,
+                                                                color: black,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    4.height,
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Flexible(
+                                                          child: Container(
+                                                            child: Text(
+                                                                custAddressList[index]
+                                                                            [
+                                                                            'state_name'] !=
+                                                                        null
+                                                                    ? "City" +
+                                                                        ": " +
+                                                                        custAddressList[index]
+                                                                            [
+                                                                            'state_name']
+                                                                    : "",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .clip,
+                                                                style: montserratRegular
+                                                                    .copyWith(
+                                                                        color:
+                                                                            black,
+                                                                        fontSize:
+                                                                            12)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    4.height,
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Flexible(
+                                                          child: Container(
+                                                            child: Text(
+                                                                custAddressList[index]
+                                                                            [
+                                                                            'city_name'] !=
+                                                                        null
+                                                                    ? "Area" +
+                                                                        ": " +
+                                                                        custAddressList[index]
+                                                                            [
+                                                                            'city_name']
+                                                                    : "",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .clip,
+                                                                style: montserratRegular
+                                                                    .copyWith(
+                                                                        color:
+                                                                            black,
+                                                                        fontSize:
+                                                                            12)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    4.height,
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Flexible(
+                                                          child: Container(
+                                                            child: Text(
+                                                                custAddressList[index]
+                                                                            [
+                                                                            'cad_landmark'] !=
+                                                                        null
+                                                                    ? "Building Name/Flat No" +
+                                                                        ": " +
+                                                                        custAddressList[index]
+                                                                            [
+                                                                            'cad_landmark']
+                                                                    : "",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .clip,
+                                                                style: montserratRegular
+                                                                    .copyWith(
+                                                                        color:
+                                                                            black,
+                                                                        fontSize:
+                                                                            12)),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    4.height,
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Text(
+                                                            custAddressList[index]
+                                                                        [
+                                                                        'cad_address_type'] !=
+                                                                    null
+                                                                ? "Type" +
+                                                                    ": " +
+                                                                    custAddressList[
+                                                                            index]
+                                                                        [
+                                                                        'cad_address_type']
+                                                                : "",
+                                                            style: montserratRegular
+                                                                .copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        12)),
+                                                      ],
+                                                    ),
                                                   ],
                                                 ),
-                                              ],
-                                            ).expand(),
-                                          ],
-                                        ).onTap(
-                                          () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ServicehistoryDetails(
-                                                            bk_id: bookingList[
-                                                                index])));
-                                            // bookingList[index]['st_code'] ==
-                                            //         "CANC"
-                                            //     ? AMCancelledServiceHistoryDetails(
-                                            //             bk_id:
-                                            //                 bookingList[index],
-                                            //             reason:
-                                            //                 bookingList[index]
-                                            //                     ['bkt_content'])
-                                            //         .launch(context)
-                                            //     :
-                                            //     ServicehistoryDetails(
-                                            //             bk_id:
-                                            //                 bookingList[index])
-                                            //         .launch(context);
-                                          },
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    showConfirmDialogCustom(
+                                                      context,
+                                                      title:
+                                                          'Are you sure you want to delete this address.?',
+                                                      primaryColor: syanColor,
+                                                      customCenterWidget:
+                                                          Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                top: 8),
+                                                        child: Image.asset(
+                                                            "assets/icons/address_list_icon.png",
+                                                            height: 80),
+                                                      ),
+                                                      onAccept: (v) {
+                                                        address_delete(
+                                                            custAddressList[
+                                                                    index]
+                                                                ['cad_id']);
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                        right: 8,
+                                                      ),
+                                                      child: Icon(
+                                                        Icons.delete,
+                                                        color: black,
+                                                        size: 22,
+                                                      )),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      )
-                                    ],
-                                  ),
+                                      ],
+                                    ),
+                                  ],
                                 );
                               })
                           : Container(
@@ -470,6 +527,23 @@ class TryOutState extends State<TryOut> {
                     ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Container(
+            width: 60,
+            height: 60,
+            child: Icon(
+              Icons.add,
+            ),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(colors: [lightblueColor, syanColor])),
+          ),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AddressAdd()));
+          },
+          heroTag: 'Add Address',
         ),
       ),
     );

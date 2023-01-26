@@ -70,6 +70,39 @@ class ProfilePageState extends State<ProfilePage> {
     if (mounted) super.setState(fn);
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: new Text(
+              'Are you sure?',
+              style: montserratSemiBold.copyWith(fontSize: 14, color: black),
+            ),
+            content: new Text(
+              'Do you want to exit an App',
+              style: montserratRegular.copyWith(fontSize: 12, color: black),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context).pop(false), //<-- SEE HERE
+                child: new Text('No',
+                    style:
+                        montserratRegular.copyWith(fontSize: 12, color: black)),
+              ),
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context).pop(true), // <-- SEE HERE
+                child: new Text('Yes',
+                    style:
+                        montserratRegular.copyWith(fontSize: 12, color: black)),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
   logout_user() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
@@ -127,497 +160,525 @@ class ProfilePageState extends State<ProfilePage> {
               color: Colors.white,
             ),
           ),
+          // leading: IconButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) {
+          //           return ProfilePage();
+          //         },
+          //       ),
+          //     );
+          //   },
+          //   icon: const Icon(Icons.arrow_back, color: Colors.white),
+          //   iconSize: 18,
+          // ),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(height: 8),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 2,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10.0),
-                              bottomRight: Radius.circular(16.0)),
-                          child: custdetails['cust_profile_pic'] != null
-                              ? CachedNetworkImage(
-                                  placeholder: (context, url) =>
-                                      Transform.scale(
-                                    scale: 0.5,
-                                    child: CircularProgressIndicator(),
+          child: WillPopScope(
+            onWillPop: _onWillPop,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    SizedBox(height: 8),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 2,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10.0),
+                                bottomRight: Radius.circular(16.0)),
+                            child: custdetails['cust_profile_pic'] != null
+                                ? CachedNetworkImage(
+                                    placeholder: (context, url) =>
+                                        Transform.scale(
+                                      scale: 0.5,
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                    imageUrl: dotenv.env['aws_url']! +
+                                        custdetails['cust_profile_pic'],
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    ImageConst.default_pro_pic,
+                                    fit: BoxFit.contain,
+                                    height: width * 0.35,
                                   ),
-                                  imageUrl: dotenv.env['aws_url']! +
-                                      custdetails['cust_profile_pic'],
-                                  height: 150,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
-                                  ImageConst.default_pro_pic,
-                                  fit: BoxFit.contain,
-                                  height: width * 0.35,
-                                ),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 16.0),
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                                custdetails['cust_fullname'] != null
-                                    ? custdetails['cust_fullname']
-                                    : "",
-                                style: montserratSemiBold.copyWith(
-                                    fontSize: 18, color: black)),
-                            Text(
-                                custdetails['cust_phone'] != null
-                                    ? custdetails['cust_country_code'] +
-                                        custdetails['cust_phone']
-                                    : " ",
-                                style: montserratRegular.copyWith(
-                                    color: black, fontSize: 14)),
-                            SizedBox(height: 4.0),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  WidgetSpan(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(right: 4.0),
-                                      child: Icon(Icons.location_on,
-                                          color: black, size: 18),
+                        SizedBox(width: 16.0),
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                  custdetails['cust_fullname'] != null
+                                      ? custdetails['cust_fullname']
+                                      : "",
+                                  style: montserratSemiBold.copyWith(
+                                      fontSize: 18, color: black)),
+                              Text(
+                                  custdetails['cust_phone'] != null
+                                      ? custdetails['cust_country_code'] +
+                                          custdetails['cust_phone']
+                                      : " ",
+                                  style: montserratRegular.copyWith(
+                                      color: black, fontSize: 14)),
+                              SizedBox(height: 4.0),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    WidgetSpan(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(right: 4.0),
+                                        child: Icon(Icons.location_on,
+                                            color: black, size: 18),
+                                      ),
                                     ),
-                                  ),
-                                  TextSpan(
-                                      text: custdetails['state_name'] != null
-                                          ? custdetails['state_name']
-                                          : "",
-                                      style: montserratRegular.copyWith(
-                                          color: black)),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 8.0),
-                            Row(
-                              children: <Widget>[
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      vehcount.toString(),
-                                      style: montserratRegular.copyWith(
-                                          color: activecolor),
-                                    ),
-                                    Text(
-                                      "Vehicles",
-                                      style: montserratRegular.copyWith(
-                                          color: black),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  height: width * 0.1,
-                                  width: 0.5,
-                                  color: Color(0xFFB4BBC2),
-                                  margin:
-                                      EdgeInsets.only(left: 16.0, right: 16.0),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text("0",
-                                        style: montserratRegular.copyWith(
-                                            color: activecolor)),
-                                    Text("Credits",
+                                    TextSpan(
+                                        text: custdetails['state_name'] != null
+                                            ? custdetails['state_name']
+                                            : "",
                                         style: montserratRegular.copyWith(
                                             color: black)),
                                   ],
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  lightblueColor,
-                                  syanColor,
-                                ],
+                                ),
                               ),
-                            ),
-                            child: Icon(Icons.person,
-                                color: Colors.white, size: 20),
-                          ),
-                          16.width,
-                          Text("Edit Profile",
-                              style: montserratSemiBold.copyWith(fontSize: 14)),
-                        ],
-                      ).paddingOnly(left: 16),
-                      Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
-                          .paddingOnly(right: 16),
-                    ],
-                  ).onTap(() async {
-                    String? name = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return Editprofie();
-                        },
-                      ),
-                    );
-                    nameProfile = name;
-                    setState(() {});
-                  }),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  lightblueColor,
-                                  syanColor,
+                              SizedBox(height: 8.0),
+                              Row(
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        vehcount.toString(),
+                                        style: montserratRegular.copyWith(
+                                            color: activecolor),
+                                      ),
+                                      Text(
+                                        "Vehicles",
+                                        style: montserratRegular.copyWith(
+                                            color: black),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    height: width * 0.1,
+                                    width: 0.5,
+                                    color: Color(0xFFB4BBC2),
+                                    margin: EdgeInsets.only(
+                                        left: 16.0, right: 16.0),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text("0",
+                                          style: montserratRegular.copyWith(
+                                              color: activecolor)),
+                                      Text("Credits",
+                                          style: montserratRegular.copyWith(
+                                              color: black)),
+                                    ],
+                                  )
                                 ],
-                              ),
-                            ),
-                            child:
-                                Icon(Icons.map, color: Colors.white, size: 20),
+                              )
+                            ],
                           ),
-                          16.width,
-                          Text("My Address",
-                              style: montserratSemiBold.copyWith()),
-                        ],
-                      ).paddingOnly(left: 16),
-                      Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
-                          .paddingOnly(right: 16),
-                    ],
-                  ).onTap(() async {
-                    String? name = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return AddressList();
-                        },
-                      ),
-                    );
-                    nameProfile = name;
-                    setState(() {});
-                  }),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  lightblueColor,
-                                  syanColor,
-                                ],
-                              ),
-                            ),
-                            child: Icon(Icons.car_rental,
-                                color: Colors.white, size: 20),
-                          ),
-                          16.width,
-                          Text("My Vehicles",
-                              style: montserratSemiBold.copyWith()),
-                        ],
-                      ).paddingOnly(left: 16),
-                      Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
-                          .paddingOnly(right: 16),
-                    ],
-                  ).onTap(() async {
-                    String? name = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return Vehiclelist(click_id: 2);
-                        },
-                      ),
-                    );
-                    nameProfile = name;
-                    setState(() {});
-                  }),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  lightblueColor,
-                                  syanColor,
-                                ],
-                              ),
-                            ),
-                            child: Icon(Icons.build,
-                                color: Colors.white, size: 20),
-                          ),
-                          16.width,
-                          Text("My Services",
-                              style: montserratSemiBold.copyWith()),
-                        ],
-                      ).paddingOnly(left: 16),
-                      Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
-                          .paddingOnly(right: 16),
-                    ],
-                  ).onTap(() async {
-                    String? name = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return ServiceList(click_id: 2);
-                        },
-                      ),
-                    );
-                    nameProfile = name;
-                    setState(() {});
-                  }),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Row(
-                  //       children: [
-                  //         Container(
-                  //           alignment: Alignment.center,
-                  //           margin: EdgeInsets.symmetric(vertical: 8),
-                  //           padding: EdgeInsets.all(10),
-                  //           decoration: BoxDecoration(
-                  //             shape: BoxShape.circle,
-                  //             gradient: LinearGradient(
-                  //               begin: Alignment.topRight,
-                  //               end: Alignment.bottomRight,
-                  //               colors: [
-                  //                 lightblueColor,
-                  //                 syanColor,
-                  //               ],
-                  //             ),
-                  //           ),
-                  //           child:
-                  //               Icon(Icons.list, color: Colors.white, size: 20),
-                  //         ),
-                  //         16.width,
-                  //         Text("My Invoices",
-                  //             style: montserratSemiBold.copyWith()),
-                  //       ],
-                  //     ).paddingOnly(left: 16),
-                  //     Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
-                  //         .paddingOnly(right: 16),
-                  //   ],
-                  // ).onTap(() async {}),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  lightblueColor,
-                                  syanColor,
-                                ],
-                              ),
-                            ),
-                            child: Icon(Icons.support_agent,
-                                color: Colors.white, size: 20),
-                          ),
-                          16.width,
-                          Text("Support", style: montserratSemiBold.copyWith()),
-                        ],
-                      ).paddingOnly(left: 16),
-                      Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
-                          .paddingOnly(right: 16),
-                    ],
-                  ).onTap(() async {
-                    String? name = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return Support();
-                        },
-                      ),
-                    );
-                    nameProfile = name;
-                    setState(() {});
-                  }),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  lightblueColor,
-                                  syanColor,
-                                ],
-                              ),
-                            ),
-                            child:
-                                Icon(Icons.lock, color: Colors.white, size: 20),
-                          ),
-                          16.width,
-                          Text("Privacy", style: montserratSemiBold.copyWith()),
-                        ],
-                      ).paddingOnly(left: 16),
-                      Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
-                          .paddingOnly(right: 16),
-                    ],
-                  ).onTap(() async {}),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Row(
-                  //       children: [
-                  //         Container(
-                  //           alignment: Alignment.center,
-                  //           margin: EdgeInsets.symmetric(vertical: 8),
-                  //           padding: EdgeInsets.all(10),
-                  //           decoration: BoxDecoration(
-                  //             shape: BoxShape.circle,
-                  //             gradient: LinearGradient(
-                  //               begin: Alignment.topRight,
-                  //               end: Alignment.bottomRight,
-                  //               colors: [
-                  //                 lightblueColor,
-                  //                 syanColor,
-                  //               ],
-                  //             ),
-                  //           ),
-                  //           child: Icon(MaterialCommunityIcons.google_translate,
-                  //               color: Colors.white, size: 20),
-                  //         ),
-                  //         16.width,
-                  //         Text("Language",
-                  //             style: montserratSemiBold.copyWith()),
-                  //       ],
-                  //     ).paddingOnly(left: 16),
-                  //     Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
-                  //         .paddingOnly(right: 16),
-                  //   ],
-                  // ).onTap(() async {
-                  //   LanguageSelection()
-                  //       .launch(context)
-                  //       .then((value) => setState(() {}));
-                  // }),
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () {
-                    showConfirmDialogCustom(
-                      context,
-                      primaryColor: syanColor,
-                      title: "Do you want to logout from the app?",
-                      onAccept: (v) {
-                        logout_user();
-                      },
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 16, horizontal: 0),
-                    padding: EdgeInsets.only(left: 16),
-                    width: 150,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: signout_button,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(24.0),
-                        bottomRight: Radius.circular(24.0),
-                      ),
-                      border: Border.all(color: syanColor, width: 1),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.logout, color: Colors.white, size: 24),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-                          child: Text(
-                            "Signout",
-                            textAlign: TextAlign.start,
-                            style: montserratSemiBold.copyWith(
-                                color: Colors.white, fontSize: 14),
-                          ),
-                        ),
+                        )
                       ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    lightblueColor,
+                                    syanColor,
+                                  ],
+                                ),
+                              ),
+                              child: Icon(Icons.person,
+                                  color: Colors.white, size: 20),
+                            ),
+                            16.width,
+                            Text("Edit Profile",
+                                style:
+                                    montserratSemiBold.copyWith(fontSize: 14)),
+                          ],
+                        ).paddingOnly(left: 16),
+                        Icon(Icons.arrow_forward_ios,
+                                color: syanColor, size: 16)
+                            .paddingOnly(right: 16),
+                      ],
+                    ).onTap(() async {
+                      String? name = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return Editprofie();
+                          },
+                        ),
+                      );
+                      nameProfile = name;
+                      setState(() {});
+                    }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    lightblueColor,
+                                    syanColor,
+                                  ],
+                                ),
+                              ),
+                              child: Icon(Icons.map,
+                                  color: Colors.white, size: 20),
+                            ),
+                            16.width,
+                            Text("My Address",
+                                style: montserratSemiBold.copyWith()),
+                          ],
+                        ).paddingOnly(left: 16),
+                        Icon(Icons.arrow_forward_ios,
+                                color: syanColor, size: 16)
+                            .paddingOnly(right: 16),
+                      ],
+                    ).onTap(() async {
+                      String? name = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AddressList();
+                          },
+                        ),
+                      );
+                      nameProfile = name;
+                      setState(() {});
+                    }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    lightblueColor,
+                                    syanColor,
+                                  ],
+                                ),
+                              ),
+                              child: Icon(Icons.car_rental,
+                                  color: Colors.white, size: 20),
+                            ),
+                            16.width,
+                            Text("My Vehicles",
+                                style: montserratSemiBold.copyWith()),
+                          ],
+                        ).paddingOnly(left: 16),
+                        Icon(Icons.arrow_forward_ios,
+                                color: syanColor, size: 16)
+                            .paddingOnly(right: 16),
+                      ],
+                    ).onTap(() async {
+                      String? name = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return Vehiclelist(click_id: 2);
+                          },
+                        ),
+                      );
+                      nameProfile = name;
+                      setState(() {});
+                    }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    lightblueColor,
+                                    syanColor,
+                                  ],
+                                ),
+                              ),
+                              child: Icon(Icons.build,
+                                  color: Colors.white, size: 20),
+                            ),
+                            16.width,
+                            Text("My Services",
+                                style: montserratSemiBold.copyWith()),
+                          ],
+                        ).paddingOnly(left: 16),
+                        Icon(Icons.arrow_forward_ios,
+                                color: syanColor, size: 16)
+                            .paddingOnly(right: 16),
+                      ],
+                    ).onTap(() async {
+                      String? name = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ServiceList(click_id: 2);
+                          },
+                        ),
+                      );
+                      nameProfile = name;
+                      setState(() {});
+                    }),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Row(
+                    //       children: [
+                    //         Container(
+                    //           alignment: Alignment.center,
+                    //           margin: EdgeInsets.symmetric(vertical: 8),
+                    //           padding: EdgeInsets.all(10),
+                    //           decoration: BoxDecoration(
+                    //             shape: BoxShape.circle,
+                    //             gradient: LinearGradient(
+                    //               begin: Alignment.topRight,
+                    //               end: Alignment.bottomRight,
+                    //               colors: [
+                    //                 lightblueColor,
+                    //                 syanColor,
+                    //               ],
+                    //             ),
+                    //           ),
+                    //           child:
+                    //               Icon(Icons.list, color: Colors.white, size: 20),
+                    //         ),
+                    //         16.width,
+                    //         Text("My Invoices",
+                    //             style: montserratSemiBold.copyWith()),
+                    //       ],
+                    //     ).paddingOnly(left: 16),
+                    //     Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
+                    //         .paddingOnly(right: 16),
+                    //   ],
+                    // ).onTap(() async {}),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    lightblueColor,
+                                    syanColor,
+                                  ],
+                                ),
+                              ),
+                              child: Icon(Icons.support_agent,
+                                  color: Colors.white, size: 20),
+                            ),
+                            16.width,
+                            Text("Support",
+                                style: montserratSemiBold.copyWith()),
+                          ],
+                        ).paddingOnly(left: 16),
+                        Icon(Icons.arrow_forward_ios,
+                                color: syanColor, size: 16)
+                            .paddingOnly(right: 16),
+                      ],
+                    ).onTap(() async {
+                      String? name = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return Support();
+                          },
+                        ),
+                      );
+                      nameProfile = name;
+                      setState(() {});
+                    }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    lightblueColor,
+                                    syanColor,
+                                  ],
+                                ),
+                              ),
+                              child: Icon(Icons.lock,
+                                  color: Colors.white, size: 20),
+                            ),
+                            16.width,
+                            Text("Privacy",
+                                style: montserratSemiBold.copyWith()),
+                          ],
+                        ).paddingOnly(left: 16),
+                        Icon(Icons.arrow_forward_ios,
+                                color: syanColor, size: 16)
+                            .paddingOnly(right: 16),
+                      ],
+                    ).onTap(() async {}),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Row(
+                    //       children: [
+                    //         Container(
+                    //           alignment: Alignment.center,
+                    //           margin: EdgeInsets.symmetric(vertical: 8),
+                    //           padding: EdgeInsets.all(10),
+                    //           decoration: BoxDecoration(
+                    //             shape: BoxShape.circle,
+                    //             gradient: LinearGradient(
+                    //               begin: Alignment.topRight,
+                    //               end: Alignment.bottomRight,
+                    //               colors: [
+                    //                 lightblueColor,
+                    //                 syanColor,
+                    //               ],
+                    //             ),
+                    //           ),
+                    //           child: Icon(MaterialCommunityIcons.google_translate,
+                    //               color: Colors.white, size: 20),
+                    //         ),
+                    //         16.width,
+                    //         Text("Language",
+                    //             style: montserratSemiBold.copyWith()),
+                    //       ],
+                    //     ).paddingOnly(left: 16),
+                    //     Icon(Icons.arrow_forward_ios, color: syanColor, size: 16)
+                    //         .paddingOnly(right: 16),
+                    //   ],
+                    // ).onTap(() async {
+                    //   LanguageSelection()
+                    //       .launch(context)
+                    //       .then((value) => setState(() {}));
+                    // }),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () {
+                      showConfirmDialogCustom(
+                        context,
+                        primaryColor: syanColor,
+                        title: "Do you want to logout from the app?",
+                        onAccept: (v) {
+                          logout_user();
+                        },
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+                      padding: EdgeInsets.only(left: 16),
+                      width: 150,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: signout_button,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(24.0),
+                          bottomRight: Radius.circular(24.0),
+                        ),
+                        border: Border.all(color: syanColor, width: 1),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.logout, color: Colors.white, size: 24),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                            child: Text(
+                              "Signout",
+                              textAlign: TextAlign.start,
+                              style: montserratSemiBold.copyWith(
+                                  color: Colors.white, fontSize: 14),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

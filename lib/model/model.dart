@@ -65,6 +65,32 @@ class VehicleModel {
       this.cv_delete_flag});
 }
 
+class AddressModel {
+  var cad_id;
+  var cad_address;
+  var cad_landmark;
+  var cad_address_type;
+  var cad_lattitude;
+  var cad_longitude;
+  var state_name;
+  var country_code;
+  var city_name;
+  var cad_distance;
+
+  AddressModel({
+    this.cad_id,
+    this.cad_address,
+    this.cad_landmark,
+    this.cad_address_type,
+    this.cad_lattitude,
+    this.cad_longitude,
+    this.state_name,
+    this.country_code,
+    this.city_name,
+    this.cad_distance,
+  });
+}
+
 class MessageModel {
   String? img;
   String? name;

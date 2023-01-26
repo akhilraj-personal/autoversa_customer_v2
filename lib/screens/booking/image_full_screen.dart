@@ -73,7 +73,7 @@ class ImageFullscreenState extends State<ImageFullscreen> {
             ),
           ),
           title: Text(
-            " ",
+            "Vehicle Image",
             style: myriadproregular.copyWith(
               fontSize: 18,
               color: Colors.white,

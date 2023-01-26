@@ -258,7 +258,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
             ),
           ),
           title: Text(
-            " ",
+            "Reschedule Booking",
             style: myriadproregular.copyWith(
               fontSize: 18,
               color: Colors.white,
