@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/address/address_list_screen.dart';
-import 'package:autoversa/screens/language/langage_screen.dart';
 import 'package:autoversa/screens/service/service_list_screen.dart';
 import 'package:autoversa/screens/settings/edit_profile.dart';
 import 'package:autoversa/screens/support/support_screen.dart';
@@ -15,7 +14,6 @@ import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../constant/image_const.dart';
@@ -71,34 +69,16 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   Future<bool> _onWillPop() async {
-    return (await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: new Text(
-              'Are you sure?',
-              style: montserratSemiBold.copyWith(fontSize: 14, color: black),
-            ),
-            content: new Text(
-              'Do you want to exit an App',
-              style: montserratRegular.copyWith(fontSize: 12, color: black),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () =>
-                    Navigator.of(context).pop(false), //<-- SEE HERE
-                child: new Text('No',
-                    style:
-                        montserratRegular.copyWith(fontSize: 12, color: black)),
-              ),
-              TextButton(
-                onPressed: () =>
-                    Navigator.of(context).pop(true), // <-- SEE HERE
-                child: new Text('Yes',
-                    style:
-                        montserratRegular.copyWith(fontSize: 12, color: black)),
-              ),
-            ],
-          ),
+    return (await showConfirmDialogCustom(
+          context,
+          height: 130,
+          title: 'Confirmation',
+          subTitle: 'Are to sure you want to exit ?',
+          primaryColor: syanColor,
+          customCenterWidget: Image.asset("assets/icons/logout_icon.png"),
+          onAccept: (v) {
+            Navigator.of(context).pop(true);
+          },
         )) ??
         false;
   }
@@ -160,20 +140,20 @@ class ProfilePageState extends State<ProfilePage> {
               color: Colors.white,
             ),
           ),
-          // leading: IconButton(
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) {
-          //           return ProfilePage();
-          //         },
-          //       ),
-          //     );
-          //   },
-          //   icon: const Icon(Icons.arrow_back, color: Colors.white),
-          //   iconSize: 18,
-          // ),
+          leading: IconButton(
+            onPressed: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return ProfilePage();
+              //     },
+              //   ),
+              // );
+            },
+            icon: const Icon(Icons.arrow_back, color: Colors.transparent),
+            iconSize: 18,
+          ),
         ),
         body: SingleChildScrollView(
           child: WillPopScope(
