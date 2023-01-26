@@ -99,11 +99,15 @@ class VehiclelistState extends State<Vehiclelist> {
   Future<bool> _onWillPop() async {
     return (await showConfirmDialogCustom(
           context,
-          height: 130,
+          height: 65,
           title: 'Confirmation',
           subTitle: 'Are to sure you want to exit ?',
           primaryColor: syanColor,
-          customCenterWidget: Image.asset("assets/icons/logout_icon.png"),
+          customCenterWidget: Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Image.asset("assets/icons/logout_icon.png",
+                width: width / 2, height: 95),
+          ),
           onAccept: (v) {
             Navigator.of(context).pop(true);
           },
@@ -475,14 +479,22 @@ class VehiclelistState extends State<Vehiclelist> {
                                                       child: GestureDetector(
                                                         onTap: () {
                                                           showConfirmDialogCustom(
+                                                            height: 65,
                                                             context,
                                                             title:
                                                                 'Are you sure you want to delete this vehicle.?',
                                                             primaryColor:
                                                                 syanColor,
                                                             customCenterWidget:
-                                                                Image.asset(
-                                                                    "assets/icons/car.png"),
+                                                                Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(top: 8),
+                                                              child: Image.asset(
+                                                                  "assets/icons/car.png",
+                                                                  width:
+                                                                      width / 2,
+                                                                  height: 95),
+                                                            ),
                                                             onAccept: (v) {
                                                               vehicle_delete(
                                                                   custvehlist[

@@ -87,11 +87,15 @@ class ServiceListState extends State<ServiceList> {
   Future<bool> _onWillPop() async {
     return (await showConfirmDialogCustom(
           context,
-          height: 130,
+          height: 65,
           title: 'Confirmation',
           subTitle: 'Are to sure you want to exit ?',
           primaryColor: syanColor,
-          customCenterWidget: Image.asset("assets/icons/logout_icon.png"),
+          customCenterWidget: Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Image.asset("assets/icons/logout_icon.png",
+                width: width / 2, height: 95),
+          ),
           onAccept: (v) {
             Navigator.of(context).pop(true);
           },
