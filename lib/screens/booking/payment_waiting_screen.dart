@@ -598,7 +598,8 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                               .toUpperCase()
                                           : "",
                                       style: montserratSemiBold.copyWith(
-                                          color: black, fontSize: 14),
+                                          color: black,
+                                          fontSize: width * 0.034),
                                       maxLines: 2),
                                   Text(
                                       vehicle['cv_make'] != null
@@ -610,7 +611,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                               ")"
                                           : "",
                                       style: montserratRegular.copyWith(
-                                        fontSize: 12,
+                                        fontSize: width * 0.032,
                                         color: black,
                                       )),
                                   Text(
@@ -619,7 +620,8 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                           ? vehicle['cv_variant']
                                           : "",
                                       style: montserratRegular.copyWith(
-                                          fontSize: 12, color: black),
+                                          fontSize: width * 0.032,
+                                          color: black),
                                       maxLines: 2),
                                   SizedBox(height: 8),
                                 ],
@@ -705,7 +707,8 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                                   style: montserratRegular
                                                       .copyWith(
                                                           color: black,
-                                                          fontSize: 12)),
+                                                          fontSize:
+                                                              width * 0.032)),
                                             ),
                                           ),
                                         ],
@@ -720,7 +723,8 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                                     'bkp_cust_amount']
                                             : "0",
                                         style: montserratRegular.copyWith(
-                                            color: warningcolor, fontSize: 12),
+                                            color: warningcolor,
+                                            fontSize: width * 0.032),
                                       ),
                                     ],
                                   ),
@@ -761,7 +765,8 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                           Text(
                                             pickup_type['pk_name'] ?? "",
                                             style: montserratRegular.copyWith(
-                                                color: black, fontSize: 12),
+                                                color: black,
+                                                fontSize: width * 0.032),
                                           ),
                                         ],
                                         mainAxisAlignment:
@@ -778,7 +783,8 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                                 : "FREE"
                                             : "",
                                         style: montserratRegular.copyWith(
-                                            fontSize: 12, color: black),
+                                            fontSize: width * 0.032,
+                                            color: black),
                                       ),
                                     ],
                                   ),
@@ -794,7 +800,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.clip,
                                 style: montserratSemiBold.copyWith(
-                                  fontSize: 14,
+                                  fontSize: width * 0.034,
                                   color: Colors.black,
                                 ),
                               ),
@@ -850,7 +856,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.clip,
                                 style: montserratSemiBold.copyWith(
-                                  fontSize: 14,
+                                  fontSize: width * 0.034,
                                   color: Colors.black,
                                 ),
                               ),
@@ -900,7 +906,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                           18.height,
                           Text("Select Date & Time*",
                               style: montserratSemiBold.copyWith(
-                                  color: black, fontSize: 14)),
+                                  color: black, fontSize: width * 0.034)),
                           12.height,
                           Row(
                             children: <Widget>[
@@ -934,7 +940,8 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                                             'bk_booking_date']))
                                                 : "",
                                             style: montserratRegular.copyWith(
-                                                color: black, fontSize: 12)),
+                                                color: black,
+                                                fontSize: width * 0.032)),
                                         Text(
                                             bookingdetails['bk_booking_date'] !=
                                                     null
@@ -945,7 +952,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                                 : "",
                                             style: montserratRegular.copyWith(
                                                 color: errorcolor,
-                                                fontSize: 12)),
+                                                fontSize: width * 0.032)),
                                       ],
                                     )
                                   ],
@@ -982,7 +989,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                             maxLines: 1,
                                             style: montserratRegular.copyWith(
                                                 color: errorcolor,
-                                                fontSize: 12)),
+                                                fontSize: width * 0.032)),
                                         Text(
                                             pickup_timeslot['tm_end_time'] !=
                                                     null
@@ -990,7 +997,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                                 : "",
                                             style: montserratRegular.copyWith(
                                                 color: errorcolor,
-                                                fontSize: 12)),
+                                                fontSize: width * 0.032)),
                                       ],
                                     )
                                   ],
@@ -1006,7 +1013,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.clip,
                                 style: montserratRegular.copyWith(
-                                  fontSize: 12,
+                                  fontSize: width * 0.032,
                                   color: black,
                                 ),
                               ),
@@ -1056,7 +1063,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                               Text(
                                 "Grand Total" + ": ",
                                 style: montserratSemiBold.copyWith(
-                                    color: black, fontSize: 14),
+                                    color: black, fontSize: width * 0.034),
                               ),
                               Text(
                                 booking_package['bkp_cust_amount'] != null
@@ -1068,7 +1075,8 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                             .toString()
                                     : "0",
                                 style: montserratSemiBold.copyWith(
-                                    color: warningcolor, fontSize: 14),
+                                    color: warningcolor,
+                                    fontSize: width * 0.034),
                               ),
                             ],
                           ),
@@ -1269,7 +1277,7 @@ class CustomWarning extends StatelessWidget {
                     Text("Awaiting Payment",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
-                            fontSize: 14, color: white)),
+                            fontSize: width * 0.034, color: white)),
                   ],
                 )
               ],
@@ -1283,7 +1291,7 @@ class CustomWarning extends StatelessWidget {
                     "Please check dashboard to complete payment for further proceedings.",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
-                        fontSize: 12, color: black))),
+                        fontSize: width * 0.032, color: black))),
             SizedBox(
               height: 16,
             ),
@@ -1357,7 +1365,7 @@ class CustomSuccess extends StatelessWidget {
                     Text("Booking Successfull",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
-                            fontSize: 14, color: white)),
+                            fontSize: width * 0.034, color: white)),
                   ],
                 )
               ],
@@ -1370,7 +1378,7 @@ class CustomSuccess extends StatelessWidget {
                 child: Text("Please check dashboard for booking status",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
-                        fontSize: 12, color: black))),
+                        fontSize: width * 0.032, color: black))),
             SizedBox(
               height: 16,
             ),

@@ -35,34 +35,20 @@ class SupportState extends State<Support> {
   }
 
   Future<bool> _onWillPop() async {
-    return (await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: new Text(
-              'Are you sure?',
-              style: montserratSemiBold.copyWith(fontSize: 14, color: black),
-            ),
-            content: new Text(
-              'Do you want to exit an App',
-              style: montserratRegular.copyWith(fontSize: 12, color: black),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () =>
-                    Navigator.of(context).pop(false), //<-- SEE HERE
-                child: new Text('No',
-                    style:
-                        montserratRegular.copyWith(fontSize: 12, color: black)),
-              ),
-              TextButton(
-                onPressed: () =>
-                    Navigator.of(context).pop(true), // <-- SEE HERE
-                child: new Text('Yes',
-                    style:
-                        montserratRegular.copyWith(fontSize: 12, color: black)),
-              ),
-            ],
+    return (await showConfirmDialogCustom(
+          context,
+          height: 65,
+          title: 'Confirmation',
+          subTitle: 'Are to sure you want to exit ?',
+          primaryColor: syanColor,
+          customCenterWidget: Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Image.asset("assets/icons/logout_icon.png",
+                width: width / 2, height: 95),
           ),
+          onAccept: (v) {
+            Navigator.of(context).pop(true);
+          },
         )) ??
         false;
   }

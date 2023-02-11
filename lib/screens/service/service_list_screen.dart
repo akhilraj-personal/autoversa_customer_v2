@@ -266,14 +266,16 @@ class ServiceListState extends State<ServiceList> {
                                       title: Text(
                                         "Cancel Reason",
                                         style: montserratSemiBold.copyWith(
-                                            color: black, fontSize: 14),
+                                            color: black,
+                                            fontSize: width * 0.034),
                                       ),
                                       content: Text(
                                         cancelreason != null
                                             ? cancelreason.toUpperCase()
                                             : "",
                                         style: montserratRegular.copyWith(
-                                            color: black, fontSize: 12),
+                                            color: black,
+                                            fontSize: width * 0.032),
                                       ),
                                       actions: [],
                                     );

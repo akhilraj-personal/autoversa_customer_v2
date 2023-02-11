@@ -253,7 +253,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: black,
-                                                      fontSize: 14)),
+                                                      fontSize: width * 0.034)),
                                         ),
                                       ],
                                     ),
@@ -270,7 +270,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                                 : "",
                                             overflow: TextOverflow.clip,
                                             style: montserratRegular.copyWith(
-                                                color: black, fontSize: 12)),
+                                                color: black,
+                                                fontSize: width * 0.032)),
                                       ],
                                     ),
                                     SizedBox(
@@ -300,7 +301,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                                       style: montserratRegular
                                                           .copyWith(
                                                               color: black,
-                                                              fontSize: 12)),
+                                                              fontSize: width *
+                                                                  0.032)),
                                                 ),
                                               ),
                                             ],
@@ -331,7 +333,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                                       style: montserratRegular
                                                           .copyWith(
                                                               color: black,
-                                                              fontSize: 12)),
+                                                              fontSize: width *
+                                                                  0.032)),
                                                 ),
                                               ),
                                             ],
@@ -375,7 +378,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: black,
-                                                        fontSize: 12)),
+                                                        fontSize:
+                                                            width * 0.032)),
                                           ),
                                         ),
                                       ],
@@ -413,7 +417,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                           overflow: TextOverflow.clip,
                                           maxLines: 3,
                                           style: montserratSemiBold.copyWith(
-                                            fontSize: 14,
+                                            fontSize: width * 0.034,
                                             color: black,
                                           ),
                                         ),
@@ -427,7 +431,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                         padding: EdgeInsets.all(8),
                                         child: Text('Cost (AED)',
                                             style: montserratSemiBold.copyWith(
-                                              fontSize: 14,
+                                              fontSize: width * 0.034,
                                               color: black,
                                             ))),
                                   ],
@@ -451,7 +455,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                             overflow: TextOverflow.clip,
                                             maxLines: 3,
                                             style: montserratRegular.copyWith(
-                                              fontSize: 12,
+                                              fontSize: width * 0.032,
                                               color: black,
                                             )),
                                       ),
@@ -469,7 +473,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                                   'bkp_cust_amount']
                                               : "",
                                           style: montserratSemiBold.copyWith(
-                                              fontSize: 12,
+                                              fontSize: width * 0.032,
                                               color: warningcolor)),
                                     ),
                                   ],
@@ -489,7 +493,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                             overflow: TextOverflow.clip,
                                             maxLines: 3,
                                             style: montserratRegular.copyWith(
-                                              fontSize: 12,
+                                              fontSize: width * 0.032,
                                               color: black,
                                             )),
                                       ),
@@ -505,7 +509,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                               ? "FREE"
                                               : pickupcost.toString(),
                                           style: montserratSemiBold.copyWith(
-                                              fontSize: 12,
+                                              fontSize: width * 0.032,
                                               color: warningcolor)),
                                     ),
                                   ],
@@ -550,7 +554,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                                         maxLines: 3,
                                                         style: montserratRegular
                                                             .copyWith(
-                                                          fontSize: 12,
+                                                          fontSize:
+                                                              width * 0.032,
                                                           color: black,
                                                         )),
                                                   ),
@@ -570,7 +575,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                                           : "",
                                                       style: montserratSemiBold
                                                           .copyWith(
-                                                              fontSize: 12,
+                                                              fontSize:
+                                                                  width * 0.032,
                                                               color:
                                                                   warningcolor)),
                                                 ),
@@ -592,12 +598,13 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                   Text(
                                     "Grand Total: ",
                                     style: montserratSemiBold.copyWith(
-                                        color: black, fontSize: 14),
+                                        color: black, fontSize: width * 0.034),
                                   ),
                                   Text(
                                     grandtotal.toString(),
                                     style: montserratSemiBold.copyWith(
-                                        color: warningcolor, fontSize: 14),
+                                        color: warningcolor,
+                                        fontSize: width * 0.034),
                                   ),
                                 ],
                               ),
@@ -618,7 +625,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                             padding: EdgeInsets.only(left: 20.0),
                             child: Text(
                               "Remarks",
-                              style: montserratRegular.copyWith(fontSize: 12.0),
+                              style: montserratRegular.copyWith(
+                                  fontSize: width * 0.032),
                             ),
                           ),
                           SizedBox(
@@ -634,7 +642,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                             padding: EdgeInsets.only(left: 20.0),
                             child: Text(
                               "Payment Mode" + ": Card",
-                              style: montserratRegular.copyWith(fontSize: 12.0),
+                              style: montserratRegular.copyWith(
+                                  fontSize: width * 0.032),
                             ),
                           ),
                           SizedBox(
@@ -644,7 +653,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                             padding: EdgeInsets.only(right: 20.0),
                             child: Text(
                               "Paid Date" + ": ",
-                              style: montserratRegular.copyWith(fontSize: 12.0),
+                              style: montserratRegular.copyWith(
+                                  fontSize: width * 0.032),
                             ),
                           ),
                         ],
@@ -656,7 +666,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                             padding: EdgeInsets.only(left: 20.0),
                             child: Text(
                               "Invoiced By" + ": Digital Service",
-                              style: montserratRegular.copyWith(fontSize: 12.0),
+                              style: montserratRegular.copyWith(
+                                  fontSize: width * 0.032),
                             ),
                           ),
                         ],

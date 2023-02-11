@@ -263,9 +263,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                               )),
                                                       focusNode: cancelFocus,
                                                       onChanged: (value) {
-                                                        setState(() {
-                                                          cancel = value;
-                                                        });
+                                                        cancel = value;
                                                       },
                                                     ),
                                                     alignment: Alignment.center,
@@ -276,16 +274,12 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                           GestureDetector(
                                             onTap: () async {
                                               if (cancel == "") {
-                                                setState(
-                                                    () => issubmitted = false);
                                                 showCustomToast(
                                                     context, "Enter Reason",
                                                     bgColor: errorcolor,
                                                     textColor: white);
                                               } else {
                                                 try {
-                                                  setState(
-                                                      () => issubmitted = true);
                                                   final prefs =
                                                       await SharedPreferences
                                                           .getInstance();
@@ -301,6 +295,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                         "Booking Created",
                                                     "user_type": "0",
                                                   };
+                                                  print(req);
                                                   await booking_cancel(req)
                                                       .then((value) {
                                                     if (value['ret_data'] ==
@@ -309,23 +304,19 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           "Booking Canceled",
                                                           bgColor: black,
                                                           textColor: white);
-                                                      setState(() {
-                                                        Navigator
-                                                            .pushReplacementNamed(
-                                                                context,
-                                                                Routes
-                                                                    .bottombar);
-                                                      });
+                                                      Navigator
+                                                          .pushReplacementNamed(
+                                                              context,
+                                                              Routes.bottombar);
                                                     } else {
-                                                      setState(() =>
-                                                          issubmitted = false);
+                                                      print("value");
+                                                      print(value);
                                                     }
                                                   });
                                                 } catch (e) {
-                                                  setState(() =>
-                                                      issubmitted = false);
+                                                  print("e");
+                                                  print(e.toString());
                                                 }
-                                                // finish(context);
                                               }
                                             },
                                             child: Stack(
@@ -604,7 +595,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           "Booking is under hold",
                                                           bgColor: black,
                                                           textColor: white);
-                                                      setState(() {
+                                                      setBottomState(() {
                                                         Navigator
                                                             .pushReplacementNamed(
                                                                 context,
@@ -612,12 +603,12 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                     .bottombar);
                                                       });
                                                     } else {
-                                                      setState(() =>
+                                                      setBottomState(() =>
                                                           issubmitted = false);
                                                     }
                                                   });
                                                 } catch (e) {
-                                                  setState(() =>
+                                                  setBottomState(() =>
                                                       issubmitted = false);
                                                   print(e.toString());
                                                 }

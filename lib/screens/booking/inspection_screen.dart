@@ -243,7 +243,8 @@ class InspectionScreenState extends State<InspectionScreen>
                                                 style:
                                                     montserratSemiBold.copyWith(
                                                         color: black,
-                                                        fontSize: 14))),
+                                                        fontSize:
+                                                            width * 0.034))),
                                       ),
                                     ],
                                   ),
@@ -259,7 +260,8 @@ class InspectionScreenState extends State<InspectionScreen>
                                           child: Text(widget.pkgname,
                                               overflow: TextOverflow.clip,
                                               style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 12)),
+                                                  color: black,
+                                                  fontSize: width * 0.032)),
                                         ),
                                       ),
                                     ],
@@ -286,7 +288,8 @@ class InspectionScreenState extends State<InspectionScreen>
                                                     style: montserratRegular
                                                         .copyWith(
                                                             color: black,
-                                                            fontSize: 12)),
+                                                            fontSize:
+                                                                width * 0.032)),
                                               ),
                                             ),
                                           ],
@@ -305,7 +308,8 @@ class InspectionScreenState extends State<InspectionScreen>
                                                     style: montserratRegular
                                                         .copyWith(
                                                             color: black,
-                                                            fontSize: 12)),
+                                                            fontSize:
+                                                                width * 0.032)),
                                               ),
                                             ),
                                           ],
@@ -325,7 +329,8 @@ class InspectionScreenState extends State<InspectionScreen>
                                           child: Text(widget.vehname,
                                               overflow: TextOverflow.clip,
                                               style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 12)),
+                                                  color: black,
+                                                  fontSize: width * 0.032)),
                                         ),
                                       ),
                                     ],
@@ -360,7 +365,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                 child: Text(
                                   "Inspection Details",
                                   style: montserratSemiBold.copyWith(
-                                      fontSize: 14, color: black),
+                                      fontSize: width * 0.034, color: black),
                                 ),
                               ),
                             ],
@@ -405,7 +410,8 @@ class InspectionScreenState extends State<InspectionScreen>
                                                           'cv_plate_number']
                                                   : "Plate No" + ": No details",
                                               style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 12)),
+                                                  color: black,
+                                                  fontSize: width * 0.032)),
                                         ],
                                       ),
                                       const SizedBox(
@@ -426,7 +432,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.clip,
                                             style: montserratRegular.copyWith(
-                                              fontSize: 12,
+                                              fontSize: width * 0.032,
                                               color: black,
                                             ),
                                           ),
@@ -452,7 +458,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.clip,
                                             style: montserratRegular.copyWith(
-                                              fontSize: 12,
+                                              fontSize: width * 0.032,
                                               color: black,
                                             ),
                                           ),
@@ -480,7 +486,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.clip,
                                     style: montserratSemiBold.copyWith(
-                                        fontSize: 14)),
+                                        fontSize: width * 0.034)),
                                 vehicleimages.length > 0
                                     ? TextButton(
                                         onPressed: () {
@@ -490,7 +496,8 @@ class InspectionScreenState extends State<InspectionScreen>
                                         },
                                         child: Text("Show all",
                                             style: montserratLight.copyWith(
-                                                color: black, fontSize: 12)),
+                                                color: black,
+                                                fontSize: width * 0.032)),
                                       )
                                     : Row(),
                               ],
@@ -531,7 +538,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.clip,
                                           style: montserratRegular.copyWith(
-                                            fontSize: 12,
+                                            fontSize: width * 0.032,
                                             color: Color(0xff000000),
                                           )),
                                     ],
@@ -550,7 +557,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.clip,
                                     style: montserratSemiBold.copyWith(
-                                        fontSize: 14)),
+                                        fontSize: width * 0.034)),
                               ],
                             ),
                           ),
@@ -711,7 +718,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.clip,
                                           style: montserratRegular.copyWith(
-                                            fontSize: 12,
+                                            fontSize: width * 0.032,
                                             color: black,
                                           )),
                                     ],
@@ -730,7 +737,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.clip,
                                     style: montserratSemiBold.copyWith(
-                                        fontSize: 14)),
+                                        fontSize: width * 0.034)),
                               ],
                             ),
                           ),
@@ -762,7 +769,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                     Text(
                                       "Hard Copy",
                                       style: montserratRegular.copyWith(
-                                        fontSize: 12,
+                                        fontSize: width * 0.032,
                                         color: black,
                                       ),
                                     ),
@@ -795,7 +802,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                     Text(
                                       "Soft Copy",
                                       style: montserratRegular.copyWith(
-                                        fontSize: 12,
+                                        fontSize: width * 0.032,
                                         color: black,
                                       ),
                                     ),
@@ -850,7 +857,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                     "Registration Validity Details",
                                     textAlign: TextAlign.start,
                                     style: montserratSemiBold.copyWith(
-                                      fontSize: 14,
+                                      fontSize: width * 0.034,
                                       color: black,
                                     ),
                                   ),
@@ -867,7 +874,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                         : ": No details",
                                     textAlign: TextAlign.start,
                                     style: montserratRegular.copyWith(
-                                      fontSize: 12,
+                                      fontSize: width * 0.032,
                                       color: black,
                                     ),
                                   ),
@@ -883,7 +890,7 @@ class InspectionScreenState extends State<InspectionScreen>
                           //         "Registration Validity Details: ",
                           //         textAlign: TextAlign.start,
                           //         style: TextStyle(
-                          //           fontSize: 14,
+                          //           fontSize: width * 0.034,
                           //           color: appStore.isDarkModeOn ? white : black,
                           //         ),
                           //       ),
@@ -897,7 +904,7 @@ class InspectionScreenState extends State<InspectionScreen>
                           //             : "",
                           //         textAlign: TextAlign.start,
                           //         style: TextStyle(
-                          //           fontSize: 14,
+                          //           fontSize: width * 0.034,
                           //           color: appStore.isDarkModeOn ? white : black,
                           //         ),
                           //       ),
@@ -917,7 +924,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.clip,
                                     style: montserratSemiBold.copyWith(
-                                        fontSize: 14)),
+                                        fontSize: width * 0.034)),
                               ],
                             ),
                           ),
@@ -943,7 +950,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                                 textAlign: TextAlign.start,
                                                 style:
                                                     montserratRegular.copyWith(
-                                                  fontSize: 12,
+                                                  fontSize: width * 0.032,
                                                   color: black,
                                                 ),
                                               ),
@@ -968,7 +975,7 @@ class InspectionScreenState extends State<InspectionScreen>
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.clip,
                                           style: montserratRegular.copyWith(
-                                            fontSize: 12,
+                                            fontSize: width * 0.032,
                                             color: black,
                                           )),
                                     ],

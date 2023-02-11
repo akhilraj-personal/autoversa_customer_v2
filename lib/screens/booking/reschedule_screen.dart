@@ -557,7 +557,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                     textAlign: TextAlign.center,
                                                     style: montserratSemiBold
                                                         .copyWith(
-                                                            fontSize: 14,
+                                                            fontSize:
+                                                                width * 0.034,
                                                             color: black),
                                                   ),
                                                 ),
@@ -1062,7 +1063,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: black,
-                                                      fontSize: 14),
+                                                      fontSize: width * 0.034),
                                               maxLines: 2)
                                           : SizedBox(),
                                       SizedBox(
@@ -1070,7 +1071,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                       ),
                                       Text(vehiclename,
                                           style: montserratRegular.copyWith(
-                                            fontSize: 12,
+                                            fontSize: width * 0.032,
                                             color: black,
                                           )),
                                       SizedBox(
@@ -1085,7 +1086,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                     'bkp_cust_amount']
                                             : "0",
                                         style: montserratSemiBold.copyWith(
-                                            color: warningcolor, fontSize: 14),
+                                            color: warningcolor,
+                                            fontSize: width * 0.034),
                                       ),
                                       SizedBox(height: 8),
                                     ],
@@ -1281,7 +1283,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                               value,
                                                                           child: Text(
                                                                               value!,
-                                                                              style: montserratRegular.copyWith(fontSize: 12)),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.032)),
                                                                         );
                                                                       }).toList(),
                                                                       onChanged:
@@ -1324,7 +1326,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                           true,
                                                                       decoration: InputDecoration(
                                                                           hintText: "Select Area",
-                                                                          hintStyle: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                          hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
                                                                           focusedBorder: OutlineInputBorder(
                                                                             borderSide:
                                                                                 const BorderSide(color: black, width: 0.5),
@@ -1368,7 +1370,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                                 Text(
                                                                               "Address",
                                                                               textAlign: TextAlign.left,
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.032, color: black),
                                                                             ),
                                                                           ),
                                                                         ),
@@ -1448,7 +1450,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                                 Text(
                                                                               "Building Name/Flat No",
                                                                               textAlign: TextAlign.left,
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.032, color: black),
                                                                             ),
                                                                           ),
                                                                         ),
@@ -1487,7 +1489,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                             decoration: InputDecoration(
                                                                                 counterText: "",
                                                                                 hintText: "Building Name/Flat No",
-                                                                                hintStyle: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                                hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
                                                                                 focusedBorder: OutlineInputBorder(
                                                                                   borderSide: const BorderSide(color: black, width: 0.5),
                                                                                   borderRadius: BorderRadius.circular(10),
@@ -1527,7 +1529,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                           ),
                                                                           Text(
                                                                               "Home",
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
                                                                           Theme(
                                                                             data:
                                                                                 Theme.of(context).copyWith(
@@ -1546,7 +1548,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                           ),
                                                                           Text(
                                                                               "Office",
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
                                                                           Theme(
                                                                             data:
                                                                                 Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
@@ -1563,7 +1565,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                           ),
                                                                           Text(
                                                                               "Other",
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
                                                                         ]),
                                                                     8.height,
                                                                     isgooglemap
@@ -1575,7 +1577,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                                   child: Text(
                                                                                     "Tap to mark",
                                                                                     textAlign: TextAlign.left,
-                                                                                    style: montserratSemiBold.copyWith(fontSize: 14, color: black),
+                                                                                    style: montserratSemiBold.copyWith(fontSize: width * 0.034, color: black),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -1605,7 +1607,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                                 height: context.height(),
                                                                                 alignment: Alignment.center,
                                                                                 width: width,
-                                                                                child: Text("Google Map", style: montserratRegular.copyWith(fontSize: 14)),
+                                                                                child: Text("Google Map", style: montserratRegular.copyWith(fontSize: width * 0.034)),
                                                                               )
                                                                         : Row(),
                                                                     8.height,
@@ -1813,7 +1815,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                 Text(
                                   ST.of(context).add_address + " ",
                                   style: montserratLight.copyWith(
-                                      color: black, fontSize: 14),
+                                      color: black, fontSize: width * 0.034),
                                 ),
                                 Container(
                                   child: Image.asset(
@@ -1883,7 +1885,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: Colors.black,
-                                                        fontSize: 14),
+                                                        fontSize:
+                                                            width * 0.034),
                                               )),
                                           items: SelectAddressList.map(
                                               (String? value) {
@@ -1894,7 +1897,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: black,
-                                                        fontSize: 14),
+                                                        fontSize:
+                                                            width * 0.034),
                                               ),
                                             );
                                           }).toList(),
@@ -1953,7 +1957,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.clip,
                           style: montserratLight.copyWith(
-                              color: black, fontSize: 14),
+                              color: black, fontSize: width * 0.034),
                         ),
                       ],
                     ),
@@ -1972,7 +1976,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                 ST.of(context).select_drop_address + "*",
                                 textAlign: TextAlign.start,
                                 style: montserratSemiBold.copyWith(
-                                    color: black, fontSize: 14),
+                                    color: black, fontSize: width * 0.034),
                               ),
                             ],
                           )
@@ -2100,7 +2104,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                           ST.of(context).pickup_options + "*",
                           textAlign: TextAlign.start,
                           style: montserratSemiBold.copyWith(
-                              color: black, fontSize: 14),
+                              color: black, fontSize: width * 0.034),
                         ),
                       ],
                     ),
@@ -2178,7 +2182,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                 overflow: TextOverflow.ellipsis,
                                                 style: montserratLight.copyWith(
                                                     color: Colors.grey[350],
-                                                    fontSize: 14),
+                                                    fontSize: width * 0.034),
                                               )
                                             : Text(
                                                 pickup_options[index]
@@ -2186,7 +2190,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                 textAlign: TextAlign.center,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: montserratLight.copyWith(
-                                                    color: black, fontSize: 14),
+                                                    color: black,
+                                                    fontSize: width * 0.034),
                                               ),
                                       ]),
                                   pickup_options[index]['pk_id'] == "0"
@@ -2199,7 +2204,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                           textAlign: TextAlign.end,
                                           overflow: TextOverflow.clip,
                                           style: montserratLight.copyWith(
-                                              color: black, fontSize: 14),
+                                              color: black,
+                                              fontSize: width * 0.034),
                                         )
                                       : Text(
                                           pickup_options[index]['pk_cost'] ==
@@ -2211,7 +2217,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                           overflow: TextOverflow.clip,
                                           style: montserratLight.copyWith(
                                               color: warningcolor,
-                                              fontSize: 14),
+                                              fontSize: width * 0.034),
                                         ),
                                 ],
                               ),
@@ -2224,7 +2230,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                         Text(
                           ST.of(context).select_booking_date + "*",
                           style: montserratSemiBold.copyWith(
-                              fontSize: 14, color: black),
+                              fontSize: width * 0.034, color: black),
                         ),
                       ],
                     ),
@@ -2274,7 +2280,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                 title: Text(
                                     ST.of(context).select_booking_date + " ",
                                     style: montserratLight.copyWith(
-                                        color: black, fontSize: 12),
+                                        color: black, fontSize: width * 0.032),
                                     maxLines: 3),
                                 subtitle: Text(
                                   selectedDate == " "
@@ -2282,7 +2288,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                       : DateFormat('dd-MM-yyyy')
                                           .format(selectedDate),
                                   style: montserratLight.copyWith(
-                                      color: black, fontSize: 12),
+                                      color: black, fontSize: width * 0.032),
                                 ),
                               )),
                         ),
@@ -2294,7 +2300,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                         Text(
                           ST.of(context).select_a_time_slot + "*",
                           style: montserratSemiBold.copyWith(
-                              fontSize: 14, color: black),
+                              fontSize: width * 0.034, color: black),
                         ),
                       ],
                     ),
@@ -2341,14 +2347,14 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                               title: Text(ST.of(context).select_a_time_slot,
                                   overflow: TextOverflow.ellipsis,
                                   style: montserratLight.copyWith(
-                                      color: black, fontSize: 14),
+                                      color: black, fontSize: width * 0.034),
                                   maxLines: 3),
                               subtitle: Text(
                                   selected_timeslot == ""
                                       ? ST.of(context).select_a_time_slot + "*"
                                       : selected_timeslot,
                                   style: montserratLight.copyWith(
-                                      color: black, fontSize: 14)),
+                                      color: black, fontSize: width * 0.034)),
                               textColor: black,
                               trailing: isExpanded
                                   ? Container(
@@ -2463,7 +2469,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                             style:
                                                                 montserratLight
                                                                     .copyWith(
-                                                              fontSize: 14,
+                                                              fontSize:
+                                                                  width * 0.034,
                                                               color: black,
                                                             ),
                                                           )
@@ -2480,7 +2487,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                             style:
                                                                 montserratLight
                                                                     .copyWith(
-                                                              fontSize: 14,
+                                                              fontSize:
+                                                                  width * 0.034,
                                                               color: black,
                                                             ),
                                                           ),
@@ -2492,7 +2500,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                   .of(context)
                                                   .no_time_slot_available,
                                               style: montserratLight.copyWith(
-                                                fontSize: 14,
+                                                fontSize: width * 0.034,
                                                 color: black,
                                               ),
                                             ),
@@ -2823,7 +2831,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     //                                                           value,
                     //                                                       child: Text(
                     //                                                           value!,
-                    //                                                           style: montserratRegular.copyWith(fontSize: 12)),
+                    //                                                           style: montserratRegular.copyWith(fontSize: width * 0.032)),
                     //                                                     );
                     //                                                   }).toList(),
                     //                                                   onChanged:
@@ -2866,7 +2874,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     //                                                       true,
                     //                                                   decoration: InputDecoration(
                     //                                                       hintText: "Select Area",
-                    //                                                       hintStyle: montserratRegular.copyWith(color: black, fontSize: 12),
+                    //                                                       hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
                     //                                                       focusedBorder: OutlineInputBorder(
                     //                                                         borderSide:
                     //                                                             const BorderSide(color: black, width: 0.5),
@@ -2910,7 +2918,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     //                                                             Text(
                     //                                                           "Address",
                     //                                                           textAlign: TextAlign.left,
-                    //                                                           style: montserratRegular.copyWith(fontSize: 12, color: black),
+                    //                                                           style: montserratRegular.copyWith(fontSize: width * 0.032, color: black),
                     //                                                         ),
                     //                                                       ),
                     //                                                     ),
@@ -2990,7 +2998,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     //                                                             Text(
                     //                                                           "Building Name/Flat No",
                     //                                                           textAlign: TextAlign.left,
-                    //                                                           style: montserratRegular.copyWith(fontSize: 12, color: black),
+                    //                                                           style: montserratRegular.copyWith(fontSize: width * 0.032, color: black),
                     //                                                         ),
                     //                                                       ),
                     //                                                     ),
@@ -3029,7 +3037,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     //                                                         decoration: InputDecoration(
                     //                                                             counterText: "",
                     //                                                             hintText: "Building Name/Flat No",
-                    //                                                             hintStyle: montserratRegular.copyWith(color: black, fontSize: 12),
+                    //                                                             hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
                     //                                                             focusedBorder: OutlineInputBorder(
                     //                                                               borderSide: const BorderSide(color: black, width: 0.5),
                     //                                                               borderRadius: BorderRadius.circular(10),
@@ -3069,7 +3077,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     //                                                       ),
                     //                                                       Text(
                     //                                                           "Home",
-                    //                                                           style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                    //                                                           style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
                     //                                                       Theme(
                     //                                                         data:
                     //                                                             Theme.of(context).copyWith(
@@ -3088,7 +3096,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     //                                                       ),
                     //                                                       Text(
                     //                                                           "Office",
-                    //                                                           style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                    //                                                           style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
                     //                                                       Theme(
                     //                                                         data:
                     //                                                             Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
@@ -3105,7 +3113,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     //                                                       ),
                     //                                                       Text(
                     //                                                           "Other",
-                    //                                                           style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                    //                                                           style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
                     //                                                     ]),
                     //                                                 8.height,
                     //                                                 isgooglemap
@@ -3117,7 +3125,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     //                                                               child: Text(
                     //                                                                 "Tap to mark",
                     //                                                                 textAlign: TextAlign.left,
-                    //                                                                 style: montserratSemiBold.copyWith(fontSize: 14, color: black),
+                    //                                                                 style: montserratSemiBold.copyWith(fontSize: width * 0.034, color: black),
                     //                                                               ),
                     //                                                             ),
                     //                                                           ),
@@ -3147,7 +3155,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     //                                                             height: context.height(),
                     //                                                             alignment: Alignment.center,
                     //                                                             width: width,
-                    //                                                             child: Text("Google Map", style: montserratRegular.copyWith(fontSize: 14)),
+                    //                                                             child: Text("Google Map", style: montserratRegular.copyWith(fontSize: width * 0.034)),
                     //                                                           )
                     //                                                     : Row(),
                     //                                                 8.height,

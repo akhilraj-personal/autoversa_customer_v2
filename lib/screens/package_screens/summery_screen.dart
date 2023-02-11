@@ -138,10 +138,14 @@ class SummeryPageState extends State<SummeryPage> {
         bookingdate = packdata['selected_date'];
         await prefs.remove("booking_data");
       } else {
+        print("else error====>");
+        print(retdata);
         showCustomToast(context, "Couldn't complete booking",
             bgColor: errorcolor, textColor: whiteColor);
       }
     } catch (e) {
+      print("object ===>");
+      print(e.toString());
       setState(() {
         isproceeding = false;
       });
@@ -407,7 +411,7 @@ class SummeryPageState extends State<SummeryPage> {
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: blackColor,
-                                                      fontSize: 14),
+                                                      fontSize: width * 0.034),
                                               maxLines: 2)
                                           : SizedBox(),
                                       widget.custvehlist[widget.selectedveh]['cv_variant'] != "" && widget.custvehlist[widget.selectedveh]['cv_variant'] != null
@@ -425,7 +429,7 @@ class SummeryPageState extends State<SummeryPage> {
                                                   " )",
                                               style: montserratRegular.copyWith(
                                                   color: blackColor,
-                                                  fontSize: 12),
+                                                  fontSize: width * 0.034),
                                               overflow: TextOverflow.clip,
                                               maxLines: 5)
                                           : Text(
@@ -437,14 +441,15 @@ class SummeryPageState extends State<SummeryPage> {
                                                   widget.custvehlist[widget.selectedveh]
                                                       ['cv_year'] +
                                                   " )",
-                                              style: montserratRegular.copyWith(color: blackColor, fontSize: 12),
+                                              style: montserratRegular.copyWith(color: blackColor, fontSize: width * 0.034),
                                               overflow: TextOverflow.clip,
                                               maxLines: 5),
                                       Divider(),
                                       Text(widget.package_id['pkg_name'],
                                           overflow: TextOverflow.ellipsis,
                                           style: montserratLight.copyWith(
-                                              color: blackColor, fontSize: 14)),
+                                              color: blackColor,
+                                              fontSize: width * 0.034)),
                                       Text(
                                         packdata['package_cost'] != 0
                                             ? widget.currency +
@@ -453,13 +458,15 @@ class SummeryPageState extends State<SummeryPage> {
                                                     .toString()
                                             : "Based on Quotation",
                                         style: montserratSemiBold.copyWith(
-                                            color: warningcolor, fontSize: 14),
+                                            color: warningcolor,
+                                            fontSize: width * 0.034),
                                       ),
                                       Divider(),
                                       Text(
                                         packdata['pick_type_name'] ?? "",
                                         style: montserratLight.copyWith(
-                                            color: blackColor, fontSize: 14),
+                                            color: blackColor,
+                                            fontSize: width * 0.034),
                                       ),
                                       Text(
                                         packdata['pick_up_price'] != null
@@ -470,7 +477,8 @@ class SummeryPageState extends State<SummeryPage> {
                                                 : "FREE"
                                             : "",
                                         style: montserratSemiBold.copyWith(
-                                            color: warningcolor, fontSize: 14),
+                                            color: warningcolor,
+                                            fontSize: width * 0.034),
                                       ),
                                       SizedBox(height: 8),
                                     ],
@@ -493,7 +501,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Pickup Location",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: blackColor, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -534,7 +542,7 @@ class SummeryPageState extends State<SummeryPage> {
                                 packdata['pick_up_location'] ?? "",
                                 overflow: TextOverflow.clip,
                                 style: montserratLight.copyWith(
-                                    color: blackColor, fontSize: 14),
+                                    color: blackColor, fontSize: width * 0.034),
                               ),
                             ),
                           ),
@@ -560,7 +568,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Drop Location",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: blackColor, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -601,7 +609,7 @@ class SummeryPageState extends State<SummeryPage> {
                                 packdata['drop_location'] ?? "",
                                 overflow: TextOverflow.clip,
                                 style: montserratLight.copyWith(
-                                    color: blackColor, fontSize: 14),
+                                    color: blackColor, fontSize: width * 0.034),
                               ),
                             ),
                           ),
@@ -627,7 +635,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Selected Date & Time",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: blackColor, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -668,7 +676,7 @@ class SummeryPageState extends State<SummeryPage> {
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
                             style: montserratLight.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: blackColor, fontSize: width * 0.034),
                           ),
                           SizedBox(
                             width: 8,
@@ -679,7 +687,7 @@ class SummeryPageState extends State<SummeryPage> {
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
                             style: montserratLight.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: blackColor, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -720,7 +728,7 @@ class SummeryPageState extends State<SummeryPage> {
                                     "-"
                                 : "",
                             style: montserratLight.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: blackColor, fontSize: width * 0.034),
                           ),
                           Text(
                             packdata['selected_timeslot'] != null
@@ -728,7 +736,7 @@ class SummeryPageState extends State<SummeryPage> {
                                     packdata['selected_timeslot'].split('- ')[1]
                                 : "",
                             style: montserratLight.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: blackColor, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -752,7 +760,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Additional Comments",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: blackColor, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -793,7 +801,7 @@ class SummeryPageState extends State<SummeryPage> {
                                 packdata['complaint'] ?? "",
                                 overflow: TextOverflow.clip,
                                 style: montserratLight.copyWith(
-                                    color: blackColor, fontSize: 14),
+                                    color: blackColor, fontSize: width * 0.034),
                               ),
                             ),
                           ),
@@ -819,12 +827,12 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Grand Total: ",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 14),
+                                color: blackColor, fontSize: width * 0.034),
                           ),
                           Text(
                             widget.currency + " " + (totalamount).toString(),
                             style: montserratSemiBold.copyWith(
-                                color: warningcolor, fontSize: 14),
+                                color: warningcolor, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -945,7 +953,7 @@ class CustomWarning extends StatelessWidget {
                     Text("Awaiting Payment",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
-                            fontSize: 14, color: whiteColor)),
+                            fontSize: width * 0.034, color: whiteColor)),
                   ],
                 )
               ],
@@ -959,7 +967,7 @@ class CustomWarning extends StatelessWidget {
                     "Please check dashboard to complete payment for further proceedings.",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
-                        fontSize: 12, color: blackColor))),
+                        fontSize: width * 0.034, color: blackColor))),
             SizedBox(
               height: 16,
             ),
@@ -1033,7 +1041,7 @@ class CustomSuccess extends StatelessWidget {
                     Text("Booking Successfull",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
-                            fontSize: 14, color: whiteColor)),
+                            fontSize: width * 0.034, color: whiteColor)),
                   ],
                 )
               ],
@@ -1046,7 +1054,7 @@ class CustomSuccess extends StatelessWidget {
                 child: Text("Please check dashboard for booking status",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
-                        fontSize: 12, color: blackColor))),
+                        fontSize: width * 0.034, color: blackColor))),
             SizedBox(
               height: 16,
             ),
