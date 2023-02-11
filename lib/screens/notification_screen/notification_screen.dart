@@ -372,7 +372,7 @@ class Notification extends StatelessWidget {
                         maxLines: 3,
                         softWrap: true,
                         style: montserratSemiBold.copyWith(
-                          fontSize: 14,
+                          fontSize: width * 0.034,
                           color: black,
                         ),
                       ),
@@ -383,7 +383,7 @@ class Notification extends StatelessWidget {
                       DateFormat('h:mm a')
                           .format(DateTime.tryParse(model.nt_created_on)!),
                       style: montserratRegular.copyWith(
-                        fontSize: 12,
+                        fontSize: width * 0.032,
                         color: black,
                       )),
                 ],
@@ -394,7 +394,7 @@ class Notification extends StatelessWidget {
                 children: [
                   Text(model.pkg_name,
                       style: montserratRegular.copyWith(
-                        fontSize: 12,
+                        fontSize: width * 0.032,
                         color: black,
                       )),
                 ],
@@ -410,7 +410,7 @@ class Notification extends StatelessWidget {
                         overflow: TextOverflow.clip,
                         maxLines: 3,
                         style: montserratRegular.copyWith(
-                          fontSize: 12,
+                          fontSize: width * 0.032,
                           color: black,
                         ),
                       ),

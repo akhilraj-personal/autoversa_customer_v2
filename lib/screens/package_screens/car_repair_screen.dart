@@ -465,8 +465,8 @@ class CarRepairState extends State<CarRepair> {
                                                                                 mainAxisAlignment: MainAxisAlignment.end,
                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                                 children: <Widget>[
-                                                                                  item['cv_plate_number'] != "" && item['cv_plate_number'] != null ? Text(item['cv_plate_number'], style: montserratSemiBold.copyWith(color: black, fontSize: 12), maxLines: 2) : SizedBox(),
-                                                                                  item['cv_variant'] != "" && item['cv_variant'] != null ? Text(item['cv_make'] + " " + item['cv_model'] + " " + item['cv_variant'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: 12), maxLines: 5) : Text(item['cv_make'] + item['cv_model'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: 12), maxLines: 5),
+                                                                                  item['cv_plate_number'] != "" && item['cv_plate_number'] != null ? Text(item['cv_plate_number'], style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.032), maxLines: 2) : SizedBox(),
+                                                                                  item['cv_variant'] != "" && item['cv_variant'] != null ? Text(item['cv_make'] + " " + item['cv_model'] + " " + item['cv_variant'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: width * 0.032), maxLines: 5) : Text(item['cv_make'] + item['cv_model'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: width * 0.032), maxLines: 5),
                                                                                   Text(
                                                                                     isPriceShow ? widget.currency + " " + (totalCost.round()).toString() : "Loading",
                                                                                     style: montserratSemiBold.copyWith(color: warningcolor, fontSize: 17),
@@ -1113,7 +1113,7 @@ class CarRepairState extends State<CarRepair> {
                                                                           child: Text(
                                                                               serviceList[index].sername,
                                                                               overflow: TextOverflow.ellipsis,
-                                                                              style: montserratSemiBold.copyWith(color: black, fontSize: 14),
+                                                                              style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.032),
                                                                               maxLines: 5),
                                                                         ),
                                                                       ),
@@ -1147,7 +1147,8 @@ class CarRepairState extends State<CarRepair> {
                                           maxLines: 10,
                                           textAlign: TextAlign.center,
                                           style: montserratRegular.copyWith(
-                                              fontSize: 14, color: black))),
+                                              fontSize: width * 0.032,
+                                              color: black))),
                               SizedBox(
                                 height: 12,
                               ),
@@ -1161,7 +1162,8 @@ class CarRepairState extends State<CarRepair> {
                                         Text(ST.of(context).additional_queries,
                                             maxLines: 10,
                                             style: montserratRegular.copyWith(
-                                                color: black, fontSize: 14))
+                                                color: black,
+                                                fontSize: width * 0.032))
                                       ],
                                     )
                                   : Container(),
@@ -1191,7 +1193,8 @@ class CarRepairState extends State<CarRepair> {
                                                 hintStyle:
                                                     montserratRegular.copyWith(
                                                         color: black,
-                                                        fontSize: 12),
+                                                        fontSize:
+                                                            width * 0.032),
                                                 focusedBorder:
                                                     OutlineInputBorder(
                                                   borderSide: BorderSide(
@@ -1229,7 +1232,8 @@ class CarRepairState extends State<CarRepair> {
                                                   style: montserratRegular
                                                       .copyWith(
                                                           color: black,
-                                                          fontSize: 12)),
+                                                          fontSize:
+                                                              width * 0.032)),
                                             ),
                                           ),
                                         ),

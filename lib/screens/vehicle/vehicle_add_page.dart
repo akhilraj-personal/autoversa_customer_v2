@@ -65,7 +65,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       child: Text(
                         item['veh_brand'],
                         style: montserratRegular.copyWith(
-                            color: blackColor, fontSize: 12),
+                            color: blackColor, fontSize: width * 0.034),
                       )),
                   value: item['veh_brand'].toString()))
               .toList();
@@ -103,7 +103,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       child: Text(
                         item['veh_model'],
                         style: montserratRegular.copyWith(
-                            color: blackColor, fontSize: 12),
+                            color: blackColor, fontSize: width * 0.034),
                       )),
                   value: item['veh_model'].toString()))
               .toList();
@@ -138,7 +138,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       child: Text(
                         item['veh_variant'],
                         style: montserratRegular.copyWith(
-                            color: blackColor, fontSize: 12),
+                            color: blackColor, fontSize: width * 0.034),
                       )),
                   value: item['veh_variant'].toString()))
               .toList();
@@ -183,7 +183,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       child: Text(
                         item,
                         style: montserratRegular.copyWith(
-                            color: blackColor, fontSize: 12),
+                            color: blackColor, fontSize: width * 0.034),
                       )),
                   value: item.toString()))
               .toList();
@@ -229,7 +229,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       child: Text(
                         item,
                         style: montserratRegular.copyWith(
-                            color: blackColor, fontSize: 12),
+                            color: blackColor, fontSize: width * 0.034),
                       )),
                   value: item.toString()))
               .toList();
@@ -267,6 +267,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
           yearselected = '';
           showCustomToast(context, ST.of(context).vehicle_save_toast,
               bgColor: blackColor, textColor: whiteColor);
+          setState(() => issubmitted = false);
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -288,6 +289,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
         }
       }
     }).catchError((e) {
+      setState(() => issubmitted = false);
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
@@ -415,7 +417,8 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: blackColor,
-                                                        fontSize: 14),
+                                                        fontSize:
+                                                            width * 0.034),
                                               )),
                                           items: brands,
                                           validator: (value) {
@@ -476,7 +479,8 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: blackColor,
-                                                        fontSize: 14),
+                                                        fontSize:
+                                                            width * 0.034),
                                               )),
                                           items: models,
                                           validator: (value) {
@@ -562,7 +566,9 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                               .copyWith(
                                                                   color:
                                                                       blackColor,
-                                                                  fontSize: 14),
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
                                                         )),
                                                     items: variants,
                                                     validator: (value) {
@@ -625,7 +631,8 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: blackColor,
-                                                        fontSize: 14),
+                                                        fontSize:
+                                                            width * 0.034),
                                               )),
                                           items: modyears,
                                           validator: (value) {
@@ -683,7 +690,8 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                           textAlign: TextAlign.center,
                                           maxLength: 15,
                                           style: montserratLight.copyWith(
-                                              color: blackColor, fontSize: 14),
+                                              color: blackColor,
+                                              fontSize: width * 0.034),
                                           decoration: InputDecoration(
                                               errorStyle: TextStyle(
                                                   fontSize: 12,
@@ -695,7 +703,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                               hintStyle:
                                                   montserratRegular.copyWith(
                                                       color: blackColor,
-                                                      fontSize: 14),
+                                                      fontSize: width * 0.034),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
                                         ),
@@ -749,11 +757,25 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                       ],
                                     ),
                                   ),
-                                  child: Text(
-                                    ST.of(context).save.toUpperCase(),
-                                    style: montserratSemiBold.copyWith(
-                                        color: Colors.white),
-                                  ),
+                                  child: issubmitted
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Transform.scale(
+                                              scale: 0.7,
+                                              child: CircularProgressIndicator(
+                                                color: whiteColor,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Text(
+                                          ST.of(context).save.toUpperCase(),
+                                          style: montserratSemiBold.copyWith(
+                                              color: Colors.white,
+                                              fontSize: width * 0.034),
+                                        ),
                                 ),
                               ],
                             ),

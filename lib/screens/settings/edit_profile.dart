@@ -207,7 +207,7 @@ class EditprofieState extends State<Editprofie> {
             ),
             Text(value,
                 style: montserratRegular.copyWith(
-                    fontSize: 14, color: Colors.black))
+                    fontSize: width * 0.034, color: Colors.black))
           ],
         ),
       );
@@ -332,7 +332,8 @@ class EditprofieState extends State<Editprofie> {
                             children: [
                               Text("Full Name" + " *",
                                   style: montserratSemiBold.copyWith(
-                                      fontSize: 14, color: Colors.black)),
+                                      fontSize: width * 0.034,
+                                      color: Colors.black)),
                               SizedBox(height: 4),
                               Stack(
                                   alignment: Alignment.bottomCenter,
@@ -390,10 +391,12 @@ class EditprofieState extends State<Editprofie> {
                                                   style:
                                                       montserratLight.copyWith(
                                                           color: Colors.black,
-                                                          fontSize: 14),
+                                                          fontSize:
+                                                              width * 0.034),
                                                   decoration: InputDecoration(
                                                       errorStyle: TextStyle(
-                                                          fontSize: 12,
+                                                          fontSize:
+                                                              width * 0.032,
                                                           color: warningcolor),
                                                       counterText: "",
                                                       filled: true,
@@ -403,7 +406,9 @@ class EditprofieState extends State<Editprofie> {
                                                               .copyWith(
                                                                   color: Colors
                                                                       .black,
-                                                                  fontSize: 14),
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
                                                       border: InputBorder.none,
                                                       fillColor: Colors.white),
                                                   validator: (value) {
@@ -419,7 +424,8 @@ class EditprofieState extends State<Editprofie> {
                               SizedBox(height: 12),
                               Text("Email",
                                   style: montserratSemiBold.copyWith(
-                                      fontSize: 14, color: Colors.black)),
+                                      fontSize: width * 0.034,
+                                      color: Colors.black)),
                               SizedBox(
                                 height: 8,
                               ),
@@ -478,10 +484,12 @@ class EditprofieState extends State<Editprofie> {
                                                   style:
                                                       montserratLight.copyWith(
                                                           color: Colors.black,
-                                                          fontSize: 14),
+                                                          fontSize:
+                                                              width * 0.034),
                                                   decoration: InputDecoration(
                                                       errorStyle: TextStyle(
-                                                          fontSize: 12,
+                                                          fontSize:
+                                                              width * 0.032,
                                                           color: warningcolor),
                                                       counterText: "",
                                                       filled: true,
@@ -491,7 +499,9 @@ class EditprofieState extends State<Editprofie> {
                                                               .copyWith(
                                                                   color: Colors
                                                                       .black,
-                                                                  fontSize: 14),
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
                                                       border: InputBorder.none,
                                                       fillColor: Colors.white),
                                                 ),
@@ -503,7 +513,8 @@ class EditprofieState extends State<Editprofie> {
                               SizedBox(height: 12),
                               Text("Emirates" + " *",
                                   style: montserratSemiBold.copyWith(
-                                      fontSize: 14, color: Colors.black)),
+                                      fontSize: width * 0.034,
+                                      color: Colors.black)),
                               SizedBox(
                                 height: 8,
                               ),
@@ -563,7 +574,9 @@ class EditprofieState extends State<Editprofie> {
                                                             .copyWith(
                                                                 color: Colors
                                                                     .black,
-                                                                fontSize: 14),
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034),
                                                       )),
                                                   items: items,
                                                   validator: (value) {
@@ -586,7 +599,8 @@ class EditprofieState extends State<Editprofie> {
                               ),
                               Text("Contact" + " *",
                                   style: montserratSemiBold.copyWith(
-                                      fontSize: 14, color: Colors.black)),
+                                      fontSize: width * 0.034,
+                                      color: Colors.black)),
                               SizedBox(
                                 height: 8,
                               ),
@@ -633,7 +647,7 @@ class EditprofieState extends State<Editprofie> {
                                                 "AE +971",
                                                 style: montserratLight.copyWith(
                                                     color: Colors.black,
-                                                    fontSize: 14),
+                                                    fontSize: width * 0.034),
                                               ),
                                             ),
                                             Container(
@@ -666,10 +680,12 @@ class EditprofieState extends State<Editprofie> {
                                                   style:
                                                       montserratLight.copyWith(
                                                           color: Colors.black,
-                                                          fontSize: 14),
+                                                          fontSize:
+                                                              width * 0.034),
                                                   decoration: InputDecoration(
                                                       errorStyle: TextStyle(
-                                                          fontSize: 12,
+                                                          fontSize:
+                                                              width * 0.032,
                                                           color: warningcolor),
                                                       counterText: "",
                                                       filled: true,
@@ -681,7 +697,9 @@ class EditprofieState extends State<Editprofie> {
                                                               .copyWith(
                                                                   color: Colors
                                                                       .black,
-                                                                  fontSize: 14),
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
                                                       border: InputBorder.none,
                                                       fillColor: Colors.white),
                                                 ),
@@ -695,7 +713,8 @@ class EditprofieState extends State<Editprofie> {
                               ),
                               Text("Alternate Contact" + " *",
                                   style: montserratSemiBold.copyWith(
-                                      fontSize: 14, color: Colors.black)),
+                                      fontSize: width * 0.034,
+                                      color: Colors.black)),
                               SizedBox(
                                 height: 8,
                               ),
@@ -742,7 +761,7 @@ class EditprofieState extends State<Editprofie> {
                                                 "AE +971",
                                                 style: montserratLight.copyWith(
                                                     color: Colors.black,
-                                                    fontSize: 14),
+                                                    fontSize: width * 0.034),
                                               ),
                                             ),
                                             Container(
@@ -770,10 +789,12 @@ class EditprofieState extends State<Editprofie> {
                                                   style:
                                                       montserratLight.copyWith(
                                                           color: Colors.black,
-                                                          fontSize: 14),
+                                                          fontSize:
+                                                              width * 0.034),
                                                   decoration: InputDecoration(
                                                       errorStyle: TextStyle(
-                                                          fontSize: 12,
+                                                          fontSize:
+                                                              width * 0.032,
                                                           color: warningcolor),
                                                       counterText: "",
                                                       filled: true,
@@ -784,7 +805,9 @@ class EditprofieState extends State<Editprofie> {
                                                               .copyWith(
                                                                   color: Colors
                                                                       .black,
-                                                                  fontSize: 14),
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
                                                       border: InputBorder.none,
                                                       fillColor: Colors.white),
                                                   onChanged: _onChanged,

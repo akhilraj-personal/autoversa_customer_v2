@@ -324,7 +324,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                   "Selected Location",
                                   textAlign: TextAlign.start,
                                   style: montserratRegular.copyWith(
-                                    fontSize: 12,
+                                    fontSize: width * 0.032,
                                     color: black,
                                   ),
                                 ),
@@ -351,7 +351,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                       : "",
                                   textAlign: TextAlign.start,
                                   style: montserratRegular.copyWith(
-                                    fontSize: 12,
+                                    fontSize: width * 0.032,
                                     color: black,
                                   ),
                                 ),
@@ -368,7 +368,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                 "Select Date & Time",
                                 textAlign: TextAlign.start,
                                 style: montserratRegular.copyWith(
-                                  fontSize: 12,
+                                  fontSize: width * 0.032,
                                   color: black,
                                 ),
                               ),
@@ -403,12 +403,12 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                 title: Text(
                                   'Select Reschedule date',
                                   style: montserratSemiBold.copyWith(
-                                      fontSize: 14, color: black),
+                                      fontSize: width * 0.034, color: black),
                                 ),
                                 subtitle: Text(
                                   DateFormat('dd-MM-yyyy').format(selectedDate),
                                   style: montserratRegular.copyWith(
-                                      fontSize: 12, color: black),
+                                      fontSize: width * 0.032, color: black),
                                 ),
                               )),
                           const SizedBox(
@@ -436,14 +436,14 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                               title: Text(ST.of(context).select_a_time_slot,
                                   overflow: TextOverflow.ellipsis,
                                   style: montserratLight.copyWith(
-                                      color: black, fontSize: 14),
+                                      color: black, fontSize: width * 0.034),
                                   maxLines: 3),
                               subtitle: Text(
                                   selected_timeslot == ""
                                       ? ST.of(context).select_a_time_slot + "*"
                                       : selected_timeslot,
                                   style: montserratLight.copyWith(
-                                      color: black, fontSize: 14)),
+                                      color: black, fontSize: width * 0.034)),
                               textColor: black,
                               trailing: isExpanded
                                   ? Container(
@@ -545,7 +545,8 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                                             style:
                                                                 montserratLight
                                                                     .copyWith(
-                                                              fontSize: 14,
+                                                              fontSize:
+                                                                  width * 0.034,
                                                               color: black,
                                                             ),
                                                           )
@@ -562,7 +563,8 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                                             style:
                                                                 montserratLight
                                                                     .copyWith(
-                                                              fontSize: 14,
+                                                              fontSize:
+                                                                  width * 0.034,
                                                               color: black,
                                                             ),
                                                           ),
@@ -574,7 +576,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                                   .of(context)
                                                   .no_time_slot_available,
                                               style: montserratLight.copyWith(
-                                                fontSize: 14,
+                                                fontSize: width * 0.034,
                                                 color: black,
                                               ),
                                             ),

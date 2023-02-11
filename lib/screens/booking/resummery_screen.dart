@@ -381,12 +381,13 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: black,
-                                                      fontSize: 14),
+                                                      fontSize: width * 0.034),
                                               maxLines: 2)
                                           : SizedBox(),
                                       Text(vehiclename,
                                           style: montserratRegular.copyWith(
-                                              color: black, fontSize: 12),
+                                              color: black,
+                                              fontSize: width * 0.032),
                                           overflow: TextOverflow.clip,
                                           maxLines: 5),
                                       Divider(),
@@ -396,7 +397,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                               : "",
                                           overflow: TextOverflow.ellipsis,
                                           style: montserratLight.copyWith(
-                                              color: black, fontSize: 14)),
+                                              color: black,
+                                              fontSize: width * 0.034)),
                                       Text(
                                         packdata['package_cost'] != null
                                             ? packdata['package_cost'] != 0
@@ -406,13 +408,15 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                                 : "Based on Quotation"
                                             : "",
                                         style: montserratSemiBold.copyWith(
-                                            color: warningcolor, fontSize: 14),
+                                            color: warningcolor,
+                                            fontSize: width * 0.034),
                                       ),
                                       Divider(),
                                       Text(
                                         packdata['pick_type_name'] ?? "",
                                         style: montserratLight.copyWith(
-                                            color: black, fontSize: 14),
+                                            color: black,
+                                            fontSize: width * 0.034),
                                       ),
                                       Text(
                                         packdata['pick_up_price'] != null
@@ -423,7 +427,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                                 : "FREE"
                                             : "",
                                         style: montserratSemiBold.copyWith(
-                                            color: warningcolor, fontSize: 14),
+                                            color: warningcolor,
+                                            fontSize: width * 0.034),
                                       ),
                                       SizedBox(height: 8),
                                     ],
@@ -446,7 +451,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                           Text(
                             "Pickup Location",
                             style: montserratSemiBold.copyWith(
-                                color: black, fontSize: 14),
+                                color: black, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -487,7 +492,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 packdata['pick_up_location'] ?? "",
                                 overflow: TextOverflow.clip,
                                 style: montserratLight.copyWith(
-                                    color: black, fontSize: 14),
+                                    color: black, fontSize: width * 0.034),
                               ),
                             ),
                           ),
@@ -513,7 +518,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                           Text(
                             "Drop Location",
                             style: montserratSemiBold.copyWith(
-                                color: black, fontSize: 14),
+                                color: black, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -554,7 +559,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 packdata['drop_location'] ?? "",
                                 overflow: TextOverflow.clip,
                                 style: montserratLight.copyWith(
-                                    color: black, fontSize: 14),
+                                    color: black, fontSize: width * 0.034),
                               ),
                             ),
                           ),
@@ -580,7 +585,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                           Text(
                             "Selected Date & Time",
                             style: montserratSemiBold.copyWith(
-                                color: black, fontSize: 14),
+                                color: black, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -621,7 +626,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
                             style: montserratLight.copyWith(
-                                color: black, fontSize: 14),
+                                color: black, fontSize: width * 0.034),
                           ),
                           SizedBox(
                             width: 8,
@@ -632,7 +637,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
                             style: montserratLight.copyWith(
-                                color: black, fontSize: 14),
+                                color: black, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -673,7 +678,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                     "-"
                                 : "",
                             style: montserratLight.copyWith(
-                                color: black, fontSize: 14),
+                                color: black, fontSize: width * 0.034),
                           ),
                           Text(
                             packdata['selected_timeslot'] != null
@@ -681,7 +686,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                     packdata['selected_timeslot'].split('- ')[1]
                                 : "",
                             style: montserratLight.copyWith(
-                                color: black, fontSize: 14),
+                                color: black, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -705,7 +710,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                           Text(
                             "Additional Comments",
                             style: montserratSemiBold.copyWith(
-                                color: black, fontSize: 14),
+                                color: black, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -746,7 +751,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 packdata['complaint'] ?? "",
                                 overflow: TextOverflow.clip,
                                 style: montserratLight.copyWith(
-                                    color: black, fontSize: 14),
+                                    color: black, fontSize: width * 0.034),
                               ),
                             ),
                           ),
@@ -772,12 +777,12 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                           Text(
                             "Grand Total: ",
                             style: montserratSemiBold.copyWith(
-                                color: black, fontSize: 14),
+                                color: black, fontSize: width * 0.034),
                           ),
                           Text(
                             widget.currency + " " + (totalamount).toString(),
                             style: montserratSemiBold.copyWith(
-                                color: warningcolor, fontSize: 14),
+                                color: warningcolor, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -900,7 +905,7 @@ class CustomWarning extends StatelessWidget {
                     Text("Awaiting Payment",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
-                            fontSize: 14, color: white)),
+                            fontSize: width * 0.034, color: white)),
                   ],
                 )
               ],
@@ -914,7 +919,7 @@ class CustomWarning extends StatelessWidget {
                     "Please check dashboard to complete payment for further proceedings.",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
-                        fontSize: 12, color: black))),
+                        fontSize: width * 0.032, color: black))),
             SizedBox(
               height: 16,
             ),
@@ -988,7 +993,7 @@ class CustomSuccess extends StatelessWidget {
                     Text("Booking Successfull",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
-                            fontSize: 14, color: white)),
+                            fontSize: width * 0.034, color: white)),
                   ],
                 )
               ],
@@ -1001,7 +1006,7 @@ class CustomSuccess extends StatelessWidget {
                 child: Text("Please check dashboard for booking status",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
-                        fontSize: 12, color: black))),
+                        fontSize: width * 0.032, color: black))),
             SizedBox(
               height: 16,
             ),

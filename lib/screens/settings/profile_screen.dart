@@ -218,7 +218,7 @@ class ProfilePageState extends State<ProfilePage> {
                                           custdetails['cust_phone']
                                       : " ",
                                   style: montserratRegular.copyWith(
-                                      color: black, fontSize: 14)),
+                                      color: black, fontSize: width * 0.034)),
                               SizedBox(height: 4.0),
                               RichText(
                                 text: TextSpan(
@@ -312,8 +312,8 @@ class ProfilePageState extends State<ProfilePage> {
                             ),
                             16.width,
                             Text("Edit Profile",
-                                style:
-                                    montserratSemiBold.copyWith(fontSize: 14)),
+                                style: montserratSemiBold.copyWith(
+                                    fontSize: width * 0.034)),
                           ],
                         ).paddingOnly(left: 16),
                         Icon(Icons.arrow_forward_ios,
@@ -653,7 +653,7 @@ class ProfilePageState extends State<ProfilePage> {
                               "Signout",
                               textAlign: TextAlign.start,
                               style: montserratSemiBold.copyWith(
-                                  color: Colors.white, fontSize: 14),
+                                  color: Colors.white, fontSize: width * 0.034),
                             ),
                           ),
                         ],

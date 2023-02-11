@@ -406,8 +406,8 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                                 mainAxisAlignment: MainAxisAlignment.end,
                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                                 children: <Widget>[
-                                                                                  item['cv_plate_number'] != "" && item['cv_plate_number'] != null ? Text(item['cv_plate_number'], style: montserratSemiBold.copyWith(color: black, fontSize: 12), maxLines: 2) : SizedBox(),
-                                                                                  item['cv_variant'] != "" && item['cv_variant'] != null ? Text(item['cv_make'] + " " + item['cv_model'] + " " + item['cv_variant'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: 12), maxLines: 5) : Text(item['cv_make'] + item['cv_model'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: 12), maxLines: 5),
+                                                                                  item['cv_plate_number'] != "" && item['cv_plate_number'] != null ? Text(item['cv_plate_number'], style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034), maxLines: 2) : SizedBox(),
+                                                                                  item['cv_variant'] != "" && item['cv_variant'] != null ? Text(item['cv_make'] + " " + item['cv_model'] + " " + item['cv_variant'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034), maxLines: 5) : Text(item['cv_make'] + item['cv_model'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034), maxLines: 5),
                                                                                   Text(
                                                                                     isPriceShow ? widget.currency + " " + (totalCost.round()).toString() : "Loading",
                                                                                     style: montserratSemiBold.copyWith(color: warningcolor, fontSize: 17),
@@ -439,7 +439,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                 alignment: Alignment.bottomCenter,
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.all(17.5),
+                                    margin: EdgeInsets.all(16.5),
                                     padding: EdgeInsets.all(8.5),
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(12),
@@ -557,7 +557,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                             color:
                                                                                 black,
                                                                             fontSize:
-                                                                                14),
+                                                                                width * 0.034),
                                                                       ),
                                                                     ),
                                                                   ],
@@ -577,7 +577,8 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                     color:
                                                                         black,
                                                                     fontSize:
-                                                                        14),
+                                                                        width *
+                                                                            0.034),
                                                           ),
                                                           Text(
                                                               widget.custvehlist[
@@ -589,7 +590,8 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                       color:
                                                                           black,
                                                                       fontSize:
-                                                                          10),
+                                                                          width *
+                                                                              0.028),
                                                               maxLines: 2),
                                                           Text(
                                                               widget.custvehlist[0]
@@ -609,8 +611,24 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                       color:
                                                                           black,
                                                                       fontSize:
-                                                                          10),
+                                                                          width *
+                                                                              0.028),
                                                               maxLines: 2),
+                                                          Text(
+                                                            isPriceShow
+                                                                ? widget.currency +
+                                                                    " " +
+                                                                    (totalCost
+                                                                            .round())
+                                                                        .toString()
+                                                                : "Loading",
+                                                            style: montserratSemiBold
+                                                                .copyWith(
+                                                                    color:
+                                                                        warningcolor,
+                                                                    fontSize:
+                                                                        17),
+                                                          ),
                                                         ],
                                                       )),
                                                   const SizedBox(width: 5),
@@ -746,7 +764,8 @@ class PackageDetailsState extends State<PackageDetails> {
                                                   style: montserratSemiBold
                                                       .copyWith(
                                                           color: Colors.black,
-                                                          fontSize: 14)),
+                                                          fontSize:
+                                                              width * 0.034)),
                                             ),
                                           ),
                                         )
@@ -756,7 +775,8 @@ class PackageDetailsState extends State<PackageDetails> {
                                           maxLines: 10,
                                           textAlign: TextAlign.center,
                                           style: montserratRegular.copyWith(
-                                              color: black, fontSize: 14))),
+                                              color: black,
+                                              fontSize: width * 0.034))),
                               SizedBox(
                                 height: 12,
                               ),
@@ -770,7 +790,8 @@ class PackageDetailsState extends State<PackageDetails> {
                                         Text(ST.of(context).additional_queries,
                                             maxLines: 10,
                                             style: montserratRegular.copyWith(
-                                                color: black, fontSize: 14))
+                                                color: black,
+                                                fontSize: width * 0.034))
                                       ],
                                     )
                                   : Container(),
@@ -800,7 +821,8 @@ class PackageDetailsState extends State<PackageDetails> {
                                                 hintStyle:
                                                     montserratRegular.copyWith(
                                                         color: black,
-                                                        fontSize: 12),
+                                                        fontSize:
+                                                            width * 0.034),
                                                 focusedBorder:
                                                     OutlineInputBorder(
                                                   borderSide: BorderSide(
@@ -838,7 +860,8 @@ class PackageDetailsState extends State<PackageDetails> {
                                                   style: montserratRegular
                                                       .copyWith(
                                                           color: black,
-                                                          fontSize: 12)),
+                                                          fontSize:
+                                                              width * 0.034)),
                                             ),
                                           ),
                                         ),
@@ -1001,7 +1024,8 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                     color: Colors
                                                                         .black,
                                                                     fontSize:
-                                                                        12)),
+                                                                        width *
+                                                                            0.034)),
                                                       ],
                                                     )
                                                   ],
@@ -1097,8 +1121,9 @@ class PackageDetailsState extends State<PackageDetails> {
                                                     ST.of(context).book_now,
                                                     style: montserratSemiBold
                                                         .copyWith(
-                                                            color:
-                                                                Colors.white),
+                                                            color: Colors.white,
+                                                            fontSize:
+                                                                width * 0.034),
                                                   )
                                                 : Row(
                                                     mainAxisAlignment:

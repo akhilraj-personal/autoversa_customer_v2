@@ -569,7 +569,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                   "Current Drop Location",
                                   textAlign: TextAlign.start,
                                   style: montserratRegular.copyWith(
-                                    fontSize: 12,
+                                    fontSize: width * 0.032,
                                     color: black,
                                   ),
                                 ),
@@ -596,7 +596,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                       : "",
                                   textAlign: TextAlign.start,
                                   style: montserratRegular.copyWith(
-                                    fontSize: 14,
+                                    fontSize: width * 0.034,
                                     color: black,
                                   ),
                                 ),
@@ -612,7 +612,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                 child: Text(
                                   "Change Address",
                                   style: montserratRegular.copyWith(
-                                    fontSize: 12,
+                                    fontSize: width * 0.032,
                                     color: black,
                                   ),
                                 ),
@@ -625,7 +625,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                   },
                                   child: Text("Change",
                                       style: montserratRegular.copyWith(
-                                        fontSize: 12,
+                                        fontSize: width * 0.032,
                                       )),
                                 ),
                               ),
@@ -806,7 +806,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                         child: Text(
                                                                                           "Select City" + "*",
                                                                                           textAlign: TextAlign.left,
-                                                                                          style: montserratRegular.copyWith(fontSize: 12, color: black),
+                                                                                          style: montserratRegular.copyWith(fontSize: width * 0.032, color: black),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -835,7 +835,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       value: value,
                                                                                       child: Text(
                                                                                         value!,
-                                                                                        style: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                                        style: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
                                                                                       ),
                                                                                     );
                                                                                   }).toList(),
@@ -855,7 +855,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                         child: Text(
                                                                                           "Select Area" + "*",
                                                                                           textAlign: TextAlign.left,
-                                                                                          style: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                                          style: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -868,7 +868,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                   isExpanded: true,
                                                                                   decoration: InputDecoration(
                                                                                       hintText: "Select Area",
-                                                                                      hintStyle: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                                      hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
                                                                                       focusedBorder: OutlineInputBorder(
                                                                                         borderSide: const BorderSide(color: black, width: 0.5),
                                                                                         borderRadius: BorderRadius.circular(10),
@@ -880,7 +880,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                   items: SelectAreaList.map((String? value) {
                                                                                     return DropdownMenuItem<String>(
                                                                                       value: value,
-                                                                                      child: Text(value!, style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                                      child: Text(value!, style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
                                                                                     );
                                                                                   }).toList(),
                                                                                   onChanged: (value) {
@@ -896,7 +896,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                         child: Text(
                                                                                           "Address",
                                                                                           textAlign: TextAlign.left,
-                                                                                          style: montserratRegular.copyWith(fontSize: 12, color: black),
+                                                                                          style: montserratRegular.copyWith(fontSize: width * 0.032, color: black),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -953,7 +953,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                         child: Text(
                                                                                           "Building Name/Flat No",
                                                                                           textAlign: TextAlign.left,
-                                                                                          style: montserratRegular.copyWith(fontSize: 12, color: black),
+                                                                                          style: montserratRegular.copyWith(fontSize: width * 0.032, color: black),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -985,7 +985,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                         decoration: InputDecoration(
                                                                                             counterText: "",
                                                                                             hintText: "Building Name/Flat No",
-                                                                                            hintStyle: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                                            hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
                                                                                             focusedBorder: OutlineInputBorder(
                                                                                               borderSide: const BorderSide(color: black, width: 0.5),
                                                                                               borderRadius: BorderRadius.circular(10),
@@ -1011,7 +1011,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       },
                                                                                     ),
                                                                                   ),
-                                                                                  Text("Home", style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                                  Text("Home", style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
                                                                                   Theme(
                                                                                     data: Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
                                                                                     child: Radio(
@@ -1024,7 +1024,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       },
                                                                                     ),
                                                                                   ),
-                                                                                  Text("Office", style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                                  Text("Office", style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
                                                                                   Theme(
                                                                                     data: Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
                                                                                     child: Radio(
@@ -1037,7 +1037,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       },
                                                                                     ),
                                                                                   ),
-                                                                                  Text("Other", style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                                  Text("Other", style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
                                                                                 ]),
                                                                                 8.height,
                                                                                 isgooglemap
@@ -1049,7 +1049,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                               child: Text(
                                                                                                 "Tap to mark",
                                                                                                 textAlign: TextAlign.left,
-                                                                                                style: montserratSemiBold.copyWith(fontSize: 14, color: black),
+                                                                                                style: montserratSemiBold.copyWith(fontSize: width * 0.034, color: black),
                                                                                               ),
                                                                                             ),
                                                                                           ),
@@ -1079,7 +1079,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                             height: context.height(),
                                                                                             alignment: Alignment.center,
                                                                                             width: width,
-                                                                                            child: Text("Google Map", style: montserratRegular.copyWith(fontSize: 14)),
+                                                                                            child: Text("Google Map", style: montserratRegular.copyWith(fontSize: width * 0.034)),
                                                                                           )
                                                                                     : Row(),
                                                                                 8.height,
@@ -1101,7 +1101,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       textAlign: TextAlign.start,
                                                                                       overflow: TextOverflow.clip,
                                                                                       style: montserratRegular.copyWith(
-                                                                                        fontSize: 12,
+                                                                                        fontSize: width * 0.032,
                                                                                         color: black,
                                                                                       ),
                                                                                     ),
@@ -1243,7 +1243,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                             Text(
                                               ST.of(context).add_address + " ",
                                               style: montserratLight.copyWith(
-                                                  color: black, fontSize: 14),
+                                                  color: black,
+                                                  fontSize: width * 0.034),
                                             ),
                                             Container(
                                               child: Image.asset(
@@ -1265,7 +1266,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                           //           Text(
                           //             "Select Drop Address*",
                           //             style: montserratSemiBold.copyWith(
-                          //                 fontSize: 14, color: black),
+                          //                 fontSize: width * 0.034, color: black),
                           //           ),
                           //         ],
                           //       )
@@ -1333,7 +1334,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                               .copyWith(
                                                                   color: Colors
                                                                       .black,
-                                                                  fontSize: 14),
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
                                                         )),
                                                     items:
                                                         SelectAddressList.map(
@@ -1371,7 +1374,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                               Text(
                                 "Select Drop Date" + "*",
                                 style: montserratSemiBold.copyWith(
-                                    fontSize: 14, color: black),
+                                    fontSize: width * 0.034, color: black),
                               ),
                             ],
                           ),
@@ -1405,13 +1408,13 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                   title: Text(
                                     'Select your Drop date',
                                     style: montserratSemiBold.copyWith(
-                                        color: black, fontSize: 14),
+                                        color: black, fontSize: width * 0.034),
                                   ),
                                   subtitle: Text(
                                     DateFormat('dd-MM-yyyy')
                                         .format(selectedDate),
                                     style: montserratRegular.copyWith(
-                                        color: black, fontSize: 12),
+                                        color: black, fontSize: width * 0.032),
                                   ),
                                 )),
                           ),
@@ -1425,7 +1428,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                               Text(
                                 ST.of(context).select_a_time_slot + "*",
                                 style: montserratSemiBold.copyWith(
-                                    fontSize: 14, color: black),
+                                    fontSize: width * 0.034, color: black),
                               ),
                             ],
                           ),
@@ -1454,14 +1457,14 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                 title: Text("Select a Time Slot",
                                     overflow: TextOverflow.clip,
                                     style: montserratSemiBold.copyWith(
-                                        color: black, fontSize: 14),
+                                        color: black, fontSize: width * 0.034),
                                     maxLines: 3),
                                 subtitle: Text(
                                   selected_timeslot == ""
                                       ? "Select a Time Slot" + "*"
                                       : selected_timeslot,
                                   style: montserratRegular.copyWith(
-                                      color: black, fontSize: 12),
+                                      color: black, fontSize: width * 0.032),
                                 ),
                                 textColor: black,
                                 trailing: isExpanded
@@ -1560,7 +1563,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                               style:
                                                                   montserratRegular
                                                                       .copyWith(
-                                                                fontSize: 12,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.032,
                                                                 color:
                                                                     errorcolor,
                                                               ),
@@ -1579,7 +1584,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                               style:
                                                                   montserratRegular
                                                                       .copyWith(
-                                                                fontSize: 14,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034,
                                                                 color: black,
                                                               ),
                                                             ),
@@ -1590,7 +1597,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                 "No time Slot",
                                                 style:
                                                     montserratRegular.copyWith(
-                                                  fontSize: 14,
+                                                  fontSize: width * 0.034,
                                                   color: black,
                                                 ),
                                               ),

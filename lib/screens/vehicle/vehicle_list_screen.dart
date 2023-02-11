@@ -342,8 +342,7 @@ class VehiclelistState extends State<Vehiclelist> {
                                                       ),
                                                       margin: EdgeInsets.only(
                                                           left: 0, right: 16),
-                                                      width: 75,
-                                                      height: 75,
+                                                      width: width * 0.2,
                                                       child: Image.asset(
                                                         custvehlist[index]
                                                                     .cv_make ==
@@ -401,7 +400,8 @@ class VehiclelistState extends State<Vehiclelist> {
                                                                       color: Colors
                                                                           .black,
                                                                       fontSize:
-                                                                          14)),
+                                                                          width *
+                                                                              0.043)),
                                                             ),
                                                           ],
                                                         ),
@@ -434,7 +434,8 @@ class VehiclelistState extends State<Vehiclelist> {
                                                                         color:
                                                                             black,
                                                                         fontSize:
-                                                                            12)),
+                                                                            width *
+                                                                                0.034)),
                                                               ),
                                                             ),
                                                           ],
@@ -452,19 +453,18 @@ class VehiclelistState extends State<Vehiclelist> {
                                                           children: <Widget>[
                                                             Container(
                                                               child: Text(
-                                                                  custvehlist[index]
-                                                                              .cv_odometer !=
+                                                                  custvehlist[index].cv_odometer !=
                                                                           null
                                                                       ? "Odometer: " +
                                                                           custvehlist[index]
                                                                               .cv_odometer
                                                                       : "",
-                                                                  style: montserratRegular
-                                                                      .copyWith(
-                                                                          fontSize:
-                                                                              12,
-                                                                          color:
-                                                                              Colors.black)),
+                                                                  style: montserratRegular.copyWith(
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.034,
+                                                                      color: Colors
+                                                                          .black)),
                                                             ),
                                                           ],
                                                         ),

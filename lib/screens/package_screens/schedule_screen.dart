@@ -88,9 +88,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
 
   DateTime selectedDate = DateTime.now();
   bool isExpanded = false;
-  int scheduleappbarcolor = 0xFFFFF,
-      clippercolor = 0xFFFFF,
-      colorstatusbar = 0xFFFFF;
   bool issubmitted = false;
   bool isproceeding = false;
   bool isoffline = false;
@@ -360,10 +357,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     }
   }
 
-  Future<void> init() async {
-    setStatusBarColor(Color(colorstatusbar),
-        statusBarIconBrightness: Brightness.light);
-  }
+  Future<void> init() async {}
 
   timeFormatter(date_data) {
     var time = date_data;
@@ -524,6 +518,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         packdata['selected_timeslot'] = selected_timeslot;
         prefs.setString("booking_data", json.encode(packdata));
         pickupoption = "";
+        print("send data1 =====>");
+        print(packdata);
         setState(() => isproceeding = false);
         Navigator.push(
             context,
@@ -570,6 +566,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             packdata['selected_timeid'] = selected_timeid;
             packdata['selected_timeslot'] = selected_timeslot;
             prefs.setString("booking_data", json.encode(packdata));
+            print("send data2 =====>");
+            print(packdata);
             pickupoption = "";
             setState(() => isproceeding = false);
             Navigator.push(
@@ -749,7 +747,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: black,
-                                                      fontSize: 14),
+                                                      fontSize: width * 0.034),
                                               maxLines: 2)
                                           : SizedBox(),
                                       widget.custvehlist[widget.selectedveh]['cv_variant'] != "" && widget.custvehlist[widget.selectedveh]['cv_variant'] != null
@@ -766,7 +764,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                       ['cv_year'] +
                                                   " )",
                                               style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 12),
+                                                  color: black,
+                                                  fontSize: width * 0.034),
                                               overflow: TextOverflow.clip,
                                               maxLines: 5)
                                           : Text(
@@ -778,7 +777,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   widget.custvehlist[widget.selectedveh]
                                                       ['cv_year'] +
                                                   " )",
-                                              style: montserratRegular.copyWith(color: black, fontSize: 12),
+                                              style: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
                                               overflow: TextOverflow.clip,
                                               maxLines: 5),
                                       Text(
@@ -786,7 +785,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                             " " +
                                             package_price.toString(),
                                         style: montserratSemiBold.copyWith(
-                                            color: warningcolor, fontSize: 14),
+                                            color: warningcolor,
+                                            fontSize: width * 0.034),
                                       ),
                                       SizedBox(height: 8),
                                     ],
@@ -837,11 +837,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   temp['state_longitude'])),
                                           zoom: 13.4746,
                                         );
+                                        setBottomState(() {});
                                         final GoogleMapController controller =
                                             await _controller.future;
                                         controller.moveCamera(
                                             CameraUpdate.newCameraPosition(
                                                 _kLake));
+                                        setBottomState(() {});
                                         setBottomState(() {
                                           Statelat = temp['state_lattitude'];
                                           Statelong = temp['state_longitude'];
@@ -853,7 +855,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                         SelectAreaList.length = 1;
                                         await getCityList(state).then((value) {
                                           if (value['ret_data'] == "success") {
-                                            setState(() {
+                                            setBottomState(() {
                                               areaList = [];
                                               SelectAreaList = <String?>[
                                                 "Select Area"
@@ -917,8 +919,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                               Container(
                                                                 margin:
                                                                     EdgeInsets
-                                                                        .all(
-                                                                            16),
+                                                                        .all(8),
                                                                 height: 850,
                                                                 decoration: BoxDecoration(
                                                                     color: context
@@ -940,7 +941,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                 Text(
                                                                               "Select City" + "*",
                                                                               textAlign: TextAlign.left,
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.034, color: black),
                                                                             ),
                                                                           ),
                                                                         ),
@@ -984,7 +985,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                               Text(
                                                                             value!,
                                                                             style:
-                                                                                montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                                montserratRegular.copyWith(color: black, fontSize: width * 0.034),
                                                                           ),
                                                                         );
                                                                       }).toList(),
@@ -1012,7 +1013,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                 Text(
                                                                               "Select Area" + "*",
                                                                               textAlign: TextAlign.left,
-                                                                              style: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                              style: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
                                                                             ),
                                                                           ),
                                                                         ),
@@ -1029,7 +1030,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                           true,
                                                                       decoration: InputDecoration(
                                                                           hintText: "Select Area",
-                                                                          hintStyle: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                          hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
                                                                           focusedBorder: OutlineInputBorder(
                                                                             borderSide:
                                                                                 const BorderSide(color: black, width: 0.5),
@@ -1051,7 +1052,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                               value,
                                                                           child: Text(
                                                                               value!,
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.034, color: black)),
                                                                         );
                                                                       }).toList(),
                                                                       onChanged:
@@ -1073,7 +1074,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                 Text(
                                                                               "Address",
                                                                               textAlign: TextAlign.left,
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.034, color: black),
                                                                             ),
                                                                           ),
                                                                         ),
@@ -1124,9 +1125,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                           decoration: InputDecoration(
                                                                               counterText: "",
                                                                               hintText: "Address",
-                                                                              hintStyle: montserratRegular.copyWith(
-                                                                                color: black,
-                                                                              ),
+                                                                              hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
                                                                               focusedBorder: OutlineInputBorder(
                                                                                 borderSide: const BorderSide(color: black, width: 0.5),
                                                                                 borderRadius: BorderRadius.circular(10),
@@ -1153,7 +1152,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                 Text(
                                                                               "Building Name/Flat No",
                                                                               textAlign: TextAlign.left,
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.034, color: black),
                                                                             ),
                                                                           ),
                                                                         ),
@@ -1192,7 +1191,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                             decoration: InputDecoration(
                                                                                 counterText: "",
                                                                                 hintText: "Building Name/Flat No",
-                                                                                hintStyle: montserratRegular.copyWith(color: black, fontSize: 12),
+                                                                                hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
                                                                                 focusedBorder: OutlineInputBorder(
                                                                                   borderSide: const BorderSide(color: black, width: 0.5),
                                                                                   borderRadius: BorderRadius.circular(10),
@@ -1232,7 +1231,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                           ),
                                                                           Text(
                                                                               "Home",
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.034, color: black)),
                                                                           Theme(
                                                                             data:
                                                                                 Theme.of(context).copyWith(
@@ -1251,7 +1250,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                           ),
                                                                           Text(
                                                                               "Office",
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.034, color: black)),
                                                                           Theme(
                                                                             data:
                                                                                 Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
@@ -1268,7 +1267,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                           ),
                                                                           Text(
                                                                               "Other",
-                                                                              style: montserratRegular.copyWith(fontSize: 12, color: black)),
+                                                                              style: montserratRegular.copyWith(fontSize: width * 0.034, color: black)),
                                                                         ]),
                                                                     8.height,
                                                                     isgooglemap
@@ -1280,7 +1279,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                   child: Text(
                                                                                     "Tap to mark",
                                                                                     textAlign: TextAlign.left,
-                                                                                    style: montserratSemiBold.copyWith(fontSize: 14, color: black),
+                                                                                    style: montserratSemiBold.copyWith(fontSize: width * 0.034, color: black),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -1310,7 +1309,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                 height: context.height(),
                                                                                 alignment: Alignment.center,
                                                                                 width: width,
-                                                                                child: Text("Google Map", style: montserratRegular.copyWith(fontSize: 14)),
+                                                                                child: Text("Google Map", style: montserratRegular.copyWith(fontSize: width * 0.034)),
                                                                               )
                                                                         : Row(),
                                                                     8.height,
@@ -1332,7 +1331,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                           },
                                                                         ),
                                                                         Text(
-                                                                          "Address",
+                                                                          "Set as default address",
                                                                           textAlign:
                                                                               TextAlign.start,
                                                                           overflow:
@@ -1418,8 +1417,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                   ];
                                                                                 });
                                                                                 setState(() {});
-                                                                                _fetchdatas(1, 'd');
+                                                                                _fetchdatas(1, 'p&d');
                                                                                 setState(() => isgooglemap = false);
+                                                                                setState(() => issubmitted = false);
                                                                               } else {
                                                                                 setState(() => issubmitted = false);
                                                                               }
@@ -1518,7 +1518,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                 Text(
                                   ST.of(context).add_address + " ",
                                   style: montserratLight.copyWith(
-                                      color: black, fontSize: 14),
+                                      color: black, fontSize: width * 0.034),
                                 ),
                                 Container(
                                   child: Image.asset(
@@ -1580,7 +1580,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           "Select Address",
                                           style: montserratRegular.copyWith(
                                               color: Colors.black,
-                                              fontSize: 14),
+                                              fontSize: width * 0.034),
                                         )),
                                     items:
                                         SelectAddressList.map((String? value) {
@@ -1589,7 +1589,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                         child: Text(
                                           value!,
                                           style: montserratRegular.copyWith(
-                                              color: black, fontSize: 14),
+                                              color: black,
+                                              fontSize: width * 0.034),
                                         ),
                                       );
                                     }).toList(),
@@ -1645,7 +1646,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.clip,
                           style: montserratLight.copyWith(
-                              color: black, fontSize: 14),
+                              color: black, fontSize: width * 0.034),
                         ),
                       ],
                     ),
@@ -1664,7 +1665,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                 ST.of(context).select_drop_address + "*",
                                 textAlign: TextAlign.start,
                                 style: montserratSemiBold.copyWith(
-                                    color: black, fontSize: 14),
+                                    color: black, fontSize: width * 0.034),
                               ),
                             ],
                           )
@@ -1792,7 +1793,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           ST.of(context).pickup_options + "*",
                           textAlign: TextAlign.start,
                           style: montserratSemiBold.copyWith(
-                              color: black, fontSize: 14),
+                              color: black, fontSize: width * 0.034),
                         ),
                       ],
                     ),
@@ -1871,7 +1872,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 overflow: TextOverflow.ellipsis,
                                                 style: montserratLight.copyWith(
                                                     color: Colors.grey[350],
-                                                    fontSize: 14),
+                                                    fontSize: width * 0.034),
                                               )
                                             : Text(
                                                 pickup_options[index]
@@ -1879,7 +1880,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 textAlign: TextAlign.center,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: montserratLight.copyWith(
-                                                    color: black, fontSize: 14),
+                                                    color: black,
+                                                    fontSize: width * 0.034),
                                               ),
                                       ]),
                                   pickup_options[index]['pk_id'] == "0"
@@ -1892,7 +1894,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           textAlign: TextAlign.end,
                                           overflow: TextOverflow.clip,
                                           style: montserratLight.copyWith(
-                                              color: black, fontSize: 14),
+                                              color: black,
+                                              fontSize: width * 0.034),
                                         )
                                       : Text(
                                           pickup_options[index]['pk_cost'] ==
@@ -1904,7 +1907,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           overflow: TextOverflow.clip,
                                           style: montserratLight.copyWith(
                                               color: warningcolor,
-                                              fontSize: 14),
+                                              fontSize: width * 0.034),
                                         ),
                                 ],
                               ),
@@ -1920,7 +1923,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         Text(
                           ST.of(context).select_booking_date + "*",
                           style: montserratSemiBold.copyWith(
-                              fontSize: 14, color: black),
+                              fontSize: width * 0.034, color: black),
                         ),
                       ],
                     ),
@@ -1969,7 +1972,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                 title: Text(
                                     ST.of(context).select_booking_date + " ",
                                     style: montserratLight.copyWith(
-                                        color: black, fontSize: 12),
+                                        color: black, fontSize: width * 0.034),
                                     maxLines: 3),
                                 subtitle: Text(
                                   selectedDate == " "
@@ -1977,7 +1980,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                       : DateFormat('dd-MM-yyyy')
                                           .format(selectedDate),
                                   style: montserratLight.copyWith(
-                                      color: black, fontSize: 12),
+                                      color: black, fontSize: width * 0.034),
                                 ),
                               )),
                         ),
@@ -1989,7 +1992,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         Text(
                           ST.of(context).select_a_time_slot + "*",
                           style: montserratSemiBold.copyWith(
-                              fontSize: 14, color: black),
+                              fontSize: width * 0.034, color: black),
                         ),
                       ],
                     ),
@@ -2036,14 +2039,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                               title: Text(ST.of(context).select_a_time_slot,
                                   overflow: TextOverflow.ellipsis,
                                   style: montserratLight.copyWith(
-                                      color: black, fontSize: 14),
+                                      color: black, fontSize: width * 0.034),
                                   maxLines: 3),
                               subtitle: Text(
                                   selected_timeslot == ""
                                       ? ST.of(context).select_a_time_slot + "*"
                                       : selected_timeslot,
                                   style: montserratLight.copyWith(
-                                      color: black, fontSize: 14)),
+                                      color: black, fontSize: width * 0.034)),
                               textColor: black,
                               trailing: isExpanded
                                   ? Container(
@@ -2153,8 +2156,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                             style:
                                                                 montserratLight
                                                                     .copyWith(
-                                                              fontSize: 14,
-                                                              color: black,
+                                                              fontSize:
+                                                                  width * 0.034,
+                                                              color: errorcolor,
                                                             ),
                                                           )
                                                         : Text(
@@ -2170,7 +2174,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                             style:
                                                                 montserratLight
                                                                     .copyWith(
-                                                              fontSize: 14,
+                                                              fontSize:
+                                                                  width * 0.034,
                                                               color: black,
                                                             ),
                                                           ),
@@ -2182,7 +2187,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   .of(context)
                                                   .no_time_slot_available,
                                               style: montserratLight.copyWith(
-                                                fontSize: 14,
+                                                fontSize: width * 0.034,
                                                 color: black,
                                               ),
                                             ),
