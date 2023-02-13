@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -19,7 +20,7 @@ class ST {
 
   static ST get current {
     assert(_current != null,
-        'No instance of ST was loaded. Try to initialize the ST delegate before accessing ST.current.');
+        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
     return _current!;
   }
 
