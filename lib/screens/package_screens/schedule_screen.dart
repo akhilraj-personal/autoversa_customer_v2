@@ -141,7 +141,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     : (widget.currency + " " + tempCost)
                 : message,
         "pk_cost_value": int.parse(tempCost) < int.parse(ptemp['pk_min_cost'])
-            ? (ptemp['pk_min_cost'])
+            ? ptemp['pk_freeFlag'] == "1"
+                ? '0'
+                : (ptemp['pk_min_cost'])
             : tempCost
       };
       pickup_options.add(temp);
@@ -336,7 +338,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         selected_address = address_index;
         selected_drop_address = 0;
       } else {
-        if (type == 'p') {
+        if (type == 'p' && isLocationCheck) {
           selected_address = SelectAddressList.length - 1;
           selected_drop_address = temp_drop_address;
           pickupaddresschange(SelectAddressList.length - 1);
@@ -593,9 +595,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   Widget build(BuildContext context) {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.dark,
-        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.light,
+        statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.white,
       ),
       child: Scaffold(
@@ -864,14 +866,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       ],
                     ),
                     Container(
-                      margin: EdgeInsets.only(right: 16.0),
+                      margin: EdgeInsets.only(right: 16.0, left: 16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            " ",
+                            "Pickup & Drop",
                             style: montserratSemiBold.copyWith(
-                                color: black, fontSize: width * 0.04),
+                                color: black, fontSize: width * 0.034),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -1482,7 +1484,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                   ];
                                                                                 });
                                                                                 setState(() {});
-                                                                                _fetchdatas(1, 'p&d');
+                                                                                _fetchdatas(1, 'p');
                                                                                 setState(() => isgooglemap = false);
                                                                                 setState(() => issubmitted = false);
                                                                               } else {
@@ -1598,11 +1600,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 8,
+                      height: 2,
                     ),
                     Stack(alignment: Alignment.bottomCenter, children: [
                       Container(
-                        margin: EdgeInsets.all(16.0),
+                        margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
@@ -1616,7 +1618,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             ]),
                       ),
                       Container(
-                          margin: EdgeInsets.all(16.0),
+                          margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
                           padding: EdgeInsets.all(8),
                           width: width * 1.85,
                           height: height * 0.075,
@@ -1673,7 +1675,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             ],
                           ))
                     ]),
-                    SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1828,7 +1829,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                     }).toList(),
                                                     onChanged: (value) {
                                                       setState(() {
-                                                        pickupaddresschange(
+                                                        dropaddresschange(
                                                             SelectAddressList
                                                                 .indexOf(value
                                                                     .toString()));

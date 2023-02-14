@@ -183,7 +183,7 @@ class SummeryPageState extends State<SummeryPage> {
           colors: PaymentSheetAppearanceColors(
               background: Colors.white,
               primary: Color(0xff31BBAC),
-              componentBorder: Colors.blue,
+              componentBorder: Color(0xff3186AC),
               primaryText: Colors.black,
               secondaryText: Colors.black,
               componentBackground: Colors.white,
@@ -193,15 +193,15 @@ class SummeryPageState extends State<SummeryPage> {
           shapes: PaymentSheetShape(
             borderWidth: 4,
             borderRadius: 10.00,
-            shadow: PaymentSheetShadowParams(color: Colors.blue),
+            shadow: PaymentSheetShadowParams(color: Color(0xff31BBAC)),
           ),
           primaryButton: PaymentSheetPrimaryButtonAppearance(
-            shapes: PaymentSheetPrimaryButtonShape(blurRadius: 8),
+            shapes: PaymentSheetPrimaryButtonShape(blurRadius: 16),
             colors: PaymentSheetPrimaryButtonTheme(
               light: PaymentSheetPrimaryButtonThemeColors(
                 background: Color(0xff31BBAC),
                 text: Colors.white,
-                border: Color.fromARGB(255, 30, 170, 235),
+                border: Color(0xff31BBAC),
               ),
             ),
           ),
@@ -264,9 +264,9 @@ class SummeryPageState extends State<SummeryPage> {
   Widget build(BuildContext context) {
     return AnnotatedRegion(
         value: SystemUiOverlayStyle(
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark,
-          statusBarColor: Colors.white,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.light,
+          statusBarColor: Colors.transparent,
           systemNavigationBarColor: Colors.white,
         ),
         child: Scaffold(
@@ -739,8 +739,8 @@ class SummeryPageState extends State<SummeryPage> {
                                 ? DateFormat('LLLL').format(
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
-                            style: montserratLight.copyWith(
-                                color: blackColor, fontSize: width * 0.034),
+                            style: montserratSemiBold.copyWith(
+                                color: warningcolor, fontSize: width * 0.034),
                           ),
                           SizedBox(
                             width: 8,
@@ -750,8 +750,8 @@ class SummeryPageState extends State<SummeryPage> {
                                 ? DateFormat('d').format(
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
-                            style: montserratLight.copyWith(
-                                color: blackColor, fontSize: width * 0.034),
+                            style: montserratSemiBold.copyWith(
+                                color: warningcolor, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -791,16 +791,16 @@ class SummeryPageState extends State<SummeryPage> {
                                 ? packdata['selected_timeslot'].split('- ')[0] +
                                     "-"
                                 : "",
-                            style: montserratLight.copyWith(
-                                color: blackColor, fontSize: width * 0.034),
+                            style: montserratSemiBold.copyWith(
+                                color: warningcolor, fontSize: width * 0.034),
                           ),
                           Text(
                             packdata['selected_timeslot'] != null
                                 ? " " +
                                     packdata['selected_timeslot'].split('- ')[1]
                                 : "",
-                            style: montserratLight.copyWith(
-                                color: blackColor, fontSize: width * 0.034),
+                            style: montserratSemiBold.copyWith(
+                                color: warningcolor, fontSize: width * 0.034),
                           ),
                         ],
                       ),
