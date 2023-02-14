@@ -8,13 +8,13 @@ import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SummeryPage extends StatefulWidget {
   final Map<String, dynamic> package_id;
@@ -265,68 +265,132 @@ class SummeryPageState extends State<SummeryPage> {
     return AnnotatedRegion(
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
           statusBarColor: Colors.white,
           systemNavigationBarColor: Colors.white,
         ),
         child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            flexibleSpace: Container(
-              alignment: Alignment.bottomCenter,
-              width: width,
-              height: height * 0.12,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    lightblueColor,
-                    syanColor,
-                  ],
-                ),
-              ),
-              child: ClipPath(
-                clipper: SinCosineWaveClipper(
-                  verticalPosition: VerticalPosition.top,
-                ),
-                child: Container(
-                  height: height * 0.31,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      syanColor.withOpacity(0.3),
-                      Color.fromARGB(255, 176, 205, 210),
-                    ],
-                  )),
-                ),
-              ),
-            ),
-            title: Text(
-              widget.package_id['pkg_name'],
-              style: myriadproregular.copyWith(
-                fontSize: 18,
-                color: Colors.white,
-              ),
-            ),
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              iconSize: 18,
-            ),
-          ),
+          // appBar: AppBar(
+          //   elevation: 0,
+          //   flexibleSpace: Container(
+          //     alignment: Alignment.bottomCenter,
+          //     width: width,
+          //     height: height * 0.12,
+          //     decoration: BoxDecoration(
+          //       gradient: LinearGradient(
+          //         begin: Alignment.topLeft,
+          //         end: Alignment.bottomRight,
+          //         colors: [
+          //           lightblueColor,
+          //           syanColor,
+          //         ],
+          //       ),
+          //     ),
+          //     child: ClipPath(
+          //       clipper: SinCosineWaveClipper(
+          //         verticalPosition: VerticalPosition.top,
+          //       ),
+          //       child: Container(
+          //         height: height * 0.31,
+          //         decoration: BoxDecoration(
+          //             gradient: LinearGradient(
+          //           begin: Alignment.topLeft,
+          //           end: Alignment.bottomRight,
+          //           colors: [
+          //             syanColor.withOpacity(0.3),
+          //             Color.fromARGB(255, 176, 205, 210),
+          //           ],
+          //         )),
+          //       ),
+          //     ),
+          //   ),
+          //   title: Text(
+          //     widget.package_id['pkg_name'],
+          //     style: myriadproregular.copyWith(
+          //       fontSize: 18,
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          //   leading: IconButton(
+          //     onPressed: () {
+          //       Navigator.pop(context);
+          //     },
+          //     icon: const Icon(Icons.arrow_back, color: Colors.white),
+          //     iconSize: 18,
+          //   ),
+          // ),
           body: SingleChildScrollView(
               child: Container(
             child: Stack(
               children: [
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  width: width,
+                  height: height * 0.2,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        lightblueColor,
+                        syanColor,
+                      ],
+                    ),
+                  ),
+                  child:
+                      ////--------------- ClipPath for curv----------
+                      ClipPath(
+                    clipper: SinCosineWaveClipper(
+                      verticalPosition: VerticalPosition.top,
+                    ),
+                    child: Container(
+                      height: height * 0.1,
+                      // padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          syanColor.withOpacity(0.3),
+                          Color.fromARGB(255, 176, 205, 210),
+                        ],
+                      )),
+                    ),
+                  ),
+                ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      margin: EdgeInsets.fromLTRB(
+                          16.5, height * 0.07, height * 0.07, 16.5),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                              size: width * 0.054,
+                            ),
+                          ),
+                          SizedBox(width: width * 0.08),
+                          Text(
+                            widget.package_id['pkg_name'],
+                            style: montserratRegular.copyWith(
+                              fontSize: width * 0.044,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Stack(
                       alignment: Alignment.bottomCenter,
                       children: [
@@ -510,7 +574,7 @@ class SummeryPageState extends State<SummeryPage> {
                       height: 8,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 16.0),
+                      margin: EdgeInsets.only(left: 30.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -577,7 +641,7 @@ class SummeryPageState extends State<SummeryPage> {
                       height: 8,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 16.0),
+                      margin: EdgeInsets.only(left: 30.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -644,7 +708,7 @@ class SummeryPageState extends State<SummeryPage> {
                       height: 8,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 16.0),
+                      margin: EdgeInsets.only(left: 30.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -696,7 +760,7 @@ class SummeryPageState extends State<SummeryPage> {
                       height: 8,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 16.0),
+                      margin: EdgeInsets.only(left: 30.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -769,7 +833,7 @@ class SummeryPageState extends State<SummeryPage> {
                       height: 8,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 16.0),
+                      margin: EdgeInsets.only(left: 30.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
