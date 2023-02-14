@@ -224,61 +224,12 @@ class PackageDetailsState extends State<PackageDetails> {
     final playrecordtext = isPlaying ? "Stop Playing" : "Play Recording";
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.dark,
-        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.light,
+        statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.white,
       ),
       child: Scaffold(
-        // appBar: AppBar(
-        //   elevation: 0,
-        //   flexibleSpace: Container(
-        //     alignment: Alignment.bottomCenter,
-        //     width: width,
-        //     height: height * 0.12,
-        //     decoration: BoxDecoration(
-        //       gradient: LinearGradient(
-        //         begin: Alignment.topLeft,
-        //         end: Alignment.bottomRight,
-        //         colors: [
-        //           lightblueColor,
-        //           syanColor,
-        //         ],
-        //       ),
-        //     ),
-        //     child: ClipPath(
-        //       clipper: SinCosineWaveClipper(
-        //         verticalPosition: VerticalPosition.top,
-        //       ),
-        //       child: Container(
-        //         height: height * 0.31,
-        //         decoration: BoxDecoration(
-        //             gradient: LinearGradient(
-        //           begin: Alignment.topLeft,
-        //           end: Alignment.bottomRight,
-        //           colors: [
-        //             syanColor.withOpacity(0.3),
-        //             Color.fromARGB(255, 176, 205, 210),
-        //           ],
-        //         )),
-        //       ),
-        //     ),
-        //   ),
-        //   title: Text(
-        //     widget.package_id['pkg_name'],
-        //     style: myriadproregular.copyWith(
-        //       fontSize: 18,
-        //       color: Colors.white,
-        //     ),
-        //   ),
-        //   leading: IconButton(
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //     icon: const Icon(Icons.arrow_back, color: white),
-        //     iconSize: 18,
-        //   ),
-        // ),
         body: SingleChildScrollView(
           child: Container(
             child: Stack(
@@ -861,7 +812,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                                 TextInputType.multiline,
                                             minLines: 1,
                                             maxLines: 5,
-                                            maxLength: 500,
+                                            maxLength: 230,
                                             textInputAction:
                                                 TextInputAction.newline,
                                             controller: complaint,
