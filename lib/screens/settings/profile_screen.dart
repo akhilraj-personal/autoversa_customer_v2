@@ -15,8 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 import '../../constant/image_const.dart';
+import '../../provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -73,7 +75,7 @@ class ProfilePageState extends State<ProfilePage> {
           context,
           height: 65,
           title: 'Confirmation',
-          subTitle: 'Are to sure you want to exit ?',
+          subTitle: 'Are you sure you want to exit ?',
           primaryColor: syanColor,
           customCenterWidget: Padding(
             padding: EdgeInsets.only(top: 8),
@@ -105,6 +107,7 @@ class ProfilePageState extends State<ProfilePage> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
+          centerTitle: true,
           flexibleSpace: Container(
             alignment: Alignment.bottomCenter,
             width: width,
@@ -139,24 +142,10 @@ class ProfilePageState extends State<ProfilePage> {
           ),
           title: Text(
             "Settings",
-            style: myriadproregular.copyWith(
+            style: montserratSemiBold.copyWith(
               fontSize: 18,
               color: Colors.white,
             ),
-          ),
-          leading: IconButton(
-            onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) {
-              //       return ProfilePage();
-              //     },
-              //   ),
-              // );
-            },
-            icon: const Icon(Icons.arrow_back, color: Colors.transparent),
-            iconSize: 18,
           ),
         ),
         body: SingleChildScrollView(
@@ -181,23 +170,30 @@ class ProfilePageState extends State<ProfilePage> {
                             borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(10.0),
                                 bottomRight: Radius.circular(16.0)),
-                            child: custdetails['cust_profile_pic'] != null
-                                ? CachedNetworkImage(
-                                    placeholder: (context, url) =>
-                                        Transform.scale(
-                                      scale: 0.5,
-                                      child: CircularProgressIndicator(),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: borderGreyColor),
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10.0),
+                                      bottomRight: Radius.circular(16.0))),
+                              child: custdetails['cust_profile_pic'] != null
+                                  ? CachedNetworkImage(
+                                      placeholder: (context, url) =>
+                                          Transform.scale(
+                                        scale: 0.5,
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                      imageUrl: dotenv.env['aws_url']! +
+                                          custdetails['cust_profile_pic'],
+                                      height: width * 0.35,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.asset(
+                                      ImageConst.default_pro_pic,
+                                      fit: BoxFit.contain,
+                                      height: width * 0.35,
                                     ),
-                                    imageUrl: dotenv.env['aws_url']! +
-                                        custdetails['cust_profile_pic'],
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.asset(
-                                    ImageConst.default_pro_pic,
-                                    fit: BoxFit.contain,
-                                    height: width * 0.35,
-                                  ),
+                            ),
                           ),
                         ),
                         SizedBox(width: 16.0),
@@ -212,6 +208,7 @@ class ProfilePageState extends State<ProfilePage> {
                                       : "",
                                   style: montserratSemiBold.copyWith(
                                       fontSize: 18, color: black)),
+                              SizedBox(height: 4.0),
                               Text(
                                   custdetails['cust_phone'] != null
                                       ? custdetails['cust_country_code'] +
@@ -227,7 +224,7 @@ class ProfilePageState extends State<ProfilePage> {
                                       child: Padding(
                                         padding: EdgeInsets.only(right: 4.0),
                                         child: Icon(Icons.location_on,
-                                            color: black, size: 18),
+                                            color: syanColor, size: 18),
                                       ),
                                     ),
                                     TextSpan(
@@ -239,7 +236,7 @@ class ProfilePageState extends State<ProfilePage> {
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 8.0),
+                              SizedBox(height: 4.0),
                               Row(
                                 children: <Widget>[
                                   Column(
@@ -248,11 +245,12 @@ class ProfilePageState extends State<ProfilePage> {
                                     children: <Widget>[
                                       Text(
                                         vehcount.toString(),
-                                        style: montserratRegular.copyWith(
-                                            color: activecolor),
+                                        style: montserratBold.copyWith(
+                                            color: warningcolor,
+                                            fontSize: width * 0.05),
                                       ),
                                       Text(
-                                        "Vehicles",
+                                        "Vehicle",
                                         style: montserratRegular.copyWith(
                                             color: black),
                                       ),
@@ -270,8 +268,9 @@ class ProfilePageState extends State<ProfilePage> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text("0",
-                                          style: montserratRegular.copyWith(
-                                              color: activecolor)),
+                                          style: montserratBold.copyWith(
+                                              color: syanColor,
+                                              fontSize: width * 0.05)),
                                       Text("Credits",
                                           style: montserratRegular.copyWith(
                                               color: black)),
@@ -330,6 +329,82 @@ class ProfilePageState extends State<ProfilePage> {
                         ),
                       );
                       nameProfile = name;
+                      setState(() {});
+                    }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    lightblueColor,
+                                    syanColor,
+                                  ],
+                                ),
+                              ),
+                              child: Icon(Icons.language,
+                                  color: Colors.white, size: 20),
+                            ),
+                            16.width,
+                            Text("Preferred Language",
+                                style: montserratSemiBold.copyWith(
+                                    fontSize: width * 0.034)),
+                          ],
+                        ).paddingOnly(left: 16),
+                        Icon(Icons.arrow_forward_ios,
+                                color: syanColor, size: 16)
+                            .paddingOnly(right: 16),
+                      ],
+                    ).onTap(() async {
+                      showModalBottomSheet(
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          // <-- SEE HERE
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(25.0),
+                          ),
+                        ),
+                        builder: (context) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.language_outlined),
+                                title: Text('English'),
+                                onTap: () async {
+                                  context
+                                      .read<LanguageChangeProvider>()
+                                      .changeLocale("en");
+                                  Navigator.pop(context);
+                                  setState(() {});
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.language_rounded),
+                                title: Text('عربي'),
+                                onTap: () async {
+                                  context
+                                      .read<LanguageChangeProvider>()
+                                      .changeLocale("ar");
+                                  Navigator.pop(context);
+                                  setState(() {});
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                       setState(() {});
                     }),
                     Row(

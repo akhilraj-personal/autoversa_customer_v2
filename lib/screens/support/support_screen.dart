@@ -67,6 +67,7 @@ class SupportState extends State<Support> {
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
+            centerTitle: true,
             flexibleSpace: Container(
               alignment: Alignment.bottomCenter,
               width: width,
@@ -101,7 +102,7 @@ class SupportState extends State<Support> {
             ),
             title: Text(
               "Support - Chat",
-              style: myriadproregular.copyWith(
+              style: montserratSemiBold.copyWith(
                 fontSize: 18,
                 color: Colors.white,
               ),
