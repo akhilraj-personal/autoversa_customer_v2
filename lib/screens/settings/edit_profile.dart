@@ -248,6 +248,7 @@ class EditprofieState extends State<Editprofie> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
+          centerTitle: true,
           flexibleSpace: Container(
             alignment: Alignment.bottomCenter,
             width: width,
@@ -282,7 +283,7 @@ class EditprofieState extends State<Editprofie> {
           ),
           title: Text(
             "Edit Profile",
-            style: myriadproregular.copyWith(
+            style: montserratSemiBold.copyWith(
               fontSize: 18,
               color: Colors.white,
             ),
