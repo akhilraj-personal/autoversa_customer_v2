@@ -17,6 +17,8 @@ import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../utils/common_utils.dart';
+
 class PackageDetails extends StatefulWidget {
   final Map<String, dynamic> package_id;
   final List<dynamic> custvehlist;
@@ -774,12 +776,20 @@ class PackageDetailsState extends State<PackageDetails> {
                                         )
                                   : Container(
                                       padding: const EdgeInsets.all(15),
-                                      child: Text(serviceMsg,
-                                          maxLines: 10,
-                                          textAlign: TextAlign.center,
-                                          style: montserratRegular.copyWith(
-                                              color: black,
-                                              fontSize: width * 0.034))),
+                                      child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(serviceMsg,
+                                                maxLines: 10,
+                                                textAlign: TextAlign.center,
+                                                style:
+                                                    montserratRegular.copyWith(
+                                                        color: black,
+                                                        fontSize:
+                                                            width * 0.034)),
+                                          ]),
+                                    ),
                               SizedBox(
                                 height: 12,
                               ),
@@ -1159,27 +1169,6 @@ class PackageDetailsState extends State<PackageDetails> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class RadiantGradientMask extends StatelessWidget {
-  final Widget child;
-  RadiantGradientMask({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (bounds) => RadialGradient(
-        center: Alignment.center,
-        radius: 0.5,
-        colors: [
-          lightblueColor,
-          syanColor,
-        ],
-        tileMode: TileMode.mirror,
-      ).createShader(bounds),
-      child: child,
     );
   }
 }
