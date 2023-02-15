@@ -129,6 +129,7 @@ class VehiclelistState extends State<Vehiclelist> {
           child: Scaffold(
               appBar: AppBar(
                 elevation: 0,
+                centerTitle: true,
                 flexibleSpace: Container(
                   alignment: Alignment.bottomCenter,
                   width: width,
@@ -163,7 +164,7 @@ class VehiclelistState extends State<Vehiclelist> {
                 ),
                 title: Text(
                   "Vehicle List",
-                  style: myriadproregular.copyWith(
+                  style: montserratSemiBold.copyWith(
                     fontSize: 18,
                     color: Colors.white,
                   ),
@@ -173,8 +174,8 @@ class VehiclelistState extends State<Vehiclelist> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
-                        iconSize: 18,
+                        icon: const Icon(Icons.arrow_back,
+                            color: Colors.white, size: 20),
                       )
                     : Row(),
               ),

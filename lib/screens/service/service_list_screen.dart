@@ -117,6 +117,7 @@ class ServiceListState extends State<ServiceList> {
           child: Scaffold(
             appBar: AppBar(
               elevation: 0,
+              centerTitle: true,
               flexibleSpace: Container(
                 alignment: Alignment.bottomCenter,
                 width: width,
@@ -151,7 +152,7 @@ class ServiceListState extends State<ServiceList> {
               ),
               title: Text(
                 "Service History",
-                style: myriadproregular.copyWith(
+                style: montserratSemiBold.copyWith(
                   fontSize: 18,
                   color: Colors.white,
                 ),
@@ -161,10 +162,10 @@ class ServiceListState extends State<ServiceList> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      icon: Icon(Icons.arrow_back, color: black),
-                      iconSize: 18,
+                      icon: Icon(Icons.arrow_back,
+                          color: Colors.white, size: width * 0.054),
                     )
-                  : Row(),
+                  : SizedBox(),
             ),
             body: Container(
               child: Column(
