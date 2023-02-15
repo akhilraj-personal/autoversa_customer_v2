@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 
 import '../../constant/image_const.dart';
 import '../../provider/provider.dart';
+import '../../utils/common_utils.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -223,8 +224,10 @@ class ProfilePageState extends State<ProfilePage> {
                                     WidgetSpan(
                                       child: Padding(
                                         padding: EdgeInsets.only(right: 4.0),
-                                        child: Icon(Icons.location_on,
-                                            color: syanColor, size: 18),
+                                        child: RadiantGradientMask(
+                                          child: Icon(Icons.location_on,
+                                              color: syanColor, size: 18),
+                                        ),
                                       ),
                                     ),
                                     TextSpan(
@@ -356,8 +359,7 @@ class ProfilePageState extends State<ProfilePage> {
                             ),
                             16.width,
                             Text("Preferred Language",
-                                style: montserratSemiBold.copyWith(
-                                    fontSize: width * 0.034)),
+                                style: montserratSemiBold.copyWith()),
                           ],
                         ).paddingOnly(left: 16),
                         Icon(Icons.arrow_forward_ios,
