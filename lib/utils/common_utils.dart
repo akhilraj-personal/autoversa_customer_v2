@@ -41,3 +41,24 @@ void showCustomToast(
     toastDuration: Duration(seconds: 4),
   );
 }
+
+class RadiantGradientMask extends StatelessWidget {
+  final Widget child;
+  RadiantGradientMask({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (bounds) => RadialGradient(
+        center: Alignment.center,
+        radius: 0.5,
+        colors: [
+          lightblueColor,
+          syanColor,
+        ],
+        tileMode: TileMode.mirror,
+      ).createShader(bounds),
+      child: child,
+    );
+  }
+}

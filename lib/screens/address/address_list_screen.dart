@@ -103,6 +103,7 @@ class AddressListState extends State<AddressList> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
+          centerTitle: true,
           flexibleSpace: Container(
             alignment: Alignment.bottomCenter,
             width: width,
@@ -137,7 +138,7 @@ class AddressListState extends State<AddressList> {
           ),
           title: Text(
             "Address List",
-            style: myriadproregular.copyWith(
+            style: montserratSemiBold.copyWith(
               fontSize: 18,
               color: Colors.white,
             ),
