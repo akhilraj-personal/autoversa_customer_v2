@@ -1,7 +1,6 @@
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
-import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/bottom_tab/bottomtab.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
@@ -315,7 +314,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
           flexibleSpace: Container(
             alignment: Alignment.bottomCenter,
             width: width,
-            height: height * 0.12,
+            height: height * 0.31,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
