@@ -1975,7 +1975,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                             color:
                                                                                 syanColor,
                                                                             fontSize:
-                                                                                12),
+                                                                                width * 0.026),
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                       )
@@ -2040,7 +2040,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                             color:
                                                                                 syanColor,
                                                                             fontSize:
-                                                                                12),
+                                                                                width * 0.026),
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                       )
@@ -2102,7 +2102,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                             color:
                                                                                 syanColor,
                                                                             fontSize:
-                                                                                12),
+                                                                                width * 0.026),
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                       )
