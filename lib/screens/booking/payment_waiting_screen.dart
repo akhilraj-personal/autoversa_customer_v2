@@ -675,7 +675,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                         Transform.scale(
                                       scale: 0.5,
                                       child: const CircularProgressIndicator(
-                                        color: Colors.blue,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     imageUrl:

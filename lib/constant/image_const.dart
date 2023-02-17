@@ -78,6 +78,7 @@ class ImageConst {
 
   static const setting = baseIconURl + 'setting.png';
   static const adrresslist_logo = baseIconURl + 'address_list_icon.png';
+  static const no_data_found_icon = baseIconURl + 'no_data_found_icon.png';
 }
 
 var height;
