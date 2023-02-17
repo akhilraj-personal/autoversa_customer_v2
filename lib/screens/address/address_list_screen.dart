@@ -240,7 +240,7 @@ class AddressListState extends State<AddressList> {
                           }),
                     )
                   : Expanded(
-                      child: custAddressList.length > 0
+                      child: custAddressList.length == 0
                           ? ListView.builder(
                               scrollDirection: Axis.vertical,
                               padding: EdgeInsets.only(top: 16, bottom: 16),
@@ -460,22 +460,95 @@ class AddressListState extends State<AddressList> {
                                   ],
                                 );
                               })
-                          : Container(
-                              decoration: BoxDecoration(
-                                color: white,
-                              ),
-                              height: context.height(),
-                              child: Stack(
-                                children: [
-                                  Image.asset(
-                                    ImageConst.no_data_found,
-                                    height: MediaQuery.of(context).size.height,
-                                    width: MediaQuery.of(context).size.width,
-                                    fit: BoxFit.fitWidth,
+                          : Stack(
+                              alignment: Alignment.topCenter,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(top: width * 0.31),
+                                  padding: EdgeInsets.all(12),
+                                  height: height * 0.045,
+                                  width: height * 0.37,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            blurRadius: 12,
+                                            color: syanColor.withOpacity(.9),
+                                            spreadRadius: 0,
+                                            blurStyle: BlurStyle.outer,
+                                            offset: Offset(0, 0)),
+                                      ]),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      top: height * 0.02,
+                                      left: width * 0.04,
+                                      right: width * 0.04,
+                                      bottom: width * 1.33),
+                                  decoration: BoxDecoration(
+                                      color: white,
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(8),
+                                                topRight: Radius.circular(8),
+                                                bottomLeft: Radius.circular(8),
+                                                bottomRight:
+                                                    Radius.circular(8)),
+                                          ),
+                                          margin: EdgeInsets.only(
+                                              left: 0, right: 12),
+                                          child: Image.asset(
+                                            ImageConst.no_data_found_icon,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            fit: BoxFit.fill,
+                                          ),
+                                          padding: EdgeInsets.all(width / 30),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Center(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Container(
+                                                    child: Text("NO SAVED ADDRESS",
+                                                        style: montserratSemiBold
+                                                            .copyWith(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.0375,
+                                                                color: Colors
+                                                                    .black)),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ).center(),
+                                ),
+                              ],
+                            ),
                     ),
             ],
           ),

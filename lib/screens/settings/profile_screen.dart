@@ -314,8 +314,7 @@ class ProfilePageState extends State<ProfilePage> {
                             ),
                             16.width,
                             Text("Edit Profile",
-                                style: montserratSemiBold.copyWith(
-                                    fontSize: width * 0.034)),
+                                style: montserratSemiBold.copyWith()),
                           ],
                         ).paddingOnly(left: 16),
                         Icon(Icons.arrow_forward_ios,
