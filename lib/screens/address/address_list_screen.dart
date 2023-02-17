@@ -240,7 +240,7 @@ class AddressListState extends State<AddressList> {
                           }),
                     )
                   : Expanded(
-                      child: custAddressList.length == 0
+                      child: custAddressList.length > 0
                           ? ListView.builder(
                               scrollDirection: Axis.vertical,
                               padding: EdgeInsets.only(top: 16, bottom: 16),
