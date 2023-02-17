@@ -161,7 +161,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
           flexibleSpace: Container(
             alignment: Alignment.bottomCenter,
             width: width,
-            height: height * 0.12,
+            height: height * 0.31,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
