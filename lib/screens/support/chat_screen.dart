@@ -180,19 +180,20 @@ class ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.light,
-        statusBarColor: Colors.white,
+        statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.white,
       ),
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
+            centerTitle: true,
             flexibleSpace: Container(
               alignment: Alignment.bottomCenter,
               width: width,
-              height: height * 0.12,
+              height: height * 0.31,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -221,22 +222,65 @@ class ChatState extends State<Chat> {
                 ),
               ),
             ),
-            title: Row(
-              children: <Widget>[
-                CircleAvatar(
-                    backgroundImage: AssetImage(widget.img!), radius: 16),
-                8.width,
-                Text(widget.name!, style: boldTextStyle()),
-              ],
-            ),
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              iconSize: 18,
+            title: Text(
+              widget.name!,
+              style: montserratSemiBold.copyWith(
+                fontSize: 18,
+                color: Colors.white,
+              ),
             ),
           ),
+
+          // AppBar(
+          //   elevation: 0,
+          //   flexibleSpace: Container(
+          //     alignment: Alignment.bottomCenter,
+          //     width: width,
+          //     height: height * 0.12,
+          //     decoration: BoxDecoration(
+          //       gradient: LinearGradient(
+          //         begin: Alignment.topLeft,
+          //         end: Alignment.bottomRight,
+          //         colors: [
+          //           lightblueColor,
+          //           syanColor,
+          //         ],
+          //       ),
+          //     ),
+          //     child: ClipPath(
+          //       clipper: SinCosineWaveClipper(
+          //         verticalPosition: VerticalPosition.top,
+          //       ),
+          //       child: Container(
+          //         height: height * 0.31,
+          //         decoration: BoxDecoration(
+          //             gradient: LinearGradient(
+          //           begin: Alignment.topLeft,
+          //           end: Alignment.bottomRight,
+          //           colors: [
+          //             syanColor.withOpacity(0.3),
+          //             Color.fromARGB(255, 176, 205, 210),
+          //           ],
+          //         )),
+          //       ),
+          //     ),
+          //   ),
+          //   title: Row(
+          //     children: <Widget>[
+          //       CircleAvatar(
+          //           backgroundImage: AssetImage(widget.img!), radius: 16),
+          //       8.width,
+          //       Text(widget.name!, style: boldTextStyle()),
+          //     ],
+          //   ),
+          //   leading: IconButton(
+          //     onPressed: () {
+          //       Navigator.pop(context);
+          //     },
+          //     icon: const Icon(Icons.arrow_back, color: Colors.white),
+          //     iconSize: 18,
+          //   ),
+          // ),
           body: Stack(
             children: [
               Container(

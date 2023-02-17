@@ -230,7 +230,7 @@ class WorkcardState extends State<Workcard> {
           colors: PaymentSheetAppearanceColors(
               background: Colors.white,
               primary: Color(0xff31BBAC),
-              componentBorder: Colors.blue,
+              componentBorder: Color(0xff3186AC),
               primaryText: Colors.black,
               secondaryText: Colors.black,
               componentBackground: Colors.white,
@@ -240,7 +240,7 @@ class WorkcardState extends State<Workcard> {
           shapes: PaymentSheetShape(
             borderWidth: 4,
             borderRadius: 10.00,
-            shadow: PaymentSheetShadowParams(color: Colors.blue),
+            shadow: PaymentSheetShadowParams(color: Color(0xff31BBAC)),
           ),
           primaryButton: PaymentSheetPrimaryButtonAppearance(
             shapes: PaymentSheetPrimaryButtonShape(blurRadius: 8),
@@ -248,7 +248,7 @@ class WorkcardState extends State<Workcard> {
               light: PaymentSheetPrimaryButtonThemeColors(
                 background: Color(0xff31BBAC),
                 text: Colors.white,
-                border: Color.fromARGB(255, 30, 170, 235),
+                border: Color(0xff31BBAC),
               ),
             ),
           ),
@@ -378,9 +378,7 @@ class WorkcardState extends State<Workcard> {
                               left: 12.0,
                             ),
                             child: Text(
-                              widget.click_id == 1
-                                  ? "Work Card"
-                                  : "Pending Payment",
+                              widget.click_id == 1 ? "" : "Pending Payment",
                               style: montserratSemiBold.copyWith(
                                   fontSize: 16,
                                   color: widget.click_id == 1 ? black : black),
