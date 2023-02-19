@@ -677,13 +677,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               onTap: () {
                                                                                 if (bookingList[index]['st_code'] == "BAPC") {
                                                                                   if (DateTime.now().isBefore(DateTime.tryParse(bookingList[index]['bk_booking_date'])!)) {
-                                                                                    Navigator.push(
-                                                                                        context,
-                                                                                        MaterialPageRoute(
-                                                                                            builder: (context) => PaymentWaitingScreen(
-                                                                                                  bk_data: bookingList[index],
-                                                                                                  custvehlist: customerVehList,
-                                                                                                )));
+                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh)));
                                                                                   } else {
                                                                                     Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh)));
                                                                                   }
