@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
@@ -7,6 +8,7 @@ import 'package:autoversa/screens/booking/inspection_screen.dart';
 import 'package:autoversa/screens/booking/reschedule_from_booking_screen.dart';
 import 'package:autoversa/screens/booking/schedule_drop_screen.dart';
 import 'package:autoversa/screens/booking/workcard_screen.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -45,7 +47,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
   var cust_status_id;
   var back_status_id;
   late List statusflow = [];
-  bool isoffline = false;
   var CurrentDate;
   bool issubmitted = false;
   final _formKey = GlobalKey<FormState>();
@@ -64,10 +65,31 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
   var holdedby;
   List<Map<String, dynamic>> temppendingjobs = [];
   DateTime selectedDate = DateTime.now();
+  bool isoffline = false;
+  StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     getBookingDetailsID();
     init();
   }
@@ -77,6 +99,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
   @override
   void dispose() {
     super.dispose();
+    internetconnection!.cancel();
   }
 
   timeFormatter(date_data) {

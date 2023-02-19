@@ -53,6 +53,7 @@ dependencies:
   socket_io_client: ^2.0.0
   video_player: ^2.4.10
   flutter_stripe: ^7.0.0
+  camera: ^0.10.3
 
 
 dev_dependencies:

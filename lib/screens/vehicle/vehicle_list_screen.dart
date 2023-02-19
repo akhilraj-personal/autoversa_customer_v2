@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/model/model.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/vehicle/vehicle_add_page.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -24,10 +27,30 @@ class VehiclelistState extends State<Vehiclelist> {
   late List<VehicleModel> custvehlist = [];
   bool isActive = true;
   bool isoffline = false;
+  StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     Future.delayed(Duration.zero, () {
       _getCustomerVehicles();
     });
@@ -94,6 +117,7 @@ class VehiclelistState extends State<Vehiclelist> {
   @override
   void dispose() {
     super.dispose();
+    internetconnection!.cancel();
   }
 
   Future<bool> _onWillPop() async {

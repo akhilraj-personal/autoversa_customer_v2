@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,9 +19,30 @@ class ImageFullscreen extends StatefulWidget {
 }
 
 class ImageFullscreenState extends State<ImageFullscreen> {
+  bool isoffline = false;
+  StreamSubscription? internetconnection;
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     init();
   }
 
@@ -26,6 +51,11 @@ class ImageFullscreenState extends State<ImageFullscreen> {
   @override
   void setState(fn) {
     if (mounted) super.setState(fn);
+  }
+
+  void dispose() {
+    super.dispose();
+    internetconnection!.cancel();
   }
 
   @override
