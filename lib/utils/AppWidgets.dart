@@ -1,3 +1,4 @@
+import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -111,4 +112,70 @@ class ChatMessageWidget extends StatelessWidget {
       ],
     );
   }
+}
+
+BoxConstraints dynamicBoxConstraints({double? maxWidth}) {
+  return BoxConstraints(maxWidth: maxWidth ?? 500.0);
+}
+
+Widget errorWidget(
+    BuildContext context, String image, String title, String desc,
+    {bool showRetry = false, Function? onRetry}) {
+  return Container(
+    constraints: dynamicBoxConstraints(),
+    height: height,
+    color: white,
+    child: Stack(
+      children: [
+        Image.asset(
+          image,
+          height: height,
+          width: width,
+          fit: BoxFit.fitWidth,
+        ),
+        Positioned(
+          bottom: 50,
+          left: 20,
+          right: 20,
+          child: Container(
+            decoration:
+                boxDecorationRoundedWithShadow(8, backgroundColor: white),
+            padding: EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(title,
+                    style: montserratSemiBold.copyWith(fontSize: width * 0.04)),
+                4.height,
+                Text(desc,
+                        style:
+                            montserratRegular.copyWith(fontSize: width * 0.03),
+                        textAlign: TextAlign.center)
+                    .paddingOnly(left: 20, right: 20),
+                Column(
+                  children: [
+                    30.height,
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        primary: white,
+                      ),
+                      onPressed: () {
+                        onRetry!();
+                      },
+                      child: Text('RETRY',
+                          style: montserratRegular.copyWith(color: black)),
+                    )
+                  ],
+                ).visible(showRetry),
+              ],
+            ),
+          ),
+        )
+      ],
+    ),
+  ).center();
 }

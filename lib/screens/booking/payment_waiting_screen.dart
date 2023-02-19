@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -27,7 +29,6 @@ class PaymentWaitingScreen extends StatefulWidget {
 }
 
 class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
-  bool isoffline = false;
   bool isproceeding = false;
   late Map<String, dynamic> bookingdetails = {};
   late Map<String, dynamic> dropdetails = {};
@@ -42,10 +43,31 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
   final _formKey = GlobalKey<FormState>();
   FocusNode cancelFocus = FocusNode();
   var cancel = "";
+  bool isoffline = false;
+  StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     init();
     Future.delayed(Duration.zero, () {
       getBookingDetailsID();
@@ -360,6 +382,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
   @override
   void dispose() {
     super.dispose();
+    internetconnection!.cancel();
   }
 
   createBooking() async {
@@ -1120,8 +1143,10 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight,
                                             colors: [
-                                              syanColor,
-                                              lightblueColor,
+                                              white,
+                                              white,
+                                              white,
+                                              white,
                                             ],
                                           ),
                                         ),

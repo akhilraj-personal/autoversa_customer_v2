@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/model/model.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/package_screens/schedule_screen.dart';
 import 'package:autoversa/screens/package_screens/sound_player_screen.dart';
 import 'package:autoversa/screens/package_screens/sound_recorder_screen.dart';
@@ -58,6 +60,7 @@ class CarRepairState extends State<CarRepair> {
   double totalCost = 0;
   TextEditingController complaint = new TextEditingController();
   bool isoffline = false;
+  StreamSubscription? internetconnection;
   bool isServicing = true;
   String serviceMsg = '';
   bool recordPending = false;
@@ -68,6 +71,25 @@ class CarRepairState extends State<CarRepair> {
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     init();
     Future.delayed(Duration.zero, () {
       _getpackageinfo();
@@ -268,6 +290,7 @@ class CarRepairState extends State<CarRepair> {
   @override
   void dispose() {
     super.dispose();
+    internetconnection!.cancel();
     recorder.dispose();
     player.dispose();
     totalCost = 0;

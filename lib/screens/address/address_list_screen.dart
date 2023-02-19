@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/screens/address/address_add_screen.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -24,11 +27,31 @@ class AddressListState extends State<AddressList> {
   List<String?> SelectAddressList = <String?>["Select Address"];
   List<String?> SelectCityList = <String?>["Select City"];
   bool isoffline = false;
+  StreamSubscription? internetconnection;
   bool isActive = true;
 
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     Future.delayed(Duration.zero, () {
       addressList();
     });
@@ -42,6 +65,7 @@ class AddressListState extends State<AddressList> {
   @override
   void dispose() {
     super.dispose();
+    internetconnection!.cancel();
   }
 
   addressList() async {

@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
 import 'package:autoversa/screens/booking/payment_waiting_screen.dart';
 import 'package:autoversa/screens/booking/reschedule_screen.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
 import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
+import 'package:autoversa/screens/tryout_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String currency = "";
   int selectedVeh = 0;
   bool noofvehicle = false;
+  StreamSubscription? internetconnection;
+  bool isoffline = false;
 
   bool isBookingLoaded = false,
       isVehicleLoaded = false,
@@ -57,6 +63,25 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     Future.delayed(Duration.zero, () {
       _getCustomerVehicles();
       _getPackages();
@@ -72,39 +97,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    internetconnection!.cancel();
     super.dispose();
   }
 
-  redirectPackage(pack_details, pack_typ, currency, noofvehicle) {
-    if (noofvehicle) {
-      if (pack_typ == "1") {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PackageDetails(
-                      package_id: pack_details,
-                      custvehlist: customerVehList,
-                      currency: currency,
-                      selectedVeh: selectedVeh,
-                      booking_list: bookingList,
-                      pack_type: 1,
-                    )));
-      } else if (pack_typ == "2") {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CarRepair(
-                      package_id: pack_details,
-                      custvehlist: customerVehList,
-                      currency: currency,
-                      selectedVeh: selectedVeh,
-                      booking_list: bookingList,
-                      pack_type: 2,
-                    )));
-      }
-    } else {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => VehicleAddPage()));
+  _getPackages() async {
+    try {
+      Map req = {};
+      await getPackages(req).then((value) {
+        if (value['ret_data'] == "success") {
+          setState(() {
+            packageList = value['package_list'];
+            currency = value['currency']['cy_code'];
+            isPackageLoaded = true;
+          });
+        }
+      });
+    } catch (e) {
+      isPackageLoaded = false;
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: white);
     }
   }
 
@@ -113,7 +125,15 @@ class _HomeScreenState extends State<HomeScreen> {
     Map req = {"custId": prefs.getString("cust_id")};
     await getCustomerVehicles(req).then((value) {
       if (value['ret_data'] == "success") {
-        noofvehicle = true;
+        if (value['vehList'].length == 0) {
+          setState(() {
+            noofvehicle = false;
+          });
+        } else {
+          setState(() {
+            noofvehicle = true;
+          });
+        }
         setState(() {
           customerVehList = value['vehList'];
           isVehicleLoaded = true;
@@ -153,28 +173,42 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  redirectPackage(pack_details, pack_typ, currency, noofvehicle) {
+    if (noofvehicle) {
+      if (pack_typ == "1") {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PackageDetails(
+                      package_id: pack_details,
+                      custvehlist: customerVehList,
+                      currency: currency,
+                      selectedVeh: selectedVeh,
+                      booking_list: bookingList,
+                      pack_type: 1,
+                    )));
+      } else if (pack_typ == "2") {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CarRepair(
+                      package_id: pack_details,
+                      custvehlist: customerVehList,
+                      currency: currency,
+                      selectedVeh: selectedVeh,
+                      booking_list: bookingList,
+                      pack_type: 2,
+                    )));
+      }
+    } else {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => VehicleAddPage()));
+    }
+  }
+
   Future refresh() async {
     _getCustomerBookingList();
     setState(() {});
-  }
-
-  _getPackages() async {
-    try {
-      Map req = {};
-      await getPackages(req).then((value) {
-        if (value['ret_data'] == "success") {
-          setState(() {
-            packageList = value['package_list'];
-            currency = value['currency']['cy_code'];
-            isPackageLoaded = true;
-          });
-        }
-      });
-    } catch (e) {
-      isPackageLoaded = false;
-      showCustomToast(context, ST.of(context).toast_application_error,
-          bgColor: errorcolor, textColor: white);
-    }
   }
 
   Future<void> init() async {
@@ -204,8 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onAccept: (v) {
             Navigator.of(context).pop(true);
           },
-        )
-        ) ??
+        )) ??
         false;
   }
 
@@ -302,11 +335,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         children: [
                                           GestureDetector(
                                             onTap: () {
-                                              // Navigator.push(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //         builder: (context) =>
-                                              //             NextPage()));
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Tryout()));
                                             },
                                             child: Image.asset(
                                               ImageConst.person,
@@ -1592,10 +1625,10 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
-          // onTap: () {
-          //   Navigator.push(
-          //       context, MaterialPageRoute(builder: (context) => NextPage()));
-          // },
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Tryout()));
+          },
           child: Container(
             padding: EdgeInsets.all(height * 0.023),
             decoration: BoxDecoration(

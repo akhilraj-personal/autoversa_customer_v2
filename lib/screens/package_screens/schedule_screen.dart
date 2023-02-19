@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/package_screens/summery_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/AppWidgets.dart';
@@ -89,9 +90,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   bool isExpanded = false;
   bool issubmitted = false;
   bool isproceeding = false;
-  bool isoffline = false;
   FocusNode addressFocus = FocusNode();
   FocusNode landmarkFocusNode = FocusNode();
+  bool isoffline = false;
+  StreamSubscription? internetconnection;
 
   final GlobalKey<FormFieldState> pick_city = GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> pick_area = GlobalKey<FormFieldState>();
@@ -109,6 +111,25 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     init();
     Future.delayed(Duration.zero, () {
       _setdatas();
@@ -395,6 +416,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   @override
   void dispose() {
     super.dispose();
+    internetconnection!.cancel();
   }
 
   getTimeSlots(pickdate) async {

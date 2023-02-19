@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/service/service_details_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -25,11 +28,31 @@ class NotificationPage extends StatefulWidget {
 class NotificationPageState extends State<NotificationPage> {
   late List<NotificationModel> notificationList = [];
   bool isoffline = false;
+  StreamSubscription? internetconnection;
   bool isActive = true;
 
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     init();
     Future.delayed(Duration.zero, () {
       _getNotificationList();
@@ -86,6 +109,7 @@ class NotificationPageState extends State<NotificationPage> {
   @override
   void dispose() {
     super.dispose();
+    internetconnection!.cancel();
   }
 
   clearNotification() async {
@@ -154,8 +178,8 @@ class NotificationPageState extends State<NotificationPage> {
           ),
           title: Text(
             "Notification",
-            style: myriadproregular.copyWith(
-              fontSize: 18,
+            style: montserratRegular.copyWith(
+              fontSize: width * 0.044,
               color: Colors.white,
             ),
           ),
