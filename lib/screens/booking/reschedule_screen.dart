@@ -36,8 +36,9 @@ class RescheduleScreen extends StatefulWidget {
 }
 
 class RescheduleScreenState extends State<RescheduleScreen> {
-  var package_price = "0";
+  late double package_price = 0.0;
   late List custAddressList = [];
+
   late List citylist = [];
   late List areaList = [];
   late List pickup_options = [];
@@ -181,7 +182,9 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     : (widget.currency + " " + tempCost)
                 : message,
         "pk_cost_value": int.parse(tempCost) < int.parse(ptemp['pk_min_cost'])
-            ? (ptemp['pk_min_cost'])
+            ? ptemp['pk_freeFlag'] == "1"
+                ? '0'
+                : (ptemp['pk_min_cost'])
             : tempCost
       };
       pickup_options.add(temp);
@@ -376,7 +379,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
         selected_address = address_index;
         selected_drop_address = 0;
       } else {
-        if (type == 'p') {
+        if (type == 'p' && isLocationCheck) {
           selected_address = SelectAddressList.length - 1;
           selected_drop_address = temp_drop_address;
           pickupaddresschange(SelectAddressList.length - 1);
@@ -925,11 +928,6 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                         selectedveh: widget.selectedVeh,
                         currency: widget.currency)));
             setState(() => isproceeding = false);
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) =>
-            //             AMPaymentWaitingScreen(bk_id: widget.bk_id)));
           } else {
             setState(() => isproceeding = false);
             showCustomToast(context, "Choose a time slot",
@@ -950,65 +948,131 @@ class RescheduleScreenState extends State<RescheduleScreen> {
         systemNavigationBarColor: Colors.white,
       ),
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          flexibleSpace: Container(
-            alignment: Alignment.bottomCenter,
-            width: width,
-            height: height * 0.12,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  lightblueColor,
-                  syanColor,
-                ],
-              ),
-            ),
-            child: ClipPath(
-              clipper: SinCosineWaveClipper(
-                verticalPosition: VerticalPosition.top,
-              ),
-              child: Container(
-                height: height * 0.31,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    syanColor.withOpacity(0.3),
-                    Color.fromARGB(255, 176, 205, 210),
-                  ],
-                )),
-              ),
-            ),
-          ),
-          title: Text(
-            booking_package['pkg_name'] != null
-                ? booking_package['pkg_name']
-                : "Schedule Page",
-            style: myriadproregular.copyWith(
-              fontSize: 18,
-              color: Colors.white,
-            ),
-          ),
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            iconSize: 18,
-          ),
-        ),
+        // appBar: AppBar(
+        //   elevation: 0,
+        //   flexibleSpace: Container(
+        //     alignment: Alignment.bottomCenter,
+        //     width: width,
+        //     height: height * 0.12,
+        //     decoration: BoxDecoration(
+        //       gradient: LinearGradient(
+        //         begin: Alignment.topLeft,
+        //         end: Alignment.bottomRight,
+        //         colors: [
+        //           lightblueColor,
+        //           syanColor,
+        //         ],
+        //       ),
+        //     ),
+        //     child: ClipPath(
+        //       clipper: SinCosineWaveClipper(
+        //         verticalPosition: VerticalPosition.top,
+        //       ),
+        //       child: Container(
+        //         height: height * 0.31,
+        //         decoration: BoxDecoration(
+        //             gradient: LinearGradient(
+        //           begin: Alignment.topLeft,
+        //           end: Alignment.bottomRight,
+        //           colors: [
+        //             syanColor.withOpacity(0.3),
+        //             Color.fromARGB(255, 176, 205, 210),
+        //           ],
+        //         )),
+        //       ),
+        //     ),
+        //   ),
+        //   title: Text(
+        //     booking_package['pkg_name'] != null
+        //         ? booking_package['pkg_name']
+        //         : "Schedule Page",
+        //     style: myriadproregular.copyWith(
+        //       fontSize: 18,
+        //       color: Colors.white,
+        //     ),
+        //   ),
+        //   leading: IconButton(
+        //     onPressed: () {
+        //       Navigator.pop(context);
+        //     },
+        //     icon: const Icon(Icons.arrow_back, color: Colors.white),
+        //     iconSize: 18,
+        //   ),
+        // ),
         body: SingleChildScrollView(
           child: Container(
             child: Stack(
               children: [
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  width: width,
+                  height: height * 0.2,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        lightblueColor,
+                        syanColor,
+                      ],
+                    ),
+                  ),
+                  child:
+                      ////--------------- ClipPath for curv----------
+                      ClipPath(
+                    clipper: SinCosineWaveClipper(
+                      verticalPosition: VerticalPosition.top,
+                    ),
+                    child: Container(
+                      height: height * 0.1,
+                      // padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          syanColor.withOpacity(0.3),
+                          Color.fromARGB(255, 176, 205, 210),
+                        ],
+                      )),
+                    ),
+                  ),
+                ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      margin: EdgeInsets.fromLTRB(
+                          16.5, height * 0.07, height * 0.07, 16.5),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                              size: width * 0.054,
+                            ),
+                          ),
+                          SizedBox(width: width * 0.08),
+                          Text(
+                            booking_package['pkg_name'] != null
+                                ? booking_package['pkg_name']
+                                : "Schedule Page",
+                            style: montserratRegular.copyWith(
+                              fontSize: width * 0.044,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Stack(
                       alignment: Alignment.bottomCenter,
                       children: [
@@ -1121,14 +1185,14 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                       ],
                     ),
                     Container(
-                      margin: EdgeInsets.only(right: 16.0),
+                      margin: EdgeInsets.only(right: 16.0, left: 16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            " ",
+                            "Pickup & Drop",
                             style: montserratSemiBold.copyWith(
-                                color: black, fontSize: width * 0.04),
+                                color: black, fontSize: width * 0.034),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -1159,11 +1223,13 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                   temp['state_longitude'])),
                                           zoom: 13.4746,
                                         );
+                                        setBottomState(() {});
                                         final GoogleMapController controller =
                                             await _controller.future;
                                         controller.moveCamera(
                                             CameraUpdate.newCameraPosition(
                                                 _kLake));
+                                        setBottomState(() {});
                                         setBottomState(() {
                                           Statelat = temp['state_lattitude'];
                                           Statelong = temp['state_longitude'];
@@ -1175,8 +1241,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                         SelectAreaList.length = 1;
                                         await getCityList(state).then((value) {
                                           if (value['ret_data'] == "success") {
-                                            Navigator.pop(context);
-                                            setState(() {
+                                            setBottomState(() {
                                               areaList = [];
                                               SelectAreaList = <String?>[
                                                 "Select Area"
@@ -1650,7 +1715,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                           },
                                                                         ),
                                                                         Text(
-                                                                          "Address",
+                                                                          "Set as default address",
                                                                           textAlign:
                                                                               TextAlign.start,
                                                                           overflow:
@@ -1736,8 +1801,9 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                                   ];
                                                                                 });
                                                                                 setState(() {});
-                                                                                _fetchdatas(1, 'd');
+                                                                                _fetchdatas(1, 'p');
                                                                                 setState(() => isgooglemap = false);
+                                                                                setState(() => issubmitted = false);
                                                                               } else {
                                                                                 setState(() => issubmitted = false);
                                                                               }

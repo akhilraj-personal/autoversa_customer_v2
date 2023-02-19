@@ -541,8 +541,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         packdata['selected_timeslot'] = selected_timeslot;
         prefs.setString("booking_data", json.encode(packdata));
         pickupoption = "";
-        print("send data1 =====>");
-        print(packdata);
         setState(() => isproceeding = false);
         Navigator.push(
             context,
@@ -589,8 +587,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             packdata['selected_timeid'] = selected_timeid;
             packdata['selected_timeslot'] = selected_timeslot;
             prefs.setString("booking_data", json.encode(packdata));
-            print("send data2 =====>");
-            print(packdata);
             pickupoption = "";
             setState(() => isproceeding = false);
             Navigator.push(
