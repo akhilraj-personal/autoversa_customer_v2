@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/address/address_list_screen.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/service/service_list_screen.dart';
 import 'package:autoversa/screens/settings/edit_profile.dart';
 import 'package:autoversa/screens/support/support_screen.dart';
@@ -32,10 +34,31 @@ class ProfilePageState extends State<ProfilePage> {
   late Map<String, dynamic> custdetails = {};
   var vehcount = 0;
   String? nameProfile;
+  bool isoffline = false;
+  StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     init();
     getProfileDetails();
   }
@@ -69,6 +92,12 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void setState(fn) {
     if (mounted) super.setState(fn);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    internetconnection!.cancel();
   }
 
   Future<bool> _onWillPop() async {

@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
-import 'package:autoversa/screens/package_screens/package_details_screen.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/AppWidgets.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -26,7 +27,6 @@ class ReschedulefromBooking extends StatefulWidget {
 }
 
 class ReschedulefromBookingState extends State<ReschedulefromBooking> {
-  bool isoffline = false;
   late Map<String, dynamic> bookingdetails = {};
   late Map<String, dynamic> dropdetails = {};
   DateTime selectedDate = DateTime.now();
@@ -37,10 +37,31 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
   var isTimeCheck;
   var selected_timeid = 0;
   bool isproceeding = false;
+  bool isoffline = false;
+  StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     getBookingDetailsID();
     _fetchdatas();
     init();
@@ -69,6 +90,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
   @override
   void dispose() {
     super.dispose();
+    internetconnection!.cancel();
   }
 
   timeFormatter(date_data) {
