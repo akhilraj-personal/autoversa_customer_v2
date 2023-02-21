@@ -1,14 +1,18 @@
+import 'dart:async';
+
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/provider/provider.dart';
 import 'package:autoversa/screens/bottom_tab/bottomtab.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/services/pre_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -42,10 +46,31 @@ class SignupViaGmailState extends State<SignupViaGmail> {
   bool isLoading = false;
   bool isVerifiedClicked = false;
   bool isVerifymeActive = true;
+  bool isoffline = false;
+  StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     init();
     Future.delayed(Duration.zero, () {
       _getStateList();
@@ -61,6 +86,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
   @override
   void dispose() {
     super.dispose();
+    internetconnection!.cancel();
   }
 
   _getStateList() async {

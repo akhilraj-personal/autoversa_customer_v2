@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/package_screens/schedule_screen.dart';
 import 'package:autoversa/screens/package_screens/sound_player_screen.dart';
 import 'package:autoversa/screens/package_screens/sound_recorder_screen.dart';
@@ -51,16 +53,35 @@ class PackageDetailsState extends State<PackageDetails> {
   late Map<String, dynamic> packageinfo;
   double totalCost = 0.0;
   bool isbooked = false;
-  bool isoffline = false;
   bool isServicing = true;
   String serviceMsg = '';
   bool recordPending = false;
-
+  StreamSubscription? internetconnection;
+  bool isoffline = false;
   TextEditingController complaint = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     init();
     Future.delayed(Duration.zero, () {
       _getpackageinfo();
@@ -208,6 +229,7 @@ class PackageDetailsState extends State<PackageDetails> {
   @override
   void dispose() {
     super.dispose();
+    internetconnection!.cancel();
     recorder.dispose();
     player.dispose();
     optionList = [];

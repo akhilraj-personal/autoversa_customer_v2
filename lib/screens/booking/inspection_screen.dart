@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/screens/booking/image_full_screen.dart';
 import 'package:autoversa/screens/booking/image_size_widget.dart';
 import 'package:autoversa/screens/booking/inspection_image_screen.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -54,10 +57,30 @@ class InspectionScreenState extends State<InspectionScreen>
   var vehiclevideourl;
   var carcontentlist = [];
   bool isoffline = false;
+  StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     Future.delayed(Duration.zero, () {
       _getInspectionDetailsList();
     });
@@ -81,6 +104,7 @@ class InspectionScreenState extends State<InspectionScreen>
   void dispose() {
     _controller.dispose();
     super.dispose();
+    internetconnection!.cancel();
   }
 
   _getInspectionDetailsList() async {

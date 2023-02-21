@@ -4,6 +4,7 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/screens/address/address_list_screen.dart';
+import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -40,16 +41,36 @@ class AddressAddState extends State<AddressAdd> {
       CameraPosition(target: LatLng(24.3547, 54.5020), zoom: 13);
   Completer<GoogleMapController> _controller = Completer();
   bool issubmitted = false;
-  bool isoffline = false;
   final _formKey = GlobalKey<FormState>();
   List<Marker> myMarker = [];
   FocusNode addressFocus = FocusNode();
   FocusNode flatnoFocus = FocusNode();
   final GlobalKey<FormFieldState> areaKey = GlobalKey<FormFieldState>();
+  bool isoffline = false;
+  StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
+    internetconnection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          isoffline = true;
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NoInternetScreen()));
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        setState(() {
+          isoffline = false;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
     Future.delayed(Duration.zero, () {
       _fetchdatas(0);
       getcitylist(0);
@@ -64,6 +85,7 @@ class AddressAddState extends State<AddressAdd> {
   @override
   void dispose() {
     super.dispose();
+    internetconnection!.cancel();
   }
 
   _fetchdatas(address_index) async {
