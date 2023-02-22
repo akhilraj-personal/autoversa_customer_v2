@@ -131,6 +131,16 @@ class ST {
     );
   }
 
+  /// `OTP Send. Try again in`
+  String get otp_resend_try {
+    return Intl.message(
+      'OTP Send. Try again in',
+      name: 'otp_resend_try',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Resend OTP`
   String get resend_otp_text {
     return Intl.message(

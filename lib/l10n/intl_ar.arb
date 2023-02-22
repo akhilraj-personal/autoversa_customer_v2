@@ -7,6 +7,7 @@
   "otp_send_text": "أدخل OTP صالح",
   "verify_me": "تحقق عني",
   "seconds_text": "ثانيا",
+  "otp_resend_try":"إرسال OTP. حاول مرة أخرى في",
   "resend_otp_text": "إعادة إرسال OTP",
   "verify_call_text": "تحقق عبر المكالمة",
   "otp_invalid_text": "الرجاء إدخال OTP صالح",
