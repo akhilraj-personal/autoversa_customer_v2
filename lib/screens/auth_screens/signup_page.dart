@@ -11,6 +11,7 @@ import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -229,7 +230,7 @@ class SignupPageState extends State<SignupPage> {
                           Text(
                             ST.of(context).register_new_account,
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: 21),
+                                color: blackColor, fontSize: width * 0.05),
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: height * 0.03),
@@ -260,23 +261,74 @@ class SignupPageState extends State<SignupPage> {
                                   children: <Widget>[
                                     Expanded(
                                       child: Container(
-                                        padding: EdgeInsets.only(
-                                          left: width * 0.025,
-                                          right: width * 0.025,
-                                        ),
-                                        child: DropdownButtonFormField(
+                                        // padding: EdgeInsets.only(
+                                        //     left: width * 0.035),
+                                        child: DropdownButtonFormField2(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          decoration: InputDecoration(
+                                            //Add isDense true and zero Padding.
+                                            //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                            isDense: true,
+                                            contentPadding: EdgeInsets.zero,
+                                            focusedBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            focusedErrorBorder:
+                                                OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color: const Color(0xfffff),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            errorStyle: TextStyle(
+                                              fontSize: 12,
+                                              color: warningcolor,
+                                            ),
+                                            //Add more decoration as you want here
+                                            //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                          ),
                                           isExpanded: true,
-                                          decoration: InputDecoration.collapsed(
-                                              hintText: ''),
-                                          hint: Align(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                ST.of(context).emirates,
-                                                style:
-                                                    montserratRegular.copyWith(
-                                                        color: blackColor,
-                                                        fontSize: 14),
-                                              )),
+                                          hint: Text(
+                                            ST.of(context).emirates,
+                                            style: montserratRegular.copyWith(
+                                                color: blackColor,
+                                                fontSize: width * 0.034),
+                                          ),
+                                          alignment: Alignment.center,
+                                          buttonHeight: height * 0.075,
+                                          buttonPadding: const EdgeInsets.only(
+                                              left: 20, right: 10),
+                                          dropdownDecoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
                                           items: data
                                               .map((item) => DropdownMenuItem(
                                                   child: Align(
@@ -288,7 +340,9 @@ class SignupPageState extends State<SignupPage> {
                                                             .copyWith(
                                                                 color:
                                                                     blackColor,
-                                                                fontSize: 12),
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034),
                                                       )),
                                                   value: item['state_id']
                                                       .toString()))
@@ -303,6 +357,48 @@ class SignupPageState extends State<SignupPage> {
                                             emirates = value.toString();
                                           },
                                         ),
+                                        //     DropdownButtonFormField(
+                                        //   isExpanded: true,
+                                        //   decoration: InputDecoration.collapsed(
+                                        //       hintText: ''),
+                                        //   hint: Align(
+                                        //       alignment: Alignment.center,
+                                        //       child: Text(
+                                        //         ST.of(context).emirates,
+                                        //         style:
+                                        //             montserratRegular.copyWith(
+                                        //                 color: greyColor,
+                                        //                 fontSize:
+                                        //                     width * 0.034),
+                                        //       )),
+                                        //   items: data
+                                        //       .map((item) => DropdownMenuItem(
+                                        //           child: Align(
+                                        //               alignment:
+                                        //                   Alignment.center,
+                                        //               child: Text(
+                                        //                 item['state_name'],
+                                        //                 style: montserratLight
+                                        //                     .copyWith(
+                                        //                         color:
+                                        //                             blackColor,
+                                        //                         fontSize:
+                                        //                             width *
+                                        //                                 0.034),
+                                        //               )),
+                                        //           value: item['state_id']
+                                        //               .toString()))
+                                        //       .toList(),
+                                        //   validator: (value) {
+                                        //     if (value == null) {
+                                        //       return emirateValidation(
+                                        //           value, context);
+                                        //     }
+                                        //   },
+                                        //   onChanged: (value) {
+                                        //     emirates = value.toString();
+                                        //   },
+                                        // ),
                                       ),
                                     ),
                                   ],
@@ -340,8 +436,10 @@ class SignupPageState extends State<SignupPage> {
                                             right: width * 0.025,
                                             left: width * 0.025),
                                         child: TextFormField(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
                                           textCapitalization:
-                                              TextCapitalization.characters,
+                                              TextCapitalization.words,
                                           controller: userNameController,
                                           keyboardType: TextInputType.text,
                                           textAlign: TextAlign.center,
@@ -354,12 +452,17 @@ class SignupPageState extends State<SignupPage> {
                                                   color: warningcolor),
                                               counterText: "",
                                               filled: true,
-                                              hintText:
-                                                  ST.of(context).full_name,
+                                              hintText: ST
+                                                  .of(context)
+                                                  .full_name,
                                               hintStyle:
                                                   montserratRegular.copyWith(
-                                                      color: blackColor,
-                                                      fontSize: 14),
+                                                      color: userNameFocus
+                                                              .hasFocus
+                                                          ? greyColor
+                                                              .withOpacity(0.6)
+                                                          : blackColor,
+                                                      fontSize: width * 0.034),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
                                           focusNode: userNameFocus,
@@ -409,13 +512,16 @@ class SignupPageState extends State<SignupPage> {
                                             right: width * 0.025,
                                             left: width * 0.025),
                                         child: TextFormField(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
                                           controller: emailController,
                                           keyboardType:
                                               TextInputType.emailAddress,
                                           textAlign: TextAlign.center,
                                           maxLength: 80,
                                           style: montserratLight.copyWith(
-                                              color: blackColor, fontSize: 14),
+                                              color: blackColor,
+                                              fontSize: width * 0.034),
                                           decoration: InputDecoration(
                                               errorStyle: TextStyle(
                                                   fontSize: 12,
@@ -425,8 +531,11 @@ class SignupPageState extends State<SignupPage> {
                                               hintText: ST.of(context).email,
                                               hintStyle:
                                                   montserratRegular.copyWith(
-                                                      color: blackColor,
-                                                      fontSize: 14),
+                                                      color: emailFocus.hasFocus
+                                                          ? greyColor
+                                                              .withOpacity(0.6)
+                                                          : blackColor,
+                                                      fontSize: width * 0.034),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
                                           onFieldSubmitted: (value) {
@@ -464,7 +573,7 @@ class SignupPageState extends State<SignupPage> {
                                 height: height * 0.075,
                                 width: height * 0.4,
                                 decoration: BoxDecoration(
-                                  color: whiteColor,
+                                  color: lightGreyColor,
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(color: borderGreyColor),
                                 ),
@@ -480,7 +589,8 @@ class SignupPageState extends State<SignupPage> {
                                       child: Text(
                                         "AE +971",
                                         style: montserratLight.copyWith(
-                                            color: blackColor, fontSize: 14),
+                                            color: blackColor,
+                                            fontSize: width * 0.034),
                                       ),
                                     ),
                                     Container(
@@ -501,7 +611,8 @@ class SignupPageState extends State<SignupPage> {
                                           focusNode: numberFocus,
                                           maxLength: 10,
                                           style: montserratLight.copyWith(
-                                              color: blackColor, fontSize: 14),
+                                              color: blackColor,
+                                              fontSize: width * 0.034),
                                           decoration: InputDecoration(
                                               errorStyle: TextStyle(
                                                   fontSize: 12,
@@ -513,9 +624,9 @@ class SignupPageState extends State<SignupPage> {
                                               hintStyle:
                                                   montserratRegular.copyWith(
                                                       color: blackColor,
-                                                      fontSize: 14),
+                                                      fontSize: width * 0.034),
                                               border: InputBorder.none,
-                                              fillColor: whiteColor),
+                                              fillColor: lightGreyColor),
                                           validator: (value) {
                                             return mobileNumberValidation(
                                                 value, context);
