@@ -20,7 +20,7 @@ class ST {
 
   static ST get current {
     assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+        'No instance of ST was loaded. Try to initialize the ST delegate before accessing ST.current.');
     return _current!;
   }
 
@@ -43,7 +43,7 @@ class ST {
   static ST of(BuildContext context) {
     final instance = ST.maybeOf(context);
     assert(instance != null,
-        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+        'No instance of ST present in the widget tree. Did you add ST.delegate in localizationsDelegates?');
     return instance!;
   }
 

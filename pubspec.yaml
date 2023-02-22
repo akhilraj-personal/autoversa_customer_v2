@@ -31,6 +31,7 @@ dependencies:
   shimmer: ^2.0.0
   cached_network_image: ^3.2.3
   intl: ^0.17.0
+  dropdown_button2: ^1.9.3
 
   # Added by Bharad
   flutter_otp_text_field: ^1.1.1
@@ -54,6 +55,7 @@ dependencies:
   video_player: ^2.4.10
   flutter_stripe: ^7.0.0
   camera: ^0.10.3
+  sms_autofill: ^2.3.0
 
 
 dev_dependencies:
