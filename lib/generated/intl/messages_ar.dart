@@ -59,6 +59,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("لا توجد فترة زمنية متاحة"),
         "otp_invalid_text":
             MessageLookupByLibrary.simpleMessage("الرجاء إدخال OTP صالح"),
+        "otp_resend_try":
+            MessageLookupByLibrary.simpleMessage("إرسال OTP. حاول مرة أخرى في"),
         "otp_send_text": MessageLookupByLibrary.simpleMessage("أدخل OTP صالح"),
         "pickup_options":
             MessageLookupByLibrary.simpleMessage("خيارات الالتقاط"),

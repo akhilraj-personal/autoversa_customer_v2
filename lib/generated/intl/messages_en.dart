@@ -58,6 +58,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No time slot available"),
         "otp_invalid_text":
             MessageLookupByLibrary.simpleMessage("Enter Valid OTP"),
+        "otp_resend_try":
+            MessageLookupByLibrary.simpleMessage("OTP Send. Try again in"),
         "otp_send_text":
             MessageLookupByLibrary.simpleMessage("OTP Send Successfully"),
         "pickup_options":

@@ -7,6 +7,7 @@
   "otp_send_text": "OTP Send Successfully",
   "verify_me": "Verify Me",
   "seconds_text": "Second",
+  "otp_resend_try":"OTP Send. Try again in",
   "resend_otp_text": "Resend OTP",
   "verify_call_text": "Verify Via Call",
   "otp_invalid_text": "Enter Valid OTP",

@@ -35,7 +35,7 @@ class LoginOTPVerification extends StatefulWidget {
 
 class LoginOTPVerificationState extends State<LoginOTPVerification> {
   late Timer _timer;
-  int OTPtimer = 0, click_count = 0;
+  int OTPtimer = 0, click_count = 0, verify_count = 0;
   bool isResend = false;
   bool isOtpVerifying = false;
   bool isoffline = false;
@@ -105,6 +105,8 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         click_count++;
         setState(() {});
         startTimer();
+        showCustomToast(context, "OTP Send Successfully",
+            bgColor: toastgrey, textColor: whiteColor);
       } else {
         prefs.setBool('islogged', false);
         setState(() => isResend = false);
@@ -130,8 +132,11 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         click_count++;
         setState(() {});
         startTimer();
+        showCustomToast(context, "Call initiated",
+            bgColor: toastgrey, textColor: whiteColor);
       } else {
         setState(() => isResend = false);
+        print(value);
         showCustomToast(context, ST.of(context).try_another_method,
             bgColor: warningcolor, textColor: whiteColor);
       }
@@ -164,21 +169,40 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
       };
       await verifyOtp(req).then((value) {
         if (value['ret_data'] == "success") {
+          verify_count++;
           prefs.setBool('islogged', true);
           if (value['customer']['cust_type'] == "old") {
-            prefs.setString('cust_id', value['customer']['id']);
-            prefs.setString('name', value['customer']['name']);
-            prefs.setString('email', value['customer']['email']);
-            prefs.setString('phone', value['customer']['phone']);
-            prefs.setString('country_code', value['customer']['country_code']);
-            prefs.setString('emirate', value['customer']['emirate']);
-            prefs.setString('language', value['customer']['language']);
-            prefs.setString('credits', value['customer']['credits']);
-            prefs.setString('token', value['token']);
-            setState(() => isOtpVerifying = false);
-            setState(() {
-              Navigator.pushReplacementNamed(context, Routes.bottombar);
-            });
+            if (value['customer']['name'] == null ||
+                value['customer']['emirate'] == null) {
+              prefs.setString('cust_id', value['customer']['id']);
+              prefs.setString('phone', value['customer']['phone']);
+              prefs.setString(
+                  'country_code', value['customer']['country_code']);
+              prefs.setString('token', value['token']);
+              setState(() => isOtpVerifying = false);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SignupPage(
+                            countrycode: value['customer']['country_code'],
+                            phone: value['customer']['phone'],
+                          )));
+            } else {
+              prefs.setString('cust_id', value['customer']['id']);
+              prefs.setString('name', value['customer']['name']);
+              prefs.setString('email', value['customer']['email']);
+              prefs.setString('phone', value['customer']['phone']);
+              prefs.setString(
+                  'country_code', value['customer']['country_code']);
+              prefs.setString('emirate', value['customer']['emirate']);
+              prefs.setString('language', value['customer']['language']);
+              prefs.setString('credits', value['customer']['credits']);
+              prefs.setString('token', value['token']);
+              setState(() => isOtpVerifying = false);
+              setState(() {
+                Navigator.pushReplacementNamed(context, Routes.bottombar);
+              });
+            }
           } else if (value['customer']['cust_type'] == "new") {
             prefs.setString('cust_id', value['customer']['id']);
             prefs.setString('phone', value['customer']['phone']);
@@ -194,17 +218,20 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         )));
           }
         } else if (value['ret_data'] == "MaxAttempt") {
+          verify_count++;
           setState(() => isOtpVerifying = false);
           showCustomToast(context, ST.of(context).max_otp_text,
               bgColor: warningcolor, textColor: whiteColor);
           otppin = "";
         } else {
+          verify_count++;
           setState(() => isOtpVerifying = false);
           showCustomToast(context, value['message'],
               bgColor: warningcolor, textColor: whiteColor);
         }
       }).catchError((e) {
         setState(() => isOtpVerifying = false);
+        print(e.toString());
         showCustomToast(context, ST.of(context).toast_application_error,
             bgColor: errorcolor, textColor: whiteColor);
       });
@@ -354,7 +381,14 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                           setState(() {
                                             isResend = true;
                                           });
-                                          reSendOTP();
+                                          if (verify_count < 5) {
+                                            reSendOTP();
+                                          } else {
+                                            showCustomToast(context,
+                                                ST.of(context).max_otp_text,
+                                                bgColor: warningcolor,
+                                                textColor: whiteColor);
+                                          }
                                         }
                                       },
                                       child: Text(
@@ -368,8 +402,14 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                     GestureDetector(
                                       onTap: () async {
                                         if (isResend == false) {
-                                          print("hi");
-                                          verifyViaCall();
+                                          if (verify_count < 5) {
+                                            verifyViaCall();
+                                          } else {
+                                            showCustomToast(context,
+                                                ST.of(context).max_otp_text,
+                                                bgColor: warningcolor,
+                                                textColor: whiteColor);
+                                          }
                                         }
                                       },
                                       child: Text(
@@ -386,7 +426,9 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                      Text(OTPtimer.toString() +
+                                      Text(ST.of(context).otp_resend_try +
+                                          " " +
+                                          OTPtimer.toString() +
                                           " " +
                                           ST.of(context).seconds_text),
                                     ]),
