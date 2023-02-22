@@ -11,6 +11,7 @@ import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:custom_clippers/custom_clippers.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,6 +35,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
   final GlobalKey<FormFieldState> _yearkey = GlobalKey<FormFieldState>();
 
   TextEditingController plateNumberController = TextEditingController();
+  final TextEditingController textEditingController = TextEditingController();
 
   var brandname, modelname, variantname, yearselected = '';
   final _formKey = GlobalKey<FormState>();
@@ -41,6 +43,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
   bool issubmitted = false;
   bool isoffline = false;
   StreamSubscription? internetconnection;
+  bool isFocused = false;
 
   @override
   void initState() {
@@ -89,8 +92,8 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       alignment: Alignment.center,
                       child: Text(
                         item['veh_brand'],
-                        style: montserratRegular.copyWith(
-                            color: blackColor, fontSize: width * 0.034),
+                        style: montserratMedium.copyWith(
+                            color: blackColor, fontSize: width * 0.04),
                       )),
                   value: item['veh_brand'].toString()))
               .toList();
@@ -127,8 +130,8 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       alignment: Alignment.center,
                       child: Text(
                         item['veh_model'],
-                        style: montserratRegular.copyWith(
-                            color: blackColor, fontSize: width * 0.034),
+                        style: montserratMedium.copyWith(
+                            color: blackColor, fontSize: width * 0.04),
                       )),
                   value: item['veh_model'].toString()))
               .toList();
@@ -162,8 +165,8 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       alignment: Alignment.center,
                       child: Text(
                         item['veh_variant'],
-                        style: montserratRegular.copyWith(
-                            color: blackColor, fontSize: width * 0.034),
+                        style: montserratMedium.copyWith(
+                            color: blackColor, fontSize: width * 0.04),
                       )),
                   value: item['veh_variant'].toString()))
               .toList();
@@ -207,8 +210,8 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       alignment: Alignment.center,
                       child: Text(
                         item,
-                        style: montserratRegular.copyWith(
-                            color: blackColor, fontSize: width * 0.034),
+                        style: montserratMedium.copyWith(
+                            color: blackColor, fontSize: width * 0.04),
                       )),
                   value: item.toString()))
               .toList();
@@ -253,8 +256,8 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                       alignment: Alignment.center,
                       child: Text(
                         item,
-                        style: montserratRegular.copyWith(
-                            color: blackColor, fontSize: width * 0.034),
+                        style: montserratMedium.copyWith(
+                            color: blackColor, fontSize: width * 0.04),
                       )),
                   value: item.toString()))
               .toList();
@@ -427,24 +430,72 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                   children: <Widget>[
                                     Expanded(
                                       child: Container(
-                                        padding: EdgeInsets.only(
-                                          left: width * 0.025,
-                                          right: width * 0.025,
-                                        ),
-                                        child: DropdownButtonFormField(
+                                        child: DropdownButtonFormField2(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          decoration: InputDecoration(
+                                            //Add isDense true and zero Padding.
+                                            //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                            isDense: true,
+                                            contentPadding: EdgeInsets.zero,
+                                            focusedBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            focusedErrorBorder:
+                                                OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color: const Color(0xfffff),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            errorStyle: TextStyle(
+                                              fontSize: 12,
+                                              color: warningcolor,
+                                            ),
+                                            //Add more decoration as you want here
+                                            //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                          ),
                                           isExpanded: true,
-                                          decoration: InputDecoration.collapsed(
-                                              hintText: ''),
-                                          hint: Align(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                ST.of(context).make + "*",
-                                                style:
-                                                    montserratRegular.copyWith(
-                                                        color: blackColor,
-                                                        fontSize:
-                                                            width * 0.034),
-                                              )),
+                                          hint: Text(
+                                            ST.of(context).make + "*",
+                                            style: montserratMedium.copyWith(
+                                                color: blackColor,
+                                                fontSize: width * 0.04),
+                                          ),
+                                          alignment: Alignment.center,
+                                          buttonHeight: height * 0.075,
+                                          buttonPadding: const EdgeInsets.only(
+                                              left: 20, right: 10),
+                                          dropdownDecoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
                                           items: brands,
                                           validator: (value) {
                                             if (value == null) {
@@ -456,6 +507,32 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                             getVehicleModel(value);
                                           },
                                         ),
+
+                                        // DropdownButtonFormField(
+                                        //   isExpanded: true,
+                                        //   decoration: InputDecoration.collapsed(
+                                        //       hintText: ''),
+                                        //   hint: Align(
+                                        //       alignment: Alignment.center,
+                                        //       child: Text(
+                                        //         ST.of(context).make + "*",
+                                        //         style:
+                                        //             montserratRegular.copyWith(
+                                        //                 color: blackColor,
+                                        //                 fontSize:
+                                        //                     width * 0.034),
+                                        //       )),
+                                        //   items: brands,
+                                        //   validator: (value) {
+                                        //     if (value == null) {
+                                        //       return selectmakeValidation(
+                                        //           value);
+                                        //     }
+                                        //   },
+                                        //   onChanged: (value) {
+                                        //     getVehicleModel(value);
+                                        //   },
+                                        // ),
                                       ),
                                     ),
                                   ],
@@ -489,24 +566,73 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                   children: <Widget>[
                                     Expanded(
                                       child: Container(
-                                        padding: EdgeInsets.only(
-                                            right: width * 0.025,
-                                            left: width * 0.025),
-                                        child: DropdownButtonFormField(
+                                        child: DropdownButtonFormField2(
                                           key: modelKey,
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          decoration: InputDecoration(
+                                            //Add isDense true and zero Padding.
+                                            //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                            isDense: true,
+                                            contentPadding: EdgeInsets.zero,
+                                            focusedBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            focusedErrorBorder:
+                                                OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color: const Color(0xfffff),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            errorStyle: TextStyle(
+                                              fontSize: 12,
+                                              color: warningcolor,
+                                            ),
+                                            //Add more decoration as you want here
+                                            //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                          ),
                                           isExpanded: true,
-                                          decoration: InputDecoration.collapsed(
-                                              hintText: ''),
-                                          hint: Align(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                ST.of(context).model + "*",
-                                                style:
-                                                    montserratRegular.copyWith(
-                                                        color: blackColor,
-                                                        fontSize:
-                                                            width * 0.034),
-                                              )),
+                                          hint: Text(
+                                            ST.of(context).model + "*",
+                                            style: montserratMedium.copyWith(
+                                                color: blackColor,
+                                                fontSize: width * 0.04),
+                                          ),
+                                          alignment: Alignment.center,
+                                          buttonHeight: height * 0.075,
+                                          buttonPadding: const EdgeInsets.only(
+                                              left: 20, right: 10),
+                                          dropdownDecoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
                                           items: models,
                                           validator: (value) {
                                             if (value == null) {
@@ -526,7 +652,93 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                   : isvariant = false;
                                             });
                                           },
+                                          dropdownMaxHeight: height * 0.5,
+                                          searchController:
+                                              textEditingController,
+                                          searchInnerWidgetHeight:
+                                              height * 0.07,
+                                          searchInnerWidget: Container(
+                                            height: height * 0.07,
+                                            padding: const EdgeInsets.only(
+                                              top: 8,
+                                              bottom: 4,
+                                              right: 8,
+                                              left: 8,
+                                            ),
+                                            child: TextFormField(
+                                              expands: true,
+                                              maxLines: null,
+                                              controller: textEditingController,
+                                              decoration: InputDecoration(
+                                                isDense: true,
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 10,
+                                                  vertical: 8,
+                                                ),
+                                                hintText: 'Search make...',
+                                                hintStyle: const TextStyle(
+                                                    fontSize: 12),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  borderSide: BorderSide(
+                                                      color: syanColor,
+                                                      width: 0.0),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          searchMatchFn: (item, searchValue) {
+                                            return (item.value
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(
+                                                    searchValue.toLowerCase()));
+                                          },
+                                          //This to clear the search value when you close the menu
+                                          onMenuStateChange: (isOpen) {
+                                            if (!isOpen) {
+                                              textEditingController.clear();
+                                            }
+                                          },
                                         ),
+                                        //
+                                        // DropdownButtonFormField(
+                                        //   key: modelKey,
+                                        //   isExpanded: true,
+                                        //   decoration: InputDecoration.collapsed(
+                                        //       hintText: ''),
+                                        //   hint: Align(
+                                        //       alignment: Alignment.center,
+                                        //       child: Text(
+                                        //         ST.of(context).model + "*",
+                                        //         style:
+                                        //             montserratRegular.copyWith(
+                                        //                 color: blackColor,
+                                        //                 fontSize:
+                                        //                     width * 0.034),
+                                        //       )),
+                                        //   items: models,
+                                        //   validator: (value) {
+                                        //     if (value == null) {
+                                        //       return selectmodelValidation(
+                                        //           value);
+                                        //     }
+                                        //   },
+                                        //   onChanged: (value) {
+                                        //     brandname == 'Mercedes Benz' ||
+                                        //             brandname == 'BMW'
+                                        //         ? getVariant(value)
+                                        //         : getModelyear(value);
+                                        //     setState(() {
+                                        //       brandname == 'Mercedes Benz' ||
+                                        //               brandname == 'BMW'
+                                        //           ? isvariant = true
+                                        //           : isvariant = false;
+                                        //     });
+                                        //   },
+                                        // ),
                                       ),
                                     ),
                                   ],
@@ -569,32 +781,97 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                             children: <Widget>[
                                               Expanded(
                                                 child: Container(
-                                                  padding: EdgeInsets.only(
-                                                      right: width * 0.025,
-                                                      left: width * 0.025),
                                                   child:
-                                                      DropdownButtonFormField(
+                                                      DropdownButtonFormField2(
                                                     key: _varkey,
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    decoration: InputDecoration(
+                                                      //Add isDense true and zero Padding.
+                                                      //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      focusedErrorBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    const Color(
+                                                                        0xfffff),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorStyle: TextStyle(
+                                                        fontSize: 12,
+                                                        color: warningcolor,
+                                                      ),
+                                                      //Add more decoration as you want here
+                                                      //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                                    ),
                                                     isExpanded: true,
-                                                    decoration: InputDecoration
-                                                        .collapsed(
-                                                            hintText: ''),
-                                                    hint: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          ST
-                                                                  .of(context)
-                                                                  .variant +
-                                                              "*",
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color:
-                                                                      blackColor,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                        )),
+                                                    hint: Text(
+                                                      ST.of(context).variant +
+                                                          "*",
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color: blackColor,
+                                                              fontSize:
+                                                                  width * 0.04),
+                                                    ),
+                                                    alignment: Alignment.center,
+                                                    buttonHeight:
+                                                        height * 0.075,
+                                                    buttonPadding:
+                                                        const EdgeInsets.only(
+                                                            left: 20,
+                                                            right: 10),
+                                                    dropdownDecoration:
+                                                        BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                    ),
                                                     items: variants,
                                                     validator: (value) {
                                                       if (value == null) {
@@ -606,7 +883,107 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                       getModelVariantYear(
                                                           value);
                                                     },
+                                                    dropdownMaxHeight:
+                                                        height * 0.5,
+                                                    searchController:
+                                                        textEditingController,
+                                                    searchInnerWidgetHeight:
+                                                        height * 0.07,
+                                                    searchInnerWidget:
+                                                        Container(
+                                                      height: height * 0.07,
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                        top: 8,
+                                                        bottom: 4,
+                                                        right: 8,
+                                                        left: 8,
+                                                      ),
+                                                      child: TextFormField(
+                                                        expands: true,
+                                                        maxLines: null,
+                                                        controller:
+                                                            textEditingController,
+                                                        decoration:
+                                                            InputDecoration(
+                                                          isDense: true,
+                                                          contentPadding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 10,
+                                                            vertical: 8,
+                                                          ),
+                                                          hintText:
+                                                              'Search make...',
+                                                          hintStyle:
+                                                              const TextStyle(
+                                                                  fontSize: 12),
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12),
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color:
+                                                                        syanColor,
+                                                                    width: 0.0),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    searchMatchFn:
+                                                        (item, searchValue) {
+                                                      return (item.value
+                                                          .toString()
+                                                          .toLowerCase()
+                                                          .contains(searchValue
+                                                              .toLowerCase()));
+                                                    },
+                                                    //This to clear the search value when you close the menu
+                                                    onMenuStateChange:
+                                                        (isOpen) {
+                                                      if (!isOpen) {
+                                                        textEditingController
+                                                            .clear();
+                                                      }
+                                                    },
                                                   ),
+                                                  //     DropdownButtonFormField(
+                                                  //   key: _varkey,
+                                                  //   isExpanded: true,
+                                                  //   decoration: InputDecoration
+                                                  //       .collapsed(
+                                                  //           hintText: ''),
+                                                  //   hint: Align(
+                                                  //       alignment:
+                                                  //           Alignment.center,
+                                                  //       child: Text(
+                                                  //         ST
+                                                  //                 .of(context)
+                                                  //                 .variant +
+                                                  //             "*",
+                                                  //         style: montserratRegular
+                                                  //             .copyWith(
+                                                  //                 color:
+                                                  //                     blackColor,
+                                                  //                 fontSize:
+                                                  //                     width *
+                                                  //                         0.034),
+                                                  //       )),
+                                                  //   items: variants,
+                                                  //   validator: (value) {
+                                                  //     if (value == null) {
+                                                  //       return selectvariantValidation(
+                                                  //           value);
+                                                  //     }
+                                                  //   },
+                                                  //   onChanged: (value) {
+                                                  //     getModelVariantYear(
+                                                  //         value);
+                                                  //   },
+                                                  // ),
                                                 ),
                                               ),
                                             ],
@@ -641,24 +1018,73 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                   children: <Widget>[
                                     Expanded(
                                       child: Container(
-                                        padding: EdgeInsets.only(
-                                            right: width * 0.025,
-                                            left: width * 0.025),
-                                        child: DropdownButtonFormField(
+                                        child: DropdownButtonFormField2(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
                                           key: _yearkey,
+                                          decoration: InputDecoration(
+                                            //Add isDense true and zero Padding.
+                                            //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                            isDense: true,
+                                            contentPadding: EdgeInsets.zero,
+                                            focusedBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            focusedErrorBorder:
+                                                OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color:
+                                                      const Color(0xffCCCCCC),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              // width: 0.0 produces a thin "hairline" border
+                                              borderSide: const BorderSide(
+                                                  color: const Color(0xfffff),
+                                                  width: 0.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            errorStyle: TextStyle(
+                                              fontSize: 12,
+                                              color: warningcolor,
+                                            ),
+                                            //Add more decoration as you want here
+                                            //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                          ),
                                           isExpanded: true,
-                                          decoration: InputDecoration.collapsed(
-                                              hintText: ''),
-                                          hint: Align(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                ST.of(context).year + "*",
-                                                style:
-                                                    montserratRegular.copyWith(
-                                                        color: blackColor,
-                                                        fontSize:
-                                                            width * 0.034),
-                                              )),
+                                          hint: Text(
+                                            ST.of(context).year + "*",
+                                            style: montserratMedium.copyWith(
+                                                color: blackColor,
+                                                fontSize: width * 0.04),
+                                          ),
+                                          alignment: Alignment.center,
+                                          buttonHeight: height * 0.075,
+                                          buttonPadding: const EdgeInsets.only(
+                                              left: 20, right: 10),
+                                          dropdownDecoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
                                           items: modyears,
                                           validator: (value) {
                                             if (value == null) {
@@ -670,6 +1096,32 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                             yearselected = value.toString();
                                           },
                                         ),
+                                        // DropdownButtonFormField(
+                                        //   key: _yearkey,
+                                        //   isExpanded: true,
+                                        //   decoration: InputDecoration.collapsed(
+                                        //       hintText: ''),
+                                        //   hint: Align(
+                                        //       alignment: Alignment.center,
+                                        //       child: Text(
+                                        //         ST.of(context).year + "*",
+                                        //         style:
+                                        //             montserratRegular.copyWith(
+                                        //                 color: blackColor,
+                                        //                 fontSize:
+                                        //                     width * 0.034),
+                                        //       )),
+                                        //   items: modyears,
+                                        //   validator: (value) {
+                                        //     if (value == null) {
+                                        //       return selectyearValidation(
+                                        //           value);
+                                        //     }
+                                        //   },
+                                        //   onChanged: (value) {
+                                        //     yearselected = value.toString();
+                                        //   },
+                                        // ),
                                       ),
                                     ),
                                   ],
@@ -709,28 +1161,47 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                         padding: EdgeInsets.only(
                                             right: width * 0.025,
                                             left: width * 0.025),
-                                        child: TextFormField(
-                                          controller: plateNumberController,
-                                          keyboardType: TextInputType.text,
-                                          textAlign: TextAlign.center,
-                                          maxLength: 15,
-                                          style: montserratLight.copyWith(
-                                              color: blackColor,
-                                              fontSize: width * 0.034),
-                                          decoration: InputDecoration(
-                                              errorStyle: TextStyle(
-                                                  fontSize: 12,
-                                                  color: warningcolor),
-                                              counterText: "",
-                                              filled: true,
-                                              hintText:
-                                                  ST.of(context).plate_number,
-                                              hintStyle:
-                                                  montserratRegular.copyWith(
-                                                      color: blackColor,
-                                                      fontSize: width * 0.034),
-                                              border: InputBorder.none,
-                                              fillColor: whiteColor),
+                                        child: Focus(
+                                          child: TextFormField(
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
+                                            textCapitalization:
+                                                TextCapitalization.characters,
+                                            controller: plateNumberController,
+                                            keyboardType: TextInputType.text,
+                                            textAlign: TextAlign.center,
+                                            maxLength: 15,
+                                            style: montserratMedium.copyWith(
+                                                color: blackColor,
+                                                fontSize: width * 0.04),
+                                            decoration: InputDecoration(
+                                                errorStyle: TextStyle(
+                                                    fontSize: 12,
+                                                    color: warningcolor),
+                                                counterText: "",
+                                                filled: true,
+                                                hintText:
+                                                    ST.of(context).plate_number,
+                                                hintStyle:
+                                                    montserratMedium.copyWith(
+                                                        color: !isFocused
+                                                            ? blackColor
+                                                            : greyColor,
+                                                        fontSize: width * 0.04),
+                                                border: InputBorder.none,
+                                                fillColor: whiteColor),
+                                          ),
+                                          onFocusChange: (hasFocus) {
+                                            if (hasFocus) {
+                                              setState(() {
+                                                isFocused = true;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                isFocused = false;
+                                              });
+                                            }
+                                          },
                                         ),
                                       ),
                                     ),

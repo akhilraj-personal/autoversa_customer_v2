@@ -155,6 +155,9 @@ class SignupPageState extends State<SignupPage> {
           elevation: 0,
           backgroundColor: whiteColor,
           shadowColor: whiteColor,
+          leading: BackButton(onPressed: () {
+            Navigator.pushReplacementNamed(context, Routes.loginPage);
+          }),
           iconTheme: IconThemeData(color: blackColor),
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarIconBrightness: Brightness.dark,
@@ -317,9 +320,9 @@ class SignupPageState extends State<SignupPage> {
                                           isExpanded: true,
                                           hint: Text(
                                             ST.of(context).emirates,
-                                            style: montserratRegular.copyWith(
+                                            style: montserratMedium.copyWith(
                                                 color: blackColor,
-                                                fontSize: width * 0.034),
+                                                fontSize: width * 0.04),
                                           ),
                                           alignment: Alignment.center,
                                           buttonHeight: height * 0.075,
@@ -336,13 +339,13 @@ class SignupPageState extends State<SignupPage> {
                                                           Alignment.center,
                                                       child: Text(
                                                         item['state_name'],
-                                                        style: montserratLight
+                                                        style: montserratMedium
                                                             .copyWith(
                                                                 color:
                                                                     blackColor,
                                                                 fontSize:
                                                                     width *
-                                                                        0.034),
+                                                                        0.04),
                                                       )),
                                                   value: item['state_id']
                                                       .toString()))
@@ -369,7 +372,7 @@ class SignupPageState extends State<SignupPage> {
                                         //             montserratRegular.copyWith(
                                         //                 color: greyColor,
                                         //                 fontSize:
-                                        //                     width * 0.034),
+                                        //                     width * 0.04),
                                         //       )),
                                         //   items: data
                                         //       .map((item) => DropdownMenuItem(
@@ -444,29 +447,30 @@ class SignupPageState extends State<SignupPage> {
                                           keyboardType: TextInputType.text,
                                           textAlign: TextAlign.center,
                                           maxLength: 50,
-                                          style: montserratLight.copyWith(
-                                              color: blackColor, fontSize: 14),
+                                          style: montserratMedium.copyWith(
+                                              color: blackColor,
+                                              fontSize: width * 0.04),
                                           decoration: InputDecoration(
                                               errorStyle: TextStyle(
                                                   fontSize: 12,
                                                   color: warningcolor),
                                               counterText: "",
                                               filled: true,
-                                              hintText: ST
-                                                  .of(context)
-                                                  .full_name,
+                                              hintText:
+                                                  ST.of(context).full_name,
                                               hintStyle:
-                                                  montserratRegular.copyWith(
+                                                  montserratMedium.copyWith(
                                                       color: userNameFocus
                                                               .hasFocus
                                                           ? greyColor
                                                               .withOpacity(0.6)
                                                           : blackColor,
-                                                      fontSize: width * 0.034),
+                                                      fontSize: width * 0.04),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
                                           focusNode: userNameFocus,
                                           onFieldSubmitted: (value) {
+                                            userNameFocus.unfocus();
                                             FocusScope.of(context)
                                                 .requestFocus(emailFocus);
                                           },
@@ -519,9 +523,9 @@ class SignupPageState extends State<SignupPage> {
                                               TextInputType.emailAddress,
                                           textAlign: TextAlign.center,
                                           maxLength: 80,
-                                          style: montserratLight.copyWith(
+                                          style: montserratMedium.copyWith(
                                               color: blackColor,
-                                              fontSize: width * 0.034),
+                                              fontSize: width * 0.04),
                                           decoration: InputDecoration(
                                               errorStyle: TextStyle(
                                                   fontSize: 12,
@@ -530,12 +534,12 @@ class SignupPageState extends State<SignupPage> {
                                               filled: true,
                                               hintText: ST.of(context).email,
                                               hintStyle:
-                                                  montserratRegular.copyWith(
+                                                  montserratMedium.copyWith(
                                                       color: emailFocus.hasFocus
                                                           ? greyColor
                                                               .withOpacity(0.6)
                                                           : blackColor,
-                                                      fontSize: width * 0.034),
+                                                      fontSize: width * 0.04),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
                                           onFieldSubmitted: (value) {
@@ -588,9 +592,9 @@ class SignupPageState extends State<SignupPage> {
                                           right: width * 0.025),
                                       child: Text(
                                         "AE +971",
-                                        style: montserratLight.copyWith(
+                                        style: montserratMedium.copyWith(
                                             color: blackColor,
-                                            fontSize: width * 0.034),
+                                            fontSize: width * 0.04),
                                       ),
                                     ),
                                     Container(
@@ -610,9 +614,9 @@ class SignupPageState extends State<SignupPage> {
                                           keyboardType: TextInputType.number,
                                           focusNode: numberFocus,
                                           maxLength: 10,
-                                          style: montserratLight.copyWith(
+                                          style: montserratMedium.copyWith(
                                               color: blackColor,
-                                              fontSize: width * 0.034),
+                                              fontSize: width * 0.04),
                                           decoration: InputDecoration(
                                               errorStyle: TextStyle(
                                                   fontSize: 12,
@@ -622,9 +626,9 @@ class SignupPageState extends State<SignupPage> {
                                               hintText:
                                                   ST.of(context).mobile_number,
                                               hintStyle:
-                                                  montserratRegular.copyWith(
+                                                  montserratMedium.copyWith(
                                                       color: blackColor,
-                                                      fontSize: width * 0.034),
+                                                      fontSize: width * 0.04),
                                               border: InputBorder.none,
                                               fillColor: lightGreyColor),
                                           validator: (value) {
