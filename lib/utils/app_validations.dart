@@ -52,6 +52,15 @@ fullNameValidation(value, context) {
   return null;
 }
 
+plateNumberValidation(value) {
+  String pattern = r'^[a-zA-Z0-9 -/]+$';
+  RegExp regExp = new RegExp(pattern);
+  if (!regExp.hasMatch(value)) {
+    return "Enter valid data";
+  }
+  return null;
+}
+
 emailValidation(value, context) {
   String pattern = r'^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
   RegExp regExp = new RegExp(pattern);

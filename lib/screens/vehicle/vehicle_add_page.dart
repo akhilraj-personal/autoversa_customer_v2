@@ -1170,10 +1170,14 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                             controller: plateNumberController,
                                             keyboardType: TextInputType.text,
                                             textAlign: TextAlign.center,
-                                            maxLength: 15,
+                                            maxLength: 10,
                                             style: montserratMedium.copyWith(
                                                 color: blackColor,
                                                 fontSize: width * 0.04),
+                                            validator: (value) {
+                                              return plateNumberValidation(
+                                                  value);
+                                            },
                                             decoration: InputDecoration(
                                                 errorStyle: TextStyle(
                                                     fontSize: 12,
