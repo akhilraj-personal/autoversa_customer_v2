@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
-import 'package:autoversa/screens/booking/payment_waiting_screen.dart';
 import 'package:autoversa/screens/booking/reschedule_screen.dart';
 import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
@@ -228,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
           context,
           height: 65,
           title: 'Confirmation',
-          subTitle: 'Are to sure you want to exit ?',
+          subTitle: 'Are you sure you want to exit ?',
           primaryColor: syanColor,
           customCenterWidget: Padding(
             padding: EdgeInsets.only(top: 8),

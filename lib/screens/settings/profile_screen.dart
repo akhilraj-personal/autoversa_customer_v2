@@ -177,10 +177,20 @@ class ProfilePageState extends State<ProfilePage> {
               color: Colors.white,
             ),
           ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, Routes.bottombar);
+            },
+            icon: Icon(Icons.arrow_back,
+                color: Colors.white, size: width * 0.054),
+          ),
         ),
         body: SingleChildScrollView(
           child: WillPopScope(
-            onWillPop: _onWillPop,
+            onWillPop: () {
+              Navigator.pushReplacementNamed(context, Routes.bottombar);
+              return Future.value(false);
+            },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -638,7 +648,7 @@ class ProfilePageState extends State<ProfilePage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return Support();
+                            return Support(click_id: 2);
                           },
                         ),
                       );
