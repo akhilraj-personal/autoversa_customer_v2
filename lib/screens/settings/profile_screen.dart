@@ -216,7 +216,8 @@ class ProfilePageState extends State<ProfilePage> {
                                   borderRadius: BorderRadius.only(
                                       topRight: Radius.circular(10.0),
                                       bottomRight: Radius.circular(16.0))),
-                              child: custdetails['cust_profile_pic'] != null
+                              child: custdetails['cust_profile_pic'] != null &&
+                                      custdetails['cust_profile_pic'] != ''
                                   ? CachedNetworkImage(
                                       placeholder: (context, url) =>
                                           Transform.scale(
