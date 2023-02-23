@@ -15,6 +15,8 @@ import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../main.dart';
+
 class Vehiclelist extends StatefulWidget {
   final int click_id;
   const Vehiclelist({required this.click_id, super.key});
@@ -115,6 +117,11 @@ class VehiclelistState extends State<Vehiclelist> {
   }
 
   @override
+  void setState(fn) {
+    if (mounted) super.setState(fn);
+  }
+
+  @override
   void dispose() {
     super.dispose();
     internetconnection!.cancel();
@@ -149,60 +156,65 @@ class VehiclelistState extends State<Vehiclelist> {
         systemNavigationBarColor: Colors.white,
       ),
       child: WillPopScope(
-          onWillPop: _onWillPop,
+          onWillPop: () {
+            widget.click_id == 2
+                ? Navigator.pop(context)
+                : Navigator.pushReplacementNamed(context, Routes.bottombar);
+            return Future.value(false);
+          },
           child: Scaffold(
               appBar: AppBar(
-                elevation: 0,
-                centerTitle: true,
-                flexibleSpace: Container(
-                  alignment: Alignment.bottomCenter,
-                  width: width,
-                  height: height * 0.31,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        lightblueColor,
-                        syanColor,
-                      ],
-                    ),
-                  ),
-                  child: ClipPath(
-                    clipper: SinCosineWaveClipper(
-                      verticalPosition: VerticalPosition.top,
-                    ),
-                    child: Container(
-                      height: height * 0.31,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
+                  elevation: 0,
+                  centerTitle: true,
+                  flexibleSpace: Container(
+                    alignment: Alignment.bottomCenter,
+                    width: width,
+                    height: height * 0.31,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          syanColor.withOpacity(0.3),
-                          Color.fromARGB(255, 176, 205, 210),
+                          lightblueColor,
+                          syanColor,
                         ],
-                      )),
+                      ),
+                    ),
+                    child: ClipPath(
+                      clipper: SinCosineWaveClipper(
+                        verticalPosition: VerticalPosition.top,
+                      ),
+                      child: Container(
+                        height: height * 0.31,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            syanColor.withOpacity(0.3),
+                            Color.fromARGB(255, 176, 205, 210),
+                          ],
+                        )),
+                      ),
                     ),
                   ),
-                ),
-                title: Text(
-                  "Vehicle List",
-                  style: montserratSemiBold.copyWith(
-                    fontSize: 18,
-                    color: Colors.white,
+                  title: Text(
+                    "Vehicle List",
+                    style: montserratSemiBold.copyWith(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                leading: widget.click_id == 2
-                    ? IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.arrow_back,
-                            color: Colors.white, size: 20),
-                      )
-                    : Row(),
-              ),
+                  leading: IconButton(
+                    onPressed: () {
+                      widget.click_id == 2
+                          ? Navigator.pop(context)
+                          : Navigator.pushReplacementNamed(
+                              context, Routes.bottombar);
+                    },
+                    icon: const Icon(Icons.arrow_back,
+                        color: Colors.white, size: 20),
+                  )),
               body: Container(
                 child: Column(
                   children: <Widget>[

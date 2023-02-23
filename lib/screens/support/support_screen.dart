@@ -13,7 +13,8 @@ import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class Support extends StatefulWidget {
-  const Support({super.key});
+  final int click_id;
+  const Support({super.key, required this.click_id});
 
   @override
   State<Support> createState() => SupportState();
@@ -88,7 +89,12 @@ class SupportState extends State<Support> {
         systemNavigationBarColor: Colors.white,
       ),
       child: WillPopScope(
-        onWillPop: _onWillPop,
+        onWillPop: () {
+          widget.click_id == 2
+              ? Navigator.pop(context)
+              : Navigator.pushReplacementNamed(context, Routes.bottombar);
+          return Future.value(false);
+        },
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -134,7 +140,9 @@ class SupportState extends State<Support> {
             ),
             leading: IconButton(
               onPressed: () {
-                Navigator.pushReplacementNamed(context, Routes.bottombar);
+                widget.click_id == 2
+                    ? Navigator.pop(context)
+                    : Navigator.pushReplacementNamed(context, Routes.bottombar);
               },
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               iconSize: 18,

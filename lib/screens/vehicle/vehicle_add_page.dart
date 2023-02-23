@@ -300,7 +300,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
             context,
             MaterialPageRoute(
               builder: (context) => BottomNavBarScreen(
-                index: 1,
+                index: 2,
               ),
             ),
             (route) => false,

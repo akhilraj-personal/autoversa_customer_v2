@@ -84,7 +84,7 @@ var routes = <String, WidgetBuilder>{
       ),
   Routes.loginPage: (BuildContext context) => LoginPage(),
   Routes.vehiclePage: (BuildContext context) => VehicleAddPage(),
-  Routes.supportPage: (BuildContext context) => Support(),
+  Routes.supportPage: (BuildContext context) => Support(click_id: 1),
 };
 
 class Routes {
