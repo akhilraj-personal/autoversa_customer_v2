@@ -46,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
       "country_code": country_code,
       "deviceid": appSignatureID,
     };
+    print(req);
     await customerLoginService(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() => isLoading = false);

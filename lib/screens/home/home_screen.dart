@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
-import 'package:autoversa/screens/booking/payment_waiting_screen.dart';
 import 'package:autoversa/screens/booking/reschedule_screen.dart';
 import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
@@ -15,7 +15,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../constant/image_const.dart';
@@ -40,11 +39,13 @@ class _HomeScreenState extends State<HomeScreen> {
   late List customerVehList = [];
   late List bookingList = [];
   late List packageList = [];
+  late List<NotificationModel> notificationList = [];
   String currency = "";
   int selectedVeh = 0;
   bool noofvehicle = false;
   StreamSubscription? internetconnection;
   bool isoffline = false;
+  bool isActive = true;
 
   bool isBookingLoaded = false,
       isVehicleLoaded = false,
@@ -86,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _getCustomerVehicles();
       _getPackages();
       _getCustomerBookingList();
+      _getNotificationList();
     });
     init();
   }
@@ -168,6 +170,37 @@ class _HomeScreenState extends State<HomeScreen> {
     }).catchError((e) {
       print("2345");
       print(e.toString());
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: white);
+    });
+  }
+
+  _getNotificationList() async {
+    Map req = {};
+    await getCustomerNotificationList(req).then((value) {
+      print(value);
+      if (value['ret_data'] == "success") {
+        for (var notify in value['notification_list']) {
+          NotificationModel noti = new NotificationModel();
+          noti.nt_read = notify['nt_read'];
+          if (noti.nt_read == "0") {
+            notificationList.add(noti);
+          }
+        }
+        print(notificationList.length);
+        setState(() {
+          isActive = false;
+        });
+      } else {
+        print(value);
+        isActive = false;
+        setState(() {});
+      }
+    }).catchError((e) {
+      print(e.toString());
+      setState(() {
+        isActive = false;
+      });
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
@@ -380,10 +413,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                         onTap: () {
                                           notificationclick();
                                         },
-                                        child: Image.asset(
-                                          ImageConst.notification,
-                                          scale: 3.7,
-                                        ),
+                                        child: notificationList.length != 0
+                                            ? Image.asset(
+                                                ImageConst.notification_with,
+                                                scale: 3.7,
+                                              )
+                                            : Image.asset(
+                                                ImageConst.notification_without,
+                                                scale: 3.7,
+                                              ),
                                       )
                                     ],
                                   ),
