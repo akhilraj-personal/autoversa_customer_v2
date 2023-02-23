@@ -63,7 +63,9 @@ class ImageConst {
   static const awaiting_payment_icon =
       baseIconURl + 'awaiting_payment_icon.png';
   static const driver_enrouted = baseIconURl + 'driver_enrouted.png';
-  static const notification = baseIconURl + 'notification.png';
+  static const notification_with = baseIconURl + 'notification.png';
+  static const notification_without =
+      baseIconURl + 'notification_without_noti.png';
   static const person = baseIconURl + 'person.png';
   static const right_arrow = baseIconURl + 'right_arrow.png';
   static const road_asset = baseIconURl + 'road_asset.png';
