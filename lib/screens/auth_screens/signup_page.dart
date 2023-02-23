@@ -126,6 +126,7 @@ class SignupPageState extends State<SignupPage> {
         prefs.setString('emirate', value['cust_info']['emirate']);
         prefs.setString('language', value['cust_info']['language']);
         prefs.setString('credits', value['cust_info']['credits']);
+        prefs.setBool('islogged', true);
         setState(() {
           Navigator.pushReplacementNamed(context, Routes.bottombar);
         });

@@ -170,7 +170,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
       await verifyOtp(req).then((value) {
         if (value['ret_data'] == "success") {
           verify_count++;
-          prefs.setBool('islogged', true);
+
           if (value['customer']['cust_type'] == "old") {
             if (value['customer']['name'] == null ||
                 value['customer']['emirate'] == null) {
@@ -188,6 +188,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                             phone: value['customer']['phone'],
                           )));
             } else {
+              prefs.setBool('islogged', true);
               prefs.setString('cust_id', value['customer']['id']);
               prefs.setString('name', value['customer']['name']);
               prefs.setString('email', value['customer']['email']);
