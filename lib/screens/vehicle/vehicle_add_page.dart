@@ -678,7 +678,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                   horizontal: 10,
                                                   vertical: 8,
                                                 ),
-                                                hintText: 'Search make...',
+                                                hintText: 'Search model...',
                                                 hintStyle: const TextStyle(
                                                     fontSize: 12),
                                                 border: OutlineInputBorder(
@@ -918,7 +918,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                             vertical: 8,
                                                           ),
                                                           hintText:
-                                                              'Search make...',
+                                                              'Search variant...',
                                                           hintStyle:
                                                               const TextStyle(
                                                                   fontSize: 12),

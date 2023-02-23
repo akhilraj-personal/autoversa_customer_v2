@@ -887,7 +887,7 @@ class EditprofieState extends State<Editprofie> {
                                 SizedBox(
                                   height: 12,
                                 ),
-                                Text("Alternate Contact" + " *",
+                                Text("Alternate Number" + " *",
                                     style: montserratSemiBold.copyWith(
                                         fontSize: width * 0.034,
                                         color: Colors.black)),
@@ -994,7 +994,7 @@ class EditprofieState extends State<Editprofie> {
                                                         fillColor:
                                                             Colors.white),
                                                     validator: (value) {
-                                                      return mobileNumberValidation(
+                                                      return mobileNumberValidationOnly(
                                                           value, context);
                                                     },
                                                     onChanged: _onChanged,
