@@ -15,6 +15,8 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../main.dart';
+
 class ServiceList extends StatefulWidget {
   final int click_id;
   const ServiceList({required this.click_id, super.key});
@@ -137,7 +139,12 @@ class ServiceListState extends State<ServiceList> {
         systemNavigationBarColor: Colors.white,
       ),
       child: WillPopScope(
-          onWillPop: _onWillPop,
+          onWillPop: () {
+            widget.click_id == 2
+                ? Navigator.pop(context)
+                : Navigator.pushReplacementNamed(context, Routes.bottombar);
+            return Future.value(false);
+          },
           child: Scaffold(
             appBar: AppBar(
               elevation: 0,
@@ -181,15 +188,16 @@ class ServiceListState extends State<ServiceList> {
                   color: Colors.white,
                 ),
               ),
-              leading: widget.click_id == 2
-                  ? IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.arrow_back,
-                          color: Colors.white, size: width * 0.054),
-                    )
-                  : SizedBox(),
+              leading: IconButton(
+                onPressed: () {
+                  widget.click_id == 2
+                      ? Navigator.pop(context)
+                      : Navigator.pushReplacementNamed(
+                          context, Routes.bottombar);
+                },
+                icon: Icon(Icons.arrow_back,
+                    color: Colors.white, size: width * 0.054),
+              ),
             ),
             body: Container(
               child: Column(

@@ -102,7 +102,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
 
   ///------- tab screen  ----------
   final List<Widget> viewContainer = [
-    Support(),
+    Support(click_id: 1),
     HomeScreen(),
     Vehiclelist(click_id: 1),
     ServiceList(click_id: 1),

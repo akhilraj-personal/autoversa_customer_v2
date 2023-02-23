@@ -25,6 +25,7 @@ import '../../utils/color_utils.dart';
 import '../../utils/common_utils.dart';
 import '../../utils/text_utils.dart';
 // import '../NextScreen.dart';
+import '../settings/edit_profile.dart';
 import '../vehicle/vehicle_add_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -261,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
           context,
           height: 65,
           title: 'Confirmation',
-          subTitle: 'Are to sure you want to exit ?',
+          subTitle: 'Are you sure you want to exit ?',
           primaryColor: syanColor,
           customCenterWidget: Padding(
             padding: EdgeInsets.only(top: 8),
@@ -369,10 +370,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                           GestureDetector(
                                             onTap: () {
                                               Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Tryout()));
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return Editprofie();
+                                                  },
+                                                ),
+                                              );
                                             },
                                             child: Image.asset(
                                               ImageConst.person,

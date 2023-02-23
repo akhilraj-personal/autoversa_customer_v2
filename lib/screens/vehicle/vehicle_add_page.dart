@@ -300,7 +300,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
             context,
             MaterialPageRoute(
               builder: (context) => BottomNavBarScreen(
-                index: 1,
+                index: 2,
               ),
             ),
             (route) => false,
@@ -558,7 +558,9 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                 height: height * 0.075,
                                 width: height * 0.4,
                                 decoration: BoxDecoration(
-                                  color: whiteColor,
+                                  color: models.isNotEmpty
+                                      ? whiteColor
+                                      : lightGreyColor,
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(color: borderGreyColor),
                                 ),
@@ -676,7 +678,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                   horizontal: 10,
                                                   vertical: 8,
                                                 ),
-                                                hintText: 'Search make...',
+                                                hintText: 'Search model...',
                                                 hintStyle: const TextStyle(
                                                     fontSize: 12),
                                                 border: OutlineInputBorder(
@@ -771,7 +773,9 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                           height: height * 0.075,
                                           width: height * 0.4,
                                           decoration: BoxDecoration(
-                                            color: whiteColor,
+                                            color: variants.isNotEmpty
+                                                ? whiteColor
+                                                : lightGreyColor,
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             border: Border.all(
@@ -914,7 +918,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                             vertical: 8,
                                                           ),
                                                           hintText:
-                                                              'Search make...',
+                                                              'Search variant...',
                                                           hintStyle:
                                                               const TextStyle(
                                                                   fontSize: 12),
@@ -1010,7 +1014,9 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                 height: height * 0.075,
                                 width: height * 0.4,
                                 decoration: BoxDecoration(
-                                  color: whiteColor,
+                                  color: modyears.isNotEmpty
+                                      ? whiteColor
+                                      : lightGreyColor,
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(color: borderGreyColor),
                                 ),
@@ -1170,10 +1176,14 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                             controller: plateNumberController,
                                             keyboardType: TextInputType.text,
                                             textAlign: TextAlign.center,
-                                            maxLength: 15,
+                                            maxLength: 10,
                                             style: montserratMedium.copyWith(
                                                 color: blackColor,
                                                 fontSize: width * 0.04),
+                                            validator: (value) {
+                                              return plateNumberValidation(
+                                                  value);
+                                            },
                                             decoration: InputDecoration(
                                                 errorStyle: TextStyle(
                                                     fontSize: 12,
