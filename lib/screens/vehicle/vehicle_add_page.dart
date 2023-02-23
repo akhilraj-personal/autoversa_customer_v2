@@ -558,7 +558,9 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                 height: height * 0.075,
                                 width: height * 0.4,
                                 decoration: BoxDecoration(
-                                  color: whiteColor,
+                                  color: models.isNotEmpty
+                                      ? whiteColor
+                                      : lightGreyColor,
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(color: borderGreyColor),
                                 ),
@@ -771,7 +773,9 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                           height: height * 0.075,
                                           width: height * 0.4,
                                           decoration: BoxDecoration(
-                                            color: whiteColor,
+                                            color: variants.isNotEmpty
+                                                ? whiteColor
+                                                : lightGreyColor,
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             border: Border.all(
@@ -1010,7 +1014,9 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                 height: height * 0.075,
                                 width: height * 0.4,
                                 decoration: BoxDecoration(
-                                  color: whiteColor,
+                                  color: modyears.isNotEmpty
+                                      ? whiteColor
+                                      : lightGreyColor,
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(color: borderGreyColor),
                                 ),
