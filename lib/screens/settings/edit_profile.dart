@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
-import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
@@ -14,6 +13,7 @@ import 'package:autoversa/utils/common_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:dio/dio.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -21,6 +21,8 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+
+import '../bottom_tab/bottomtab.dart';
 
 class Editprofie extends StatefulWidget {
   const Editprofie({super.key});
@@ -43,8 +45,9 @@ class EditprofieState extends State<Editprofie> {
   File? profileImage;
   var viewprofilepic;
   var givenprofilepic;
-  bool issubmitted = false;
-  String emirates = '';
+  bool issubmitted = false, isLoaded = false;
+  String emirates = '', emirates_id = '0';
+
   List<DropdownMenuItem<String>> items = [];
   List data = List<String>.empty();
   final _formKey = GlobalKey<FormState>();
@@ -106,7 +109,11 @@ class EditprofieState extends State<Editprofie> {
           data = value['statelist'];
           items = data
               .map((item) => DropdownMenuItem(
-                  child: Text(item['state_name']),
+                  child: Text(
+                    item['state_name'],
+                    style: montserratMedium.copyWith(
+                        color: Colors.black, fontSize: width * 0.04),
+                  ),
                   value: item['state_id'].toString()))
               .toList();
         });
@@ -127,6 +134,7 @@ class EditprofieState extends State<Editprofie> {
         .then((value) => {
               if (value['ret_data'] == "success")
                 {
+                  print(value),
                   setState(() {
                     custdetails = value['cust_info'];
                     fullNameController.text =
@@ -145,10 +153,16 @@ class EditprofieState extends State<Editprofie> {
                             ? custdetails['cust_mobile']
                             : "";
                     givenprofilepic = custdetails['cust_profile_pic'];
+                    emirates_id = custdetails['state_id'];
+                    isLoaded = true;
                   }),
                 }
               else
-                {}
+                {
+                  setState(() {
+                    isLoaded = false;
+                  })
+                }
             })
         .catchError((e) {
       print(e.toString());
@@ -190,7 +204,7 @@ class EditprofieState extends State<Editprofie> {
               ? dotenv.env['aws_url']! + viewprofilepic
               : dotenv.env['aws_url']! + custdetails['cust_profile_pic']
           : "",
-      'emiratesId': emirates != null ? emirates : custdetails['state_id'],
+      'emiratesId': emirates_id,
     };
     print("====>");
     print(req);
@@ -198,8 +212,16 @@ class EditprofieState extends State<Editprofie> {
       if (value['ret_data'] == "success") {
         showCustomToast(context, "Profile Details Updated",
             bgColor: Colors.black, textColor: Colors.white);
-        Navigator.pushReplacementNamed(context, Routes.bottombar);
         setState(() => issubmitted = false);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BottomNavBarScreen(
+              index: 4,
+            ),
+          ),
+          (route) => false,
+        );
       } else {
         setState(() => issubmitted = false);
         showCustomToast(context, value['ret_data'],
@@ -207,6 +229,7 @@ class EditprofieState extends State<Editprofie> {
       }
     }).catchError((e) {
       setState(() => issubmitted = false);
+      print(e);
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     });
@@ -319,677 +342,818 @@ class EditprofieState extends State<Editprofie> {
           ),
         ),
         body: Container(
-          height: height,
-          width: width,
-          child: Stack(
-            alignment: AlignmentDirectional.topCenter,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 110),
-                padding:
-                    EdgeInsets.only(top: 50, left: 16, right: 16, bottom: 16),
-                width: context.width(),
-                height: context.height(),
-                decoration: boxDecorationWithShadow(
-                  backgroundColor: context.cardColor,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30)),
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text("Personal Information",
-                          style: montserratSemiBold.copyWith(
-                              fontSize: 16, color: Colors.black)),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Full Name" + " *",
-                                  style: montserratSemiBold.copyWith(
-                                      fontSize: width * 0.034,
-                                      color: Colors.black)),
-                              SizedBox(height: 4),
-                              Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Container(
-                                      height: height * 0.045,
-                                      width: height * 0.37,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 16,
-                                                color:
-                                                    syanColor.withOpacity(.5),
-                                                spreadRadius: 0,
-                                                blurStyle: BlurStyle.outer,
-                                                offset: Offset(0, 0)),
-                                          ]),
-                                    ),
-                                    Container(
-                                        height: height * 0.075,
-                                        width: height * 0.4,
+            height: height,
+            width: width,
+            child: Stack(
+              alignment: AlignmentDirectional.topCenter,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 110),
+                  padding:
+                      EdgeInsets.only(top: 50, left: 16, right: 16, bottom: 16),
+                  width: context.width(),
+                  height: context.height(),
+                  decoration: boxDecorationWithShadow(
+                    backgroundColor: context.cardColor,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("Personal Information",
+                            style: montserratSemiBold.copyWith(
+                                fontSize: 16, color: Colors.black)),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Full Name" + " *",
+                                    style: montserratSemiBold.copyWith(
+                                        fontSize: width * 0.034,
+                                        color: Colors.black)),
+                                SizedBox(height: 4),
+                                Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height: height * 0.045,
+                                        width: height * 0.37,
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: borderGreyColor),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Container(
-                                                padding: EdgeInsets.only(
-                                                    right: width * 0.025,
-                                                    left: width * 0.025),
-                                                child: TextFormField(
-                                                  controller:
-                                                      fullNameController,
-                                                  obscureText: false,
-                                                  maxLength: 50,
-                                                  textAlign: TextAlign.left,
-                                                  maxLines: 1,
-                                                  onFieldSubmitted: (value) {
-                                                    FocusScope.of(context)
-                                                        .requestFocus(
-                                                            emailFocus);
-                                                  },
-                                                  focusNode: fullNameFocusNode,
-                                                  style:
-                                                      montserratLight.copyWith(
-                                                          color: Colors.black,
-                                                          fontSize:
-                                                              width * 0.034),
-                                                  decoration: InputDecoration(
-                                                      errorStyle: TextStyle(
-                                                          fontSize:
-                                                              width * 0.032,
-                                                          color: warningcolor),
-                                                      counterText: "",
-                                                      filled: true,
-                                                      hintText: "Full Name",
-                                                      hintStyle:
-                                                          montserratRegular
-                                                              .copyWith(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                      border: InputBorder.none,
-                                                      fillColor: Colors.white),
-                                                  validator: (value) {
-                                                    return fullNameValidation(
-                                                        value, context);
-                                                  },
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 16,
+                                                  color:
+                                                      syanColor.withOpacity(.5),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Container(
+                                          height: height * 0.075,
+                                          width: height * 0.4,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: borderGreyColor),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.only(
+                                                      right: width * 0.025,
+                                                      left: width * 0.025),
+                                                  child: TextFormField(
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    controller:
+                                                        fullNameController,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    textCapitalization:
+                                                        TextCapitalization
+                                                            .words,
+                                                    obscureText: false,
+                                                    maxLength: 80,
+                                                    textAlign: TextAlign.left,
+                                                    maxLines: 1,
+                                                    onFieldSubmitted: (value) {
+                                                      FocusScope.of(context)
+                                                          .requestFocus(
+                                                              emailFocus);
+                                                    },
+                                                    focusNode:
+                                                        fullNameFocusNode,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                            color: Colors.black,
+                                                            fontSize:
+                                                                width * 0.04),
+                                                    decoration: InputDecoration(
+                                                        errorStyle: TextStyle(
+                                                            fontSize:
+                                                                width * 0.032,
+                                                            color:
+                                                                warningcolor),
+                                                        counterText: "",
+                                                        filled: true,
+                                                        hintText: "Full Name",
+                                                        hintStyle: montserratMedium
+                                                            .copyWith(
+                                                                color:
+                                                                    borderGreyColor,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.04),
+                                                        border:
+                                                            InputBorder.none,
+                                                        fillColor:
+                                                            Colors.white),
+                                                    validator: (value) {
+                                                      return fullNameValidation(
+                                                          value, context);
+                                                    },
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ))
-                                  ]),
-                              SizedBox(height: 12),
-                              Text("Email",
-                                  style: montserratSemiBold.copyWith(
-                                      fontSize: width * 0.034,
-                                      color: Colors.black)),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Container(
-                                      height: height * 0.045,
-                                      width: height * 0.37,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 16,
-                                                color:
-                                                    syanColor.withOpacity(.5),
-                                                spreadRadius: 0,
-                                                blurStyle: BlurStyle.outer,
-                                                offset: Offset(0, 0)),
-                                          ]),
-                                    ),
-                                    Container(
-                                        height: height * 0.075,
-                                        width: height * 0.4,
+                                            ],
+                                          ))
+                                    ]),
+                                SizedBox(height: 12),
+                                Text("Email",
+                                    style: montserratSemiBold.copyWith(
+                                        fontSize: width * 0.034,
+                                        color: Colors.black)),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height: height * 0.045,
+                                        width: height * 0.37,
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: borderGreyColor),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Container(
-                                                padding: EdgeInsets.only(
-                                                    right: width * 0.025,
-                                                    left: width * 0.025),
-                                                child: TextFormField(
-                                                  controller: emailController,
-                                                  obscureText: false,
-                                                  maxLength: 80,
-                                                  textAlign: TextAlign.left,
-                                                  maxLines: 1,
-                                                  onFieldSubmitted: (value) {
-                                                    FocusScope.of(context)
-                                                        .requestFocus(
-                                                            alternatenumberFocusNode);
-                                                  },
-                                                  focusNode: emailFocus,
-                                                  style:
-                                                      montserratLight.copyWith(
-                                                          color: Colors.black,
-                                                          fontSize:
-                                                              width * 0.034),
-                                                  decoration: InputDecoration(
-                                                      errorStyle: TextStyle(
-                                                          fontSize:
-                                                              width * 0.032,
-                                                          color: warningcolor),
-                                                      counterText: "",
-                                                      filled: true,
-                                                      hintText: "Email Id",
-                                                      hintStyle:
-                                                          montserratRegular
-                                                              .copyWith(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                      border: InputBorder.none,
-                                                      fillColor: Colors.white),
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 16,
+                                                  color:
+                                                      syanColor.withOpacity(.5),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Container(
+                                          height: height * 0.075,
+                                          width: height * 0.4,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: borderGreyColor),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.only(
+                                                      right: width * 0.025,
+                                                      left: width * 0.025),
+                                                  child: TextFormField(
+                                                    controller: emailController,
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    obscureText: false,
+                                                    maxLength: 80,
+                                                    textAlign: TextAlign.left,
+                                                    maxLines: 1,
+                                                    onFieldSubmitted: (value) {
+                                                      FocusScope.of(context)
+                                                          .requestFocus(
+                                                              alternatenumberFocusNode);
+                                                    },
+                                                    validator: (value) {
+                                                      return emailValidation(
+                                                          value, context);
+                                                    },
+                                                    focusNode: emailFocus,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                            color: Colors.black,
+                                                            fontSize:
+                                                                width * 0.04),
+                                                    decoration: InputDecoration(
+                                                        errorStyle: TextStyle(
+                                                            fontSize:
+                                                                width * 0.032,
+                                                            color:
+                                                                warningcolor),
+                                                        counterText: "",
+                                                        filled: true,
+                                                        hintText: "Email Id",
+                                                        hintStyle: montserratMedium
+                                                            .copyWith(
+                                                                color:
+                                                                    borderGreyColor,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.04),
+                                                        border:
+                                                            InputBorder.none,
+                                                        fillColor:
+                                                            Colors.white),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ))
-                                  ]),
-                              SizedBox(height: 12),
-                              Text("Emirates" + " *",
-                                  style: montserratSemiBold.copyWith(
-                                      fontSize: width * 0.034,
-                                      color: Colors.black)),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Container(
-                                      height: height * 0.045,
-                                      width: height * 0.37,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 16,
-                                                color:
-                                                    syanColor.withOpacity(.5),
-                                                spreadRadius: 0,
-                                                blurStyle: BlurStyle.outer,
-                                                offset: Offset(0, 0)),
-                                          ]),
-                                    ),
-                                    Container(
-                                        height: height * 0.075,
-                                        width: height * 0.4,
+                                            ],
+                                          ))
+                                    ]),
+                                SizedBox(height: 12),
+                                Text("Emirates" + " *",
+                                    style: montserratSemiBold.copyWith(
+                                        fontSize: width * 0.034,
+                                        color: Colors.black)),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height: height * 0.045,
+                                        width: height * 0.37,
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: borderGreyColor),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Container(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 16,
+                                                  color:
+                                                      syanColor.withOpacity(.5),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Container(
+                                          height: height * 0.075,
+                                          width: height * 0.4,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: borderGreyColor),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Container(
+                                                  child:
+                                                      DropdownButtonFormField2(
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    value:
+                                                        custdetails['state_id'],
+                                                    decoration: InputDecoration(
+                                                      //Add isDense true and zero Padding.
+                                                      //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      focusedErrorBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    const Color(
+                                                                        0xfffff),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorStyle: TextStyle(
+                                                        fontSize: 12,
+                                                        color: warningcolor,
+                                                      ),
+                                                      //Add more decoration as you want here
+                                                      //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                                    ),
+                                                    isExpanded: true,
+                                                    hint: Text(
+                                                      ST.of(context).emirates,
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color:
+                                                                  borderGreyColor,
+                                                              fontSize:
+                                                                  width * 0.04),
+                                                    ),
+                                                    alignment: Alignment.center,
+                                                    buttonHeight:
+                                                        height * 0.075,
+                                                    buttonPadding:
+                                                        const EdgeInsets.only(
+                                                            left: 20,
+                                                            right: 10),
+                                                    dropdownDecoration:
+                                                        BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                    ),
+                                                    items: items,
+                                                    validator: (value) {
+                                                      if (value == null) {
+                                                        return emirateValidation(
+                                                            value, context);
+                                                      }
+                                                    },
+                                                    onChanged: (value) {
+                                                      emirates_id =
+                                                          value.toString();
+                                                    },
+                                                  ),
+                                                  //     DropdownButtonFormField(
+                                                  //   isExpanded: true,
+                                                  //   value:
+                                                  //       custdetails['state_id'],
+                                                  //   decoration: InputDecoration
+                                                  //       .collapsed(
+                                                  //           hintText: ''),
+                                                  //   hint: Align(
+                                                  //       alignment:
+                                                  //           Alignment.center,
+                                                  //       child: Text(
+                                                  //         ST
+                                                  //             .of(context)
+                                                  //             .emirates,
+                                                  //         style: montserratMedium
+                                                  //             .copyWith(
+                                                  //                 color: borderGreyColor,
+                                                  //                 fontSize:
+                                                  //                     width *
+                                                  //                         0.034),
+                                                  //       )),
+                                                  //   items: items,
+                                                  //   validator: (value) {
+                                                  //     if (value == null) {
+                                                  //       return emirateValidation(
+                                                  //           value, context);
+                                                  //     }
+                                                  //   },
+                                                  //   onChanged: (value) {
+                                                  //     print(value);
+                                                  //     emirates_id =
+                                                  //         value.toString();
+                                                  //   },
+                                                  // ),
+                                                ),
+                                              ),
+                                            ],
+                                          ))
+                                    ]),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                Text("Contact" + " *",
+                                    style: montserratSemiBold.copyWith(
+                                        fontSize: width * 0.034,
+                                        color: Colors.black)),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height: height * 0.045,
+                                        width: height * 0.37,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 16,
+                                                  color:
+                                                      syanColor.withOpacity(.5),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Container(
+                                          height: height * 0.075,
+                                          width: height * 0.4,
+                                          decoration: BoxDecoration(
+                                            color: lightGreyColor,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: borderGreyColor),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Container(
                                                 padding: EdgeInsets.only(
-                                                    right: width * 0.025,
-                                                    left: width * 0.025),
-                                                child: DropdownButtonFormField(
-                                                  isExpanded: true,
-                                                  value:
-                                                      custdetails['state_id'],
-                                                  decoration:
-                                                      InputDecoration.collapsed(
-                                                          hintText: ''),
-                                                  hint: Align(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        ST.of(context).emirates,
-                                                        style: montserratRegular
+                                                    left: width * 0.025,
+                                                    right: width * 0.025),
+                                                child: Text(
+                                                  "AE +971",
+                                                  style:
+                                                      montserratMedium.copyWith(
+                                                          color: Colors.black,
+                                                          fontSize:
+                                                              width * 0.04),
+                                                ),
+                                              ),
+                                              Container(
+                                                height: height * 0.075,
+                                                width: 2.0,
+                                                color: borderGreyColor,
+                                                margin: EdgeInsets.only(
+                                                    left: width * 0.025,
+                                                    right: width * 0.025),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: lightGreyColor),
+                                                  padding: EdgeInsets.only(
+                                                      right: width * 0.025),
+                                                  child: TextField(
+                                                    controller:
+                                                        contactNumberController,
+                                                    enabled: false,
+                                                    textAlign: TextAlign.left,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    maxLines: 1,
+                                                    onSubmitted: (value) {
+                                                      FocusScope.of(context)
+                                                          .requestFocus(
+                                                              contactNumberFocusNode);
+                                                    },
+                                                    focusNode:
+                                                        contactNumberFocusNode,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                            color: Colors.black,
+                                                            fontSize:
+                                                                width * 0.04),
+                                                    decoration: InputDecoration(
+                                                        errorStyle: TextStyle(
+                                                            fontSize:
+                                                                width * 0.032,
+                                                            color:
+                                                                warningcolor),
+                                                        counterText: "",
+                                                        filled: true,
+                                                        hintText: ST
+                                                            .of(context)
+                                                            .mobile_number,
+                                                        hintStyle: montserratRegular
                                                             .copyWith(
                                                                 color: Colors
                                                                     .black,
                                                                 fontSize:
                                                                     width *
                                                                         0.034),
-                                                      )),
-                                                  items: items,
-                                                  validator: (value) {
-                                                    if (value == null) {
-                                                      return emirateValidation(
-                                                          value, context);
-                                                    }
-                                                  },
-                                                  onChanged: (value) {
-                                                    emirates = value.toString();
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ))
-                                  ]),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              Text("Contact" + " *",
-                                  style: montserratSemiBold.copyWith(
-                                      fontSize: width * 0.034,
-                                      color: Colors.black)),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Container(
-                                      height: height * 0.045,
-                                      width: height * 0.37,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 16,
-                                                color:
-                                                    syanColor.withOpacity(.5),
-                                                spreadRadius: 0,
-                                                blurStyle: BlurStyle.outer,
-                                                offset: Offset(0, 0)),
-                                          ]),
-                                    ),
-                                    Container(
-                                        height: height * 0.075,
-                                        width: height * 0.4,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: borderGreyColor),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Container(
-                                              padding: EdgeInsets.only(
-                                                  left: width * 0.025,
-                                                  right: width * 0.025),
-                                              child: Text(
-                                                "AE +971",
-                                                style: montserratLight.copyWith(
-                                                    color: Colors.black,
-                                                    fontSize: width * 0.034),
-                                              ),
-                                            ),
-                                            Container(
-                                              height: height * 0.075,
-                                              width: 2.0,
-                                              color: borderGreyColor,
-                                              margin: EdgeInsets.only(
-                                                  left: width * 0.025,
-                                                  right: width * 0.025),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                padding: EdgeInsets.only(
-                                                    right: width * 0.025),
-                                                child: TextField(
-                                                  controller:
-                                                      contactNumberController,
-                                                  enabled: false,
-                                                  textAlign: TextAlign.left,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  maxLines: 1,
-                                                  onSubmitted: (value) {
-                                                    FocusScope.of(context)
-                                                        .requestFocus(
-                                                            contactNumberFocusNode);
-                                                  },
-                                                  focusNode:
-                                                      contactNumberFocusNode,
-                                                  style:
-                                                      montserratLight.copyWith(
-                                                          color: Colors.black,
-                                                          fontSize:
-                                                              width * 0.034),
-                                                  decoration: InputDecoration(
-                                                      errorStyle: TextStyle(
-                                                          fontSize:
-                                                              width * 0.032,
-                                                          color: warningcolor),
-                                                      counterText: "",
-                                                      filled: true,
-                                                      hintText: ST
-                                                          .of(context)
-                                                          .mobile_number,
-                                                      hintStyle:
-                                                          montserratRegular
-                                                              .copyWith(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                      border: InputBorder.none,
-                                                      fillColor: Colors.white),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ))
-                                  ]),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              Text("Alternate Contact" + " *",
-                                  style: montserratSemiBold.copyWith(
-                                      fontSize: width * 0.034,
-                                      color: Colors.black)),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Container(
-                                      height: height * 0.045,
-                                      width: height * 0.37,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 16,
-                                                color:
-                                                    syanColor.withOpacity(.5),
-                                                spreadRadius: 0,
-                                                blurStyle: BlurStyle.outer,
-                                                offset: Offset(0, 0)),
-                                          ]),
-                                    ),
-                                    Container(
-                                        height: height * 0.075,
-                                        width: height * 0.4,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: borderGreyColor),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Container(
-                                              padding: EdgeInsets.only(
-                                                  left: width * 0.025,
-                                                  right: width * 0.025),
-                                              child: Text(
-                                                "AE +971",
-                                                style: montserratLight.copyWith(
-                                                    color: Colors.black,
-                                                    fontSize: width * 0.034),
-                                              ),
-                                            ),
-                                            Container(
-                                              height: height * 0.075,
-                                              width: 2.0,
-                                              color: borderGreyColor,
-                                              margin: EdgeInsets.only(
-                                                  left: width * 0.025,
-                                                  right: width * 0.025),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                padding: EdgeInsets.only(
-                                                    right: width * 0.025),
-                                                child: TextFormField(
-                                                  controller:
-                                                      alternateNumberController,
-                                                  obscureText: false,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  maxLength: 10,
-                                                  textAlign: TextAlign.left,
-                                                  focusNode:
-                                                      alternatenumberFocusNode,
-                                                  style:
-                                                      montserratLight.copyWith(
-                                                          color: Colors.black,
-                                                          fontSize:
-                                                              width * 0.034),
-                                                  decoration: InputDecoration(
-                                                      errorStyle: TextStyle(
-                                                          fontSize:
-                                                              width * 0.032,
-                                                          color: warningcolor),
-                                                      counterText: "",
-                                                      filled: true,
-                                                      hintText:
-                                                          "Alternate Number",
-                                                      hintStyle:
-                                                          montserratRegular
-                                                              .copyWith(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                      border: InputBorder.none,
-                                                      fillColor: Colors.white),
-                                                  onChanged: _onChanged,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ))
-                                  ]),
-                              SizedBox(height: height * 0.04),
-                              GestureDetector(
-                                onTap: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    if (issubmitted) return;
-                                    setState(() => issubmitted = true);
-                                    await Future.delayed(
-                                        Duration(milliseconds: 1000));
-                                    onProfileUpdate();
-                                  }
-                                },
-                                child: Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Container(
-                                      height: height * 0.045,
-                                      width: height * 0.37,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 16,
-                                                color:
-                                                    syanColor.withOpacity(.6),
-                                                spreadRadius: 0,
-                                                blurStyle: BlurStyle.outer,
-                                                offset: Offset(0, 0)),
-                                          ]),
-                                    ),
-                                    Container(
-                                      height: height * 0.075,
-                                      width: height * 0.4,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.rectangle,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(14)),
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            syanColor,
-                                            lightblueColor,
-                                          ],
-                                        ),
-                                      ),
-                                      child: !issubmitted
-                                          ? Text(
-                                              "UPDATE",
-                                              style:
-                                                  montserratSemiBold.copyWith(
-                                                      color: Colors.white),
-                                            )
-                                          : Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Transform.scale(
-                                                  scale: 0.7,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    color: Colors.white,
+                                                        border:
+                                                            InputBorder.none,
+                                                        fillColor:
+                                                            lightGreyColor),
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                    ),
-                                  ],
+                                              ),
+                                            ],
+                                          ))
+                                    ]),
+                                SizedBox(
+                                  height: 12,
                                 ),
-                              ),
-                            ],
+                                Text("Alternate Contact" + " *",
+                                    style: montserratSemiBold.copyWith(
+                                        fontSize: width * 0.034,
+                                        color: Colors.black)),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height: height * 0.045,
+                                        width: height * 0.37,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 16,
+                                                  color:
+                                                      syanColor.withOpacity(.5),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Container(
+                                          height: height * 0.075,
+                                          width: height * 0.4,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: borderGreyColor),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Container(
+                                                padding: EdgeInsets.only(
+                                                    left: width * 0.025,
+                                                    right: width * 0.025),
+                                                child: Text(
+                                                  "AE +971",
+                                                  style:
+                                                      montserratMedium.copyWith(
+                                                          color: Colors.black,
+                                                          fontSize:
+                                                              width * 0.04),
+                                                ),
+                                              ),
+                                              Container(
+                                                height: height * 0.075,
+                                                width: 2.0,
+                                                color: borderGreyColor,
+                                                margin: EdgeInsets.only(
+                                                    left: width * 0.025,
+                                                    right: width * 0.025),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  padding: EdgeInsets.only(
+                                                      right: width * 0.025),
+                                                  child: TextFormField(
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    controller:
+                                                        alternateNumberController,
+                                                    obscureText: false,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    maxLength: 10,
+                                                    textAlign: TextAlign.left,
+                                                    focusNode:
+                                                        alternatenumberFocusNode,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                            color: Colors.black,
+                                                            fontSize:
+                                                                width * 0.04),
+                                                    decoration: InputDecoration(
+                                                        errorStyle: TextStyle(
+                                                            fontSize:
+                                                                width * 0.032,
+                                                            color:
+                                                                warningcolor),
+                                                        counterText: "",
+                                                        filled: true,
+                                                        hintText:
+                                                            "Alternate Number",
+                                                        hintStyle: montserratRegular
+                                                            .copyWith(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034),
+                                                        border:
+                                                            InputBorder.none,
+                                                        fillColor:
+                                                            Colors.white),
+                                                    validator: (value) {
+                                                      return mobileNumberValidation(
+                                                          value, context);
+                                                    },
+                                                    onChanged: _onChanged,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ))
+                                    ]),
+                                SizedBox(height: height * 0.04),
+                                GestureDetector(
+                                  onTap: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      if (issubmitted) return;
+                                      setState(() => issubmitted = true);
+                                      await Future.delayed(
+                                          Duration(milliseconds: 1000));
+                                      onProfileUpdate();
+                                    }
+                                  },
+                                  child: Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height: height * 0.045,
+                                        width: height * 0.37,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 16,
+                                                  color:
+                                                      syanColor.withOpacity(.6),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Container(
+                                        height: height * 0.075,
+                                        width: height * 0.4,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(14)),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              syanColor,
+                                              lightblueColor,
+                                            ],
+                                          ),
+                                        ),
+                                        child: !issubmitted
+                                            ? Text(
+                                                "UPDATE",
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        color: Colors.white),
+                                              )
+                                            : Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Transform.scale(
+                                                    scale: 0.7,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Stack(
-                alignment: AlignmentDirectional.bottomEnd,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(right: 8, top: 24),
-                    height: 135,
-                    width: 135,
-                    child: profileImage != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.file(
-                              profileImage!,
-                              width: 135.0,
-                              height: 135.0,
-                              fit: BoxFit.fill,
-                            ),
-                          ).paddingTop(5)
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: custdetails['cust_profile_pic'] != null
-                                ? CachedNetworkImage(
-                                    placeholder: (context, url) =>
-                                        Transform.scale(
-                                      scale: 0.5,
-                                      child: const CircularProgressIndicator(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    imageUrl: dotenv.env['aws_url']! +
-                                        custdetails['cust_profile_pic'],
-                                    fit: BoxFit.cover,
-                                    width: 135.0,
-                                    height: 135.0,
-                                  )
-                                : Image.asset(
-                                    ImageConst.default_pro_pic,
-                                    height: width * 0.35,
-                                  ),
-                          ).paddingTop(5),
-                  ),
-                  Positioned(
-                    bottom: 16,
-                    child: Container(
-                      child: IconButton(
-                          icon: Image.asset(
-                            ImageConst.camera,
-                            width: 20,
-                            height: 20,
-                            fit: BoxFit.fill,
-                            color: white,
-                          ),
-                          onPressed: () async {
-                            profilepictureclick();
-                          }),
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              lightblueColor,
-                              syanColor,
-                            ],
-                          ),
-                          shape: BoxShape.circle),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
-        ),
+                ),
+                Stack(
+                  alignment: AlignmentDirectional.bottomEnd,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(right: 8, top: 24),
+                      height: 135,
+                      width: 135,
+                      child: profileImage != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.file(
+                                profileImage!,
+                                width: 135.0,
+                                height: 135.0,
+                                fit: BoxFit.fill,
+                              ),
+                            ).paddingTop(5)
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: custdetails['cust_profile_pic'] != null &&
+                                      custdetails['cust_profile_pic'] != ''
+                                  ? CachedNetworkImage(
+                                      placeholder: (context, url) =>
+                                          Transform.scale(
+                                        scale: 0.5,
+                                        child: const CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      imageUrl: dotenv.env['aws_url']! +
+                                          custdetails['cust_profile_pic'],
+                                      fit: BoxFit.cover,
+                                      width: 135.0,
+                                      height: 135.0,
+                                    )
+                                  : Image.asset(
+                                      ImageConst.default_pro_pic,
+                                      height: width * 0.35,
+                                    ),
+                            ).paddingTop(5),
+                    ),
+                    Positioned(
+                      bottom: 16,
+                      child: Container(
+                        child: IconButton(
+                            icon: Image.asset(
+                              ImageConst.camera,
+                              width: 20,
+                              height: 20,
+                              fit: BoxFit.fill,
+                              color: white,
+                            ),
+                            onPressed: () async {
+                              profilepictureclick();
+                            }),
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                lightblueColor,
+                                syanColor,
+                              ],
+                            ),
+                            shape: BoxShape.circle),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )),
       ),
     );
   }
