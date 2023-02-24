@@ -307,8 +307,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
             booking_package['pkg_name'] != null
                 ? booking_package['pkg_name']
                 : "Summery Page",
-            style: myriadproregular.copyWith(
-              fontSize: 18,
+            style: montserratRegular.copyWith(
+              fontSize: width * 0.044,
               color: Colors.white,
             ),
           ),

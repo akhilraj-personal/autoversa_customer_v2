@@ -900,6 +900,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
             "Selected location not in our service area. Please choose another location",
             bgColor: errorcolor, textColor: white);
       } else {
+        packdata['package_cost'] = booking_package['bkp_cust_amount'];
         packdata['pick_up_location'] = SelectAddressList[selected_address];
         packdata['pick_up_location_id'] = ptemp;
         packdata['drop_location_id'] = dtemp;
@@ -916,6 +917,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
           if (selected_timeid != 0) {
             packdata['selected_timeid'] = selected_timeid;
             packdata['selected_timeslot'] = selected_timeslot;
+            packdata['vehicle_id'] = bookingdetails['vehicle']['cv_id'];
+            packdata['complaint'] = bookingdetails['bk_complaint'];
             prefs.setString("booking_data", json.encode(packdata));
             pickupoption = "";
             setState(() => isproceeding = false);
@@ -2161,7 +2164,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                     }).toList(),
                                                     onChanged: (value) {
                                                       setState(() {
-                                                        pickupaddresschange(
+                                                        dropaddresschange(
                                                             SelectAddressList
                                                                 .indexOf(value
                                                                     .toString()));
