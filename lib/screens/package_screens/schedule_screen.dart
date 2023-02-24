@@ -12,6 +12,7 @@ import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -1636,12 +1637,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             ]),
                       ),
                       Container(
-                          margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                          padding: EdgeInsets.all(8),
-                          width: width * 1.85,
                           height: height * 0.075,
+                          width: height * 0.4,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: white,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(color: borderGreyColor),
                           ),
@@ -1651,22 +1650,62 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             children: <Widget>[
                               Expanded(
                                 child: Container(
-                                  padding: EdgeInsets.only(
-                                      right: width * 0.025,
-                                      left: width * 0.025),
-                                  child: DropdownButtonFormField(
+                                  child: DropdownButtonFormField2(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    decoration: InputDecoration(
+                                      //Add isDense true and zero Padding.
+                                      //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.zero,
+                                      focusedBorder: OutlineInputBorder(
+                                        // width: 0.0 produces a thin "hairline" border
+                                        borderSide: const BorderSide(
+                                            color: const Color(0xffCCCCCC),
+                                            width: 0.0),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                        // width: 0.0 produces a thin "hairline" border
+                                        borderSide: const BorderSide(
+                                            color: const Color(0xffCCCCCC),
+                                            width: 0.0),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        // width: 0.0 produces a thin "hairline" border
+                                        borderSide: const BorderSide(
+                                            color: const Color(0xffCCCCCC),
+                                            width: 0.0),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        // width: 0.0 produces a thin "hairline" border
+                                        borderSide: const BorderSide(
+                                            color: const Color(0xfffff),
+                                            width: 0.0),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      errorStyle: TextStyle(
+                                        fontSize: 12,
+                                        color: warningcolor,
+                                      ),
+                                      //Add more decoration as you want here
+                                      //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                    ),
                                     isExpanded: true,
-                                    value: SelectAddressList[selected_address],
-                                    decoration:
-                                        InputDecoration.collapsed(hintText: ''),
-                                    hint: Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Select Address",
-                                          style: montserratRegular.copyWith(
-                                              color: Colors.black,
-                                              fontSize: width * 0.034),
-                                        )),
+                                    hint: Text(
+                                      "Select Address" + "*",
+                                      style: montserratMedium.copyWith(
+                                          color: black, fontSize: width * 0.04),
+                                    ),
+                                    alignment: Alignment.center,
+                                    buttonHeight: height * 0.075,
+                                    buttonPadding: const EdgeInsets.only(
+                                        left: 20, right: 10),
+                                    dropdownDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
                                     items:
                                         SelectAddressList.map((String? value) {
                                       return DropdownMenuItem<String>(
