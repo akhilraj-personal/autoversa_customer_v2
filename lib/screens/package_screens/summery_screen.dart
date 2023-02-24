@@ -138,6 +138,33 @@ class SummeryPageState extends State<SummeryPage> {
         "sourcetype": "MOB",
         "bk_pickup_cost": packdata['pick_up_price'],
       });
+      Map req = {
+        'bookingattachment': audio,
+        "custId": prefs.getString('cust_id'),
+        "cust_name": prefs.getString('name'),
+        "vehId": packdata['vehicle_id'],
+        "bkurl": packdata['audio_location'],
+        "pickupaddress": packdata['pick_up_location_id'],
+        "dropaddress": packdata['drop_location_id'],
+        "bookingdate": packdata['selected_date'],
+        "sub_packages": packdata['sub_packages'],
+        "services": packdata['services'],
+        "expenses": [],
+        "packid": packdata['package_id'],
+        "packtype": packdata['packtype'],
+        "packprice": packdata['package_cost'],
+        "total_amount": totalamount,
+        "advance": "0",
+        "discount": "0",
+        "bk_branchid": 1,
+        'complaint': packdata['complaint'],
+        "slot": packdata['selected_timeid'],
+        "pickuptype": packdata['pick_type_id'],
+        "sourcetype": "MOB",
+        "bk_pickup_cost": packdata['pick_up_price'],
+      };
+      print("BKKKKKKKKKKKK");
+      print(req);
       String? token = prefs.getString('token');
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';

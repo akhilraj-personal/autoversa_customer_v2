@@ -15,6 +15,7 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../services/pre_auth_services.dart';
 import '../../utils/common_utils.dart';
@@ -42,6 +43,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
   StreamSubscription? internetconnection;
 
   String otppin = '';
+  String codeValue = "";
 
   @override
   void initState() {

@@ -218,8 +218,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
         'tot_amount': totalamount,
         'trxn_id': trnxId,
         'complaint': bookingdetails['bk_complaint'],
-        'slot': bookingdetails['bk_timeslot'],
-        'bookingdate': bookingdetails['bk_booking_date'],
+        'slot': packdata['selected_timeid'],
+        'bookingdate': packdata['selected_date'],
         'audiofile': audio != null ? audio['bka_url'] : ""
       };
       await confirmbookingpayment(booking).then((value) {
