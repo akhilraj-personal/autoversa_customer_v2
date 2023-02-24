@@ -168,8 +168,6 @@ class _DashScreenState extends State<DashScreen> {
         });
       }
     }).catchError((e) {
-      print("2345");
-      print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
@@ -179,7 +177,6 @@ class _DashScreenState extends State<DashScreen> {
     notificationList = [];
     Map req = {};
     await getCustomerNotificationList(req).then((value) {
-      print(value);
       if (value['ret_data'] == "success") {
         for (var notify in value['notification_list']) {
           NotificationModel noti = new NotificationModel();
@@ -190,12 +187,10 @@ class _DashScreenState extends State<DashScreen> {
           isActive = false;
         });
       } else {
-        print(value);
         isActive = false;
         setState(() {});
       }
     }).catchError((e) {
-      print(e.toString());
       setState(() {
         isActive = false;
       });
