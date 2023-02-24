@@ -169,8 +169,6 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     }).catchError((e) {
-      print("2345");
-      print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
@@ -179,7 +177,6 @@ class _HomeScreenState extends State<HomeScreen> {
   _getNotificationList() async {
     Map req = {};
     await getCustomerNotificationList(req).then((value) {
-      print(value);
       if (value['ret_data'] == "success") {
         for (var notify in value['notification_list']) {
           NotificationModel noti = new NotificationModel();
@@ -188,12 +185,10 @@ class _HomeScreenState extends State<HomeScreen> {
             notificationList.add(noti);
           }
         }
-        print(notificationList.length);
         setState(() {
           isActive = false;
         });
       } else {
-        print(value);
         isActive = false;
         setState(() {});
       }
