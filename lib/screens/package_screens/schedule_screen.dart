@@ -1099,7 +1099,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                           true,
                                                                       hint:
                                                                           Text(
-                                                                        ST.of(context).make +
+                                                                        "Select City" +
                                                                             "*",
                                                                         style: montserratMedium.copyWith(
                                                                             color:
@@ -1237,7 +1237,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                           true,
                                                                       hint:
                                                                           Text(
-                                                                        ST.of(context).make +
+                                                                        "Select Area" +
                                                                             "*",
                                                                         style: montserratMedium.copyWith(
                                                                             color:
