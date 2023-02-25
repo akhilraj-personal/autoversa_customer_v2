@@ -408,7 +408,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                               maxLines: 2)
                                           : SizedBox(),
                                       Text(vehiclename,
-                                          style: montserratRegular.copyWith(
+                                          style: montserratMedium.copyWith(
                                               color: black,
                                               fontSize: width * 0.032),
                                           overflow: TextOverflow.clip,
@@ -419,7 +419,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                               ? booking_package['pkg_name']
                                               : "",
                                           overflow: TextOverflow.ellipsis,
-                                          style: montserratLight.copyWith(
+                                          style: montserratMedium.copyWith(
                                               color: black,
                                               fontSize: width * 0.034)),
                                       Text(
@@ -437,7 +437,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                       Divider(),
                                       Text(
                                         packdata['pick_type_name'] ?? "",
-                                        style: montserratLight.copyWith(
+                                        style: montserratMedium.copyWith(
                                             color: black,
                                             fontSize: width * 0.034),
                                       ),
@@ -514,7 +514,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                               child: Text(
                                 packdata['pick_up_location'] ?? "",
                                 overflow: TextOverflow.clip,
-                                style: montserratLight.copyWith(
+                                style: montserratMedium.copyWith(
                                     color: black, fontSize: width * 0.034),
                               ),
                             ),
@@ -581,7 +581,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                               child: Text(
                                 packdata['drop_location'] ?? "",
                                 overflow: TextOverflow.clip,
-                                style: montserratLight.copyWith(
+                                style: montserratMedium.copyWith(
                                     color: black, fontSize: width * 0.034),
                               ),
                             ),
@@ -773,7 +773,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                               child: Text(
                                 packdata['complaint'] ?? "",
                                 overflow: TextOverflow.clip,
-                                style: montserratLight.copyWith(
+                                style: montserratMedium.copyWith(
                                     color: black, fontSize: width * 0.034),
                               ),
                             ),
@@ -948,7 +948,7 @@ class CustomWarning extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pushReplacementNamed(context, Routes.bottombar);
+                // Navigator.pushReplacementNamed(context, Routes.bottombar);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -1002,7 +1002,19 @@ class CustomSuccess extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(height: 130, color: black),
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      lightblueColor,
+                      syanColor,
+                    ],
+                  )),
+                ),
+                // Container(height: 130, color: black),
                 Column(
                   children: [
                     Image.asset(
