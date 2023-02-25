@@ -542,7 +542,7 @@ class SummeryPageState extends State<SummeryPage> {
                                                   widget.custvehlist[widget.selectedveh]
                                                       ['cv_year'] +
                                                   " )",
-                                              style: montserratRegular.copyWith(
+                                              style: montserratMedium.copyWith(
                                                   color: blackColor,
                                                   fontSize: width * 0.034),
                                               overflow: TextOverflow.clip,
@@ -556,13 +556,13 @@ class SummeryPageState extends State<SummeryPage> {
                                                   widget.custvehlist[widget.selectedveh]
                                                       ['cv_year'] +
                                                   " )",
-                                              style: montserratRegular.copyWith(color: blackColor, fontSize: width * 0.034),
+                                              style: montserratMedium.copyWith(color: blackColor, fontSize: width * 0.034),
                                               overflow: TextOverflow.clip,
                                               maxLines: 5),
                                       Divider(),
                                       Text(widget.package_id['pkg_name'],
                                           overflow: TextOverflow.ellipsis,
-                                          style: montserratLight.copyWith(
+                                          style: montserratMedium.copyWith(
                                               color: blackColor,
                                               fontSize: width * 0.034)),
                                       Text(
@@ -579,7 +579,7 @@ class SummeryPageState extends State<SummeryPage> {
                                       Divider(),
                                       Text(
                                         packdata['pick_type_name'] ?? "",
-                                        style: montserratLight.copyWith(
+                                        style: montserratMedium.copyWith(
                                             color: blackColor,
                                             fontSize: width * 0.034),
                                       ),
@@ -656,7 +656,7 @@ class SummeryPageState extends State<SummeryPage> {
                               child: Text(
                                 packdata['pick_up_location'] ?? "",
                                 overflow: TextOverflow.clip,
-                                style: montserratLight.copyWith(
+                                style: montserratMedium.copyWith(
                                     color: blackColor, fontSize: width * 0.034),
                               ),
                             ),
@@ -723,7 +723,7 @@ class SummeryPageState extends State<SummeryPage> {
                               child: Text(
                                 packdata['drop_location'] ?? "",
                                 overflow: TextOverflow.clip,
-                                style: montserratLight.copyWith(
+                                style: montserratMedium.copyWith(
                                     color: blackColor, fontSize: width * 0.034),
                               ),
                             ),
@@ -874,7 +874,7 @@ class SummeryPageState extends State<SummeryPage> {
                         children: [
                           Text(
                             "Additional Comments",
-                            style: montserratSemiBold.copyWith(
+                            style: montserratMedium.copyWith(
                                 color: blackColor, fontSize: width * 0.034),
                           ),
                         ],
@@ -1142,7 +1142,19 @@ class CustomSuccess extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(height: 130, color: blackColor),
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      lightblueColor,
+                      syanColor,
+                    ],
+                  )),
+                ),
+                // Container(height: 130, color: blackColor),
                 Column(
                   children: [
                     Image.asset(
