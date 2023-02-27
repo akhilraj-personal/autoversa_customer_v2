@@ -1043,7 +1043,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
               }
             } else if (statuslist["bkt_code"] == "PIWC") {
               var temp = {
-                "status": "Pickedup & enrouted\nto workshop",
+                "status": "Pickedup & enroute\nto workshop",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -1240,7 +1240,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
             if (cust_status_master[i] == "PIWC") {
               var temp = {
-                "status": "Pickedup & enrouted\nto workshop",
+                "status": "Pickedup & enroute\nto workshop",
                 "time": "",
                 "code": "",
                 "icon": 'assets/icons/pickedup_inactive.png',
@@ -2115,10 +2115,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                     OutlinedButton(
                                                                   onPressed:
                                                                       () async {
-                                                                    bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
-                                                                            'us_country_code'] +
-                                                                        drivercontact[
-                                                                            'us_phone']);
+                                                                    // bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
+                                                                    //         'us_country_code'] +
+                                                                    //     drivercontact[
+                                                                    //         'us_phone']);
                                                                   },
                                                                   style: OutlinedButton
                                                                       .styleFrom(

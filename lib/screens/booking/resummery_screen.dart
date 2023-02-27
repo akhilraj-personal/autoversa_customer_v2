@@ -263,9 +263,9 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   Widget build(BuildContext context) {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.light,
-        statusBarColor: Colors.white,
+        statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.white,
       ),
       child: Scaffold(
@@ -410,7 +410,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                       Text(vehiclename,
                                           style: montserratMedium.copyWith(
                                               color: black,
-                                              fontSize: width * 0.032),
+                                              fontSize: width * 0.034),
                                           overflow: TextOverflow.clip,
                                           maxLines: 5),
                                       Divider(),
@@ -648,7 +648,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 ? DateFormat('LLLL').format(
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
-                            style: montserratLight.copyWith(
+                            style: montserratMedium.copyWith(
                                 color: black, fontSize: width * 0.034),
                           ),
                           SizedBox(
@@ -659,7 +659,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 ? DateFormat('d').format(
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
-                            style: montserratLight.copyWith(
+                            style: montserratMedium.copyWith(
                                 color: black, fontSize: width * 0.034),
                           ),
                         ],
@@ -700,7 +700,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 ? packdata['selected_timeslot'].split('- ')[0] +
                                     "-"
                                 : "",
-                            style: montserratLight.copyWith(
+                            style: montserratMedium.copyWith(
                                 color: black, fontSize: width * 0.034),
                           ),
                           Text(
@@ -708,7 +708,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 ? " " +
                                     packdata['selected_timeslot'].split('- ')[1]
                                 : "",
-                            style: montserratLight.copyWith(
+                            style: montserratMedium.copyWith(
                                 color: black, fontSize: width * 0.034),
                           ),
                         ],
