@@ -493,6 +493,7 @@ class AddressListState extends State<AddressList> {
                                       left: width * 0.04,
                                       right: width * 0.04,
                                       bottom: width * 1.33),
+                                  height: height * 0.2,
                                   padding: EdgeInsets.all(12),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
@@ -511,6 +512,7 @@ class AddressListState extends State<AddressList> {
                                       left: width * 0.04,
                                       right: width * 0.04,
                                       bottom: width * 1.33),
+                                  height: height * 0.2,
                                   decoration: BoxDecoration(
                                       color: white,
                                       border: Border.all(color: Colors.grey),
