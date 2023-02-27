@@ -652,6 +652,7 @@ class ServiceListState extends State<ServiceList> {
                                           left: width * 0.04,
                                           right: width * 0.04,
                                           bottom: width * 1.2),
+                                      height: height * 0.2,
                                       padding: EdgeInsets.all(12),
                                       decoration: BoxDecoration(
                                           borderRadius:
@@ -672,6 +673,7 @@ class ServiceListState extends State<ServiceList> {
                                           left: width * 0.04,
                                           right: width * 0.04,
                                           bottom: width * 1.2),
+                                      height: height * 0.2,
                                       decoration: BoxDecoration(
                                           color: white,
                                           border:

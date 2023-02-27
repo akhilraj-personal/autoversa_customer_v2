@@ -83,7 +83,7 @@ class VehiclelistState extends State<Vehiclelist> {
             temp.cv_updated_by = veh['cv_updated_by'];
             temp.cv_status_flag = veh['cv_status_flag'];
             temp.cv_delete_flag = veh['cv_delete_flag'];
-            // custvehlist.add(temp);
+            custvehlist.add(temp);
           }
           isActive = false;
         });
@@ -568,6 +568,7 @@ class VehiclelistState extends State<Vehiclelist> {
                                             left: width * 0.04,
                                             right: width * 0.04,
                                             bottom: width * 1.2),
+                                        height: height * 0.2,
                                         padding: EdgeInsets.all(12),
                                         decoration: BoxDecoration(
                                             borderRadius:
@@ -588,6 +589,7 @@ class VehiclelistState extends State<Vehiclelist> {
                                             left: width * 0.04,
                                             right: width * 0.04,
                                             bottom: width * 1.2),
+                                        height: height * 0.2,
                                         decoration: BoxDecoration(
                                             color: white,
                                             border:
