@@ -276,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return AnnotatedRegion(
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
           statusBarColor: Colors.transparent,
           systemNavigationBarColor: Colors.white,
         ),
