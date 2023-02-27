@@ -2436,7 +2436,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                     color: statusflow[index]
                                                         ["color"],
                                                     margin: EdgeInsets.only(
-                                                      left: width * 0.05,
+                                                      left: width * 0.047,
                                                     ),
                                                   ),
                                                 ]);
