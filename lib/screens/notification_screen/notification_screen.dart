@@ -136,8 +136,8 @@ class NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
         statusBarColor: Colors.white,
         systemNavigationBarColor: Colors.white,
       ),
