@@ -1310,10 +1310,7 @@ class CustomWarning extends StatelessWidget {
               height: 16,
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.pushReplacementNamed(context, Routes.bottombar);
-              },
+              onTap: () {},
               child: Container(
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
