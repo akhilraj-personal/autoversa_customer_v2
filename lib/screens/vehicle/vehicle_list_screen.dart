@@ -83,7 +83,7 @@ class VehiclelistState extends State<Vehiclelist> {
             temp.cv_updated_by = veh['cv_updated_by'];
             temp.cv_status_flag = veh['cv_status_flag'];
             temp.cv_delete_flag = veh['cv_delete_flag'];
-            // custvehlist.add(temp);
+            custvehlist.add(temp);
           }
           isActive = false;
         });
