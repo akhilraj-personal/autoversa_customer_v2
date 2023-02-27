@@ -866,7 +866,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ? height * 0.07
                                         : bookingList.length > 1
                                             ? height * 0.09
-                                            : height * 0.05),
+                                            : height * 0.08),
                       ]),
                       isVehicleLoaded
                           ? customerVehList.length < 2
@@ -919,7 +919,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   });
                                                 },
                                                 child: Container(
-                                                  height: height * 0.1,
+                                                  height: height * 0.14,
                                                   width: width,
                                                   padding: EdgeInsets.only(
                                                       left: width * 0.04,
