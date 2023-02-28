@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:autoversa/main.dart';
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
 import 'package:autoversa/screens/booking/reschedule_screen.dart';
@@ -77,10 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
       } else if (result == ConnectivityResult.mobile) {
         setState(() {
           isoffline = false;
+          Navigator.pushReplacementNamed(context, Routes.bottombar);
         });
       } else if (result == ConnectivityResult.wifi) {
         setState(() {
           isoffline = false;
+          Navigator.pushReplacementNamed(context, Routes.bottombar);
         });
       }
     });
@@ -1656,10 +1659,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Tryout()));
-          },
+          onTap: () {},
           child: Container(
             padding: EdgeInsets.all(height * 0.023),
             decoration: BoxDecoration(
