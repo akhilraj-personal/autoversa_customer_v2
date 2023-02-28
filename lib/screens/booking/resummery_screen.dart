@@ -144,7 +144,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
         "dropaddress": packdata['drop_location_id'],
         "pickuptype": packdata['pick_type_id'],
         "pickupcost": packdata['pick_up_price'],
-        "complaint": bookingdetails['bk_complaint'],
+        'complaint': additionalcommentsController.text.toString(),
         "advance": "0",
         "discount": "0",
         "total_amount": totalamount,
@@ -224,7 +224,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
         'book_id': bookingdetails['bk_id'],
         'tot_amount': totalamount,
         'trxn_id': trnxId,
-        'complaint': bookingdetails['bk_complaint'],
+        'complaint': additionalcommentsController.text.toString(),
         'slot': packdata['selected_timeid'],
         'bookingdate': packdata['selected_date'],
         'audiofile': audio != null ? audio['bka_url'] : ""

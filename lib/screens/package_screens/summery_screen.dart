@@ -144,7 +144,7 @@ class SummeryPageState extends State<SummeryPage> {
         "advance": "0",
         "discount": "0",
         "bk_branchid": 1,
-        'complaint': packdata['complaint'],
+        'complaint': additionalcommentsController.text.toString(),
         "slot": packdata['selected_timeid'],
         "pickuptype": packdata['pick_type_id'],
         "sourcetype": "MOB",
@@ -169,7 +169,7 @@ class SummeryPageState extends State<SummeryPage> {
         "advance": "0",
         "discount": "0",
         "bk_branchid": 1,
-        'complaint': packdata['complaint'],
+        'complaint': additionalcommentsController.text.toString(),
         "slot": packdata['selected_timeid'],
         "pickuptype": packdata['pick_type_id'],
         "sourcetype": "MOB",
@@ -197,7 +197,7 @@ class SummeryPageState extends State<SummeryPage> {
         audiofile = retdata['audio_file'];
         trnxId = retdata['payment_details']['id'];
         slot = packdata['selected_timeid'];
-        complaint = packdata['complaint'];
+        complaint = additionalcommentsController.text.toString();
         bookingdate = packdata['selected_date'];
         await prefs.remove("booking_data");
       } else {
