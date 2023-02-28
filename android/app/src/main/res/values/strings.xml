@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Example: Sets all OneSignal notification's accent color to Green by default.  -->
+    <!-- Color format is in ARGB. -->
+    <string name="onesignal_notification_accent_color">FF31BBAC</string>
+</resources>
