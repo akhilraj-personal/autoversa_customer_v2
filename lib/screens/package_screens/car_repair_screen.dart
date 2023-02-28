@@ -109,7 +109,6 @@ class CarRepairState extends State<CarRepair> {
         }
       }
     }
-    optionList = [];
     if (booking_flag == false) {
       try {
         Map req = {
@@ -119,6 +118,8 @@ class CarRepairState extends State<CarRepair> {
           "variant": widget.custvehlist[currentveh]['cv_variant'],
           "year": widget.custvehlist[currentveh]['cv_year'],
         };
+        print("reqqqqqqqqqqqqqq");
+        print(req);
         var nonMapCount = 0;
         await getServicePackageDetails(req).then((value) {
           if (value['ret_data'] == "success") {
@@ -753,7 +754,7 @@ class CarRepairState extends State<CarRepair> {
                                 height: 12,
                               ),
                               isServicing
-                                  ? serviceList.isEmpty
+                                  ? optionList.isEmpty
                                       ? ListView.builder(
                                           scrollDirection: Axis.vertical,
                                           shrinkWrap: true,

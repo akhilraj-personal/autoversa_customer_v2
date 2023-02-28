@@ -6,6 +6,7 @@ import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/no_internet_screen.dart';
+import 'package:autoversa/screens/package_screens/sound_player_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -48,6 +49,9 @@ class SummeryPageState extends State<SummeryPage> {
   var slot;
   var complaint;
   var bookingdate;
+  final player = SoundPlayer();
+  TextEditingController additionalcommentsController = TextEditingController();
+  var packdataaudio;
 
   @override
   void initState() {
@@ -81,6 +85,11 @@ class SummeryPageState extends State<SummeryPage> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       packdata = json.decode(prefs.get("booking_data").toString());
+      additionalcommentsController.text =
+          packdata['complaint'] != null ? packdata['complaint'] : "";
+      packdataaudio = prefs.getString('comp_audio') != null
+          ? prefs.getString('comp_audio')
+          : null;
       if (packdata['package_cost'] != null) {
         totalamount = double.parse(packdata['package_cost'].toString()) +
             double.parse(packdata['pick_up_price'].toString());
@@ -90,7 +99,9 @@ class SummeryPageState extends State<SummeryPage> {
     });
   }
 
-  Future<void> init() async {}
+  Future<void> init() async {
+    player.init();
+  }
 
   @override
   void setState(fn) {
@@ -100,6 +111,7 @@ class SummeryPageState extends State<SummeryPage> {
   @override
   void dispose() {
     super.dispose();
+    player.dispose();
     internetconnection!.cancel();
   }
 
@@ -132,7 +144,7 @@ class SummeryPageState extends State<SummeryPage> {
         "advance": "0",
         "discount": "0",
         "bk_branchid": 1,
-        'complaint': packdata['complaint'],
+        'complaint': additionalcommentsController.text.toString(),
         "slot": packdata['selected_timeid'],
         "pickuptype": packdata['pick_type_id'],
         "sourcetype": "MOB",
@@ -157,7 +169,7 @@ class SummeryPageState extends State<SummeryPage> {
         "advance": "0",
         "discount": "0",
         "bk_branchid": 1,
-        'complaint': packdata['complaint'],
+        'complaint': additionalcommentsController.text.toString(),
         "slot": packdata['selected_timeid'],
         "pickuptype": packdata['pick_type_id'],
         "sourcetype": "MOB",
@@ -185,7 +197,7 @@ class SummeryPageState extends State<SummeryPage> {
         audiofile = retdata['audio_file'];
         trnxId = retdata['payment_details']['id'];
         slot = packdata['selected_timeid'];
-        complaint = packdata['complaint'];
+        complaint = additionalcommentsController.text.toString();
         bookingdate = packdata['selected_date'];
         await prefs.remove("booking_data");
       } else {
@@ -313,6 +325,11 @@ class SummeryPageState extends State<SummeryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isPlaying = player.isPlaying;
+    final playrecordicon = isPlaying
+        ? Icons.stop_circle_outlined
+        : Icons.play_circle_outline_sharp;
+    final playrecordtext = isPlaying ? "Stop Playing" : "Play Recording";
     return AnnotatedRegion(
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.light,
@@ -834,46 +851,166 @@ class SummeryPageState extends State<SummeryPage> {
                     SizedBox(
                       height: 8,
                     ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(20, 4, 20, 0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                            color: whiteColor),
+                        child: TextField(
+                            keyboardType: TextInputType.multiline,
+                            minLines: 1,
+                            maxLines: 5,
+                            maxLength: 230,
+                            controller: additionalcommentsController,
+                            textInputAction: TextInputAction.newline,
+                            decoration: InputDecoration(
+                                counterText: "",
+                                hintText: ST.of(context).your_message_here,
+                                hintStyle: montserratRegular.copyWith(
+                                    color: blackColor, fontSize: width * 0.034),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: greyColor, width: 0.5),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: greyColor, width: 0.5),
+                                  borderRadius: BorderRadius.circular(10),
+                                ))),
+                        alignment: Alignment.center,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Divider(
+                        color: divider_grey_color,
+                        thickness: 1.5,
+                        indent: 20,
+                        endIndent: 20),
+                    SizedBox(
+                      height: 8,
+                    ),
                     Container(
                       margin: EdgeInsets.only(left: 30.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
-                            height: height * 0.050,
-                            width: height * 0.050,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  lightblueColor,
-                                  syanColor,
-                                ],
-                              ),
-                            ),
-                            child: Image.asset(
-                              ImageConst.comments_icon,
-                              scale: 4.5,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Flexible(
-                            child: Container(
-                              child: Text(
-                                packdata['complaint'] ?? "",
-                                overflow: TextOverflow.clip,
-                                style: montserratLight.copyWith(
-                                    color: blackColor, fontSize: width * 0.034),
-                              ),
-                            ),
+                          Text(
+                            "Recordings",
+                            style: montserratSemiBold.copyWith(
+                                color: blackColor, fontSize: width * 0.034),
                           ),
                         ],
                       ),
                     ),
+                    packdataaudio != null
+                        ? Padding(
+                            padding: EdgeInsets.fromLTRB(8, 8, 20, 0),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 4,
+                                  child: Container(
+                                    margin: const EdgeInsets.fromLTRB(
+                                        14.0, 0, 0, 0),
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.white.withOpacity(0.2),
+                                          blurRadius: 0.1,
+                                          spreadRadius: 0,
+                                        ),
+                                      ],
+                                      border: Border.all(
+                                          color: greyColor.withOpacity(0.5)),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    padding: const EdgeInsets.all(8),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Padding(padding: EdgeInsets.all(4)),
+                                            Container(
+                                              alignment: Alignment.center,
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                gradient: LinearGradient(
+                                                  begin: Alignment.topRight,
+                                                  end: Alignment.bottomRight,
+                                                  colors: [
+                                                    lightblueColor,
+                                                    syanColor,
+                                                  ],
+                                                ),
+                                              ),
+                                              child: Icon(
+                                                  Icons
+                                                      .record_voice_over_outlined,
+                                                  color: Colors.white,
+                                                  size: 20),
+                                            ),
+                                            SizedBox(
+                                              width: 16,
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(playrecordtext,
+                                                    style: montserratRegular
+                                                        .copyWith(
+                                                            color: Colors.black,
+                                                            fontSize:
+                                                                width * 0.034)),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        CircleAvatar(
+                                          radius: 20,
+                                          backgroundColor: Colors.white,
+                                          child: IconButton(
+                                            icon: Icon(playrecordicon,
+                                                color: Colors.black),
+                                            onPressed: () async {
+                                              await player.togglePlaying(
+                                                  whenFinished: () =>
+                                                      setState(() {}));
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Padding(
+                            padding: EdgeInsets.fromLTRB(30, 8, 20, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Text("No Recordings",
+                                    style: montserratRegular.copyWith(
+                                      fontSize: width * 0.035,
+                                      color: blackColor,
+                                    )),
+                              ],
+                            ),
+                          ),
                     SizedBox(
                       height: 8,
                     ),
