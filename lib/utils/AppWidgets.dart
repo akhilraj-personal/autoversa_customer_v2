@@ -147,28 +147,61 @@ Widget errorWidget(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(title,
-                    style: montserratSemiBold.copyWith(fontSize: width * 0.04)),
+                    style: montserratSemiBold.copyWith(fontSize: width * 0.05)),
                 4.height,
                 Text(desc,
                         style:
-                            montserratRegular.copyWith(fontSize: width * 0.03),
+                            montserratRegular.copyWith(fontSize: width * 0.04),
                         textAlign: TextAlign.center)
                     .paddingOnly(left: 20, right: 20),
                 Column(
                   children: [
                     30.height,
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        primary: white,
-                      ),
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () async {
                         onRetry!();
                       },
-                      child: Text('RETRY',
-                          style: montserratRegular.copyWith(color: black)),
-                    )
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Container(
+                            height: height * 0.045,
+                            width: height * 0.37,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                boxShadow: [
+                                  BoxShadow(
+                                      blurRadius: 16,
+                                      color: syanColor.withOpacity(.6),
+                                      spreadRadius: 0,
+                                      blurStyle: BlurStyle.outer,
+                                      offset: Offset(0, 0)),
+                                ]),
+                          ),
+                          Container(
+                            height: height * 0.075,
+                            width: height * 0.45,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(14)),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  syanColor,
+                                  lightblueColor,
+                                ],
+                              ),
+                            ),
+                            child: Text('RETRY',
+                                style:
+                                    montserratRegular.copyWith(color: white)),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ).visible(showRetry),
               ],

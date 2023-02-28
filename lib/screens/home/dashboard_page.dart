@@ -360,13 +360,7 @@ class _DashScreenState extends State<DashScreen> {
                                       Row(
                                         children: [
                                           GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Tryout()));
-                                            },
+                                            onTap: () {},
                                             child: Image.asset(
                                               ImageConst.person,
                                               scale: 3.6,
@@ -1645,10 +1639,7 @@ class _DashScreenState extends State<DashScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Tryout()));
-          },
+          onTap: () {},
           child: Container(
             padding: EdgeInsets.all(height * 0.023),
             decoration: BoxDecoration(

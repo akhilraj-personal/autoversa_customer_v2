@@ -2,6 +2,7 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/screens/splash_screen/splash_screen.dart';
 import 'package:autoversa/utils/AppWidgets.dart';
+import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -58,7 +59,7 @@ class NoInternetScreenState extends State<NoInternetScreen> {
         showRetry: false,
         onRetry: () {
           showCustomToast(context, "Retrying",
-              bgColor: white, textColor: Colors.black);
+              bgColor: toastgrey, textColor: white);
         },
       ),
     );
