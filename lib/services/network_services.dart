@@ -14,7 +14,12 @@ Map buildHeader() {
 
 Future<Response> postRequest(String endPoint, body) async {
   try {
-    if (!await isNetworkAvailable()) throw "NETWORK_ERROR";
+    if (!await isNetworkAvailable()) {
+      var temp = await isNetworkAvailable();
+      if (!temp) {
+        throw "NETWORK_ERROR";
+      }
+    }
     String url = dotenv.env['API_URL']! + endPoint;
     Response response = await post(Uri.parse(url), body: body).timeout(
         Duration(seconds: 30),
