@@ -201,7 +201,7 @@ class EditprofieState extends State<Editprofie> {
           : "",
       'cust_profile_pic': custdetails['cust_profile_pic'] != null
           ? viewprofilepic != null
-              ? dotenv.env['aws_url']! + viewprofilepic
+              ? viewprofilepic
               : dotenv.env['aws_url']! + custdetails['cust_profile_pic']
           : "",
       'emiratesId': emirates_id,
@@ -1188,8 +1188,8 @@ class EditprofieState extends State<Editprofie> {
       if (retdata['ret_data'] == "success") {
         setState(() {
           profilepicturechanged = false;
+          viewprofilepic = dotenv.env['aws_url']! + retdata['cust_profile_pic'];
         });
-        viewprofilepic = dotenv.env['aws_url']! + retdata['cust_profile_pic'];
         setState(() => profileImage = File(pickedImage.path));
       }
     } on PlatformException catch (e) {
@@ -1228,8 +1228,9 @@ class EditprofieState extends State<Editprofie> {
       if (retdata['ret_data'] == "success") {
         setState(() {
           profilepicturechanged = true;
+          viewprofilepic = dotenv.env['aws_url']! + retdata['cust_profile_pic'];
         });
-        viewprofilepic = dotenv.env['aws_url']! + retdata['cust_profile_pic'];
+
         setState(() => profileImage = File(pickedImage.path));
       }
     } on PlatformException catch (e) {

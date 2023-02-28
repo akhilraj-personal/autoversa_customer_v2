@@ -309,8 +309,8 @@ class CarRepairState extends State<CarRepair> {
     final playrecordtext = isPlaying ? "Stop Playing" : "Play Recording";
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
         statusBarColor: Colors.white,
         systemNavigationBarColor: Colors.white,
       ),

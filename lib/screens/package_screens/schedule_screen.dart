@@ -615,7 +615,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.white,
       ),

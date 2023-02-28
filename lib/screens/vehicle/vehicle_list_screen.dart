@@ -563,11 +563,12 @@ class VehiclelistState extends State<Vehiclelist> {
                                     alignment: Alignment.topCenter,
                                     children: [
                                       Container(
-                                        margin:
-                                            EdgeInsets.only(top: width * 0.31),
+                                        margin: EdgeInsets.only(
+                                            top: height * 0.02,
+                                            left: width * 0.04,
+                                            right: width * 0.04),
+                                        height: height * 0.18,
                                         padding: EdgeInsets.all(12),
-                                        height: height * 0.045,
-                                        width: height * 0.37,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(12),
@@ -585,14 +586,14 @@ class VehiclelistState extends State<Vehiclelist> {
                                         margin: EdgeInsets.only(
                                             top: height * 0.02,
                                             left: width * 0.04,
-                                            right: width * 0.04,
-                                            bottom: width * 1.2),
+                                            right: width * 0.04),
+                                        height: height * 0.18,
                                         decoration: BoxDecoration(
                                             color: white,
                                             border:
                                                 Border.all(color: Colors.grey),
                                             borderRadius:
-                                                BorderRadius.circular(10)),
+                                                BorderRadius.circular(12)),
                                         child: Row(
                                           children: <Widget>[
                                             Expanded(

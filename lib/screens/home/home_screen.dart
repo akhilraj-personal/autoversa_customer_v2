@@ -276,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return AnnotatedRegion(
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
           statusBarColor: Colors.transparent,
           systemNavigationBarColor: Colors.white,
         ),
@@ -919,7 +919,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   });
                                                 },
                                                 child: Container(
-                                                  height: height * 0.1,
+                                                  height: height * 0.14,
                                                   width: width,
                                                   padding: EdgeInsets.only(
                                                       left: width * 0.04,
