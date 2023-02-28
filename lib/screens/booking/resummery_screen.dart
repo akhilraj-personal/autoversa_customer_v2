@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
+import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
@@ -46,6 +47,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   int bookId = 0;
   var trnxId;
   var vehiclename = "";
+  TextEditingController additionalcommentsController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -79,6 +81,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       packdata = json.decode(prefs.get("booking_data").toString());
+      print(packdata['selected_timeslot'].split('- ')[1]);
       if (packdata['package_cost'] != null) {
         totalamount = double.parse(packdata['package_cost'].toString()) +
             double.parse(packdata['pick_up_price'].toString());
@@ -111,6 +114,10 @@ class ResummeryScreenState extends State<ResummeryScreen> {
           vehicle = value['booking']['vehicle'];
           booking_package = value['booking']['booking_package'];
           value['audio'] != null ? audio = value['audio'] : "";
+          additionalcommentsController.text =
+              bookingdetails['bk_complaint'] != null
+                  ? bookingdetails['bk_complaint']
+                  : "";
         });
         setState(() {
           vehiclename = vehicle['cv_variant'] != null
@@ -137,7 +144,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
         "dropaddress": packdata['drop_location_id'],
         "pickuptype": packdata['pick_type_id'],
         "pickupcost": packdata['pick_up_price'],
-        "complaint": packdata['complaint'],
+        "complaint": bookingdetails['bk_complaint'],
         "advance": "0",
         "discount": "0",
         "total_amount": totalamount,
@@ -741,44 +748,35 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                     SizedBox(
                       height: 8,
                     ),
-                    Container(
-                      margin: EdgeInsets.only(left: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: height * 0.050,
-                            width: height * 0.050,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topRight,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  lightblueColor,
-                                  syanColor,
-                                ],
-                              ),
-                            ),
-                            child: Image.asset(
-                              ImageConst.comments_icon,
-                              scale: 4.5,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Flexible(
-                            child: Container(
-                              child: Text(
-                                packdata['complaint'] ?? "",
-                                overflow: TextOverflow.clip,
-                                style: montserratMedium.copyWith(
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(20, 4, 20, 0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                            color: white),
+                        child: TextField(
+                            keyboardType: TextInputType.multiline,
+                            minLines: 1,
+                            maxLines: 5,
+                            maxLength: 230,
+                            controller: additionalcommentsController,
+                            textInputAction: TextInputAction.newline,
+                            decoration: InputDecoration(
+                                counterText: "",
+                                hintText: ST.of(context).your_message_here,
+                                hintStyle: montserratRegular.copyWith(
                                     color: black, fontSize: width * 0.034),
-                              ),
-                            ),
-                          ),
-                        ],
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: greyColor, width: 0.5),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: greyColor, width: 0.5),
+                                  borderRadius: BorderRadius.circular(10),
+                                ))),
+                        alignment: Alignment.center,
                       ),
                     ),
                     SizedBox(
@@ -938,8 +936,7 @@ class CustomWarning extends StatelessWidget {
             ),
             Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
-                child: Text(
-                    "Please check dashboard to complete payment for further proceedings.",
+                child: Text("Please complete payment for further proceedings.",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
                         fontSize: width * 0.032, color: black))),
@@ -948,6 +945,7 @@ class CustomWarning extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
+                Navigator.pop(context);
                 // Navigator.pushReplacementNamed(context, Routes.bottombar);
               },
               child: Container(
