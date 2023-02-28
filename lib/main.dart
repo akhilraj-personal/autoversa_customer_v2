@@ -13,6 +13,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'generated/l10n.dart';
@@ -28,6 +29,11 @@ Future<void> main() async {
       OneSignal.shared.setNotificationWillShowInForegroundHandler(
           (OSNotificationReceivedEvent? event) {
         return event?.complete(event.notification);
+      });
+      await Permission.notification.isDenied.then((value) {
+        if (value) {
+          Permission.notification.request();
+        }
       });
     } catch (e) {
       print('${e.toString()}');
