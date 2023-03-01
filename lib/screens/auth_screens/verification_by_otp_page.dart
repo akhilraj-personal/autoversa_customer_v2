@@ -15,7 +15,6 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../services/pre_auth_services.dart';
 import '../../utils/common_utils.dart';
@@ -339,10 +338,16 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                               color: lightblackColor, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
-                        Text('\n' + ST.of(context).change_number,
-                            style: montserratMedium.copyWith(
-                                color: changenumberorange, fontSize: 14),
-                            textAlign: TextAlign.end),
+                        GestureDetector(
+                          onTap: () async {
+                            Navigator.pushReplacementNamed(
+                                context, Routes.loginPage);
+                          },
+                          child: Text('\n' + ST.of(context).change_number,
+                              style: montserratMedium.copyWith(
+                                  color: changenumberorange, fontSize: 14),
+                              textAlign: TextAlign.end),
+                        ),
                         SizedBox(height: height * 0.03),
                         Text(
                           ST.of(context).please_enter_the_code,
@@ -373,68 +378,89 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         ),
                         SizedBox(height: 16),
                         Container(
-                          child: OTPtimer == 0
+                          child: isResend
                               ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () async {
-                                        if (isResend == false) {
-                                          setState(() {
-                                            isResend = true;
-                                          });
-                                          if (verify_count < 5) {
-                                            reSendOTP();
-                                          } else {
-                                            showCustomToast(context,
-                                                ST.of(context).max_otp_text,
-                                                bgColor: warningcolor,
-                                                textColor: whiteColor);
-                                          }
-                                        }
-                                      },
-                                      child: Text(
-                                          click_count >= 0
-                                              ? ST.of(context).resend_otp_text
-                                              : "",
-                                          style: montserratSemiBold.copyWith(
-                                              color: lightblackColor,
-                                              fontSize: 14)),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        if (isResend == false) {
-                                          if (verify_count < 5) {
-                                            verifyViaCall();
-                                          } else {
-                                            showCustomToast(context,
-                                                ST.of(context).max_otp_text,
-                                                bgColor: warningcolor,
-                                                textColor: whiteColor);
-                                          }
-                                        }
-                                      },
-                                      child: Text(
-                                        click_count >= 1
-                                            ? ST.of(context).verify_call_text
-                                            : "",
-                                        style: montserratSemiBold.copyWith(
-                                            color: lightblackColor,
-                                            fontSize: 14),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                      Text(ST.of(context).otp_resend_try +
-                                          " " +
-                                          OTPtimer.toString() +
-                                          " " +
-                                          ST.of(context).seconds_text),
-                                    ]),
+                                      Text("Sending..."),
+                                    ])
+                              : OTPtimer == 0
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () async {
+                                            if (isResend == false) {
+                                              setState(() {
+                                                isResend = true;
+                                              });
+                                              if (verify_count < 5) {
+                                                reSendOTP();
+                                              } else {
+                                                setState(() {
+                                                  isResend = false;
+                                                });
+                                                showCustomToast(context,
+                                                    ST.of(context).max_otp_text,
+                                                    bgColor: warningcolor,
+                                                    textColor: whiteColor);
+                                              }
+                                            }
+                                          },
+                                          child: Text(
+                                              click_count >= 0
+                                                  ? ST
+                                                      .of(context)
+                                                      .resend_otp_text
+                                                  : "",
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: lightblackColor,
+                                                      fontSize: 14)),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            if (isResend == false) {
+                                              setState(() {
+                                                isResend = true;
+                                              });
+                                              if (verify_count < 5) {
+                                                verifyViaCall();
+                                              } else {
+                                                setState(() {
+                                                  isResend = false;
+                                                });
+                                                showCustomToast(context,
+                                                    ST.of(context).max_otp_text,
+                                                    bgColor: warningcolor,
+                                                    textColor: whiteColor);
+                                              }
+                                            }
+                                          },
+                                          child: Text(
+                                            click_count >= 1
+                                                ? ST
+                                                    .of(context)
+                                                    .verify_call_text
+                                                : "",
+                                            style: montserratSemiBold.copyWith(
+                                                color: lightblackColor,
+                                                fontSize: 14),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                          Text(ST.of(context).otp_resend_try +
+                                              " " +
+                                              OTPtimer.toString() +
+                                              " " +
+                                              ST.of(context).seconds_text),
+                                        ]),
                         ),
                         SizedBox(height: 20),
                         GestureDetector(

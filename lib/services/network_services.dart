@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io' show Platform;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
@@ -16,8 +17,10 @@ Future<Response> postRequest(String endPoint, body) async {
   try {
     if (!await isNetworkAvailable()) {
       var temp = await isNetworkAvailable();
-      if (!temp) {
-        throw "NETWORK_ERROR";
+      if (Platform.isAndroid) {
+        if (!temp) {
+          throw "NETWORK_ERROR";
+        }
       }
     }
     String url = dotenv.env['API_URL']! + endPoint;

@@ -223,7 +223,11 @@ class _LoginPageState extends State<LoginPage> {
                                                                     right: width *
                                                                         0.025),
                                                             child: Text(
-                                                                "AE +971")),
+                                                              "AE +971",
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      16.0),
+                                                            )),
                                                         Container(
                                                           height:
                                                               height * 0.075,
