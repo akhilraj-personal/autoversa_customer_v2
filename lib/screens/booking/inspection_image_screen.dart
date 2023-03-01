@@ -109,8 +109,8 @@ class InspectionImageScreenState extends State<InspectionImageScreen> {
           ),
           title: Text(
             "Vehicle Images",
-            style: myriadproregular.copyWith(
-              fontSize: 18,
+            style: montserratRegular.copyWith(
+              fontSize: width * 0.044,
               color: Colors.white,
             ),
           ),

@@ -200,8 +200,8 @@ class InspectionScreenState extends State<InspectionScreen>
           ),
           title: Text(
             "Inspection Details",
-            style: myriadproregular.copyWith(
-              fontSize: 18,
+            style: montserratRegular.copyWith(
+              fontSize: width * 0.044,
               color: Colors.white,
             ),
           ),
@@ -281,11 +281,13 @@ class InspectionScreenState extends State<InspectionScreen>
                                     children: <Widget>[
                                       Flexible(
                                         child: Container(
-                                          child: Text(widget.pkgname,
-                                              overflow: TextOverflow.clip,
-                                              style: montserratRegular.copyWith(
-                                                  color: black,
-                                                  fontSize: width * 0.032)),
+                                          child: Text(
+                                            widget.pkgname,
+                                            overflow: TextOverflow.clip,
+                                            style: montserratMedium.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -304,16 +306,16 @@ class InspectionScreenState extends State<InspectionScreen>
                                             Flexible(
                                               child: Container(
                                                 child: Text(
-                                                    DateFormat('dd-MM-yyyy')
-                                                        .format(DateTime
-                                                            .tryParse(widget
-                                                                .bookdate)!),
-                                                    overflow: TextOverflow.clip,
-                                                    style: montserratRegular
-                                                        .copyWith(
-                                                            color: black,
-                                                            fontSize:
-                                                                width * 0.032)),
+                                                  DateFormat('dd-MM-yyyy')
+                                                      .format(DateTime.tryParse(
+                                                          widget.bookdate)!),
+                                                  overflow: TextOverflow.clip,
+                                                  style:
+                                                      montserratMedium.copyWith(
+                                                          color: black,
+                                                          fontSize:
+                                                              width * 0.034),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -327,13 +329,15 @@ class InspectionScreenState extends State<InspectionScreen>
                                           children: <Widget>[
                                             Flexible(
                                               child: Container(
-                                                child: Text(widget.booktime,
-                                                    overflow: TextOverflow.clip,
-                                                    style: montserratRegular
-                                                        .copyWith(
-                                                            color: black,
-                                                            fontSize:
-                                                                width * 0.032)),
+                                                child: Text(
+                                                  widget.booktime,
+                                                  overflow: TextOverflow.clip,
+                                                  style:
+                                                      montserratMedium.copyWith(
+                                                          color: black,
+                                                          fontSize:
+                                                              width * 0.034),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -350,11 +354,13 @@ class InspectionScreenState extends State<InspectionScreen>
                                     children: <Widget>[
                                       Flexible(
                                         child: Container(
-                                          child: Text(widget.vehname,
-                                              overflow: TextOverflow.clip,
-                                              style: montserratRegular.copyWith(
-                                                  color: black,
-                                                  fontSize: width * 0.032)),
+                                          child: Text(
+                                            widget.vehname,
+                                            overflow: TextOverflow.clip,
+                                            style: montserratMedium.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -425,17 +431,17 @@ class InspectionScreenState extends State<InspectionScreen>
                                             CrossAxisAlignment.end,
                                         children: <Widget>[
                                           Text(
-                                              getinspection[
-                                                          'cv_plate_number'] !=
-                                                      null
-                                                  ? "Plate No" +
-                                                      ": " +
-                                                      getinspection[
-                                                          'cv_plate_number']
-                                                  : "Plate No" + ": No details",
-                                              style: montserratRegular.copyWith(
-                                                  color: black,
-                                                  fontSize: width * 0.032)),
+                                            getinspection['cv_plate_number'] !=
+                                                    null
+                                                ? "Plate No" +
+                                                    ": " +
+                                                    getinspection[
+                                                        'cv_plate_number']
+                                                : "Plate No" + ": No details",
+                                            style: montserratMedium.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                          ),
                                         ],
                                       ),
                                       const SizedBox(
@@ -455,10 +461,9 @@ class InspectionScreenState extends State<InspectionScreen>
                                                 : "Odometer" + ": No details",
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.clip,
-                                            style: montserratRegular.copyWith(
-                                              fontSize: width * 0.032,
-                                              color: black,
-                                            ),
+                                            style: montserratMedium.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
                                           ),
                                         ],
                                       ),
@@ -475,16 +480,16 @@ class InspectionScreenState extends State<InspectionScreen>
                                             getinspection['us_firstname'] !=
                                                     null
                                                 ? "Inspection By" +
+                                                    ": " +
                                                     getinspection[
                                                         'us_firstname']
-                                                : "Inspection By" +
+                                                : "Inspection By " +
                                                     ": No details",
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.clip,
-                                            style: montserratRegular.copyWith(
-                                              fontSize: width * 0.032,
-                                              color: black,
-                                            ),
+                                            style: montserratMedium.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
                                           ),
                                         ],
                                       ),
@@ -519,9 +524,9 @@ class InspectionScreenState extends State<InspectionScreen>
                                               .launch(context);
                                         },
                                         child: Text("Show all",
-                                            style: montserratLight.copyWith(
+                                            style: montserratMedium.copyWith(
                                                 color: black,
-                                                fontSize: width * 0.032)),
+                                                fontSize: width * 0.034)),
                                       )
                                     : Row(),
                               ],
@@ -561,10 +566,9 @@ class InspectionScreenState extends State<InspectionScreen>
                                       Text("No Vehicle Images",
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.clip,
-                                          style: montserratRegular.copyWith(
-                                            fontSize: width * 0.032,
-                                            color: Color(0xff000000),
-                                          )),
+                                          style: montserratMedium.copyWith(
+                                              color: black,
+                                              fontSize: width * 0.034)),
                                     ],
                                   ),
                                 ),
@@ -741,10 +745,9 @@ class InspectionScreenState extends State<InspectionScreen>
                                       Text("No Vehicle Video",
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.clip,
-                                          style: montserratRegular.copyWith(
-                                            fontSize: width * 0.032,
-                                            color: black,
-                                          )),
+                                          style: montserratMedium.copyWith(
+                                              color: black,
+                                              fontSize: width * 0.034)),
                                     ],
                                   ),
                                 ),
@@ -790,13 +793,10 @@ class InspectionScreenState extends State<InspectionScreen>
                                                 : value = 'Hard Copy';
                                           }),
                                     ),
-                                    Text(
-                                      "Hard Copy",
-                                      style: montserratRegular.copyWith(
-                                        fontSize: width * 0.032,
-                                        color: black,
-                                      ),
-                                    ),
+                                    Text("Hard Copy",
+                                        style: montserratMedium.copyWith(
+                                            color: black,
+                                            fontSize: width * 0.034)),
                                   ],
                                 ),
                               ),
@@ -823,13 +823,10 @@ class InspectionScreenState extends State<InspectionScreen>
                                         },
                                       ),
                                     ),
-                                    Text(
-                                      "Soft Copy",
-                                      style: montserratRegular.copyWith(
-                                        fontSize: width * 0.032,
-                                        color: black,
-                                      ),
-                                    ),
+                                    Text("Soft Copy",
+                                        style: montserratMedium.copyWith(
+                                            color: black,
+                                            fontSize: width * 0.034)),
                                   ],
                                 ),
                               ),
@@ -889,19 +886,18 @@ class InspectionScreenState extends State<InspectionScreen>
                                 Expanded(
                                   flex: 1,
                                   child: Text(
-                                    getinspection['cv_registrationvalidity'] !=
-                                            null
-                                        ? ": " +
-                                            DateFormat('dd-MM-yyyy').format(
-                                                DateTime.tryParse(getinspection[
-                                                    'cv_registrationvalidity'])!)
-                                        : ": No details",
-                                    textAlign: TextAlign.start,
-                                    style: montserratRegular.copyWith(
-                                      fontSize: width * 0.032,
-                                      color: black,
-                                    ),
-                                  ),
+                                      getinspection[
+                                                  'cv_registrationvalidity'] !=
+                                              null
+                                          ? ": " +
+                                              DateFormat('dd-MM-yyyy').format(
+                                                  DateTime.tryParse(getinspection[
+                                                      'cv_registrationvalidity'])!)
+                                          : ": No details",
+                                      textAlign: TextAlign.start,
+                                      style: montserratMedium.copyWith(
+                                          color: black,
+                                          fontSize: width * 0.034)),
                                 ),
                               ],
                             ),
@@ -969,15 +965,15 @@ class InspectionScreenState extends State<InspectionScreen>
                                               padding: EdgeInsets.symmetric(
                                                   vertical: 0, horizontal: 12),
                                               child: Text(
-                                                carcontentlist[i]['civ_name'],
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.start,
-                                                style:
-                                                    montserratRegular.copyWith(
-                                                  fontSize: width * 0.032,
-                                                  color: black,
-                                                ),
-                                              ),
+                                                  carcontentlist[i]['civ_name'],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.start,
+                                                  style:
+                                                      montserratMedium.copyWith(
+                                                          color: black,
+                                                          fontSize:
+                                                              width * 0.034)),
                                             ),
                                           ),
                                         ],
@@ -998,10 +994,9 @@ class InspectionScreenState extends State<InspectionScreen>
                                       Text("No Contents",
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.clip,
-                                          style: montserratRegular.copyWith(
-                                            fontSize: width * 0.032,
-                                            color: black,
-                                          )),
+                                          style: montserratMedium.copyWith(
+                                              color: black,
+                                              fontSize: width * 0.034)),
                                     ],
                                   ),
                                 ),

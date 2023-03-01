@@ -381,7 +381,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                             "Booking Created",
                                                         "user_type": "0",
                                                       };
-                                                      print(req);
                                                       await booking_cancel(req)
                                                           .then((value) {
                                                         if (value['ret_data'] ==
@@ -396,13 +395,9 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                   context,
                                                                   Routes
                                                                       .bottombar);
-                                                        } else {
-                                                          print("value");
-                                                          print(value);
                                                         }
                                                       });
                                                     } catch (e) {
-                                                      print("e");
                                                       print(e.toString());
                                                     }
                                                   }
@@ -930,7 +925,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
     });
     await getbookingdetails(req).then((value) async {
       if (value['ret_data'] == "success") {
-        print(value);
         setState(() {
           booking = value['booking'];
           booking_package = value['booking']['booking_package'];
@@ -1457,8 +1451,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             ),
             title: Text(
               "Booking Details",
-              style: myriadproregular.copyWith(
-                fontSize: 18,
+              style: montserratRegular.copyWith(
+                fontSize: width * 0.044,
                 color: Colors.white,
               ),
             ),
@@ -1561,19 +1555,20 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                             Flexible(
                                               child: Container(
                                                 child: Text(
-                                                    booking['bk_booking_date'] !=
-                                                            null
-                                                        ? DateFormat(
-                                                                'dd-MM-yyyy')
-                                                            .format(DateTime
-                                                                .tryParse(booking[
-                                                                    'bk_booking_date'])!)
-                                                        : "",
-                                                    overflow: TextOverflow.clip,
-                                                    style: montserratRegular
-                                                        .copyWith(
-                                                            color: black,
-                                                            fontSize: 12)),
+                                                  booking['bk_booking_date'] !=
+                                                          null
+                                                      ? DateFormat('dd-MM-yyyy')
+                                                          .format(DateTime
+                                                              .tryParse(booking[
+                                                                  'bk_booking_date'])!)
+                                                      : "",
+                                                  overflow: TextOverflow.clip,
+                                                  style:
+                                                      montserratMedium.copyWith(
+                                                          color: black,
+                                                          fontSize:
+                                                              width * 0.034),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -1588,22 +1583,24 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                             Flexible(
                                               child: Container(
                                                 child: Text(
-                                                    pickup_timeslot[
-                                                                'tm_start_time'] !=
-                                                            null
-                                                        ? timeFormatter(
-                                                                pickup_timeslot[
-                                                                    'tm_start_time']) +
-                                                            " - " +
-                                                            timeFormatter(
-                                                                pickup_timeslot[
-                                                                    'tm_end_time'])
-                                                        : "",
-                                                    overflow: TextOverflow.clip,
-                                                    style: montserratRegular
-                                                        .copyWith(
-                                                            color: black,
-                                                            fontSize: 12)),
+                                                  pickup_timeslot[
+                                                              'tm_start_time'] !=
+                                                          null
+                                                      ? timeFormatter(
+                                                              pickup_timeslot[
+                                                                  'tm_start_time']) +
+                                                          " - " +
+                                                          timeFormatter(
+                                                              pickup_timeslot[
+                                                                  'tm_end_time'])
+                                                      : "",
+                                                  overflow: TextOverflow.clip,
+                                                  style:
+                                                      montserratMedium.copyWith(
+                                                          color: black,
+                                                          fontSize:
+                                                              width * 0.034),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -1620,10 +1617,13 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                     children: <Widget>[
                                       Flexible(
                                         child: Container(
-                                          child: Text(widget.vehname,
-                                              overflow: TextOverflow.clip,
-                                              style: montserratRegular.copyWith(
-                                                  color: black, fontSize: 12)),
+                                          child: Text(
+                                            widget.vehname,
+                                            overflow: TextOverflow.clip,
+                                            style: montserratMedium.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -2102,9 +2102,11 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                             statusflow[index]
                                                                 ["hold_flag"]),
                                                       ),
-                                                      statusflow[index]
-                                                                  ['code'] ==
-                                                              "DRPC"
+                                                      statusflow[index][
+                                                                      'code'] ==
+                                                                  "DRPC" &&
+                                                              (status["st_code"] ==
+                                                                  "DRPC")
                                                           ? Expanded(
                                                               flex: 2,
                                                               child: Container(
@@ -2115,10 +2117,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                     OutlinedButton(
                                                                   onPressed:
                                                                       () async {
-                                                                    // bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
-                                                                    //         'us_country_code'] +
-                                                                    //     drivercontact[
-                                                                    //         'us_phone']);
+                                                                    bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
+                                                                            'us_country_code'] +
+                                                                        drivercontact[
+                                                                            'us_phone']);
                                                                   },
                                                                   style: OutlinedButton
                                                                       .styleFrom(
