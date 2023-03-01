@@ -26,7 +26,6 @@ class AddressListState extends State<AddressList> {
   late List stateList = [];
   List<String?> SelectAddressList = <String?>["Select Address"];
   List<String?> SelectCityList = <String?>["Select City"];
-  bool isoffline = false;
   StreamSubscription? internetconnection;
   bool isActive = true;
 
@@ -38,17 +37,18 @@ class AddressListState extends State<AddressList> {
         .listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         setState(() {
-          isoffline = true;
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => NoInternetScreen()));
         });
       } else if (result == ConnectivityResult.mobile) {
         setState(() {
-          isoffline = false;
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddressList()));
         });
       } else if (result == ConnectivityResult.wifi) {
         setState(() {
-          isoffline = false;
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddressList()));
         });
       }
     });
