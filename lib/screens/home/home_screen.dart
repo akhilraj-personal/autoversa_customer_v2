@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../constant/image_const.dart';
@@ -92,6 +93,11 @@ class _HomeScreenState extends State<HomeScreen> {
       _getPackages();
       _getCustomerBookingList();
       _getNotificationList();
+    });
+    Permission.notification.isDenied.then((value) {
+      if (value) {
+        Permission.notification.request();
+      }
     });
     init();
   }
