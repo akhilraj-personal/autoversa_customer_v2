@@ -46,7 +46,6 @@ class AddressAddState extends State<AddressAdd> {
   FocusNode addressFocus = FocusNode();
   FocusNode flatnoFocus = FocusNode();
   final GlobalKey<FormFieldState> areaKey = GlobalKey<FormFieldState>();
-  bool isoffline = false;
   StreamSubscription? internetconnection;
 
   @override
@@ -57,17 +56,18 @@ class AddressAddState extends State<AddressAdd> {
         .listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         setState(() {
-          isoffline = true;
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => NoInternetScreen()));
         });
       } else if (result == ConnectivityResult.mobile) {
         setState(() {
-          isoffline = false;
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddressAdd()));
         });
       } else if (result == ConnectivityResult.wifi) {
         setState(() {
-          isoffline = false;
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddressAdd()));
         });
       }
     });
