@@ -8,7 +8,6 @@ import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
 import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
-import 'package:autoversa/screens/tryout_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
@@ -875,7 +874,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ? height * 0.07
                                         : bookingList.length > 1
                                             ? height * 0.09
-                                            : height * 0.05),
+                                            : height * 0.07),
                       ]),
                       isVehicleLoaded
                           ? customerVehList.length < 2
