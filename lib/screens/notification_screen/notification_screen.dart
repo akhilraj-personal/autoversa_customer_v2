@@ -70,7 +70,6 @@ class NotificationPageState extends State<NotificationPage> {
     notificationList = [];
     Map req = {};
     await getCustomerNotificationList(req).then((value) {
-      print(value);
       if (value['ret_data'] == "success") {
         for (var notify in value['notification_list']) {
           NotificationModel noti = new NotificationModel();
@@ -92,7 +91,6 @@ class NotificationPageState extends State<NotificationPage> {
           isActive = false;
         });
       } else {
-        print(value);
         isActive = false;
         setState(() {});
       }
@@ -115,14 +113,18 @@ class NotificationPageState extends State<NotificationPage> {
   clearNotification() async {
     Map req = {};
     await clear_notification(req).then((value) {
+      print("value====>");
+      print(value);
       if (value['ret_data'] == "success") {
         showCustomToast(context, "Notification Cleared",
             bgColor: black, textColor: white);
         Navigator.pushReplacementNamed(context, Routes.bottombar);
       } else {
+        print("else====>");
         print(value['ret_data']);
       }
     }).catchError((e) {
+      print("e to string====>");
       print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);

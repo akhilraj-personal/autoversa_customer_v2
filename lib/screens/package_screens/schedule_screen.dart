@@ -1392,6 +1392,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                 Radio(
                                                                               value: 'Home',
                                                                               groupValue: AddressType,
+                                                                              fillColor: MaterialStateColor.resolveWith((states) => syanColor),
                                                                               onChanged: (dynamic value) {
                                                                                 setBottomState(() {
                                                                                   AddressType = value;
@@ -1411,6 +1412,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                 Radio(
                                                                               value: 'Office',
                                                                               groupValue: AddressType,
+                                                                              fillColor: MaterialStateColor.resolveWith((states) => syanColor),
                                                                               onChanged: (dynamic value) {
                                                                                 setBottomState(() {
                                                                                   AddressType = value;
@@ -1428,6 +1430,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                 Radio(
                                                                               value: 'Other',
                                                                               groupValue: AddressType,
+                                                                              fillColor: MaterialStateColor.resolveWith((states) => syanColor),
                                                                               onChanged: (dynamic value) {
                                                                                 setBottomState(() {
                                                                                   AddressType = value;
