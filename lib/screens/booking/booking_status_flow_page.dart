@@ -39,10 +39,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
   late Map<String, dynamic> booking = {};
   late Map<String, dynamic> booking_package = {};
   late Map<String, dynamic> pickup_timeslot = {};
+  late Map<String, dynamic> drop_timeslot = {};
   late Map<String, dynamic> status = {};
   late Map<String, dynamic> backstatus = {};
   late Map<String, dynamic> drivercontact = {};
-  // late Map<String, dynamic> dropdetails = {};
   late Map<String, dynamic> vehicle = {};
   var cust_status_id;
   var back_status_id;
@@ -930,9 +930,13 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
           booking_package = value['booking']['booking_package'];
           pickup_timeslot = value['booking']['pickup_timeslot'];
           drivercontact = value['booking']['driver_contact'];
-          // dropdetails = value['booking']['drop_address'];
           vehicle = value['booking']['vehicle'];
         });
+        if (value['booking']['drop_timeslot'] != null) {
+          setState(() {
+            drop_timeslot = value['booking']['drop_timeslot'];
+          });
+        }
       }
       Map req = {
         "book_id": base64.encode(utf8.encode(widget.bk_id)),
@@ -1097,14 +1101,14 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
               }
             } else if (statuslist["bkt_code"] == "CDLC") {
               var temp = {
-                "status": "Confirm\ndrop location",
+                "status": "Ready for delivery",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
                     DateFormat('hh:mm a').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
-                "icon": 'assets/icons/location_icon.png',
+                "icon": 'assets/icons/ready_delivery_active.png',
                 "color": activecolor,
                 "active_flag": true,
                 "hold_flag": false
@@ -1117,14 +1121,15 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
               }
             } else if (statuslist["bkt_code"] == "RFDC") {
               var temp = {
-                "status": "Ready for delivery",
-                "time": DateFormat('dd-MM-yyyy').format(
-                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
-                    " / " +
-                    DateFormat('hh:mm a').format(
-                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "status": "Delivery scheduled On",
+                "time": DateFormat('dd-MM-yyyy')
+                        .format(DateTime.tryParse(booking['bk_dropdate'])!) +
+                    " at " +
+                    timeFormatter(drop_timeslot['tm_start_time']) +
+                    " - " +
+                    timeFormatter(drop_timeslot['tm_end_time']),
                 "code": statuslist["bkt_code"],
-                "icon": 'assets/icons/ready_delivery_active.png',
+                "icon": 'assets/icons/location_icon.png',
                 "color": activecolor,
                 "active_flag": true,
                 "hold_flag": false
@@ -1270,10 +1275,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
             if (cust_status_master[i] == "CDLC") {
               var temp = {
-                "status": "Confirm\nDrop Location",
+                "status": "Ready for Delivery",
                 "time": "",
                 "code": "",
-                "icon": 'assets/icons/location_icon_inactive.png',
+                "icon": 'assets/icons/ready_delivery_inactive.png',
                 "color": Colors.transparent,
                 "active_flag": false,
                 "hold_flag": false
@@ -1282,10 +1287,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
             if (cust_status_master[i] == "RFDC") {
               var temp = {
-                "status": "Ready for Delivery",
+                "status": "Location Confirmed",
                 "time": "",
                 "code": "",
-                "icon": 'assets/icons/ready_delivery_inactive.png',
+                "icon": 'assets/icons/location_icon_inactive.png',
                 "color": Colors.transparent,
                 "active_flag": false,
                 "hold_flag": false
@@ -1628,6 +1633,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                       ),
                                     ],
                                   ),
+                                  8.height,
                                   status['st_code'] == "HOLDC"
                                       ? Row(
                                           children: <Widget>[
@@ -1638,36 +1644,59 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                             "BKCC"
                                                 ? Expanded(
                                                     flex: 1,
-                                                    child: OutlinedButton(
-                                                      style: OutlinedButton
-                                                          .styleFrom(
-                                                        side: BorderSide(
-                                                          color: greyColor,
-                                                          style: BorderStyle
-                                                              .solid, //Style of the border
-                                                          width:
-                                                              0.8, //width of the border
-                                                        ),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(30),
-                                                          side: BorderSide(
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
+                                                    child: GestureDetector(
+                                                      onTap: () async {
                                                         cancelbookingbottomsheet();
                                                       },
-                                                      child: Text('Cancel',
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.021)),
+                                                      child: Stack(
+                                                        alignment: Alignment
+                                                            .bottomCenter,
+                                                        children: [
+                                                          Container(
+                                                            height:
+                                                                height * 0.05,
+                                                            width: height * 0.2,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .rectangle,
+                                                              border:
+                                                                  Border.all(
+                                                                      color:
+                                                                          grey),
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          12)),
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                begin: Alignment
+                                                                    .topLeft,
+                                                                end: Alignment
+                                                                    .bottomRight,
+                                                                colors: [
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              "CANCEL",
+                                                              style: montserratSemiBold
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.025),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   )
                                                 : Row(),
@@ -1703,36 +1732,59 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                         (holdedby == "0")
                                                 ? Expanded(
                                                     flex: 1,
-                                                    child: OutlinedButton(
-                                                      style: OutlinedButton
-                                                          .styleFrom(
-                                                        side: BorderSide(
-                                                          color: greyColor,
-                                                          style: BorderStyle
-                                                              .solid, //Style of the border
-                                                          width:
-                                                              0.8, //width of the border
-                                                        ),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(30),
-                                                          side: BorderSide(
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
+                                                    child: GestureDetector(
+                                                      onTap: () async {
                                                         unholdbookingbottomsheet();
                                                       },
-                                                      child: Text('Unhold',
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.021)),
+                                                      child: Stack(
+                                                        alignment: Alignment
+                                                            .bottomCenter,
+                                                        children: [
+                                                          Container(
+                                                            height:
+                                                                height * 0.05,
+                                                            width: height * 0.2,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .rectangle,
+                                                              border:
+                                                                  Border.all(
+                                                                      color:
+                                                                          grey),
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          12)),
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                begin: Alignment
+                                                                    .topLeft,
+                                                                end: Alignment
+                                                                    .bottomRight,
+                                                                colors: [
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              "UNHOLD",
+                                                              style: montserratSemiBold
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.025),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   )
                                                 : Row(),
@@ -1749,27 +1801,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                     status['st_code'] == "HOLDC"
                                                 ? Expanded(
                                                     flex: 1,
-                                                    child: OutlinedButton(
-                                                      style: OutlinedButton
-                                                          .styleFrom(
-                                                        side: BorderSide(
-                                                          color: greyColor,
-                                                          style: BorderStyle
-                                                              .solid, //Style of the border
-                                                          width:
-                                                              0.8, //width of the border
-                                                        ),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(30),
-                                                          side: BorderSide(
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
+                                                    child: GestureDetector(
+                                                      onTap: () {
                                                         status['st_code'] ==
                                                                     "BKCC" ||
                                                                 (status['st_code'] ==
@@ -1793,13 +1826,55 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                         bk_id: widget
                                                                             .bk_id)));
                                                       },
-                                                      child: Text('Reschedule',
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.021)),
+                                                      child: Stack(
+                                                        alignment: Alignment
+                                                            .bottomCenter,
+                                                        children: [
+                                                          Container(
+                                                            height:
+                                                                height * 0.05,
+                                                            width: height * 0.2,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .rectangle,
+                                                              border:
+                                                                  Border.all(
+                                                                      color:
+                                                                          grey),
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          12)),
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                begin: Alignment
+                                                                    .topLeft,
+                                                                end: Alignment
+                                                                    .bottomRight,
+                                                                colors: [
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              "RESCHEDULE",
+                                                              style: montserratSemiBold
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.025),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   )
                                                 : Row(),
@@ -1814,36 +1889,59 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                             "BKCC"
                                                 ? Expanded(
                                                     flex: 1,
-                                                    child: OutlinedButton(
-                                                      style: OutlinedButton
-                                                          .styleFrom(
-                                                        side: BorderSide(
-                                                          color: greyColor,
-                                                          style: BorderStyle
-                                                              .solid, //Style of the border
-                                                          width:
-                                                              0.8, //width of the border
-                                                        ),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(30),
-                                                          side: BorderSide(
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
+                                                    child: GestureDetector(
+                                                      onTap: () async {
                                                         cancelbookingbottomsheet();
                                                       },
-                                                      child: Text('Cancel',
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.021)),
+                                                      child: Stack(
+                                                        alignment: Alignment
+                                                            .bottomCenter,
+                                                        children: [
+                                                          Container(
+                                                            height:
+                                                                height * 0.05,
+                                                            width: height * 0.2,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .rectangle,
+                                                              border:
+                                                                  Border.all(
+                                                                      color:
+                                                                          grey),
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          12)),
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                begin: Alignment
+                                                                    .topLeft,
+                                                                end: Alignment
+                                                                    .bottomRight,
+                                                                colors: [
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              "CANCEL",
+                                                              style: montserratSemiBold
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.025),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   )
                                                 : Row(),
@@ -1879,36 +1977,59 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                         (holdedby == "0")
                                                 ? Expanded(
                                                     flex: 1,
-                                                    child: OutlinedButton(
-                                                      style: OutlinedButton
-                                                          .styleFrom(
-                                                        side: BorderSide(
-                                                          color: greyColor,
-                                                          style: BorderStyle
-                                                              .solid, //Style of the border
-                                                          width:
-                                                              0.8, //width of the border
-                                                        ),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(30),
-                                                          side: BorderSide(
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
+                                                    child: GestureDetector(
+                                                      onTap: () async {
                                                         holdbookingbottomsheet();
                                                       },
-                                                      child: Text('Hold',
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.021)),
+                                                      child: Stack(
+                                                        alignment: Alignment
+                                                            .bottomCenter,
+                                                        children: [
+                                                          Container(
+                                                            height:
+                                                                height * 0.05,
+                                                            width: height * 0.2,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .rectangle,
+                                                              border:
+                                                                  Border.all(
+                                                                      color:
+                                                                          grey),
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          12)),
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                begin: Alignment
+                                                                    .topLeft,
+                                                                end: Alignment
+                                                                    .bottomRight,
+                                                                colors: [
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              "HOLD",
+                                                              style: montserratSemiBold
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.025),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   )
                                                 : Row(),
@@ -1928,27 +2049,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                             "BKCC"
                                                 ? Expanded(
                                                     flex: 1,
-                                                    child: OutlinedButton(
-                                                      style: OutlinedButton
-                                                          .styleFrom(
-                                                        side: BorderSide(
-                                                          color: greyColor,
-                                                          style: BorderStyle
-                                                              .solid, //Style of the border
-                                                          width:
-                                                              0.8, //width of the border
-                                                        ),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(30),
-                                                          side: BorderSide(
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
+                                                    child: GestureDetector(
+                                                      onTap: () {
                                                         status['st_code'] ==
                                                                     "BKCC" ||
                                                                 (status['st_code'] ==
@@ -1972,13 +2074,55 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                         bk_id: widget
                                                                             .bk_id)));
                                                       },
-                                                      child: Text('Reschedule',
-                                                          style: montserratRegular
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.021)),
+                                                      child: Stack(
+                                                        alignment: Alignment
+                                                            .bottomCenter,
+                                                        children: [
+                                                          Container(
+                                                            height:
+                                                                height * 0.05,
+                                                            width: height * 0.2,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .rectangle,
+                                                              border:
+                                                                  Border.all(
+                                                                      color:
+                                                                          grey),
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          12)),
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                begin: Alignment
+                                                                    .topLeft,
+                                                                end: Alignment
+                                                                    .bottomRight,
+                                                                colors: [
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                  white,
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              "RESCHEDULE",
+                                                              style: montserratSemiBold
+                                                                  .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.025),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   )
                                                 : Row(),
@@ -2112,63 +2256,56 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                               child: Container(
                                                                 alignment:
                                                                     Alignment
-                                                                        .topRight,
+                                                                        .center,
                                                                 child:
-                                                                    OutlinedButton(
-                                                                  onPressed:
+                                                                    GestureDetector(
+                                                                  onTap:
                                                                       () async {
                                                                     bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
                                                                             'us_country_code'] +
                                                                         drivercontact[
                                                                             'us_phone']);
                                                                   },
-                                                                  style: OutlinedButton
-                                                                      .styleFrom(
-                                                                    side:
-                                                                        BorderSide(
-                                                                      color:
-                                                                          syanColor, //Color of the border
-                                                                      style: BorderStyle
-                                                                          .solid, //Style of the border
-                                                                      width:
-                                                                          0.8, //width of the border
-                                                                    ),
-                                                                    shape:
-                                                                        RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              30),
-                                                                      side:
-                                                                          BorderSide(
-                                                                        color:
-                                                                            syanColor,
-                                                                      ),
-                                                                    ),
-                                                                  ),
                                                                   child: Stack(
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Align(
-                                                                          alignment: Alignment
-                                                                              .centerRight,
-                                                                          child:
-                                                                              Icon(
-                                                                            Icons.phone,
-                                                                            color:
-                                                                                syanColor,
-                                                                            size:
-                                                                                16,
-                                                                          )),
-                                                                      Text(
-                                                                        "Call",
-                                                                        style: montserratRegular.copyWith(
-                                                                            color:
-                                                                                syanColor,
-                                                                            fontSize:
-                                                                                width * 0.026),
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                      )
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .bottomCenter,
+                                                                    children: [
+                                                                      Container(
+                                                                        height: height *
+                                                                            0.05,
+                                                                        width: height *
+                                                                            0.2,
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                          border:
+                                                                              Border.all(color: syanColor),
+                                                                          borderRadius:
+                                                                              BorderRadius.all(Radius.circular(12)),
+                                                                          gradient:
+                                                                              LinearGradient(
+                                                                            begin:
+                                                                                Alignment.topLeft,
+                                                                            end:
+                                                                                Alignment.bottomRight,
+                                                                            colors: [
+                                                                              lightblueColor,
+                                                                              syanColor,
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                        child:
+                                                                            Text(
+                                                                          "CALL",
+                                                                          style: montserratSemiBold.copyWith(
+                                                                              color: white,
+                                                                              fontSize: width * 0.03),
+                                                                        ),
+                                                                      ),
                                                                     ],
                                                                   ),
                                                                 ),
@@ -2183,8 +2320,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                               flex: 2,
                                                               child: Container(
                                                                 child:
-                                                                    OutlinedButton(
-                                                                  onPressed:
+                                                                    GestureDetector(
+                                                                  onTap:
                                                                       () async {
                                                                     Navigator.push(
                                                                         context,
@@ -2198,42 +2335,46 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                                 vehname: widget.vehname,
                                                                                 vehmake: vehicle['cv_make'])));
                                                                   },
-                                                                  style: OutlinedButton
-                                                                      .styleFrom(
-                                                                    side:
-                                                                        BorderSide(
-                                                                      color:
-                                                                          syanColor, //Color of the border
-                                                                      style: BorderStyle
-                                                                          .solid, //Style of the border
-                                                                      width:
-                                                                          0.8, //width of the border
-                                                                    ),
-                                                                    shape:
-                                                                        RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              30),
-                                                                      side:
-                                                                          BorderSide(
-                                                                        color:
-                                                                            syanColor,
-                                                                      ),
-                                                                    ),
-                                                                  ),
                                                                   child: Stack(
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Text(
-                                                                        'Inspection\nReport',
-                                                                        style: montserratRegular.copyWith(
-                                                                            color:
-                                                                                syanColor,
-                                                                            fontSize:
-                                                                                width * 0.026),
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                      )
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .bottomCenter,
+                                                                    children: [
+                                                                      Container(
+                                                                        height: height *
+                                                                            0.05,
+                                                                        width: height *
+                                                                            0.2,
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                          border:
+                                                                              Border.all(color: syanColor),
+                                                                          borderRadius:
+                                                                              BorderRadius.all(Radius.circular(12)),
+                                                                          gradient:
+                                                                              LinearGradient(
+                                                                            begin:
+                                                                                Alignment.topLeft,
+                                                                            end:
+                                                                                Alignment.bottomRight,
+                                                                            colors: [
+                                                                              lightblueColor,
+                                                                              syanColor,
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                        child:
+                                                                            Text(
+                                                                          "INSPECTION\nREPORT",
+                                                                          style: montserratSemiBold.copyWith(
+                                                                              color: white,
+                                                                              fontSize: width * 0.026),
+                                                                        ),
+                                                                      ),
                                                                     ],
                                                                   ),
                                                                 ),
@@ -2248,8 +2389,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                               flex: 2,
                                                               child: Container(
                                                                 child:
-                                                                    OutlinedButton(
-                                                                  onPressed:
+                                                                    GestureDetector(
+                                                                  onTap:
                                                                       () async {
                                                                     Navigator.push(
                                                                         context,
@@ -2260,42 +2401,46 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                                 vehname: widget.vehname,
                                                                                 vehmake: vehicle['cv_make'])));
                                                                   },
-                                                                  style: OutlinedButton
-                                                                      .styleFrom(
-                                                                    side:
-                                                                        BorderSide(
-                                                                      color:
-                                                                          syanColor, //Color of the border
-                                                                      style: BorderStyle
-                                                                          .solid, //Style of the border
-                                                                      width:
-                                                                          0.8, //width of the border
-                                                                    ),
-                                                                    shape:
-                                                                        RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              30),
-                                                                      side:
-                                                                          BorderSide(
-                                                                        color:
-                                                                            syanColor,
-                                                                      ),
-                                                                    ),
-                                                                  ),
                                                                   child: Stack(
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Text(
-                                                                        'Work Card',
-                                                                        style: montserratRegular.copyWith(
-                                                                            color:
-                                                                                syanColor,
-                                                                            fontSize:
-                                                                                width * 0.026),
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                      )
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Container(
+                                                                        height: height *
+                                                                            0.05,
+                                                                        width: height *
+                                                                            0.2,
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                          border:
+                                                                              Border.all(color: syanColor),
+                                                                          borderRadius:
+                                                                              BorderRadius.all(Radius.circular(12)),
+                                                                          gradient:
+                                                                              LinearGradient(
+                                                                            begin:
+                                                                                Alignment.topLeft,
+                                                                            end:
+                                                                                Alignment.bottomRight,
+                                                                            colors: [
+                                                                              lightblueColor,
+                                                                              syanColor,
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                        child:
+                                                                            Text(
+                                                                          "WORK CARD",
+                                                                          style: montserratSemiBold.copyWith(
+                                                                              color: white,
+                                                                              fontSize: width * 0.026),
+                                                                        ),
+                                                                      ),
                                                                     ],
                                                                   ),
                                                                 ),
@@ -2303,15 +2448,17 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           : const SizedBox(
                                                               height: 0,
                                                             ),
-                                                      statusflow[index]
-                                                                  ['code'] ==
-                                                              "CDLC"
+                                                      statusflow[index][
+                                                                      'code'] ==
+                                                                  "CDLC" &&
+                                                              (status["st_code"] ==
+                                                                  "CDLC")
                                                           ? Expanded(
                                                               flex: 2,
                                                               child: Container(
                                                                 child:
-                                                                    OutlinedButton(
-                                                                  onPressed:
+                                                                    GestureDetector(
+                                                                  onTap:
                                                                       () async {
                                                                     temppendingjobs.length ==
                                                                             0
@@ -2320,38 +2467,50 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                             MaterialPageRoute(builder: (context) => ScheduleDropScreen(bk_id: widget.bk_id)))
                                                                         : Navigator.push(context, MaterialPageRoute(builder: (context) => Workcard(click_id: 2, booking_id: widget.bk_id, vehname: widget.vehname, vehmake: vehicle['cv_make'])));
                                                                   },
-                                                                  style: OutlinedButton
-                                                                      .styleFrom(
-                                                                    side:
-                                                                        BorderSide(
-                                                                      color:
-                                                                          syanColor, //Color of the border
-                                                                      style: BorderStyle
-                                                                          .solid, //Style of the border
-                                                                      width:
-                                                                          0.8, //width of the border
-                                                                    ),
-                                                                    shape:
-                                                                        RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              30),
-                                                                      side:
-                                                                          BorderSide(
-                                                                        color:
-                                                                            syanColor,
-                                                                      ),
-                                                                    ),
-                                                                  ),
                                                                   child: Stack(
-                                                                    children: <
-                                                                        Widget>[
-                                                                      temppendingjobs.length ==
-                                                                              0
-                                                                          ? Text(
-                                                                              'Schedule\nDelivery',
-                                                                              style: montserratRegular.copyWith(color: syanColor, fontSize: 12))
-                                                                          : Text('Pending Payment', style: montserratRegular.copyWith(color: syanColor, fontSize: 12)),
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .bottomCenter,
+                                                                    children: [
+                                                                      Container(
+                                                                        height: height *
+                                                                            0.05,
+                                                                        width: height *
+                                                                            0.2,
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                          border:
+                                                                              Border.all(color: temppendingjobs.length == 0 ? syanColor : warningcolor),
+                                                                          borderRadius:
+                                                                              BorderRadius.all(Radius.circular(12)),
+                                                                          gradient: temppendingjobs.length == 0
+                                                                              ? LinearGradient(
+                                                                                  begin: Alignment.topLeft,
+                                                                                  end: Alignment.bottomRight,
+                                                                                  colors: [
+                                                                                    lightblueColor,
+                                                                                    syanColor,
+                                                                                  ],
+                                                                                )
+                                                                              : LinearGradient(
+                                                                                  begin: Alignment.topLeft,
+                                                                                  end: Alignment.bottomRight,
+                                                                                  colors: [
+                                                                                    lightorangeColor,
+                                                                                    holdorangeColor,
+                                                                                  ],
+                                                                                ),
+                                                                        ),
+                                                                        child: temppendingjobs.length ==
+                                                                                0
+                                                                            ? Text('SCHEDULE\nDELIVERY',
+                                                                                style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026))
+                                                                            : Text('PENDING\nPAYMENT', style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026)),
+                                                                      ),
                                                                     ],
                                                                   ),
                                                                 ),
@@ -2359,38 +2518,17 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           : const SizedBox(
                                                               height: 0,
                                                             ),
-                                                      statusflow[index]
-                                                                  ['code'] ==
-                                                              "DEDC"
+                                                      statusflow[index][
+                                                                      'code'] ==
+                                                                  "DEDC" &&
+                                                              (status["st_code"] ==
+                                                                  "DEDC")
                                                           ? Expanded(
                                                               flex: 2,
                                                               child: Container(
                                                                   child:
-                                                                      OutlinedButton(
-                                                                style: OutlinedButton
-                                                                    .styleFrom(
-                                                                  side:
-                                                                      BorderSide(
-                                                                    color:
-                                                                        syanColor,
-                                                                    style: BorderStyle
-                                                                        .solid, //Style of the border
-                                                                    width:
-                                                                        0.8, //width of the border
-                                                                  ),
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            30),
-                                                                    side:
-                                                                        BorderSide(
-                                                                      color: Colors
-                                                                          .grey,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                onPressed:
+                                                                      GestureDetector(
+                                                                onTap:
                                                                     () async {
                                                                   bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
                                                                           'us_country_code'] +
@@ -2398,32 +2536,51 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                           'us_phone']);
                                                                 },
                                                                 child: Stack(
-                                                                  children: <
-                                                                      Widget>[
-                                                                    Align(
-                                                                        alignment:
-                                                                            Alignment
-                                                                                .centerRight,
-                                                                        child:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .phone,
-                                                                          color:
-                                                                              syanColor,
-                                                                          size:
-                                                                              16,
-                                                                        )),
-                                                                    Text(
-                                                                      "Call",
-                                                                      style: montserratRegular.copyWith(
-                                                                          color:
-                                                                              syanColor,
-                                                                          fontSize:
-                                                                              12),
-                                                                      textAlign:
-                                                                          TextAlign
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Container(
+                                                                      height:
+                                                                          height *
+                                                                              0.05,
+                                                                      width:
+                                                                          height *
+                                                                              0.2,
+                                                                      alignment:
+                                                                          Alignment
                                                                               .center,
-                                                                    )
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        shape: BoxShape
+                                                                            .rectangle,
+                                                                        border: Border.all(
+                                                                            color:
+                                                                                syanColor),
+                                                                        borderRadius:
+                                                                            BorderRadius.all(Radius.circular(12)),
+                                                                        gradient:
+                                                                            LinearGradient(
+                                                                          begin:
+                                                                              Alignment.topLeft,
+                                                                          end: Alignment
+                                                                              .bottomRight,
+                                                                          colors: [
+                                                                            lightblueColor,
+                                                                            syanColor,
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      child:
+                                                                          Text(
+                                                                        "CALL",
+                                                                        style: montserratSemiBold.copyWith(
+                                                                            color:
+                                                                                white,
+                                                                            fontSize:
+                                                                                width * 0.03),
+                                                                      ),
+                                                                    ),
                                                                   ],
                                                                 ),
                                                               )))

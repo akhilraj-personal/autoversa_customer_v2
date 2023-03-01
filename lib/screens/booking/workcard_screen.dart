@@ -371,8 +371,8 @@ class WorkcardState extends State<Workcard> {
           ),
           title: Text(
             "Work Card",
-            style: myriadproregular.copyWith(
-              fontSize: 18,
+            style: montserratRegular.copyWith(
+              fontSize: width * 0.044,
               color: Colors.white,
             ),
           ),
@@ -466,11 +466,13 @@ class WorkcardState extends State<Workcard> {
                                     children: <Widget>[
                                       Flexible(
                                         child: Container(
-                                          child: Text(widget.vehname,
-                                              overflow: TextOverflow.clip,
-                                              style: montserratRegular.copyWith(
-                                                  color: black,
-                                                  fontSize: width * 0.032)),
+                                          child: Text(
+                                            widget.vehname,
+                                            overflow: TextOverflow.clip,
+                                            style: montserratMedium.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -483,13 +485,14 @@ class WorkcardState extends State<Workcard> {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                          vehicle['cv_plate_number'] != null
-                                              ? "Reg No: " +
-                                                  vehicle['cv_plate_number']
-                                              : "",
-                                          style: montserratRegular.copyWith(
-                                              color: black,
-                                              fontSize: width * 0.032)),
+                                        vehicle['cv_plate_number'] != null
+                                            ? "Reg No: " +
+                                                vehicle['cv_plate_number']
+                                            : "",
+                                        style: montserratMedium.copyWith(
+                                            color: black,
+                                            fontSize: width * 0.034),
+                                      ),
                                     ],
                                   ),
                                   // 4.height,
@@ -547,14 +550,15 @@ class WorkcardState extends State<Workcard> {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                          service_advisor['us_phone'] != null
-                                              ? "Contact" +
-                                                  ": " +
-                                                  service_advisor['us_phone']
-                                              : "",
-                                          style: montserratRegular.copyWith(
-                                              color: black,
-                                              fontSize: width * 0.032)),
+                                        service_advisor['us_phone'] != null
+                                            ? "Contact" +
+                                                ": " +
+                                                service_advisor['us_phone']
+                                            : "",
+                                        style: montserratMedium.copyWith(
+                                            color: black,
+                                            fontSize: width * 0.034),
+                                      ),
                                     ],
                                   ),
                                   SizedBox(
@@ -632,15 +636,15 @@ class WorkcardState extends State<Workcard> {
                                     Flexible(
                                       child: Container(
                                         child: Text(
-                                            packagebooking['pkg_name'] != null
-                                                ? packagebooking['pkg_name']
-                                                : "",
-                                            overflow: TextOverflow.clip,
-                                            maxLines: 3,
-                                            style: montserratRegular.copyWith(
-                                              fontSize: width * 0.032,
+                                          packagebooking['pkg_name'] != null
+                                              ? packagebooking['pkg_name']
+                                              : "",
+                                          overflow: TextOverflow.clip,
+                                          maxLines: 3,
+                                          style: montserratMedium.copyWith(
                                               color: black,
-                                            )),
+                                              fontSize: width * 0.034),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -650,19 +654,19 @@ class WorkcardState extends State<Workcard> {
                                     Container(
                                       padding: EdgeInsets.all(6),
                                       child: Text(
-                                          packagebooking['bkp_cust_amount'] !=
-                                                  null
-                                              ? packagebooking[
-                                                  'bkp_cust_amount']
-                                              : "",
-                                          style: montserratSemiBold.copyWith(
-                                              fontSize: width * 0.032,
-                                              color: warningcolor)),
+                                        packagebooking['bkp_cust_amount'] !=
+                                                null
+                                            ? packagebooking['bkp_cust_amount']
+                                            : "",
+                                        style: montserratSemiBold.copyWith(
+                                            color: warningcolor,
+                                            fontSize: width * 0.034),
+                                      ),
                                     ),
                                     8.width,
                                     Text("PAID",
-                                        style: montserratRegular.copyWith(
-                                            fontSize: width * 0.032,
+                                        style: montserratMedium.copyWith(
+                                            fontSize: width * 0.034,
                                             color: Colors.green)),
                                   ],
                                 ),
@@ -677,13 +681,14 @@ class WorkcardState extends State<Workcard> {
                                   children: [
                                     Flexible(
                                       child: Container(
-                                        child: Text("Pickup Cost",
-                                            overflow: TextOverflow.clip,
-                                            maxLines: 3,
-                                            style: montserratRegular.copyWith(
-                                              fontSize: width * 0.032,
+                                        child: Text(
+                                          "Pickup Cost",
+                                          overflow: TextOverflow.clip,
+                                          maxLines: 3,
+                                          style: montserratMedium.copyWith(
                                               color: black,
-                                            )),
+                                              fontSize: width * 0.034),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -697,13 +702,13 @@ class WorkcardState extends State<Workcard> {
                                               ? "FREE"
                                               : (pickupcost.toStringAsFixed(2)),
                                           style: montserratSemiBold.copyWith(
-                                              fontSize: width * 0.032,
+                                              fontSize: width * 0.034,
                                               color: warningcolor)),
                                     ),
                                     8.width,
                                     Text("PAID",
-                                        style: montserratRegular.copyWith(
-                                            fontSize: width * 0.032,
+                                        style: montserratMedium.copyWith(
+                                            fontSize: width * 0.034,
                                             color: Colors.green)),
                                   ],
                                 ),
@@ -736,21 +741,21 @@ class WorkcardState extends State<Workcard> {
                                                 Flexible(
                                                   child: Container(
                                                     child: Text(
-                                                        approvedjobs[i][
-                                                                    'bkj_jobname'] !=
-                                                                null
-                                                            ? approvedjobs[i]
-                                                                ['bkj_jobname']
-                                                            : "",
-                                                        overflow:
-                                                            TextOverflow.clip,
-                                                        maxLines: 3,
-                                                        style: montserratRegular
-                                                            .copyWith(
-                                                          fontSize:
-                                                              width * 0.032,
-                                                          color: black,
-                                                        )),
+                                                      approvedjobs[i][
+                                                                  'bkj_jobname'] !=
+                                                              null
+                                                          ? approvedjobs[i]
+                                                              ['bkj_jobname']
+                                                          : "",
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      maxLines: 3,
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color: black,
+                                                              fontSize: width *
+                                                                  0.034),
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -778,19 +783,19 @@ class WorkcardState extends State<Workcard> {
                                                             'bkj_payment_status'] ==
                                                         "0"
                                                     ? Text("PENDING",
-                                                        style: montserratRegular
+                                                        style: montserratMedium
                                                             .copyWith(
                                                                 fontSize:
                                                                     width *
-                                                                        0.032,
+                                                                        0.034,
                                                                 color:
                                                                     Colors.red))
                                                     : Text("PAID",
-                                                        style: montserratRegular
+                                                        style: montserratMedium
                                                             .copyWith(
                                                                 fontSize:
                                                                     width *
-                                                                        0.032,
+                                                                        0.034,
                                                                 color: Colors
                                                                     .green)),
                                               ],
@@ -900,11 +905,11 @@ class WorkcardState extends State<Workcard> {
                                                       overflow:
                                                           TextOverflow.clip,
                                                       maxLines: 3,
-                                                      style: montserratRegular
+                                                      style: montserratMedium
                                                           .copyWith(
                                                               color: black,
                                                               fontSize: width *
-                                                                  0.032)),
+                                                                  0.034)),
                                                 ),
                                               ),
                                             ],
@@ -1192,7 +1197,18 @@ class CustomSuccess extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(height: 130, color: black),
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      lightblueColor,
+                      syanColor,
+                    ],
+                  )),
+                ),
                 Column(
                   children: [
                     Image.asset(
@@ -1203,7 +1219,7 @@ class CustomSuccess extends StatelessWidget {
                     SizedBox(
                       height: 16,
                     ),
-                    Text("Success",
+                    Text("Payment Success",
                         textAlign: TextAlign.center,
                         style: montserratRegular.copyWith(
                             fontSize: width * 0.032, color: white)),
@@ -1310,7 +1326,9 @@ class CustomWarning extends StatelessWidget {
               height: 16,
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.pop(context);
+              },
               child: Container(
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,

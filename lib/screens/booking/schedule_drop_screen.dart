@@ -12,6 +12,7 @@ import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -46,11 +47,13 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   var selected_address = 0;
   var selected_timeslot = "";
   var selected_timeid = 0;
+  var pickupoption;
   CameraPosition _initialPosition =
       CameraPosition(target: LatLng(24.3547, 54.5020), zoom: 13);
   Completer<GoogleMapController> _controller = Completer();
   bool isoffline = false;
   late List temppickup_options = [];
+  late List pickup_options = [];
 
   var isTimeCheck;
   bool isdroplocation = false;
@@ -134,6 +137,83 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     });
   }
 
+  dropCostCalculation(
+      totalDistance, serviceAvailability, message, freeFlag, rangestatus) {
+    pickup_options = [];
+    for (var ptemp in temppickup_options) {
+      var tempCost = '0';
+      freeFlag
+          ? ptemp['pk_freeFlag'] != "1"
+              ? tempCost =
+                  (int.parse(ptemp['pk_cost']) * totalDistance).toString()
+              : tempCost = "0"
+          : tempCost = (int.parse(ptemp['pk_cost']) * totalDistance).toString();
+      var temp = {
+        "pk_id":
+            ptemp['pk_freeFlag'] == "1" && rangestatus ? "0" : ptemp['pk_id'],
+        "pk_name": ptemp['pk_name'],
+        "pk_cost": ptemp['pk_freeFlag'] == "1" && rangestatus
+            ? "Not Available"
+            : serviceAvailability
+                ? (int.parse(tempCost) < int.parse(ptemp['pk_min_cost']) &&
+                        ptemp['pk_freeFlag'] != "1")
+                    ? ("AED" + " " + ptemp['pk_min_cost'])
+                    : ("AED" + " " + tempCost)
+                : message,
+        "pk_cost_value": int.parse(tempCost) < int.parse(ptemp['pk_min_cost'])
+            ? ptemp['pk_freeFlag'] == "1"
+                ? '0'
+                : (ptemp['pk_min_cost'])
+            : tempCost
+      };
+      pickup_options.add(temp);
+    }
+    isserviceble = serviceAvailability;
+    setState(() {});
+  }
+
+  dropaddresschange(drop_address) {
+    if (drop_address - 1 == -1) {
+      dropCostCalculation(0, false, "Select Drop", false, false);
+      showCustomToast(context, "Please select drop location",
+          bgColor: errorcolor, textColor: white);
+    } else {
+      setState(() {
+        pickupoption = "";
+        isTimeCheck = "";
+        dtemp = custAddressList[drop_address - 1]['cad_id'];
+        selected_drop_address = drop_address;
+        dlocdistance =
+            int.parse(custAddressList[drop_address - 1]['cad_distance']);
+      });
+      var tdistance = 0;
+      if (plocdistance != "") {
+        if (servicedistance > dlocdistance && servicedistance > plocdistance) {
+          if (freeservicedistance > dlocdistance &&
+              freeservicedistance > plocdistance) {
+            pickup_options = [];
+            tdistance = plocdistance + dlocdistance;
+            dropCostCalculation(tdistance, true, "", true, false);
+          } else {
+            pickup_options = [];
+            tdistance = plocdistance + dlocdistance;
+            dropCostCalculation(tdistance, true, "", false, false);
+          }
+        } else {
+          // toast("Service not available in this location");
+          // dropCostCalculation(0, false, "No Service", false);
+          pickup_options = [];
+          tdistance = plocdistance + dlocdistance;
+          dropCostCalculation(tdistance, true, "", false, true);
+        }
+      } else {
+        dropCostCalculation(0, false, "Select Pickup", false, false);
+        showCustomToast(context, "Please select pickup location",
+            bgColor: errorcolor, textColor: white);
+      }
+    }
+  }
+
   getarealist(data) async {
     if (SelectAreaList.indexOf(data.toString()) > 0) {
       setState(() {});
@@ -143,10 +223,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
             double.parse(temp['city_longitude'])),
         zoom: 15.4746,
       );
-      setState(() {});
       final GoogleMapController controller = await _controller.future;
       controller.moveCamera(CameraUpdate.newCameraPosition(_kLake));
-      setState(() {});
       setState(() {
         city = int.parse(temp['city_id']);
         Statelat = temp['city_lattitude'];
@@ -160,6 +238,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
       final prefs = await SharedPreferences.getInstance();
       Map req = {"customerId": prefs.getString('cust_id')};
       custAddressList = [];
+      pickup_options = [];
       var temp_address = selected_address;
       var temp_drop_address = selected_address;
       selected_address = 0;
@@ -200,6 +279,18 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
             int.parse(value['settings']['gs_freeservicearea']);
         servicedistance = int.parse(value['settings']['gs_service_area']);
         max_days = int.parse(value['settings']['gs_nofdays']);
+        if (value['ret_data'] == "success") {
+          temppickup_options = value['active_pickuptype_list'];
+          for (var ptype in value['active_pickuptype_list']) {
+            var temp = {
+              "pk_id": ptype['pk_id'],
+              "pk_name": ptype['pk_name'],
+              "pk_cost": 'Select Address',
+              "pk_cost_value": '0'
+            };
+            pickup_options.add(temp);
+          }
+        }
       });
       setState(() {});
       if (address_index == 0) {
@@ -221,75 +312,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
       setState(() => issubmitted = false);
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
-    }
-  }
-
-  dropCostCalculation(
-      totalDistance, serviceAvailability, message, freeFlag, rangestatus) {
-    for (var ptemp in temppickup_options) {
-      var tempCost = '0';
-      freeFlag
-          ? ptemp['pk_freeFlag'] != "1"
-              ? tempCost =
-                  (int.parse(ptemp['pk_cost']) * totalDistance).toString()
-              : tempCost = "0"
-          : tempCost = (int.parse(ptemp['pk_cost']) * totalDistance).toString();
-      var temp = {
-        "pk_id":
-            ptemp['pk_freeFlag'] == "1" && rangestatus ? "0" : ptemp['pk_id'],
-        "pk_name": ptemp['pk_name'],
-        "pk_cost": ptemp['pk_freeFlag'] == "1" && rangestatus
-            ? "Not Available"
-            : serviceAvailability
-                ? (int.parse(tempCost) < int.parse(ptemp['pk_min_cost']) &&
-                        ptemp['pk_freeFlag'] != "1")
-                    ? ("AED" + " " + ptemp['pk_min_cost'])
-                    : ("AED" + " " + tempCost)
-                : message,
-        "pk_cost_value": int.parse(tempCost) < int.parse(ptemp['pk_min_cost'])
-            ? (ptemp['pk_min_cost'])
-            : tempCost
-      };
-    }
-    isserviceble = serviceAvailability;
-    setState(() {});
-  }
-
-  dropaddresschange(drop_address) {
-    if (drop_address - 1 == -1) {
-      dropCostCalculation(0, false, "Select Drop", false, false);
-      showCustomToast(context, "Please select a drop location",
-          bgColor: errorcolor, textColor: white);
-    } else {
-      setState(() {
-        isTimeCheck = "";
-        dtemp = custAddressList[drop_address - 1]['cad_id'];
-        selected_drop_address = drop_address;
-        dlocdistance =
-            int.parse(custAddressList[drop_address - 1]['cad_distance']);
-      });
-      var tdistance = 0;
-      if (plocdistance != "") {
-        if (servicedistance > dlocdistance && servicedistance > plocdistance) {
-          if (freeservicedistance > dlocdistance &&
-              freeservicedistance > plocdistance) {
-            tdistance = plocdistance + dlocdistance;
-            dropCostCalculation(tdistance, true, "", true, false);
-          } else {
-            tdistance = plocdistance + dlocdistance;
-            dropCostCalculation(tdistance, true, "", false, false);
-          }
-        } else {
-          // toast("Service not available in this location");
-          // dropCostCalculation(0, false, "No Service", false);
-          tdistance = plocdistance + dlocdistance;
-          dropCostCalculation(tdistance, true, "", false, true);
-        }
-      } else {
-        dropCostCalculation(0, false, "Select Pickup", false, false);
-        showCustomToast(context, "Please select Pick up location",
-            bgColor: errorcolor, textColor: white);
-      }
     }
   }
 
@@ -525,8 +547,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
           ),
           title: Text(
             "Schedule Drop",
-            style: myriadproregular.copyWith(
-              fontSize: 18,
+            style: montserratRegular.copyWith(
+              fontSize: width * 0.044,
               color: Colors.white,
             ),
           ),
@@ -546,40 +568,15 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    AnimatedContainer(
+                    Container(
                       margin: const EdgeInsets.all(8),
                       padding: EdgeInsets.all(8),
-                      width: context.width() * 1.85,
-                      decoration: BoxDecoration(
-                        color: context.cardColor,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: defaultBoxShadow(),
-                      ),
-                      duration: 1000.milliseconds,
-                      curve: Curves.linearToEaseOut,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.all(2),
-                          ),
-                          Container(
-                            margin: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  topRight: Radius.circular(5),
-                                  bottomLeft: Radius.circular(5),
-                                  bottomRight: Radius.circular(5)),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Color(0xFF808080).withOpacity(0.3),
-                                    offset: Offset(0.0, 1.0),
-                                    blurRadius: 2.0)
-                              ],
-                            ),
                           ),
                           Row(
                             children: <Widget>[
@@ -589,8 +586,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                 child: Text(
                                   "Current Drop Location",
                                   textAlign: TextAlign.start,
-                                  style: montserratRegular.copyWith(
-                                    fontSize: width * 0.032,
+                                  style: montserratSemiBold.copyWith(
+                                    fontSize: width * 0.034,
                                     color: black,
                                   ),
                                 ),
@@ -616,7 +613,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                               dropdetails['state_name']
                                       : "",
                                   textAlign: TextAlign.start,
-                                  style: montserratRegular.copyWith(
+                                  style: montserratMedium.copyWith(
                                     fontSize: width * 0.034,
                                     color: black,
                                   ),
@@ -624,7 +621,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                               ),
                             ],
                           ),
-                          8.height,
+                          12.height,
                           Row(
                             children: <Widget>[
                               Padding(padding: EdgeInsets.all(2)),
@@ -632,22 +629,48 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                 flex: 1,
                                 child: Text(
                                   "Change Address",
-                                  style: montserratRegular.copyWith(
-                                    fontSize: width * 0.032,
+                                  style: montserratSemiBold.copyWith(
+                                    fontSize: width * 0.034,
                                     color: black,
                                   ),
                                 ),
                               ),
                               Expanded(
                                 flex: 1,
-                                child: OutlinedButton(
-                                  onPressed: () {
+                                child: GestureDetector(
+                                  onTap: () async {
                                     Clickedchangeaddress();
                                   },
-                                  child: Text("Change",
-                                      style: montserratRegular.copyWith(
-                                        fontSize: width * 0.032,
-                                      )),
+                                  child: Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height: height * 0.05,
+                                        width: height * 0.2,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          border: Border.all(color: syanColor),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12)),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              white,
+                                              white,
+                                              white,
+                                              white,
+                                            ],
+                                          ),
+                                        ),
+                                        child: Text('CHANGE',
+                                            style: montserratSemiBold.copyWith(
+                                                color: syanColor,
+                                                fontSize: width * 0.026)),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
@@ -702,6 +725,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                               'state_longitude'])),
                                                       zoom: 13.4746,
                                                     );
+                                                    setBottomState(() {});
                                                     final GoogleMapController
                                                         controller =
                                                         await _controller
@@ -710,6 +734,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                         CameraUpdate
                                                             .newCameraPosition(
                                                                 _kLake));
+                                                    setBottomState(() {});
                                                     setBottomState(() {
                                                       Statelat = temp[
                                                           'state_lattitude'];
@@ -727,8 +752,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                         .then((value) {
                                                       if (value['ret_data'] ==
                                                           "success") {
-                                                        Navigator.pop(context);
-                                                        setState(() {
+                                                        setBottomState(() {
                                                           areaList = [];
                                                           SelectAreaList =
                                                               <String?>[
@@ -827,30 +851,60 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                         child: Text(
                                                                                           "Select City" + "*",
                                                                                           textAlign: TextAlign.left,
-                                                                                          style: montserratRegular.copyWith(fontSize: width * 0.032, color: black),
+                                                                                          style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
                                                                                         ),
                                                                                       ),
                                                                                     ),
                                                                                   ],
                                                                                 ),
                                                                                 8.height,
-                                                                                DropdownButtonFormField(
+                                                                                DropdownButtonFormField2(
                                                                                   value: SelectCityList[0],
                                                                                   key: drop_city,
-                                                                                  isExpanded: true,
+                                                                                  autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                                   decoration: InputDecoration(
-                                                                                      hintText: "Select City",
-                                                                                      hintStyle: primaryTextStyle(
-                                                                                        color: black,
-                                                                                      ),
-                                                                                      focusedBorder: OutlineInputBorder(
-                                                                                        borderSide: const BorderSide(color: black, width: 0.5),
-                                                                                        borderRadius: BorderRadius.circular(10),
-                                                                                      ),
-                                                                                      enabledBorder: OutlineInputBorder(
-                                                                                        borderSide: const BorderSide(color: black, width: 0.5),
-                                                                                        borderRadius: BorderRadius.circular(10),
-                                                                                      )),
+                                                                                    //Add isDense true and zero Padding.
+                                                                                    //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                                                                    isDense: true,
+                                                                                    contentPadding: EdgeInsets.zero,
+                                                                                    focusedBorder: OutlineInputBorder(
+                                                                                      // width: 0.0 produces a thin "hairline" border
+                                                                                      borderSide: const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                                      borderRadius: BorderRadius.circular(12),
+                                                                                    ),
+                                                                                    focusedErrorBorder: OutlineInputBorder(
+                                                                                      // width: 0.0 produces a thin "hairline" border
+                                                                                      borderSide: const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                                      borderRadius: BorderRadius.circular(12),
+                                                                                    ),
+                                                                                    enabledBorder: OutlineInputBorder(
+                                                                                      // width: 0.0 produces a thin "hairline" border
+                                                                                      borderSide: const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                                      borderRadius: BorderRadius.circular(12),
+                                                                                    ),
+                                                                                    errorBorder: OutlineInputBorder(
+                                                                                      // width: 0.0 produces a thin "hairline" border
+                                                                                      borderSide: const BorderSide(color: const Color(0xfffff), width: 0.0),
+                                                                                      borderRadius: BorderRadius.circular(12),
+                                                                                    ),
+                                                                                    errorStyle: TextStyle(
+                                                                                      fontSize: 12,
+                                                                                      color: warningcolor,
+                                                                                    ),
+                                                                                    //Add more decoration as you want here
+                                                                                    //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                                                                  ),
+                                                                                  isExpanded: true,
+                                                                                  hint: Text(
+                                                                                    "Select City" + "*",
+                                                                                    style: montserratMedium.copyWith(color: black, fontSize: width * 0.04),
+                                                                                  ),
+                                                                                  alignment: Alignment.center,
+                                                                                  buttonHeight: height * 0.075,
+                                                                                  buttonPadding: const EdgeInsets.only(left: 20, right: 10),
+                                                                                  dropdownDecoration: BoxDecoration(
+                                                                                    borderRadius: BorderRadius.circular(15),
+                                                                                  ),
                                                                                   items: SelectCityList.map((String? value) {
                                                                                     return DropdownMenuItem<String>(
                                                                                       value: value,
@@ -876,28 +930,60 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                         child: Text(
                                                                                           "Select Area" + "*",
                                                                                           textAlign: TextAlign.left,
-                                                                                          style: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
+                                                                                          style: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
                                                                                         ),
                                                                                       ),
                                                                                     ),
                                                                                   ],
                                                                                 ),
                                                                                 8.height,
-                                                                                DropdownButtonFormField(
+                                                                                DropdownButtonFormField2(
                                                                                   key: drop_area,
                                                                                   value: SelectAreaList[0],
-                                                                                  isExpanded: true,
+                                                                                  autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                                   decoration: InputDecoration(
-                                                                                      hintText: "Select Area",
-                                                                                      hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
-                                                                                      focusedBorder: OutlineInputBorder(
-                                                                                        borderSide: const BorderSide(color: black, width: 0.5),
-                                                                                        borderRadius: BorderRadius.circular(10),
-                                                                                      ),
-                                                                                      enabledBorder: OutlineInputBorder(
-                                                                                        borderSide: const BorderSide(color: black, width: 0.5),
-                                                                                        borderRadius: BorderRadius.circular(10),
-                                                                                      )),
+                                                                                    //Add isDense true and zero Padding.
+                                                                                    //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                                                                    isDense: true,
+                                                                                    contentPadding: EdgeInsets.zero,
+                                                                                    focusedBorder: OutlineInputBorder(
+                                                                                      // width: 0.0 produces a thin "hairline" border
+                                                                                      borderSide: const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                                      borderRadius: BorderRadius.circular(12),
+                                                                                    ),
+                                                                                    focusedErrorBorder: OutlineInputBorder(
+                                                                                      // width: 0.0 produces a thin "hairline" border
+                                                                                      borderSide: const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                                      borderRadius: BorderRadius.circular(12),
+                                                                                    ),
+                                                                                    enabledBorder: OutlineInputBorder(
+                                                                                      // width: 0.0 produces a thin "hairline" border
+                                                                                      borderSide: const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                                      borderRadius: BorderRadius.circular(12),
+                                                                                    ),
+                                                                                    errorBorder: OutlineInputBorder(
+                                                                                      // width: 0.0 produces a thin "hairline" border
+                                                                                      borderSide: const BorderSide(color: const Color(0xfffff), width: 0.0),
+                                                                                      borderRadius: BorderRadius.circular(12),
+                                                                                    ),
+                                                                                    errorStyle: TextStyle(
+                                                                                      fontSize: 12,
+                                                                                      color: warningcolor,
+                                                                                    ),
+                                                                                    //Add more decoration as you want here
+                                                                                    //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                                                                  ),
+                                                                                  isExpanded: true,
+                                                                                  hint: Text(
+                                                                                    "Select Area" + "*",
+                                                                                    style: montserratMedium.copyWith(color: black, fontSize: width * 0.04),
+                                                                                  ),
+                                                                                  alignment: Alignment.center,
+                                                                                  buttonHeight: height * 0.075,
+                                                                                  buttonPadding: const EdgeInsets.only(left: 20, right: 10),
+                                                                                  dropdownDecoration: BoxDecoration(
+                                                                                    borderRadius: BorderRadius.circular(15),
+                                                                                  ),
                                                                                   items: SelectAreaList.map((String? value) {
                                                                                     return DropdownMenuItem<String>(
                                                                                       value: value,
@@ -917,7 +1003,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                         child: Text(
                                                                                           "Address",
                                                                                           textAlign: TextAlign.left,
-                                                                                          style: montserratRegular.copyWith(fontSize: width * 0.032, color: black),
+                                                                                          style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -927,7 +1013,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                 Padding(
                                                                                   padding: EdgeInsets.all(2),
                                                                                   child: Container(
-                                                                                    width: context.width() * 0.85,
+                                                                                    width: width * 0.85,
                                                                                     decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16)), color: white),
                                                                                     child: TextFormField(
                                                                                       keyboardType: TextInputType.text,
@@ -950,9 +1036,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       decoration: InputDecoration(
                                                                                           counterText: "",
                                                                                           hintText: "Address",
-                                                                                          hintStyle: montserratRegular.copyWith(
-                                                                                            color: black,
-                                                                                          ),
+                                                                                          hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
                                                                                           focusedBorder: OutlineInputBorder(
                                                                                             borderSide: const BorderSide(color: black, width: 0.5),
                                                                                             borderRadius: BorderRadius.circular(10),
@@ -974,7 +1058,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                         child: Text(
                                                                                           "Building Name/Flat No",
                                                                                           textAlign: TextAlign.left,
-                                                                                          style: montserratRegular.copyWith(fontSize: width * 0.032, color: black),
+                                                                                          style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -984,7 +1068,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                 Padding(
                                                                                   padding: EdgeInsets.all(2),
                                                                                   child: Container(
-                                                                                    width: context.width() * 0.85,
+                                                                                    width: width * 0.85,
                                                                                     decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16)), color: white),
                                                                                     child: TextField(
                                                                                         keyboardType: TextInputType.multiline,
@@ -1006,7 +1090,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                         decoration: InputDecoration(
                                                                                             counterText: "",
                                                                                             hintText: "Building Name/Flat No",
-                                                                                            hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
+                                                                                            hintStyle: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
                                                                                             focusedBorder: OutlineInputBorder(
                                                                                               borderSide: const BorderSide(color: black, width: 0.5),
                                                                                               borderRadius: BorderRadius.circular(10),
@@ -1025,6 +1109,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                     child: Radio(
                                                                                       value: 'Home',
                                                                                       groupValue: AddressType,
+                                                                                      fillColor: MaterialStateColor.resolveWith((states) => syanColor),
                                                                                       onChanged: (dynamic value) {
                                                                                         setBottomState(() {
                                                                                           AddressType = value;
@@ -1032,12 +1117,15 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       },
                                                                                     ),
                                                                                   ),
-                                                                                  Text("Home", style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
+                                                                                  Text("Home", style: montserratMedium.copyWith(fontSize: width * 0.034, color: black)),
                                                                                   Theme(
-                                                                                    data: Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
+                                                                                    data: Theme.of(context).copyWith(
+                                                                                      unselectedWidgetColor: syanColor,
+                                                                                    ),
                                                                                     child: Radio(
                                                                                       value: 'Office',
                                                                                       groupValue: AddressType,
+                                                                                      fillColor: MaterialStateColor.resolveWith((states) => syanColor),
                                                                                       onChanged: (dynamic value) {
                                                                                         setBottomState(() {
                                                                                           AddressType = value;
@@ -1045,12 +1133,13 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       },
                                                                                     ),
                                                                                   ),
-                                                                                  Text("Office", style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
+                                                                                  Text("Office", style: montserratMedium.copyWith(fontSize: width * 0.034, color: black)),
                                                                                   Theme(
                                                                                     data: Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
                                                                                     child: Radio(
                                                                                       value: 'Other',
                                                                                       groupValue: AddressType,
+                                                                                      fillColor: MaterialStateColor.resolveWith((states) => syanColor),
                                                                                       onChanged: (dynamic value) {
                                                                                         setBottomState(() {
                                                                                           AddressType = value;
@@ -1058,7 +1147,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       },
                                                                                     ),
                                                                                   ),
-                                                                                  Text("Other", style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
+                                                                                  Text("Other", style: montserratMedium.copyWith(fontSize: width * 0.034, color: black)),
                                                                                 ]),
                                                                                 8.height,
                                                                                 isgooglemap
@@ -1118,11 +1207,11 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       },
                                                                                     ),
                                                                                     Text(
-                                                                                      "Address",
+                                                                                      "Set as default address",
                                                                                       textAlign: TextAlign.start,
                                                                                       overflow: TextOverflow.clip,
-                                                                                      style: montserratRegular.copyWith(
-                                                                                        fontSize: width * 0.032,
+                                                                                      style: montserratMedium.copyWith(
+                                                                                        fontSize: 12,
                                                                                         color: black,
                                                                                       ),
                                                                                     ),
@@ -1143,7 +1232,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                     } else {
                                                                                       final prefs = await SharedPreferences.getInstance();
                                                                                       try {
-                                                                                        // if (issubmitted) return;
                                                                                         setState(() => issubmitted = true);
                                                                                         await Future.delayed(Duration(milliseconds: 1000));
                                                                                         Map req = {
@@ -1175,6 +1263,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                             });
                                                                                             setState(() {});
                                                                                             _fetchdatas(1, 'd');
+                                                                                            setState(() => isgooglemap = false);
+                                                                                            setState(() => issubmitted = false);
                                                                                           } else {
                                                                                             setState(() => issubmitted = false);
                                                                                           }
@@ -1263,7 +1353,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                           children: [
                                             Text(
                                               ST.of(context).add_address + " ",
-                                              style: montserratLight.copyWith(
+                                              style: montserratMedium.copyWith(
                                                   color: black,
                                                   fontSize: width * 0.034),
                                             ),
@@ -1314,10 +1404,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                             ]),
                                       ),
                                       Container(
-                                          margin: EdgeInsets.all(12.0),
-                                          padding: EdgeInsets.all(2),
-                                          width: width * 1.85,
-                                          height: height * 0.075,
+                                          margin: EdgeInsets.all(8.0),
                                           decoration: BoxDecoration(
                                             color: Colors.white,
                                             borderRadius:
@@ -1333,32 +1420,97 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                             children: <Widget>[
                                               Expanded(
                                                 child: Container(
-                                                  padding: EdgeInsets.only(
-                                                      right: width * 0.025,
-                                                      left: width * 0.025),
                                                   child:
-                                                      DropdownButtonFormField(
-                                                    isExpanded: true,
+                                                      DropdownButtonFormField2(
                                                     value: SelectAddressList[
                                                         selected_address],
-                                                    decoration: InputDecoration
-                                                        .collapsed(
-                                                            hintText: ''),
-                                                    hint: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          ST
-                                                              .of(context)
-                                                              .emirates,
-                                                          style: montserratRegular
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    decoration: InputDecoration(
+                                                      //Add isDense true and zero Padding.
+                                                      //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xff00000),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      focusedErrorBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xff000000),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xff000000),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    const Color(
+                                                                        0xfffff),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorStyle:
+                                                          montserratRegular
                                                               .copyWith(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                        )),
+                                                        fontSize: 12,
+                                                        color: warningcolor,
+                                                      ),
+                                                      //Add more decoration as you want here
+                                                      //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                                    ),
+                                                    isExpanded: true,
+                                                    hint: Text(
+                                                      "Select Address" + "*",
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color: black,
+                                                              fontSize: width *
+                                                                  0.035),
+                                                    ),
+                                                    buttonHeight:
+                                                        height * 0.075,
+                                                    buttonPadding:
+                                                        const EdgeInsets.only(
+                                                            right: 10),
+                                                    dropdownDecoration:
+                                                        BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                    ),
                                                     items:
                                                         SelectAddressList.map(
                                                             (String? value) {
@@ -1434,7 +1586,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                   subtitle: Text(
                                     DateFormat('dd-MM-yyyy')
                                         .format(selectedDate),
-                                    style: montserratRegular.copyWith(
+                                    style: montserratMedium.copyWith(
                                         color: black, fontSize: width * 0.032),
                                   ),
                                 )),
@@ -1484,7 +1636,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                   selected_timeslot == ""
                                       ? "Select a Time Slot" + "*"
                                       : selected_timeslot,
-                                  style: montserratRegular.copyWith(
+                                  style: montserratMedium.copyWith(
                                       color: black, fontSize: width * 0.032),
                                 ),
                                 textColor: black,
@@ -1541,6 +1693,11 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                   'tm_end_time'],
                                                           groupValue:
                                                               isTimeCheck,
+                                                          fillColor:
+                                                              MaterialStateColor
+                                                                  .resolveWith(
+                                                                      (states) =>
+                                                                          syanColor),
                                                           onChanged:
                                                               (dynamic value) {
                                                             timeslots[index][
