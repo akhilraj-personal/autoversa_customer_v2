@@ -430,6 +430,12 @@ class WorkcardState extends State<Workcard> {
                             ] else if (vehicle['cv_make'] == 'Audi') ...[
                               Image.asset(ImageConst.aud_ico,
                                   width: width / 8, height: 50),
+                            ] else if (vehicle['cv_make'] == 'Porsche') ...[
+                              Image.asset(ImageConst.porsche_ico,
+                                  width: width / 8, height: 50),
+                            ] else if (vehicle['cv_make'] == 'Volkswagen') ...[
+                              Image.asset(ImageConst.volkswagen_icon,
+                                  width: width / 8, height: 50),
                             ] else ...[
                               Image.asset(ImageConst.defcar_ico,
                                   width: width / 8, height: 50)

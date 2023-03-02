@@ -28,6 +28,8 @@ class ImageConst {
   static const aud_ico = baseImageURl + 'audi_icon.png';
   static const skod_ico = baseImageURl + 'skoda_icon.png';
   static const bmw_ico = baseImageURl + 'bmw_icon.png';
+  static const porsche_ico = baseImageURl + 'porsche_icon.png';
+  static const volkswagen_icon = baseImageURl + 'volkswagen_icon.png';
   static const defcar_ico = baseImageURl + 'no_logo_car.png';
   static const success = baseImageURl + 'success.png';
   static const warning = baseImageURl + 'warning.png';
