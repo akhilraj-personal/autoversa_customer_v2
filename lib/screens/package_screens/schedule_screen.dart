@@ -916,9 +916,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                       maxChildSize: 1,
                                       builder: (context, scrollController) {
                                         return Container(
-                                          color: context.cardColor,
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 16),
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 0),
+                                          decoration: BoxDecoration(
+                                            color: context.cardColor,
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            boxShadow: defaultBoxShadow(),
+                                          ),
                                           child: SingleChildScrollView(
                                             controller: scrollController,
                                             child: Form(
@@ -927,9 +932,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   AnimatedContainer(
-                                                    margin:
-                                                        const EdgeInsets.all(8),
-                                                    padding: EdgeInsets.all(8),
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            8, 8, 8, 8),
                                                     width: width * 1.85,
                                                     decoration: BoxDecoration(
                                                       color: context.cardColor,
@@ -957,10 +962,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                 margin:
                                                                     EdgeInsets
                                                                         .all(8),
-                                                                height: 850,
                                                                 decoration: BoxDecoration(
                                                                     color: context
-                                                                        .scaffoldBackgroundColor,
+                                                                        .cardColor,
                                                                     borderRadius:
                                                                         BorderRadius.all(
                                                                             Radius.circular(8))),
@@ -1054,9 +1058,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                             "*",
                                                                         style: montserratMedium.copyWith(
                                                                             color:
-                                                                                black,
-                                                                            fontSize:
-                                                                                width * 0.04),
+                                                                                Colors.black,
+                                                                            fontSize: width * 0.04),
                                                                       ),
                                                                       alignment:
                                                                           Alignment
@@ -1086,7 +1089,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                               Text(
                                                                             value!,
                                                                             style:
-                                                                                montserratRegular.copyWith(color: black, fontSize: width * 0.034),
+                                                                                montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
                                                                           ),
                                                                         );
                                                                       }).toList(),
@@ -1192,9 +1195,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                             "*",
                                                                         style: montserratMedium.copyWith(
                                                                             color:
-                                                                                black,
-                                                                            fontSize:
-                                                                                width * 0.04),
+                                                                                Colors.black,
+                                                                            fontSize: width * 0.04),
                                                                       ),
                                                                       alignment:
                                                                           Alignment
@@ -1222,7 +1224,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                               value,
                                                                           child: Text(
                                                                               value!,
-                                                                              style: montserratRegular.copyWith(fontSize: width * 0.034, color: black)),
+                                                                              style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04)),
                                                                         );
                                                                       }).toList(),
                                                                       onChanged:
@@ -1257,8 +1259,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                               2),
                                                                       child:
                                                                           Container(
-                                                                        width: width *
-                                                                            0.85,
                                                                         decoration: const BoxDecoration(
                                                                             borderRadius:
                                                                                 BorderRadius.all(Radius.circular(16)),
@@ -1273,6 +1273,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                               2,
                                                                           maxLength:
                                                                               80,
+                                                                          style: montserratMedium.copyWith(
+                                                                              color: Colors.black,
+                                                                              fontSize: width * 0.04),
                                                                           onChanged:
                                                                               (value) {
                                                                             setState(() {
@@ -1295,7 +1298,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                           decoration: InputDecoration(
                                                                               counterText: "",
                                                                               hintText: "Address",
-                                                                              hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
+                                                                              hintStyle: montserratMedium.copyWith(color: greyColor, fontSize: width * 0.04),
                                                                               focusedBorder: OutlineInputBorder(
                                                                                 borderSide: const BorderSide(color: black, width: 0.5),
                                                                                 borderRadius: BorderRadius.circular(10),
@@ -1332,11 +1335,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                     Padding(
                                                                       padding:
                                                                           EdgeInsets.all(
-                                                                              2),
+                                                                              0),
                                                                       child:
                                                                           Container(
-                                                                        width: width *
-                                                                            0.85,
                                                                         decoration: const BoxDecoration(
                                                                             borderRadius:
                                                                                 BorderRadius.all(Radius.circular(16)),
@@ -1345,6 +1346,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                             keyboardType: TextInputType.multiline,
                                                                             minLines: 1,
                                                                             maxLength: 50,
+                                                                            style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
                                                                             onChanged: (value) {
                                                                               if (value != "") {
                                                                                 var ret = buildingValidation(value);
@@ -1361,7 +1363,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                             decoration: InputDecoration(
                                                                                 counterText: "",
                                                                                 hintText: "Building Name/Flat No",
-                                                                                hintStyle: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
+                                                                                hintStyle: montserratMedium.copyWith(color: greyColor, fontSize: width * 0.04),
                                                                                 focusedBorder: OutlineInputBorder(
                                                                                   borderSide: const BorderSide(color: black, width: 0.5),
                                                                                   borderRadius: BorderRadius.circular(10),
@@ -1690,13 +1692,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                               children: [
                                 Text(
                                   ST.of(context).add_address + " ",
-                                  style: montserratMedium.copyWith(
+                                  style: montserratSemiBold.copyWith(
                                       color: black, fontSize: width * 0.034),
                                 ),
                                 Container(
                                   child: Image.asset(
                                     ImageConst.add_black,
-                                    scale: 4.7,
+                                    scale: 4.8,
                                   ),
                                 )
                               ],
@@ -1794,8 +1796,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                         hint: Text(
                                           "Select Address" + "*",
                                           style: montserratMedium.copyWith(
-                                              color: black,
-                                              fontSize: width * 0.035),
+                                              color: Colors.black,
+                                              fontSize: width * 0.04),
                                         ),
                                         buttonHeight: height * 0.075,
                                         buttonPadding:
@@ -1810,9 +1812,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                             value: value,
                                             child: Text(
                                               value!,
-                                              style: montserratRegular.copyWith(
-                                                  color: black,
-                                                  fontSize: width * 0.034),
+                                              style: montserratMedium.copyWith(
+                                                  color: Colors.black,
+                                                  fontSize: width * 0.04),
                                             ),
                                           );
                                         }).toList(),
@@ -2013,9 +2015,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                       "Select Address" + "*",
                                                       style: montserratMedium
                                                           .copyWith(
-                                                              color: black,
-                                                              fontSize: width *
-                                                                  0.035),
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width * 0.04),
                                                     ),
                                                     buttonHeight:
                                                         height * 0.075,
@@ -2036,12 +2039,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                         value: value,
                                                         child: Text(
                                                           value!,
-                                                          style: montserratRegular
+                                                          style: montserratMedium
                                                               .copyWith(
-                                                                  color: black,
+                                                                  color: Colors
+                                                                      .black,
                                                                   fontSize:
                                                                       width *
-                                                                          0.034),
+                                                                          0.04),
                                                         ),
                                                       );
                                                     }).toList(),
