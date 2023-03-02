@@ -311,7 +311,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                       children: [
                 Container(
                     padding: EdgeInsets.all(width * 0.08),
-                    height: height - height * 0.12,
+                    height: height - height * 0.16,
                     color: whiteColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

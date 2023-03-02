@@ -874,7 +874,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ? height * 0.07
                                         : bookingList.length > 1
                                             ? height * 0.09
-                                            : height * 0.07),
+                                            : height * 0.06),
                       ]),
                       isVehicleLoaded
                           ? customerVehList.length < 2
