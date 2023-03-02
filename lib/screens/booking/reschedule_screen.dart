@@ -1077,6 +1077,17 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                   ImageConst.aud_ico,
                                   width: width * 0.12,
                                 ),
+                              ] else if (vehicle['cv_make'] == 'Porsche') ...[
+                                Image.asset(
+                                  ImageConst.porsche_ico,
+                                  width: width * 0.12,
+                                ),
+                              ] else if (vehicle['cv_make'] ==
+                                  'Volkswagen') ...[
+                                Image.asset(
+                                  ImageConst.volkswagen_icon,
+                                  width: width * 0.12,
+                                ),
                               ] else ...[
                                 Image.asset(
                                   ImageConst.defcar_ico,
