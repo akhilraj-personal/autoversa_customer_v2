@@ -477,7 +477,11 @@ class CarRepairState extends State<CarRepair> {
                                                                                         ? ImageConst.skod_ico
                                                                                         : item['cv_make'] == 'Audi'
                                                                                             ? ImageConst.aud_ico
-                                                                                            : ImageConst.defcar_ico,
+                                                                                            : item['cv_make'] == 'Porsche'
+                                                                                                ? ImageConst.porsche_ico
+                                                                                                : item['cv_make'] == 'Volkswagen'
+                                                                                                    ? ImageConst.volkswagen_icon
+                                                                                                    : ImageConst.defcar_ico,
                                                                             width:
                                                                                 width * 0.12,
                                                                           ),
@@ -598,6 +602,23 @@ class CarRepairState extends State<CarRepair> {
                                                       'Audi') ...[
                                                     Image.asset(
                                                       ImageConst.aud_ico,
+                                                      width: width * 0.12,
+                                                    ),
+                                                  ] else if (widget
+                                                              .custvehlist[0]
+                                                          ['cv_make'] ==
+                                                      'Porsche') ...[
+                                                    Image.asset(
+                                                      ImageConst.porsche_ico,
+                                                      width: width * 0.12,
+                                                    ),
+                                                  ] else if (widget
+                                                              .custvehlist[0]
+                                                          ['cv_make'] ==
+                                                      'Volkswagen') ...[
+                                                    Image.asset(
+                                                      ImageConst
+                                                          .volkswagen_icon,
                                                       width: width * 0.12,
                                                     ),
                                                   ] else ...[

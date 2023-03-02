@@ -243,6 +243,12 @@ class InspectionScreenState extends State<InspectionScreen>
                             ] else if (widget.vehmake == 'Audi') ...[
                               Image.asset(ImageConst.aud_ico,
                                   width: width / 8, height: 50),
+                            ] else if (widget.vehmake == 'Porsche') ...[
+                              Image.asset(ImageConst.porsche_ico,
+                                  width: width / 8, height: 50),
+                            ] else if (widget.vehmake == 'Volkswagen') ...[
+                              Image.asset(ImageConst.volkswagen_icon,
+                                  width: width / 8, height: 50),
                             ] else ...[
                               Image.asset(ImageConst.defcar_ico,
                                   width: width / 8, height: 50)
