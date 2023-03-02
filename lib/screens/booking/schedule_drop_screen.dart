@@ -121,17 +121,17 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
       if (value['ret_data'] == "success") {
         dropdetails = value['booking']['drop_address'];
         CameraPosition _kLake = CameraPosition(
-          target: LatLng(double.parse(dropdetails['city_lattitude']),
-              double.parse(dropdetails['city_longitude'])),
+          target: LatLng(double.parse(dropdetails['cad_lattitude']),
+              double.parse(dropdetails['cad_longitude'])),
           zoom: 15.4746,
         );
         final GoogleMapController controller = await _controller.future;
         controller.moveCamera(CameraUpdate.newCameraPosition(_kLake));
         setState(() {});
         setState(() {
-          city = int.parse(dropdetails['city_id']);
-          Statelat = dropdetails['city_lattitude'];
-          Statelong = dropdetails['city_longitude'];
+          city = int.parse(dropdetails['cad_id']);
+          Statelat = dropdetails['cad_lattitude'];
+          Statelong = dropdetails['cad_longitude'];
         });
       }
     });

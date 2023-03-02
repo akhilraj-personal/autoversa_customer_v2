@@ -19,7 +19,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class BookingStatusFlow extends StatefulWidget {
   final String bk_id;
@@ -960,6 +959,14 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
               });
             }
             ;
+          }
+          if (value['booking']['cust_status']['st_code'] == "CDLC") {
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context) =>
+                  ScheduleDelivery(bk_id: widget.bk_id),
+            );
           }
           ;
 
@@ -2649,4 +2656,109 @@ BoxConstraints dynamicBoxConstraints({double? maxWidth}) {
 
 double dynamicWidth(BuildContext context) {
   return isMobile ? context.width() : width;
+}
+
+class ScheduleDelivery extends StatelessWidget {
+  final String bk_id;
+  const ScheduleDelivery({required this.bk_id, super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: new BoxDecoration(
+          color: white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(0),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0)),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To make the card compact
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      white,
+                      white,
+                      white,
+                      white,
+                    ],
+                  )),
+                ),
+                // Container(height: 130, color: blackColor),
+                Column(
+                  children: [
+                    Image.asset(
+                      ImageConst.confirm_drop_icon,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text("Schedule Delivery",
+                        textAlign: TextAlign.center,
+                        style: montserratSemiBold.copyWith(
+                            fontSize: width * 0.034, color: black)),
+                  ],
+                )
+              ],
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Text(
+                    "Please confirm delivery date, time and drop location",
+                    textAlign: TextAlign.center,
+                    style: montserratRegular.copyWith(
+                        fontSize: width * 0.034, color: black))),
+            SizedBox(
+              height: 16,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ScheduleDropScreen(bk_id: bk_id)));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        lightblueColor,
+                        syanColor,
+                      ],
+                    )),
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Text('SCHEDULE',
+                    style: montserratSemiBold.copyWith(color: white)),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
