@@ -400,8 +400,12 @@ class VehiclelistState extends State<Vehiclelist> {
                                                                             'Audi'
                                                                         ? ImageConst
                                                                             .aud_ico
-                                                                        : ImageConst
-                                                                            .defcar_ico,
+                                                                        : custvehlist[index].cv_make ==
+                                                                                'Porsche'
+                                                                            ? ImageConst.porsche_ico
+                                                                            : custvehlist[index].cv_make == 'Volkswagen'
+                                                                                ? ImageConst.volkswagen_icon
+                                                                                : ImageConst.defcar_ico,
                                                       ),
                                                       padding: EdgeInsets.all(
                                                           width / 30),

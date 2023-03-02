@@ -1095,8 +1095,11 @@ class _DashScreenState extends State<DashScreen> {
                                                                               'Audi'
                                                                           ? ImageConst
                                                                               .aud_ico
-                                                                          : ImageConst
-                                                                              .defcar_ico,
+                                                                          : customerVehList[0]['cv_make'] == 'Porsche'
+                                                                              ? ImageConst.porsche_ico
+                                                                              : customerVehList[0]['cv_make'] == 'Volkswagen'
+                                                                                  ? ImageConst.volkswagen_icon
+                                                                                  : ImageConst.defcar_ico,
                                                           width: width * 0.2,
                                                         )
                                                       ],
@@ -1252,8 +1255,18 @@ class _DashScreenState extends State<DashScreen> {
                                                                     'Audi'
                                                                 ? ImageConst
                                                                     .aud_ico
-                                                                : ImageConst
-                                                                    .defcar_ico,
+                                                                : customerVehList[index]
+                                                                            [
+                                                                            'cv_make'] ==
+                                                                        'Porsche'
+                                                                    ? ImageConst
+                                                                        .porsche_ico
+                                                                    : customerVehList[index]['cv_make'] ==
+                                                                            'Volkswagen'
+                                                                        ? ImageConst
+                                                                            .volkswagen_icon
+                                                                        : ImageConst
+                                                                            .defcar_ico,
                                                 width: width * 0.1,
                                               ),
                                             ))
