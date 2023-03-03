@@ -83,9 +83,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   var max_days = 0;
 
   bool isgooglemap = false;
-  CameraPosition _initialPosition =
-      CameraPosition(target: LatLng(24.3547, 54.5020), zoom: 13);
-  Completer<GoogleMapController> _controller = Completer();
 
   DateTime selectedDate = DateTime.now();
   bool isExpanded = false;
@@ -270,26 +267,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         showCustomToast(context, "Please select pickup location",
             bgColor: errorcolor, textColor: white);
       }
-    }
-  }
-
-  getarealist(data) async {
-    // areaKey.currentState!.reset();
-    if (SelectAreaList.indexOf(data.toString()) > 0) {
-      setState(() {});
-      var temp = areaList[SelectAreaList.indexOf(data.toString()) - 1];
-      CameraPosition _kLake = CameraPosition(
-        target: LatLng(double.parse(temp['city_lattitude']),
-            double.parse(temp['city_longitude'])),
-        zoom: 15.4746,
-      );
-      final GoogleMapController controller = await _controller.future;
-      controller.moveCamera(CameraUpdate.newCameraPosition(_kLake));
-      setState(() {
-        city = int.parse(temp['city_id']);
-        Statelat = temp['city_lattitude'];
-        Statelong = temp['city_longitude'];
-      });
     }
   }
 
@@ -861,6 +838,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
+                              Completer<GoogleMapController> _controller =
+                                  Completer();
                               showModalBottomSheet(
                                 enableDrag: true,
                                 isDismissible: true,
@@ -872,6 +851,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           context,
                                       StateSetter
                                           setBottomState /*You can rename this!*/) {
+                                    CameraPosition _initialPosition =
+                                        CameraPosition(
+                                            target: LatLng(24.3547, 54.5020),
+                                            zoom: 13);
                                     getcitylist(data) async {
                                       if (SelectCityList.indexOf(data) > 0) {
                                         var temp = citylist[
@@ -888,13 +871,20 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   temp['state_longitude'])),
                                           zoom: 13.4746,
                                         );
-                                        setBottomState(() {});
+                                        // setBottomState(() {});
+
+                                        print(data +
+                                            "--------------------000----");
                                         final GoogleMapController controller =
                                             await _controller.future;
+                                        print(data +
+                                            "-----------------------2222-");
                                         controller.moveCamera(
                                             CameraUpdate.newCameraPosition(
                                                 _kLake));
-                                        setBottomState(() {});
+                                        // setBottomState(() {});
+                                        print(data +
+                                            "-----------------------11111-");
                                         setBottomState(() {
                                           Statelat = temp['state_lattitude'];
                                           Statelong = temp['state_longitude'];
@@ -921,6 +911,37 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           }
                                         });
                                         setBottomState(() {});
+                                      }
+                                    }
+
+                                    getarealist(data) async {
+                                      // areaKey.currentState!.reset();
+                                      if (SelectAreaList.indexOf(
+                                              data.toString()) >
+                                          0) {
+                                        setState(() {});
+                                        var temp = areaList[
+                                            SelectAreaList.indexOf(
+                                                    data.toString()) -
+                                                1];
+                                        CameraPosition _kLake = CameraPosition(
+                                          target: LatLng(
+                                              double.parse(
+                                                  temp['city_lattitude']),
+                                              double.parse(
+                                                  temp['city_longitude'])),
+                                          zoom: 15.4746,
+                                        );
+                                        final GoogleMapController controller =
+                                            await _controller.future;
+                                        controller.moveCamera(
+                                            CameraUpdate.newCameraPosition(
+                                                _kLake));
+                                        setState(() {
+                                          city = int.parse(temp['city_id']);
+                                          Statelat = temp['city_lattitude'];
+                                          Statelong = temp['city_longitude'];
+                                        });
                                       }
                                     }
 
@@ -1484,9 +1505,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                 color: white,
                                                                                 child: GoogleMap(
                                                                                   initialCameraPosition: _initialPosition,
-                                                                                  myLocationEnabled: true,
-                                                                                  markers: Set.from(myMarker),
-                                                                                  onTap: _handleTap,
                                                                                   myLocationButtonEnabled: true,
                                                                                   onMapCreated: (GoogleMapController controller) {
                                                                                     _controller.complete(controller);
@@ -1699,7 +1717,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                     );
                                   });
                                 },
-                              );
+                              ).whenComplete(() {
+                                setState(() => isgooglemap = false);
+                                print(
+                                    'Hey there, I\'m calling after hide bottomSheet');
+                              });
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
