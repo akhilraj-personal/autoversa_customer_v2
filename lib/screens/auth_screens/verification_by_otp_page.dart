@@ -15,6 +15,7 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../services/pre_auth_services.dart';
 import '../../utils/common_utils.dart';
@@ -311,7 +312,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                       children: [
                 Container(
                     padding: EdgeInsets.all(width * 0.08),
-                    height: height - height * 0.12,
+                    height: height - height * 0.16,
                     color: whiteColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -376,6 +377,32 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                             });
                           }, // end onSubmit
                         ),
+                        // SizedBox(height: 16),
+                        // PinFieldAutoFill(
+                        //   keyboardType: TextInputType.number,
+                        //   decoration: UnderlineDecoration(
+                        //     textStyle: TextStyle(
+                        //         fontSize: 12,
+                        //         fontWeight: FontWeight.bold,
+                        //         color: blackColor),
+                        //     colorBuilder: FixedColorBuilder(Colors.grey),
+                        //   ),
+                        //   cursor: Cursor(
+                        //     width: 2,
+                        //     height: 40,
+                        //     color: syanColor,
+                        //     radius: Radius.circular(1),
+                        //     enabled: true,
+                        //   ),
+                        //   codeLength: 4,
+                        //   // currentCode: _code,
+                        //   onCodeSubmitted: (code) {},
+                        //   onCodeChanged: (code) {
+                        //     setState(() {
+                        //       otppin = "";
+                        //     });
+                        //   },
+                        // ),
                         SizedBox(height: 16),
                         Container(
                           child: isResend

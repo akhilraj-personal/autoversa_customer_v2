@@ -874,7 +874,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ? height * 0.07
                                         : bookingList.length > 1
                                             ? height * 0.09
-                                            : height * 0.07),
+                                            : height * 0.06),
                       ]),
                       isVehicleLoaded
                           ? customerVehList.length < 2
@@ -1120,8 +1120,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               'Audi'
                                                                           ? ImageConst
                                                                               .aud_ico
-                                                                          : ImageConst
-                                                                              .defcar_ico,
+                                                                          : customerVehList[0]['cv_make'] == 'Porsche'
+                                                                              ? ImageConst.porsche_ico
+                                                                              : customerVehList[0]['cv_make'] == 'Volkswagen'
+                                                                                  ? ImageConst.volkswagen_icon
+                                                                                  : ImageConst.defcar_ico,
                                                           width: width * 0.2,
                                                         )
                                                       ],
@@ -1277,8 +1280,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     'Audi'
                                                                 ? ImageConst
                                                                     .aud_ico
-                                                                : ImageConst
-                                                                    .defcar_ico,
+                                                                : customerVehList[index]
+                                                                            [
+                                                                            'cv_make'] ==
+                                                                        'Porsche'
+                                                                    ? ImageConst
+                                                                        .porsche_ico
+                                                                    : customerVehList[index]['cv_make'] ==
+                                                                            'Volkswagen'
+                                                                        ? ImageConst
+                                                                            .volkswagen_icon
+                                                                        : ImageConst
+                                                                            .defcar_ico,
                                                 width: width * 0.1,
                                               ),
                                             ))
@@ -1394,7 +1407,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ],
                                           ),
                                           Image.asset(
-                                            ImageConst.handel,
+                                            ImageConst.benz_ico,
                                             scale: 4,
                                           )
                                         ],

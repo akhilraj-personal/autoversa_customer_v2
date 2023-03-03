@@ -9,10 +9,10 @@ import 'package:autoversa/screens/booking/reschedule_from_booking_screen.dart';
 import 'package:autoversa/screens/booking/schedule_drop_screen.dart';
 import 'package:autoversa/screens/booking/workcard_screen.dart';
 import 'package:autoversa/screens/no_internet_screen.dart';
+import 'package:autoversa/screens/service/service_details_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -126,11 +126,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
       time += t;
     }
     return time;
-  }
-
-  Future refresh() async {
-    getBookingDetailsID();
-    setState(() {});
   }
 
   cancelbookingbottomsheet() async {
@@ -874,44 +869,32 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
     );
   }
 
-  unholdbookingbottomsheet() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.green,
-        content: Text('Unhold Booking.?',
-            style: montserratSemiBold.copyWith(color: black, fontSize: 21)),
-        action: SnackBarAction(
-            label: 'Unhold',
-            textColor: Colors.white,
-            onPressed: () async {
-              try {
-                setState(() => issubmitted = true);
-                final prefs = await SharedPreferences.getInstance();
-                Map req = {
-                  "bookid": widget.bk_id,
-                  "backendstatus": pastbackendstatus,
-                  "customerstatus": pastcustomerstatus,
-                  "unhold": true,
-                  "user_type": "0",
-                };
-                await booking_unhold(req).then((value) {
-                  if (value['ret_data'] == "success") {
-                    showCustomToast(context, "Booking hold removed",
-                        bgColor: warningcolor, textColor: white);
-                    setState(() {
-                      Navigator.pushReplacementNamed(context, Routes.bottombar);
-                    });
-                  } else {
-                    setState(() => issubmitted = false);
-                  }
-                });
-              } catch (e) {
-                setState(() => issubmitted = false);
-                print(e.toString());
-              }
-            }),
-      ),
-    );
+  unholdbookingbottomsheet() async {
+    try {
+      setState(() => issubmitted = true);
+      final prefs = await SharedPreferences.getInstance();
+      Map req = {
+        "bookid": widget.bk_id,
+        "backendstatus": pastbackendstatus,
+        "customerstatus": pastcustomerstatus,
+        "unhold": true,
+        "user_type": "0",
+      };
+      await booking_unhold(req).then((value) {
+        if (value['ret_data'] == "success") {
+          showCustomToast(context, "Booking hold removed",
+              bgColor: black, textColor: white);
+          setState(() {
+            Navigator.pushReplacementNamed(context, Routes.bottombar);
+          });
+        } else {
+          setState(() => issubmitted = false);
+        }
+      });
+    } catch (e) {
+      setState(() => issubmitted = false);
+      print(e.toString());
+    }
   }
 
   getBookingDetailsID() async {
@@ -986,7 +969,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
           var position = cust_status_master
               .indexOf(value['booking']['cust_status']['st_code']);
           for (var statuslist in value['booking']['status_flow']) {
-            if (statuslist["bkt_code"] == "BKCC") {
+            if (statuslist["bkt_code"] == "BKCC" &&
+                statuslist['bkt_task'] != "Unhold") {
               var temp = {
                 "status": "Booking Created",
                 "time": DateFormat('dd-MM-yyyy').format(
@@ -998,15 +982,17 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "icon": 'assets/icons/booking_created_active.png',
                 "color": activecolor,
                 "active_flag": true,
-                "hold_flag": false
+                "hold_flag": false,
+                "unhold_status": null,
               };
-              if ((statusflow.singleWhere(
+              if ((statusflow.firstWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
                       orElse: () => null)) ==
                   null) {
                 statusflow.add(temp);
               }
-            } else if (statuslist["bkt_code"] == "DRPC") {
+            } else if (statuslist["bkt_code"] == "DRPC" &&
+                statuslist['bkt_task'] != "Unhold") {
               var temp = {
                 "status": "Driver enroute\nto location",
                 "time": DateFormat('dd-MM-yyyy').format(
@@ -1018,7 +1004,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "icon": 'assets/icons/driver_enrouted_active.png',
                 "color": activecolor,
                 "active_flag": true,
-                "hold_flag": false
+                "hold_flag": false,
+                "unhold_status": null,
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -1026,7 +1013,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                   null) {
                 statusflow.add(temp);
               }
-            } else if (statuslist["bkt_code"] == "PIPC") {
+            } else if (statuslist["bkt_code"] == "PIPC" &&
+                statuslist['bkt_task'] != "Unhold") {
               var temp = {
                 "status": "Pickup in progress",
                 "time": DateFormat('dd-MM-yyyy').format(
@@ -1038,7 +1026,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "icon": 'assets/icons/pickup_progress_active.png',
                 "color": activecolor,
                 "active_flag": true,
-                "hold_flag": false
+                "hold_flag": false,
+                "unhold_status": null,
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -1046,7 +1035,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                   null) {
                 statusflow.add(temp);
               }
-            } else if (statuslist["bkt_code"] == "PIWC") {
+            } else if (statuslist["bkt_code"] == "PIWC" &&
+                statuslist['bkt_task'] != "Unhold") {
               var temp = {
                 "status": "Pickedup & enroute\nto workshop",
                 "time": DateFormat('dd-MM-yyyy').format(
@@ -1058,7 +1048,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "icon": 'assets/icons/pickedup_active.png',
                 "color": activecolor,
                 "active_flag": true,
-                "hold_flag": false
+                "hold_flag": false,
+                "unhold_status": null,
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -1066,7 +1057,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                   null) {
                 statusflow.add(temp);
               }
-            } else if (statuslist["bkt_code"] == "VAWC") {
+            } else if (statuslist["bkt_code"] == "VAWC" &&
+                statuslist['bkt_task'] != "Unhold") {
               var temp = {
                 "status": "Vehicle at workshop",
                 "time": DateFormat('dd-MM-yyyy').format(
@@ -1078,7 +1070,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "icon": 'assets/icons/vehicle_workshop_active.png',
                 "color": activecolor,
                 "active_flag": true,
-                "hold_flag": false
+                "hold_flag": false,
+                "unhold_status": null,
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -1086,7 +1079,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                   null) {
                 statusflow.add(temp);
               }
-            } else if (statuslist["bkt_code"] == "WIPC") {
+            } else if (statuslist["bkt_code"] == "WIPC" &&
+                statuslist['bkt_task'] != "Unhold") {
               var temp = {
                 "status": "Work in progress",
                 "time": DateFormat('dd-MM-yyyy').format(
@@ -1098,7 +1092,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "icon": 'assets/icons/work_in_progress_active.png',
                 "color": activecolor,
                 "active_flag": true,
-                "hold_flag": false
+                "hold_flag": false,
+                "unhold_status": null,
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -1106,7 +1101,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                   null) {
                 statusflow.add(temp);
               }
-            } else if (statuslist["bkt_code"] == "CDLC") {
+            } else if (statuslist["bkt_code"] == "CDLC" &&
+                statuslist['bkt_task'] != "Unhold") {
               var temp = {
                 "status": "Ready for delivery",
                 "time": DateFormat('dd-MM-yyyy').format(
@@ -1118,7 +1114,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "icon": 'assets/icons/ready_delivery_active.png',
                 "color": activecolor,
                 "active_flag": true,
-                "hold_flag": false
+                "hold_flag": false,
+                "unhold_status": null,
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -1126,7 +1123,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                   null) {
                 statusflow.add(temp);
               }
-            } else if (statuslist["bkt_code"] == "RFDC") {
+            } else if (statuslist["bkt_code"] == "RFDC" &&
+                statuslist['bkt_task'] != "Unhold") {
               var temp = {
                 "status": "Delivery scheduled On",
                 "time": DateFormat('dd-MM-yyyy')
@@ -1139,15 +1137,17 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "icon": 'assets/icons/location_icon.png',
                 "color": activecolor,
                 "active_flag": true,
-                "hold_flag": false
+                "hold_flag": false,
+                "unhold_status": null,
               };
-              if ((statusflow.singleWhere(
+              if ((statusflow.firstWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
                       orElse: () => null)) ==
                   null) {
                 statusflow.add(temp);
               }
-            } else if (statuslist["bkt_code"] == "DEDC") {
+            } else if (statuslist["bkt_code"] == "DEDC" &&
+                statuslist['bkt_task'] != "Unhold") {
               var temp = {
                 "status": "Vehicle enrouted to\nyour location",
                 "time": DateFormat('dd-MM-yyyy').format(
@@ -1159,7 +1159,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "icon": 'assets/icons/enrouted_drop_active.png',
                 "color": activecolor,
                 "active_flag": true,
-                "hold_flag": false
+                "hold_flag": false,
+                "unhold_status": null,
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -1177,9 +1178,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
                 "icon": 'assets/icons/delivery_complete_active.png',
-                "color": activecolor,
+                "color": Colors.transparent,
                 "active_flag": true,
-                "hold_flag": false
+                "hold_flag": false,
+                "unhold_status": null,
               };
               if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
@@ -1199,9 +1201,163 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                         DateTime.tryParse(statuslist["bkt_created_on"])!),
                 "code": statuslist["bkt_code"],
                 "icon": 'assets/icons/hold.png',
-                "color": Colors.transparent,
+                "color": activecolor,
                 "active_flag": true,
-                "hold_flag": true
+                "hold_flag": true,
+                "unhold_status": null,
+              };
+              statusflow.add(temp);
+            } else if (statuslist["bkt_code"] == "BKCC" &&
+                statuslist['bkt_task'] == "Unhold") {
+              var temp = {
+                "status": "Unhold",
+                "time": DateFormat('dd-MM-yyyy').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
+                    " / " +
+                    DateFormat('hh:mm a').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "code": statuslist["bkt_code"],
+                "icon": 'assets/icons/unhold.png',
+                "color": activecolor,
+                "active_flag": true,
+                "hold_flag": false,
+                "unhold_status": "unhold",
+              };
+              statusflow.add(temp);
+            } else if (statuslist["bkt_code"] == "DRPC" &&
+                statuslist['bkt_task'] == "Unhold") {
+              var temp = {
+                "status": "Unhold",
+                "time": DateFormat('dd-MM-yyyy').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
+                    " / " +
+                    DateFormat('hh:mm a').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "code": statuslist["bkt_code"],
+                "icon": 'assets/icons/unhold.png',
+                "color": activecolor,
+                "active_flag": true,
+                "hold_flag": false,
+                "unhold_status": "unhold",
+              };
+              statusflow.add(temp);
+            } else if (statuslist["bkt_code"] == "PIPC" &&
+                statuslist['bkt_task'] == "Unhold") {
+              var temp = {
+                "status": "Unhold",
+                "time": DateFormat('dd-MM-yyyy').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
+                    " / " +
+                    DateFormat('hh:mm a').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "code": statuslist["bkt_code"],
+                "icon": 'assets/icons/unhold.png',
+                "color": activecolor,
+                "active_flag": true,
+                "hold_flag": false,
+                "unhold_status": "unhold",
+              };
+              statusflow.add(temp);
+            } else if (statuslist["bkt_code"] == "PIWC" &&
+                statuslist['bkt_task'] == "Unhold") {
+              var temp = {
+                "status": "Unhold",
+                "time": DateFormat('dd-MM-yyyy').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
+                    " / " +
+                    DateFormat('hh:mm a').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "code": statuslist["bkt_code"],
+                "icon": 'assets/icons/unhold.png',
+                "color": activecolor,
+                "active_flag": true,
+                "hold_flag": false,
+                "unhold_status": "unhold",
+              };
+              statusflow.add(temp);
+            } else if (statuslist["bkt_code"] == "VAWC" &&
+                statuslist['bkt_task'] == "Unhold") {
+              var temp = {
+                "status": "Unhold",
+                "time": DateFormat('dd-MM-yyyy').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
+                    " / " +
+                    DateFormat('hh:mm a').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "code": statuslist["bkt_code"],
+                "icon": 'assets/icons/unhold.png',
+                "color": activecolor,
+                "active_flag": true,
+                "hold_flag": false,
+                "unhold_status": "unhold",
+              };
+              statusflow.add(temp);
+            } else if (statuslist["bkt_code"] == "WIPC" &&
+                statuslist['bkt_task'] == "Unhold") {
+              var temp = {
+                "status": "Unhold",
+                "time": DateFormat('dd-MM-yyyy').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
+                    " / " +
+                    DateFormat('hh:mm a').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "code": statuslist["bkt_code"],
+                "icon": 'assets/icons/unhold.png',
+                "color": activecolor,
+                "active_flag": true,
+                "hold_flag": false,
+                "unhold_status": "unhold",
+              };
+              statusflow.add(temp);
+            } else if (statuslist["bkt_code"] == "CDLC" &&
+                statuslist['bkt_task'] == "Unhold") {
+              var temp = {
+                "status": "Unhold",
+                "time": DateFormat('dd-MM-yyyy').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
+                    " / " +
+                    DateFormat('hh:mm a').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "code": statuslist["bkt_code"],
+                "icon": 'assets/icons/unhold.png',
+                "color": activecolor,
+                "active_flag": true,
+                "hold_flag": false,
+                "unhold_status": "unhold",
+              };
+              statusflow.add(temp);
+            } else if (statuslist["bkt_code"] == "RFDC" &&
+                statuslist['bkt_task'] == "Unhold") {
+              var temp = {
+                "status": "Unhold",
+                "time": DateFormat('dd-MM-yyyy').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
+                    " / " +
+                    DateFormat('hh:mm a').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "code": statuslist["bkt_code"],
+                "icon": 'assets/icons/unhold.png',
+                "color": activecolor,
+                "active_flag": true,
+                "hold_flag": false,
+                "unhold_status": "unhold",
+              };
+              statusflow.add(temp);
+            } else if (statuslist["bkt_code"] == "DEDC" &&
+                statuslist['bkt_task'] == "Unhold") {
+              var temp = {
+                "status": "Unhold",
+                "time": DateFormat('dd-MM-yyyy').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
+                    " / " +
+                    DateFormat('hh:mm a').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "code": statuslist["bkt_code"],
+                "icon": 'assets/icons/unhold.png',
+                "color": activecolor,
+                "active_flag": true,
+                "hold_flag": false,
+                "unhold_status": "unhold",
               };
               statusflow.add(temp);
             }
@@ -1335,8 +1491,15 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
     });
   }
 
-  Widget statusView(
-      String? title, String? icon, String? time, bool isActive, bool ishold) {
+  Future refresh() async {
+    await Future.delayed(Duration(milliseconds: 1500));
+    setState(() {
+      getBookingDetailsID();
+    });
+  }
+
+  Widget statusView(String? title, String? icon, String? time, bool isActive,
+      bool ishold, String? unhold) {
     return Row(
       children: [
         if (isActive && !ishold) ...[
@@ -1400,6 +1563,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
           children: [
             Text(title!,
                 overflow: TextOverflow.clip,
+                maxLines: 5,
                 style: montserratSemiBold.copyWith(
                     color:
                         isActive ? Colors.black : Colors.grey.withOpacity(0.5),
@@ -1477,6 +1641,11 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             ),
           ),
           body: RefreshIndicator(
+              displacement: 250,
+              backgroundColor: Colors.white,
+              color: syanColor,
+              strokeWidth: 3,
+              triggerMode: RefreshIndicatorTriggerMode.onEdge,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -1512,6 +1681,16 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                             ] else if (widget.make == 'Audi') ...[
                               Image.asset(
                                 ImageConst.aud_ico,
+                                width: width * 0.12,
+                              ),
+                            ] else if (widget.make == 'Porsche') ...[
+                              Image.asset(
+                                ImageConst.porsche_ico,
+                                width: width * 0.12,
+                              ),
+                            ] else if (widget.make == 'Volkswagen') ...[
+                              Image.asset(
+                                ImageConst.volkswagen_icon,
                                 width: width * 0.12,
                               ),
                             ] else ...[
@@ -1741,7 +1920,28 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                     flex: 1,
                                                     child: GestureDetector(
                                                       onTap: () async {
-                                                        unholdbookingbottomsheet();
+                                                        showConfirmDialogCustom(
+                                                          height: 65,
+                                                          context,
+                                                          title:
+                                                              'Unhold Booking.?',
+                                                          primaryColor:
+                                                              syanColor,
+                                                          customCenterWidget:
+                                                              Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 8),
+                                                            child: Image.asset(
+                                                                "assets/icons/car.png",
+                                                                width:
+                                                                    width / 2,
+                                                                height: 95),
+                                                          ),
+                                                          onAccept: (v) {
+                                                            unholdbookingbottomsheet();
+                                                          },
+                                                        );
                                                       },
                                                       child: Stack(
                                                         alignment: Alignment
@@ -2251,11 +2451,16 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                             statusflow[index]
                                                                 ["active_flag"],
                                                             statusflow[index]
-                                                                ["hold_flag"]),
+                                                                ["hold_flag"],
+                                                            statusflow[index][
+                                                                "unhold_status"]),
                                                       ),
                                                       statusflow[index][
                                                                       'code'] ==
                                                                   "DRPC" &&
+                                                              statusflow[index][
+                                                                      'unhold_status'] !=
+                                                                  "unhold" &&
                                                               (status["st_code"] ==
                                                                   "DRPC")
                                                           ? Expanded(
@@ -2320,9 +2525,12 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           : const SizedBox(
                                                               height: 0,
                                                             ),
-                                                      statusflow[index]
-                                                                  ['code'] ==
-                                                              "PIWC"
+                                                      statusflow[index][
+                                                                      'code'] ==
+                                                                  "PIWC" &&
+                                                              statusflow[index][
+                                                                      'unhold_status'] !=
+                                                                  "unhold"
                                                           ? Expanded(
                                                               flex: 2,
                                                               child: Container(
@@ -2389,9 +2597,12 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           : const SizedBox(
                                                               height: 0,
                                                             ),
-                                                      statusflow[index]
-                                                                  ['code'] ==
-                                                              "WIPC"
+                                                      statusflow[index][
+                                                                      'code'] ==
+                                                                  "WIPC" &&
+                                                              statusflow[index][
+                                                                      'unhold_status'] !=
+                                                                  "unhold"
                                                           ? Expanded(
                                                               flex: 2,
                                                               child: Container(
@@ -2458,6 +2669,9 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                       statusflow[index][
                                                                       'code'] ==
                                                                   "CDLC" &&
+                                                              statusflow[index][
+                                                                      'unhold_status'] !=
+                                                                  "unhold" &&
                                                               (status["st_code"] ==
                                                                   "CDLC")
                                                           ? Expanded(
@@ -2528,6 +2742,9 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                       statusflow[index][
                                                                       'code'] ==
                                                                   "DEDC" &&
+                                                              statusflow[index][
+                                                                      'unhold_status'] !=
+                                                                  "unhold" &&
                                                               (status["st_code"] ==
                                                                   "DEDC")
                                                           ? Expanded(
@@ -2594,6 +2811,73 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                           : const SizedBox(
                                                               height: 0,
                                                             ),
+                                                      statusflow[index][
+                                                                      'code'] ==
+                                                                  "DLCC" &&
+                                                              statusflow[index][
+                                                                      'unhold_status'] !=
+                                                                  "unhold"
+                                                          ? Expanded(
+                                                              flex: 2,
+                                                              child: Container(
+                                                                child:
+                                                                    GestureDetector(
+                                                                  onTap:
+                                                                      () async {
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) => ServicehistoryDetails(
+                                                                                  bk_id: widget.bk_id,
+                                                                                )));
+                                                                  },
+                                                                  child: Stack(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .bottomCenter,
+                                                                    children: [
+                                                                      Container(
+                                                                        height: height *
+                                                                            0.05,
+                                                                        width: height *
+                                                                            0.2,
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                          border:
+                                                                              Border.all(color: syanColor),
+                                                                          borderRadius:
+                                                                              BorderRadius.all(Radius.circular(12)),
+                                                                          gradient:
+                                                                              LinearGradient(
+                                                                            begin:
+                                                                                Alignment.topLeft,
+                                                                            end:
+                                                                                Alignment.bottomRight,
+                                                                            colors: [
+                                                                              lightblueColor,
+                                                                              syanColor,
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                        child:
+                                                                            Text(
+                                                                          "VIEW HISTORY",
+                                                                          style: montserratSemiBold.copyWith(
+                                                                              color: white,
+                                                                              fontSize: width * 0.026),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ))
+                                                          : const SizedBox(
+                                                              height: 0,
+                                                            ),
                                                     ],
                                                   ),
                                                   Container(
@@ -2619,44 +2903,44 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
   }
 }
 
-Widget commonCacheImageWidget(String? url, double height,
-    {double? width, BoxFit? fit}) {
-  if (url.validate().startsWith('http')) {
-    if (isMobile) {
-      return CachedNetworkImage(
-        placeholder:
-            placeholderWidgetFn() as Widget Function(BuildContext, String)?,
-        imageUrl: '$url',
-        height: height,
-        width: width,
-        fit: fit ?? BoxFit.cover,
-        errorWidget: (_, __, ___) {
-          return SizedBox(height: height, width: width);
-        },
-      );
-    } else {
-      return Image.network(url!,
-          height: height, width: width, fit: fit ?? BoxFit.cover);
-    }
-  } else {
-    return Image.asset(url!,
-        height: height, width: width, fit: fit ?? BoxFit.cover);
-  }
-}
+// Widget commonCacheImageWidget(String? url, double height,
+//     {double? width, BoxFit? fit}) {
+//   if (url.validate().startsWith('http')) {
+//     if (isMobile) {
+//       return CachedNetworkImage(
+//         placeholder:
+//             placeholderWidgetFn() as Widget Function(BuildContext, String)?,
+//         imageUrl: '$url',
+//         height: height,
+//         width: width,
+//         fit: fit ?? BoxFit.cover,
+//         errorWidget: (_, __, ___) {
+//           return SizedBox(height: height, width: width);
+//         },
+//       );
+//     } else {
+//       return Image.network(url!,
+//           height: height, width: width, fit: fit ?? BoxFit.cover);
+//     }
+//   } else {
+//     return Image.asset(url!,
+//         height: height, width: width, fit: fit ?? BoxFit.cover);
+//   }
+// }
 
-Widget? Function(BuildContext, String) placeholderWidgetFn() =>
-    (_, s) => placeholderWidget();
+// Widget? Function(BuildContext, String) placeholderWidgetFn() =>
+//     (_, s) => placeholderWidget();
 
-Widget placeholderWidget() =>
-    Image.asset('images/app/placeholder.jpg', fit: BoxFit.cover);
+// Widget placeholderWidget() =>
+//     Image.asset('images/app/placeholder.jpg', fit: BoxFit.cover);
 
-BoxConstraints dynamicBoxConstraints({double? maxWidth}) {
-  return BoxConstraints(maxWidth: maxWidth ?? width);
-}
+// BoxConstraints dynamicBoxConstraints({double? maxWidth}) {
+//   return BoxConstraints(maxWidth: maxWidth ?? width);
+// }
 
-double dynamicWidth(BuildContext context) {
-  return isMobile ? context.width() : width;
-}
+// double dynamicWidth(BuildContext context) {
+//   return isMobile ? context.width() : width;
+// }
 
 class ScheduleDelivery extends StatelessWidget {
   final String bk_id;
