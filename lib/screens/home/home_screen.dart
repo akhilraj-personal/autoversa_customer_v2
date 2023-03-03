@@ -1407,7 +1407,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ],
                                           ),
                                           Image.asset(
-                                            ImageConst.handel,
+                                            ImageConst.benz_ico,
                                             scale: 4,
                                           )
                                         ],

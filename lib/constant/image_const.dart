@@ -10,7 +10,7 @@ class ImageConst {
   static const img3 = baseImageURl + 'img3.png';
 
   static const img4 = baseImageURl + 'img4.png';
-  static const handel = baseImageURl + 'handel.png';
+  static const handel = baseImageURl + 'benz_ico.png';
   static const person1 = baseImageURl + 'person1.png';
   static const curv = baseImageURl + 'curv.png';
   static const ai_icon = baseImageURl + 'av_ai_icon.png';
