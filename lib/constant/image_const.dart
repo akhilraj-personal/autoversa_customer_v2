@@ -10,7 +10,7 @@ class ImageConst {
   static const img3 = baseImageURl + 'img3.png';
 
   static const img4 = baseImageURl + 'img4.png';
-  static const handel = baseImageURl + 'handel.png';
+  static const handel = baseImageURl + 'benz_ico.png';
   static const person1 = baseImageURl + 'person1.png';
   static const curv = baseImageURl + 'curv.png';
   static const ai_icon = baseImageURl + 'av_ai_icon.png';
@@ -28,6 +28,8 @@ class ImageConst {
   static const aud_ico = baseImageURl + 'audi_icon.png';
   static const skod_ico = baseImageURl + 'skoda_icon.png';
   static const bmw_ico = baseImageURl + 'bmw_icon.png';
+  static const porsche_ico = baseImageURl + 'porsche_icon.png';
+  static const volkswagen_icon = baseImageURl + 'volkswagen_icon.png';
   static const defcar_ico = baseImageURl + 'no_logo_car.png';
   static const success = baseImageURl + 'success.png';
   static const warning = baseImageURl + 'warning.png';
