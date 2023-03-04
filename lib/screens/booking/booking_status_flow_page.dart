@@ -1007,7 +1007,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.singleWhere(
+              if ((statusflow.firstWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
                       orElse: () => null)) ==
                   null) {
@@ -1029,7 +1029,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.singleWhere(
+              if ((statusflow.firstWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
                       orElse: () => null)) ==
                   null) {
@@ -1051,7 +1051,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.singleWhere(
+              if ((statusflow.firstWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
                       orElse: () => null)) ==
                   null) {
@@ -1073,7 +1073,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.singleWhere(
+              if ((statusflow.firstWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
                       orElse: () => null)) ==
                   null) {
@@ -1095,7 +1095,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.singleWhere(
+              if ((statusflow.firstWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
                       orElse: () => null)) ==
                   null) {
@@ -1117,7 +1117,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.singleWhere(
+              if ((statusflow.firstWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
                       orElse: () => null)) ==
                   null) {
@@ -1162,7 +1162,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.singleWhere(
+              if ((statusflow.firstWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
                       orElse: () => null)) ==
                   null) {
@@ -1183,7 +1183,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.singleWhere(
+              if ((statusflow.firstWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
                       orElse: () => null)) ==
                   null) {
