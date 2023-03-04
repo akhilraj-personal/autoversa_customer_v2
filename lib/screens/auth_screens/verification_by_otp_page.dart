@@ -41,7 +41,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
   bool isOtpVerifying = false;
   bool isoffline = false;
   StreamSubscription? internetconnection;
-
   String otppin = '';
   String codeValue = "";
 
@@ -150,9 +149,9 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
   }
 
   submit_otp(otpval) async {
-    setState(() {
-      FocusScope.of(context).unfocus();
-    });
+    // setState(() {
+    //   FocusScope.of(context).unfocus();
+    // });
     if (otpval == null || otpval == "") {
       setState(() {
         isOtpVerifying = false;
@@ -377,31 +376,15 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                             });
                           }, // end onSubmit
                         ),
-                        // SizedBox(height: 16),
-                        // PinFieldAutoFill(
-                        //   keyboardType: TextInputType.number,
-                        //   decoration: UnderlineDecoration(
-                        //     textStyle: TextStyle(
-                        //         fontSize: 12,
-                        //         fontWeight: FontWeight.bold,
-                        //         color: blackColor),
-                        //     colorBuilder: FixedColorBuilder(Colors.grey),
+                        // Padding(
+                        //   padding: EdgeInsets.fromLTRB(24, 8, 24, 0),
+                        //   child: PinFieldAutoFill(
+                        //     codeLength: 4,
+                        //     onCodeChanged: (code) {
+                        //       codeValue = code.toString();
+                        //     },
+                        //     onCodeSubmitted: (val) {},
                         //   ),
-                        //   cursor: Cursor(
-                        //     width: 2,
-                        //     height: 40,
-                        //     color: syanColor,
-                        //     radius: Radius.circular(1),
-                        //     enabled: true,
-                        //   ),
-                        //   codeLength: 4,
-                        //   // currentCode: _code,
-                        //   onCodeSubmitted: (code) {},
-                        //   onCodeChanged: (code) {
-                        //     setState(() {
-                        //       otppin = "";
-                        //     });
-                        //   },
                         // ),
                         SizedBox(height: 16),
                         Container(

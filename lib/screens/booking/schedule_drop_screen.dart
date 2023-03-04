@@ -32,7 +32,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   late List citylist = [];
   late List timeslots = [];
   late Map<String, dynamic> dropdetails = {};
+  late Map<String, dynamic> droptypedetails = {};
   bool changeaddress = false;
+  bool changedroptype = false;
   bool sendotp = true;
   bool issubmitted = false;
   late List areaList = [];
@@ -47,6 +49,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   var selected_address = 0;
   var selected_timeslot = "";
   var selected_timeid = 0;
+  var pickup_name = "";
+  var pickup_cost = "";
   var pickupoption;
   CameraPosition _initialPosition =
       CameraPosition(target: LatLng(24.3547, 54.5020), zoom: 13);
@@ -120,6 +124,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     await getbookingdetails(req).then((value) async {
       if (value['ret_data'] == "success") {
         dropdetails = value['booking']['drop_address'];
+        droptypedetails = value['booking']['pickup_type'];
         CameraPosition _kLake = CameraPosition(
           target: LatLng(double.parse(dropdetails['cad_lattitude']),
               double.parse(dropdetails['cad_longitude'])),
@@ -443,6 +448,12 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     });
   }
 
+  Clickedchangedroptype() async {
+    setState(() {
+      changedroptype = true;
+    });
+  }
+
   scheduleDrop() async {
     late Map<String, dynamic> packdata = {};
     if (changeaddress == true) {
@@ -640,6 +651,90 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                 child: GestureDetector(
                                   onTap: () async {
                                     Clickedchangeaddress();
+                                  },
+                                  child: Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height: height * 0.05,
+                                        width: height * 0.2,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          border: Border.all(color: syanColor),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12)),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              white,
+                                              white,
+                                              white,
+                                              white,
+                                            ],
+                                          ),
+                                        ),
+                                        child: Text('CHANGE',
+                                            style: montserratSemiBold.copyWith(
+                                                color: syanColor,
+                                                fontSize: width * 0.026)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          12.height,
+                          Row(
+                            children: <Widget>[
+                              Padding(padding: EdgeInsets.all(2)),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  "Current Drop Type",
+                                  textAlign: TextAlign.start,
+                                  style: montserratSemiBold.copyWith(
+                                    fontSize: width * 0.034,
+                                    color: black,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  droptypedetails['pk_name'] != null
+                                      ? ": " + droptypedetails['pk_name']
+                                      : "",
+                                  textAlign: TextAlign.start,
+                                  style: montserratMedium.copyWith(
+                                    fontSize: width * 0.034,
+                                    color: black,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          12.height,
+                          Row(
+                            children: <Widget>[
+                              Padding(padding: EdgeInsets.all(2)),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  "Change Drop Type",
+                                  style: montserratSemiBold.copyWith(
+                                    fontSize: width * 0.034,
+                                    color: black,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    Clickedchangedroptype();
                                   },
                                   child: Stack(
                                     alignment: Alignment.bottomCenter,
@@ -1539,6 +1634,179 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                     ])
                               : Row(),
                           4.height,
+                          changedroptype
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(padding: EdgeInsets.all(2)),
+                                    Text(
+                                      "Drop Type" + "*",
+                                      textAlign: TextAlign.start,
+                                      style: montserratSemiBold.copyWith(
+                                          color: black,
+                                          fontSize: width * 0.034),
+                                    ),
+                                  ],
+                                )
+                              : Row(),
+                          changedroptype
+                              ? ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: EdgeInsets.only(
+                                      left: 0, top: 16, bottom: 16, right: 16),
+                                  itemCount: pickup_options.length,
+                                  itemBuilder: (context, index) {
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Theme(
+                                                    data: pickup_options[index]
+                                                                ['pk_id'] ==
+                                                            "0"
+                                                        ? Theme.of(context)
+                                                            .copyWith(
+                                                                unselectedWidgetColor:
+                                                                    Colors.grey[
+                                                                        350])
+                                                        : Theme.of(context)
+                                                            .copyWith(
+                                                                unselectedWidgetColor:
+                                                                    black),
+                                                    child:
+                                                        pickup_options[index]
+                                                                    ['pk_id'] ==
+                                                                "0"
+                                                            ? Radio(
+                                                                fillColor: MaterialStateColor
+                                                                    .resolveWith(
+                                                                        (states) =>
+                                                                            syanColor),
+                                                                value: pickup_options[
+                                                                        index]
+                                                                    ['pk_id'],
+                                                                groupValue:
+                                                                    pickupoption,
+                                                                onChanged:
+                                                                    (dynamic
+                                                                        value) {
+                                                                  setState(() {
+                                                                    value =
+                                                                        null;
+                                                                  });
+                                                                },
+                                                              )
+                                                            : Radio(
+                                                                fillColor: MaterialStateColor
+                                                                    .resolveWith(
+                                                                        (states) =>
+                                                                            syanColor),
+                                                                value: pickup_options[
+                                                                        index]
+                                                                    ['pk_id'],
+                                                                groupValue:
+                                                                    pickupoption,
+                                                                onChanged:
+                                                                    (dynamic
+                                                                        value) {
+                                                                  setState(() {
+                                                                    pickupoption =
+                                                                        value;
+                                                                    pickup_name =
+                                                                        pickup_options[index]
+                                                                            [
+                                                                            'pk_name'];
+                                                                    pickup_cost =
+                                                                        pickup_options[index]
+                                                                            [
+                                                                            'pk_cost_value'];
+                                                                  });
+                                                                },
+                                                              ),
+                                                  ),
+                                                  pickup_options[index]
+                                                              ['pk_id'] ==
+                                                          "0"
+                                                      ? Text(
+                                                          pickup_options[index]
+                                                              ['pk_name'],
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: montserratMedium
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      350],
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
+                                                        )
+                                                      : Text(
+                                                          pickup_options[index]
+                                                              ['pk_name'],
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: montserratMedium
+                                                              .copyWith(
+                                                                  color: black,
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
+                                                        ),
+                                                ]),
+                                            pickup_options[index]['pk_id'] ==
+                                                    "0"
+                                                ? Text(
+                                                    pickup_options[index]
+                                                                ['pk_cost'] ==
+                                                            "AED 0"
+                                                        ? ST.of(context).free
+                                                        : pickup_options[index]
+                                                            ['pk_cost'],
+                                                    textAlign: TextAlign.end,
+                                                    overflow: TextOverflow.clip,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                            color: black,
+                                                            fontSize:
+                                                                width * 0.034),
+                                                  )
+                                                : Text(
+                                                    pickup_options[index]
+                                                                ['pk_cost'] ==
+                                                            "AED 0"
+                                                        ? ST.of(context).free
+                                                        : pickup_options[index]
+                                                            ['pk_cost'],
+                                                    textAlign: TextAlign.end,
+                                                    overflow: TextOverflow.clip,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                            color: warningcolor,
+                                                            fontSize:
+                                                                width * 0.034),
+                                                  ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  })
+                              : Row(),
                           // isserviceble
                           //     ?
                           Row(
