@@ -8,7 +8,6 @@ import 'package:autoversa/screens/booking/inspection_screen.dart';
 import 'package:autoversa/screens/booking/reschedule_from_booking_screen.dart';
 import 'package:autoversa/screens/booking/schedule_drop_screen.dart';
 import 'package:autoversa/screens/booking/workcard_screen.dart';
-import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/service/service_details_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -70,25 +69,25 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
   @override
   void initState() {
     super.initState();
-    internetconnection = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        setState(() {
-          isoffline = true;
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => NoInternetScreen()));
-        });
-      } else if (result == ConnectivityResult.mobile) {
-        setState(() {
-          isoffline = false;
-        });
-      } else if (result == ConnectivityResult.wifi) {
-        setState(() {
-          isoffline = false;
-        });
-      }
-    });
+    // internetconnection = Connectivity()
+    //     .onConnectivityChanged
+    //     .listen((ConnectivityResult result) {
+    //   if (result == ConnectivityResult.none) {
+    //     setState(() {
+    //       isoffline = true;
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
+    //     });
+    //   } else if (result == ConnectivityResult.mobile) {
+    //     setState(() {
+    //       isoffline = false;
+    //     });
+    //   } else if (result == ConnectivityResult.wifi) {
+    //     setState(() {
+    //       isoffline = false;
+    //     });
+    //   }
+    // });
     getBookingDetailsID();
     init();
   }

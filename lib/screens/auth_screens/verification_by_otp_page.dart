@@ -6,16 +6,13 @@ import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/provider/provider.dart';
 import 'package:autoversa/screens/auth_screens/signup_page.dart';
-import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/utils/color_utils.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../services/pre_auth_services.dart';
 import '../../utils/common_utils.dart';
@@ -49,25 +46,25 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
   void initState() {
     OTPtimer = int.parse(widget.timer['gs_reotp_time']);
     super.initState();
-    internetconnection = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        setState(() {
-          isoffline = true;
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => NoInternetScreen()));
-        });
-      } else if (result == ConnectivityResult.mobile) {
-        setState(() {
-          isoffline = false;
-        });
-      } else if (result == ConnectivityResult.wifi) {
-        setState(() {
-          isoffline = false;
-        });
-      }
-    });
+    // internetconnection = Connectivity()
+    //     .onConnectivityChanged
+    //     .listen((ConnectivityResult result) {
+    //   if (result == ConnectivityResult.none) {
+    //     setState(() {
+    //       isoffline = true;
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
+    //     });
+    //   } else if (result == ConnectivityResult.mobile) {
+    //     setState(() {
+    //       isoffline = false;
+    //     });
+    //   } else if (result == ConnectivityResult.wifi) {
+    //     setState(() {
+    //       isoffline = false;
+    //     });
+    //   }
+    // });
     startTimer();
   }
 
