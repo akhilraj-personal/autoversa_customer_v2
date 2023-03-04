@@ -4,7 +4,6 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/screens/booking/image_full_screen.dart';
 import 'package:autoversa/screens/booking/image_size_widget.dart';
-import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
@@ -26,25 +25,25 @@ class InspectionImageScreenState extends State<InspectionImageScreen> {
   @override
   void initState() {
     super.initState();
-    internetconnection = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        setState(() {
-          isoffline = true;
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => NoInternetScreen()));
-        });
-      } else if (result == ConnectivityResult.mobile) {
-        setState(() {
-          isoffline = false;
-        });
-      } else if (result == ConnectivityResult.wifi) {
-        setState(() {
-          isoffline = false;
-        });
-      }
-    });
+    // internetconnection = Connectivity()
+    //     .onConnectivityChanged
+    //     .listen((ConnectivityResult result) {
+    //   if (result == ConnectivityResult.none) {
+    //     setState(() {
+    //       isoffline = true;
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
+    //     });
+    //   } else if (result == ConnectivityResult.mobile) {
+    //     setState(() {
+    //       isoffline = false;
+    //     });
+    //   } else if (result == ConnectivityResult.wifi) {
+    //     setState(() {
+    //       isoffline = false;
+    //     });
+    //   }
+    // });
     init();
   }
 
