@@ -76,7 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "seconds_text": MessageLookupByLibrary.simpleMessage("Second"),
         "select_a_time_slot":
-            MessageLookupByLibrary.simpleMessage("Select a Time Slot"),
+            MessageLookupByLibrary.simpleMessage("Booking Time Slot"),
         "select_booking_date":
             MessageLookupByLibrary.simpleMessage("Select Booking Date"),
         "select_drop_address":

@@ -381,7 +381,7 @@ class PaymentWaitingScreenState extends State<PaymentWaitingScreen> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   createBooking() async {

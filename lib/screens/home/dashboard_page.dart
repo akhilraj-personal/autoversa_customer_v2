@@ -97,7 +97,7 @@ class _DashScreenState extends State<DashScreen> {
 
   @override
   void dispose() {
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
     super.dispose();
   }
 

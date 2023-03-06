@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
     super.dispose();
   }
 

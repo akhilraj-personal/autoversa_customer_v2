@@ -86,7 +86,7 @@ class EditprofieState extends State<Editprofie> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   Future<void> init() async {

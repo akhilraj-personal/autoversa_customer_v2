@@ -228,7 +228,7 @@ class PackageDetailsState extends State<PackageDetails> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
     recorder.dispose();
     player.dispose();
     optionList = [];
@@ -812,7 +812,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                                       .copyWith(
                                                           color: Colors.black,
                                                           fontSize:
-                                                              width * 0.034)),
+                                                              width * 0.04)),
                                             ),
                                           ),
                                         )

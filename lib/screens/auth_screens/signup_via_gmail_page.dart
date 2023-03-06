@@ -83,7 +83,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   _getStateList() async {

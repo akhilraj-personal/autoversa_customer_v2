@@ -290,7 +290,7 @@ class CarRepairState extends State<CarRepair> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
     recorder.dispose();
     player.dispose();
     totalCost = 0;

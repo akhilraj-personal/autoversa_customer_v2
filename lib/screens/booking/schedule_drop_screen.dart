@@ -356,7 +356,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   getTimeSlots(pickdate) async {

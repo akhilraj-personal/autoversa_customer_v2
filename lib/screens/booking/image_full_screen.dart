@@ -53,7 +53,7 @@ class ImageFullscreenState extends State<ImageFullscreen> {
 
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   @override

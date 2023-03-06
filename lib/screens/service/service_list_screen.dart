@@ -106,7 +106,7 @@ class ServiceListState extends State<ServiceList> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   Future<bool> _onWillPop() async {

@@ -76,7 +76,7 @@ class SignupPageState extends State<SignupPage> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   _getStateList() async {

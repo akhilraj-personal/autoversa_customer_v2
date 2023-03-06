@@ -100,7 +100,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   getBookingDetailsID() async {

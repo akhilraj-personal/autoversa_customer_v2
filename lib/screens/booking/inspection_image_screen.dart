@@ -54,7 +54,7 @@ class InspectionImageScreenState extends State<InspectionImageScreen> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   @override

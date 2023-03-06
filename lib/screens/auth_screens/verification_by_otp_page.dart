@@ -87,7 +87,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
   void dispose() {
     _timer.cancel();
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   reSendOTP() async {

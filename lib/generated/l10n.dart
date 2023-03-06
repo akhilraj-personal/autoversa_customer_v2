@@ -581,10 +581,10 @@ class ST {
     );
   }
 
-  /// `Select a Time Slot`
+  /// `Booking Time Slot`
   String get select_a_time_slot {
     return Intl.message(
-      'Select a Time Slot',
+      'Booking Time Slot',
       name: 'select_a_time_slot',
       desc: '',
       args: [],
