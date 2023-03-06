@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
@@ -28,65 +27,55 @@ class ScheduleDropScreen extends StatefulWidget {
 
 class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   late List custAddressList = [];
-  late List citylist = [];
   late List timeslots = [];
   late Map<String, dynamic> dropdetails = {};
   late Map<String, dynamic> droptypedetails = {};
-  bool changeaddress = false;
-  bool changedroptype = false;
-  bool sendotp = true;
-  bool issubmitted = false;
-  late List areaList = [];
-  var landmark = "";
-  var freeservicedistance = 0;
-  var servicedistance = 0;
-
+  List data = List<String>.empty();
+  List<DropdownMenuItem<String>> items = [];
   List<String?> SelectAddressList = <String?>["Select Address"];
   List<String?> SelectCityList = <String?>["Select City"];
   List<String?> SelectAreaList = <String?>["Select Area"];
-
+  final GlobalKey<FormFieldState> drop_city = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> drop_area = GlobalKey<FormFieldState>();
+  bool sendotp = true;
+  bool issubmitted = false;
+  var freeservicedistance = 0;
+  var servicedistance = 0;
   var selected_address = 0;
   var selected_timeslot = "";
   var selected_timeid = 0;
   var pickup_name = "";
   var pickup_cost = "";
+  var dtemp = "";
+  var dlocdistance = 0;
   var pickupoption;
-  CameraPosition _initialPosition =
-      CameraPosition(target: LatLng(24.3547, 54.5020), zoom: 13);
-  Completer<GoogleMapController> _controller = Completer();
   bool isoffline = false;
   late List temppickup_options = [];
   late List pickup_options = [];
-
   var isTimeCheck;
-  bool isdroplocation = false;
-  bool isLocationCheck = true;
-  bool isgooglemap = false;
-  var emirates = 0, city = 0;
-  var AddressType = "Home";
-  bool isDefaultAddressChecked = true;
-  var address = "";
   var selected_drop_address = 0;
-  var Statelat = "24.3547";
-  var Statelong = "54.5020";
-  final GlobalKey<FormFieldState> drop_city = GlobalKey<FormFieldState>();
-  final GlobalKey<FormFieldState> drop_area = GlobalKey<FormFieldState>();
   final _formKey = GlobalKey<FormState>();
-  FocusNode addressFocus = FocusNode();
-  FocusNode landmarkFocusNode = FocusNode();
   DateTime selectedDate = DateTime.now();
-  List<Marker> myMarker = [];
   bool isExpanded = false;
-  var Marklat = 0.0;
-  var Marklong = 0.0;
   bool isproceeding = false;
   var max_days = 0;
   bool isserviceble = false;
-  var dlocdistance = 0;
-  var dtemp = "";
-  var plocdistance = 0;
   StreamSubscription? internetconnection;
-
+  bool isgooglemap = false;
+  var AddressType = "Home";
+  var Marklat = 0.0;
+  var Marklong = 0.0;
+  var address = "";
+  var landmark = "";
+  var emirates = 0, city = 0;
+  var Statelat = "24.3547";
+  var Statelong = "54.5020";
+  bool isDefaultAddressChecked = true;
+  FocusNode addressFocus = FocusNode();
+  FocusNode landmarkFocusNode = FocusNode();
+  late List citylist = [];
+  late List areaList = [];
+  bool changeaddress = true;
   @override
   void initState() {
     super.initState();
@@ -112,7 +101,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     init();
     Future.delayed(Duration.zero, () {
       getBookingDetailsID();
-      _fetchdatas(0, 'p&d');
+      _fetchdatas(0, 'd');
     });
     setState(() => isserviceble = true);
   }
@@ -123,20 +112,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     await getbookingdetails(req).then((value) async {
       if (value['ret_data'] == "success") {
         dropdetails = value['booking']['drop_address'];
+        selected_address = int.parse(dropdetails['cad_id']);
         droptypedetails = value['booking']['pickup_type'];
-        CameraPosition _kLake = CameraPosition(
-          target: LatLng(double.parse(dropdetails['cad_lattitude']),
-              double.parse(dropdetails['cad_longitude'])),
-          zoom: 15.4746,
-        );
-        final GoogleMapController controller = await _controller.future;
-        controller.moveCamera(CameraUpdate.newCameraPosition(_kLake));
         setState(() {});
-        setState(() {
-          city = int.parse(dropdetails['cad_id']);
-          Statelat = dropdetails['cad_lattitude'];
-          Statelong = dropdetails['cad_longitude'];
-        });
       }
     });
   }
@@ -190,50 +168,31 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
         dlocdistance =
             int.parse(custAddressList[drop_address - 1]['cad_distance']);
       });
-      var tdistance = 0;
-      if (plocdistance != "") {
-        if (servicedistance > dlocdistance && servicedistance > plocdistance) {
-          if (freeservicedistance > dlocdistance &&
-              freeservicedistance > plocdistance) {
-            pickup_options = [];
-            tdistance = plocdistance + dlocdistance;
-            dropCostCalculation(tdistance, true, "", true, false);
-          } else {
-            pickup_options = [];
-            tdistance = plocdistance + dlocdistance;
-            dropCostCalculation(tdistance, true, "", false, false);
-          }
-        } else {
-          // toast("Service not available in this location");
-          // dropCostCalculation(0, false, "No Service", false);
-          pickup_options = [];
-          tdistance = plocdistance + dlocdistance;
-          dropCostCalculation(tdistance, true, "", false, true);
-        }
-      } else {
-        dropCostCalculation(0, false, "Select Pickup", false, false);
-        showCustomToast(context, "Please select pickup location",
-            bgColor: errorcolor, textColor: white);
-      }
-    }
-  }
-
-  getarealist(data) async {
-    if (SelectAreaList.indexOf(data.toString()) > 0) {
-      setState(() {});
-      var temp = areaList[SelectAreaList.indexOf(data.toString()) - 1];
-      CameraPosition _kLake = CameraPosition(
-        target: LatLng(double.parse(temp['city_lattitude']),
-            double.parse(temp['city_longitude'])),
-        zoom: 15.4746,
-      );
-      final GoogleMapController controller = await _controller.future;
-      controller.moveCamera(CameraUpdate.newCameraPosition(_kLake));
-      setState(() {
-        city = int.parse(temp['city_id']);
-        Statelat = temp['city_lattitude'];
-        Statelong = temp['city_longitude'];
-      });
+      // var tdistance = 0;
+      // if (plocdistance != "") {
+      //   if (servicedistance > dlocdistance && servicedistance > plocdistance) {
+      //     if (freeservicedistance > dlocdistance &&
+      //         freeservicedistance > plocdistance) {
+      //       pickup_options = [];
+      //       tdistance = plocdistance + dlocdistance;
+      //       dropCostCalculation(tdistance, true, "", true, false);
+      //     } else {
+      //       pickup_options = [];
+      //       tdistance = plocdistance + dlocdistance;
+      //       dropCostCalculation(tdistance, true, "", false, false);
+      //     }
+      //   } else {
+      //     // toast("Service not available in this location");
+      //     // dropCostCalculation(0, false, "No Service", false);
+      //     pickup_options = [];
+      //     tdistance = plocdistance + dlocdistance;
+      //     dropCostCalculation(tdistance, true, "", false, true);
+      //   }
+      // } else {
+      //   dropCostCalculation(0, false, "Select Pickup", false, false);
+      //   showCustomToast(context, "Please select pickup location",
+      //       bgColor: errorcolor, textColor: white);
+      // }
     }
   }
 
@@ -301,10 +260,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
         selected_address = address_index;
         selected_drop_address = 0;
       } else {
-        if (type == 'p') {
-          selected_address = SelectAddressList.length - 1;
-          selected_drop_address = temp_drop_address;
-        } else if (type == 'd') {
+        if (type == 'd') {
           selected_address = temp_address;
           selected_drop_address = SelectAddressList.length - 1;
           dropaddresschange(SelectAddressList.length - 1);
@@ -314,6 +270,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
       getTimeSlots(new DateTime.now());
     } catch (e) {
       setState(() => issubmitted = false);
+      print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     }
@@ -447,68 +404,62 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     });
   }
 
-  Clickedchangedroptype() async {
-    setState(() {
-      changedroptype = true;
-    });
-  }
-
   scheduleDrop() async {
     late Map<String, dynamic> packdata = {};
-    if (changeaddress == true) {
-      if (dtemp == "") {
-        setState(() => isproceeding = false);
-        showCustomToast(context, "Choose a drop location",
-            bgColor: errorcolor, textColor: white);
-      } else if (isserviceble == false) {
-        setState(() => isproceeding = false);
-        showCustomToast(context,
-            "Selected location is beyond our service area. Please select an another location",
-            bgColor: errorcolor, textColor: white);
-      } else if (selected_timeid == 0) {
-        setState(() => isproceeding = false);
-        showCustomToast(context, "Choose a time slot",
-            bgColor: errorcolor, textColor: white);
-      } else {
-        packdata['drop_location_id'] = dtemp;
-        packdata['booking_id'] = widget.bk_id;
-        packdata['selected_date'] = selectedDate.toString();
-        packdata['selected_timeid'] = selected_timeid;
-        packdata['selected_timeslot'] = selected_timeslot;
-        await submitdeliverydrop(packdata).then((value) {
-          if (value['ret_data'] == "success") {
-            setState(() {
-              showCustomToast(context, "Drop Details Saved Successfully",
-                  bgColor: Colors.black, textColor: white);
-              Navigator.pushReplacementNamed(context, Routes.bottombar);
-            });
-          } else {
-            setState(() => isproceeding = false);
-          }
-        });
-      }
-    } else if (selected_timeid == 0) {
-      setState(() => isproceeding = false);
-      showCustomToast(context, "Choose a time slot",
-          bgColor: errorcolor, textColor: white);
-    } else {
-      packdata['drop_location_id'] = dropdetails['cad_id'];
-      packdata['booking_id'] = widget.bk_id;
-      packdata['selected_date'] = selectedDate.toString();
-      packdata['selected_timeid'] = selected_timeid;
-      packdata['selected_timeslot'] = selected_timeslot;
-      await submitdeliverydrop(packdata).then((value) {
-        if (value['ret_data'] == "success") {
-          setState(() {
-            showCustomToast(context, "Drop Details Saved Successfully",
-                bgColor: Colors.black, textColor: white);
-            Navigator.pushReplacementNamed(context, Routes.bottombar);
-          });
-        } else {
-          setState(() => isproceeding = false);
-        }
-      });
-    }
+    // if (changeaddress == true) {
+    //   if (dtemp == "") {
+    //     setState(() => isproceeding = false);
+    //     showCustomToast(context, "Choose a drop location",
+    //         bgColor: errorcolor, textColor: white);
+    //   } else if (isserviceble == false) {
+    //     setState(() => isproceeding = false);
+    //     showCustomToast(context,
+    //         "Selected location is beyond our service area. Please select an another location",
+    //         bgColor: errorcolor, textColor: white);
+    //   } else if (selected_timeid == 0) {
+    //     setState(() => isproceeding = false);
+    //     showCustomToast(context, "Choose a time slot",
+    //         bgColor: errorcolor, textColor: white);
+    //   } else {
+    //     packdata['drop_location_id'] = dtemp;
+    //     packdata['booking_id'] = widget.bk_id;
+    //     packdata['selected_date'] = selectedDate.toString();
+    //     packdata['selected_timeid'] = selected_timeid;
+    //     packdata['selected_timeslot'] = selected_timeslot;
+    //     await submitdeliverydrop(packdata).then((value) {
+    //       if (value['ret_data'] == "success") {
+    //         setState(() {
+    //           showCustomToast(context, "Drop Details Saved Successfully",
+    //               bgColor: Colors.black, textColor: white);
+    //           Navigator.pushReplacementNamed(context, Routes.bottombar);
+    //         });
+    //       } else {
+    //         setState(() => isproceeding = false);
+    //       }
+    //     });
+    //   }
+    // } else if (selected_timeid == 0) {
+    //   setState(() => isproceeding = false);
+    //   showCustomToast(context, "Choose a time slot",
+    //       bgColor: errorcolor, textColor: white);
+    // } else {
+    //   packdata['drop_location_id'] = dropdetails['cad_id'];
+    //   packdata['booking_id'] = widget.bk_id;
+    //   packdata['selected_date'] = selectedDate.toString();
+    //   packdata['selected_timeid'] = selected_timeid;
+    //   packdata['selected_timeslot'] = selected_timeslot;
+    //   await submitdeliverydrop(packdata).then((value) {
+    //     if (value['ret_data'] == "success") {
+    //       setState(() {
+    //         showCustomToast(context, "Drop Details Saved Successfully",
+    //             bgColor: Colors.black, textColor: white);
+    //         Navigator.pushReplacementNamed(context, Routes.bottombar);
+    //       });
+    //     } else {
+    //       setState(() => isproceeding = false);
+    //     }
+    //   });
+    // }
   }
 
   @override
@@ -579,8 +530,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      margin: const EdgeInsets.all(8),
-                      padding: EdgeInsets.all(8),
+                      margin: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+                      padding: EdgeInsets.fromLTRB(12, 4, 12, 8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -631,160 +582,91 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                               ),
                             ],
                           ),
-                          12.height,
-                          Row(
-                            children: <Widget>[
-                              Padding(padding: EdgeInsets.all(2)),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  "Change Address",
-                                  style: montserratSemiBold.copyWith(
-                                    fontSize: width * 0.034,
-                                    color: black,
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                      padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.fromLTRB(8, 0, 8, 16),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    "Change Address",
+                                    style: montserratSemiBold.copyWith(
+                                      fontSize: width * 0.034,
+                                      color: black,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    Clickedchangeaddress();
-                                  },
-                                  child: Stack(
-                                    alignment: Alignment.bottomCenter,
-                                    children: [
-                                      Container(
-                                        height: height * 0.05,
-                                        width: height * 0.2,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.rectangle,
-                                          border: Border.all(color: syanColor),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(12)),
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                            colors: [
-                                              white,
-                                              white,
-                                              white,
-                                              white,
-                                            ],
+                                Expanded(
+                                  flex: 1,
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      Clickedchangeaddress();
+                                    },
+                                    child: Stack(
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        Container(
+                                          height: height * 0.05,
+                                          width: height * 0.2,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.rectangle,
+                                            border:
+                                                Border.all(color: syanColor),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(12)),
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                                white,
+                                                white,
+                                                white,
+                                                white,
+                                              ],
+                                            ),
                                           ),
+                                          child: Text('CHANGE',
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: syanColor,
+                                                      fontSize: width * 0.026)),
                                         ),
-                                        child: Text('CHANGE',
-                                            style: montserratSemiBold.copyWith(
-                                                color: syanColor,
-                                                fontSize: width * 0.026)),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                          12.height,
-                          Row(
-                            children: <Widget>[
-                              Padding(padding: EdgeInsets.all(2)),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  "Current Drop Type",
-                                  textAlign: TextAlign.start,
-                                  style: montserratSemiBold.copyWith(
-                                    fontSize: width * 0.034,
-                                    color: black,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  droptypedetails['pk_name'] != null
-                                      ? ": " + droptypedetails['pk_name']
-                                      : "",
-                                  textAlign: TextAlign.start,
-                                  style: montserratMedium.copyWith(
-                                    fontSize: width * 0.034,
-                                    color: black,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          12.height,
-                          Row(
-                            children: <Widget>[
-                              Padding(padding: EdgeInsets.all(2)),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  "Change Drop Type",
-                                  style: montserratSemiBold.copyWith(
-                                    fontSize: width * 0.034,
-                                    color: black,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    Clickedchangedroptype();
-                                  },
-                                  child: Stack(
-                                    alignment: Alignment.bottomCenter,
-                                    children: [
-                                      Container(
-                                        height: height * 0.05,
-                                        width: height * 0.2,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.rectangle,
-                                          border: Border.all(color: syanColor),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(12)),
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                            colors: [
-                                              white,
-                                              white,
-                                              white,
-                                              white,
-                                            ],
-                                          ),
-                                        ),
-                                        child: Text('CHANGE',
-                                            style: montserratSemiBold.copyWith(
-                                                color: syanColor,
-                                                fontSize: width * 0.026)),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          16.height,
                           changeaddress
                               ? Container(
-                                  margin: EdgeInsets.only(left: 4, right: 16.0),
+                                  margin:
+                                      EdgeInsets.only(right: 8.0, left: 8.0),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Select Drop Address*",
+                                        "Selected Drop Location",
                                         style: montserratSemiBold.copyWith(
                                             color: black,
-                                            fontSize: width * 0.04),
+                                            fontSize: width * 0.034),
                                       ),
                                       GestureDetector(
                                         onTap: () {
+                                          Completer<GoogleMapController>
+                                              _controller = Completer();
                                           showModalBottomSheet(
                                             enableDrag: true,
                                             isDismissible: true,
@@ -796,6 +678,12 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                   (BuildContext context,
                                                       StateSetter
                                                           setBottomState /*You can rename this!*/) {
+                                                CameraPosition
+                                                    _initialPosition =
+                                                    CameraPosition(
+                                                        target: LatLng(
+                                                            24.3547, 54.5020),
+                                                        zoom: 13);
                                                 getcitylist(data) async {
                                                   if (SelectCityList.indexOf(
                                                           data) >
@@ -819,7 +707,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                               'state_longitude'])),
                                                       zoom: 13.4746,
                                                     );
-                                                    setBottomState(() {});
                                                     final GoogleMapController
                                                         controller =
                                                         await _controller
@@ -828,7 +715,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                         CameraUpdate
                                                             .newCameraPosition(
                                                                 _kLake));
-                                                    setBottomState(() {});
                                                     setBottomState(() {
                                                       Statelat = temp[
                                                           'state_lattitude'];
@@ -867,6 +753,44 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                   }
                                                 }
 
+                                                getarealist(data) async {
+                                                  // areaKey.currentState!.reset();
+                                                  if (SelectAreaList.indexOf(
+                                                          data.toString()) >
+                                                      0) {
+                                                    setState(() {});
+                                                    var temp = areaList[
+                                                        SelectAreaList.indexOf(
+                                                                data.toString()) -
+                                                            1];
+                                                    CameraPosition _kLake =
+                                                        CameraPosition(
+                                                      target: LatLng(
+                                                          double.parse(temp[
+                                                              'city_lattitude']),
+                                                          double.parse(temp[
+                                                              'city_longitude'])),
+                                                      zoom: 15.4746,
+                                                    );
+                                                    final GoogleMapController
+                                                        controller =
+                                                        await _controller
+                                                            .future;
+                                                    controller.moveCamera(
+                                                        CameraUpdate
+                                                            .newCameraPosition(
+                                                                _kLake));
+                                                    setState(() {
+                                                      city = int.parse(
+                                                          temp['city_id']);
+                                                      Statelat = temp[
+                                                          'city_lattitude'];
+                                                      Statelong = temp[
+                                                          'city_longitude'];
+                                                    });
+                                                  }
+                                                }
+
                                                 return DraggableScrollableSheet(
                                                   initialChildSize: 0.6,
                                                   minChildSize: 0.2,
@@ -874,10 +798,18 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                   builder: (context,
                                                       scrollController) {
                                                     return Container(
-                                                      color: context.cardColor,
                                                       padding:
                                                           EdgeInsets.symmetric(
-                                                              vertical: 16),
+                                                              vertical: 0),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            context.cardColor,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16),
+                                                        boxShadow:
+                                                            defaultBoxShadow(),
+                                                      ),
                                                       child:
                                                           SingleChildScrollView(
                                                         controller:
@@ -890,14 +822,14 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                     .min,
                                                             children: [
                                                               AnimatedContainer(
-                                                                margin:
-                                                                    const EdgeInsets
-                                                                        .all(8),
                                                                 padding:
                                                                     EdgeInsets
-                                                                        .all(2),
-                                                                width: context
-                                                                        .width() *
+                                                                        .fromLTRB(
+                                                                            8,
+                                                                            8,
+                                                                            8,
+                                                                            8),
+                                                                width: width *
                                                                     1.85,
                                                                 decoration:
                                                                     BoxDecoration(
@@ -929,11 +861,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                         children: [
                                                                           Container(
                                                                             margin:
-                                                                                EdgeInsets.all(16),
-                                                                            height:
-                                                                                850,
+                                                                                EdgeInsets.all(8),
                                                                             decoration:
-                                                                                BoxDecoration(color: context.scaffoldBackgroundColor, borderRadius: BorderRadius.all(Radius.circular(8))),
+                                                                                BoxDecoration(color: context.cardColor, borderRadius: BorderRadius.all(Radius.circular(8))),
                                                                             child:
                                                                                 Column(
                                                                               children: [
@@ -954,7 +884,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                 8.height,
                                                                                 DropdownButtonFormField2(
                                                                                   value: SelectCityList[0],
-                                                                                  key: drop_city,
                                                                                   autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                                   decoration: InputDecoration(
                                                                                     //Add isDense true and zero Padding.
@@ -991,7 +920,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                   isExpanded: true,
                                                                                   hint: Text(
                                                                                     "Select City" + "*",
-                                                                                    style: montserratMedium.copyWith(color: black, fontSize: width * 0.04),
+                                                                                    style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
                                                                                   ),
                                                                                   alignment: Alignment.center,
                                                                                   buttonHeight: height * 0.075,
@@ -1004,7 +933,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       value: value,
                                                                                       child: Text(
                                                                                         value!,
-                                                                                        style: montserratRegular.copyWith(color: black, fontSize: width * 0.032),
+                                                                                        style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
                                                                                       ),
                                                                                     );
                                                                                   }).toList(),
@@ -1070,7 +999,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                   isExpanded: true,
                                                                                   hint: Text(
                                                                                     "Select Area" + "*",
-                                                                                    style: montserratMedium.copyWith(color: black, fontSize: width * 0.04),
+                                                                                    style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
                                                                                   ),
                                                                                   alignment: Alignment.center,
                                                                                   buttonHeight: height * 0.075,
@@ -1081,7 +1010,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                   items: SelectAreaList.map((String? value) {
                                                                                     return DropdownMenuItem<String>(
                                                                                       value: value,
-                                                                                      child: Text(value!, style: montserratRegular.copyWith(fontSize: width * 0.032, color: black)),
+                                                                                      child: Text(value!, style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04)),
                                                                                     );
                                                                                   }).toList(),
                                                                                   onChanged: (value) {
@@ -1107,13 +1036,13 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                 Padding(
                                                                                   padding: EdgeInsets.all(2),
                                                                                   child: Container(
-                                                                                    width: width * 0.85,
                                                                                     decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16)), color: white),
                                                                                     child: TextFormField(
                                                                                       keyboardType: TextInputType.text,
                                                                                       minLines: 1,
                                                                                       maxLines: 2,
                                                                                       maxLength: 80,
+                                                                                      style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
                                                                                       onChanged: (value) {
                                                                                         setState(() {
                                                                                           address = value;
@@ -1130,7 +1059,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                       decoration: InputDecoration(
                                                                                           counterText: "",
                                                                                           hintText: "Address",
-                                                                                          hintStyle: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
+                                                                                          hintStyle: montserratMedium.copyWith(color: greyColor, fontSize: width * 0.04),
                                                                                           focusedBorder: OutlineInputBorder(
                                                                                             borderSide: const BorderSide(color: black, width: 0.5),
                                                                                             borderRadius: BorderRadius.circular(10),
@@ -1160,14 +1089,14 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                 ),
                                                                                 8.height,
                                                                                 Padding(
-                                                                                  padding: EdgeInsets.all(2),
+                                                                                  padding: EdgeInsets.all(0),
                                                                                   child: Container(
-                                                                                    width: width * 0.85,
                                                                                     decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16)), color: white),
                                                                                     child: TextField(
                                                                                         keyboardType: TextInputType.multiline,
                                                                                         minLines: 1,
                                                                                         maxLength: 50,
+                                                                                        style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
                                                                                         onChanged: (value) {
                                                                                           if (value != "") {
                                                                                             var ret = buildingValidation(value);
@@ -1184,7 +1113,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                         decoration: InputDecoration(
                                                                                             counterText: "",
                                                                                             hintText: "Building Name/Flat No",
-                                                                                            hintStyle: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
+                                                                                            hintStyle: montserratMedium.copyWith(color: greyColor, fontSize: width * 0.04),
                                                                                             focusedBorder: OutlineInputBorder(
                                                                                               borderSide: const BorderSide(color: black, width: 0.5),
                                                                                               borderRadius: BorderRadius.circular(10),
@@ -1253,7 +1182,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                               child: Text(
                                                                                                 "Tap to mark",
                                                                                                 textAlign: TextAlign.left,
-                                                                                                style: montserratSemiBold.copyWith(fontSize: width * 0.034, color: black),
+                                                                                                style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
                                                                                               ),
                                                                                             ),
                                                                                           ),
@@ -1269,9 +1198,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                                             color: white,
                                                                                             child: GoogleMap(
                                                                                               initialCameraPosition: _initialPosition,
-                                                                                              myLocationEnabled: true,
-                                                                                              markers: Set.from(myMarker),
-                                                                                              onTap: _handleTap,
                                                                                               myLocationButtonEnabled: true,
                                                                                               onMapCreated: (GoogleMapController controller) {
                                                                                                 _controller.complete(controller);
@@ -1425,7 +1351,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                     Padding(
                                                                       padding:
                                                                           EdgeInsets.all(
-                                                                              2),
+                                                                              8),
                                                                     ),
                                                                   ],
                                                                 ),
@@ -1439,7 +1365,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                 );
                                               });
                                             },
-                                          );
+                                          ).whenComplete(() {
+                                            setState(() => isgooglemap = false);
+                                          });
                                         },
                                         child: Row(
                                           mainAxisAlignment:
@@ -1447,14 +1375,15 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                           children: [
                                             Text(
                                               ST.of(context).add_address + " ",
-                                              style: montserratMedium.copyWith(
-                                                  color: black,
-                                                  fontSize: width * 0.034),
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: black,
+                                                      fontSize: width * 0.034),
                                             ),
                                             Container(
                                               child: Image.asset(
                                                 ImageConst.add_black,
-                                                scale: 4.7,
+                                                scale: 4.8,
                                               ),
                                             )
                                           ],
@@ -1463,27 +1392,15 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                     ],
                                   ),
                                 )
-                              : 0.height,
-                          // changeaddress
-                          //     ? Row(
-                          //         children: [
-                          //           Padding(padding: EdgeInsets.all(2)),
-                          //           Text(
-                          //             "Select Drop Address*",
-                          //             style: montserratSemiBold.copyWith(
-                          //                 fontSize: width * 0.034, color: black),
-                          //           ),
-                          //         ],
-                          //       )
-                          //     : SizedBox(),
-                          4.height,
+                              : Container(),
                           changeaddress
                               ? Stack(
                                   alignment: Alignment.bottomCenter,
                                   children: [
                                       Container(
-                                        margin: EdgeInsets.all(12.0),
-                                        padding: EdgeInsets.all(2),
+                                        height: height * 0.035,
+                                        width: height * 0.37,
+                                        margin: EdgeInsets.all(8.0),
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(14),
@@ -1533,7 +1450,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                         borderSide:
                                                             const BorderSide(
                                                                 color: const Color(
-                                                                    0xff00000),
+                                                                    0xffCCCCCC),
                                                                 width: 0.0),
                                                         borderRadius:
                                                             BorderRadius
@@ -1545,7 +1462,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                         borderSide:
                                                             const BorderSide(
                                                                 color: const Color(
-                                                                    0xff000000),
+                                                                    0xffCCCCCC),
                                                                 width: 0.0),
                                                         borderRadius:
                                                             BorderRadius
@@ -1557,7 +1474,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                         borderSide:
                                                             const BorderSide(
                                                                 color: const Color(
-                                                                    0xff000000),
+                                                                    0xffCCCCCC),
                                                                 width: 0.0),
                                                         borderRadius:
                                                             BorderRadius
@@ -1590,9 +1507,10 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                       "Select Address" + "*",
                                                       style: montserratMedium
                                                           .copyWith(
-                                                              color: black,
-                                                              fontSize: width *
-                                                                  0.035),
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width * 0.04),
                                                     ),
                                                     buttonHeight:
                                                         height * 0.075,
@@ -1611,10 +1529,16 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                       return DropdownMenuItem<
                                                           String>(
                                                         value: value,
-                                                        child: Text(value!,
-                                                            style:
-                                                                boldTextStyle(
-                                                                    size: 14)),
+                                                        child: Text(
+                                                          value!,
+                                                          style: montserratMedium
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.04),
+                                                        ),
                                                       );
                                                     }).toList(),
                                                     onChanged: (value) {
@@ -1631,181 +1555,164 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                             ],
                                           ))
                                     ])
-                              : Row(),
-                          4.height,
-                          changedroptype
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                              : Container(),
+                          changeaddress ? 12.height : 0.height,
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(padding: EdgeInsets.all(2)),
+                              Text(
+                                "Drop Type" + "*",
+                                textAlign: TextAlign.start,
+                                style: montserratSemiBold.copyWith(
+                                    color: black, fontSize: width * 0.034),
+                              ),
+                            ],
+                          ),
+                          ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.only(
+                                  left: 0, top: 16, bottom: 16, right: 16),
+                              itemCount: pickup_options.length,
+                              itemBuilder: (context, index) {
+                                return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Padding(padding: EdgeInsets.all(2)),
-                                    Text(
-                                      "Drop Type" + "*",
-                                      textAlign: TextAlign.start,
-                                      style: montserratSemiBold.copyWith(
-                                          color: black,
-                                          fontSize: width * 0.034),
-                                    ),
-                                  ],
-                                )
-                              : Row(),
-                          changedroptype
-                              ? ListView.builder(
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  padding: EdgeInsets.only(
-                                      left: 0, top: 16, bottom: 16, right: 16),
-                                  itemCount: pickup_options.length,
-                                  itemBuilder: (context, index) {
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Theme(
-                                                    data: pickup_options[index]
-                                                                ['pk_id'] ==
-                                                            "0"
-                                                        ? Theme.of(context)
-                                                            .copyWith(
-                                                                unselectedWidgetColor:
-                                                                    Colors.grey[
-                                                                        350])
-                                                        : Theme.of(context)
-                                                            .copyWith(
-                                                                unselectedWidgetColor:
-                                                                    black),
-                                                    child:
-                                                        pickup_options[index]
-                                                                    ['pk_id'] ==
-                                                                "0"
-                                                            ? Radio(
-                                                                fillColor: MaterialStateColor
-                                                                    .resolveWith(
-                                                                        (states) =>
-                                                                            syanColor),
-                                                                value: pickup_options[
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: <Widget>[
+                                              Theme(
+                                                data: pickup_options[index]
+                                                            ['pk_id'] ==
+                                                        "0"
+                                                    ? Theme.of(context).copyWith(
+                                                        unselectedWidgetColor:
+                                                            Colors.grey[350])
+                                                    : Theme.of(context).copyWith(
+                                                        unselectedWidgetColor:
+                                                            black),
+                                                child: pickup_options[index]
+                                                            ['pk_id'] ==
+                                                        "0"
+                                                    ? Radio(
+                                                        fillColor:
+                                                            MaterialStateColor
+                                                                .resolveWith(
+                                                                    (states) =>
+                                                                        syanColor),
+                                                        value: pickup_options[
+                                                            index]['pk_id'],
+                                                        groupValue:
+                                                            pickupoption,
+                                                        onChanged:
+                                                            (dynamic value) {
+                                                          setState(() {
+                                                            value = null;
+                                                          });
+                                                        },
+                                                      )
+                                                    : Radio(
+                                                        fillColor:
+                                                            MaterialStateColor
+                                                                .resolveWith(
+                                                                    (states) =>
+                                                                        syanColor),
+                                                        value: pickup_options[
+                                                            index]['pk_id'],
+                                                        groupValue:
+                                                            pickupoption,
+                                                        onChanged:
+                                                            (dynamic value) {
+                                                          setState(() {
+                                                            pickupoption =
+                                                                value;
+                                                            pickup_name =
+                                                                pickup_options[
                                                                         index]
-                                                                    ['pk_id'],
-                                                                groupValue:
-                                                                    pickupoption,
-                                                                onChanged:
-                                                                    (dynamic
-                                                                        value) {
-                                                                  setState(() {
-                                                                    value =
-                                                                        null;
-                                                                  });
-                                                                },
-                                                              )
-                                                            : Radio(
-                                                                fillColor: MaterialStateColor
-                                                                    .resolveWith(
-                                                                        (states) =>
-                                                                            syanColor),
-                                                                value: pickup_options[
-                                                                        index]
-                                                                    ['pk_id'],
-                                                                groupValue:
-                                                                    pickupoption,
-                                                                onChanged:
-                                                                    (dynamic
-                                                                        value) {
-                                                                  setState(() {
-                                                                    pickupoption =
-                                                                        value;
-                                                                    pickup_name =
-                                                                        pickup_options[index]
-                                                                            [
-                                                                            'pk_name'];
-                                                                    pickup_cost =
-                                                                        pickup_options[index]
-                                                                            [
-                                                                            'pk_cost_value'];
-                                                                  });
-                                                                },
-                                                              ),
-                                                  ),
-                                                  pickup_options[index]
-                                                              ['pk_id'] ==
-                                                          "0"
-                                                      ? Text(
-                                                          pickup_options[index]
-                                                              ['pk_name'],
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: montserratMedium
-                                                              .copyWith(
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      350],
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                        )
-                                                      : Text(
-                                                          pickup_options[index]
-                                                              ['pk_name'],
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: montserratMedium
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                        ),
-                                                ]),
-                                            pickup_options[index]['pk_id'] ==
-                                                    "0"
-                                                ? Text(
-                                                    pickup_options[index]
-                                                                ['pk_cost'] ==
-                                                            "AED 0"
-                                                        ? ST.of(context).free
-                                                        : pickup_options[index]
-                                                            ['pk_cost'],
-                                                    textAlign: TextAlign.end,
-                                                    overflow: TextOverflow.clip,
-                                                    style: montserratMedium
-                                                        .copyWith(
-                                                            color: black,
-                                                            fontSize:
-                                                                width * 0.034),
-                                                  )
-                                                : Text(
-                                                    pickup_options[index]
-                                                                ['pk_cost'] ==
-                                                            "AED 0"
-                                                        ? ST.of(context).free
-                                                        : pickup_options[index]
-                                                            ['pk_cost'],
-                                                    textAlign: TextAlign.end,
-                                                    overflow: TextOverflow.clip,
-                                                    style: montserratMedium
-                                                        .copyWith(
-                                                            color: warningcolor,
-                                                            fontSize:
-                                                                width * 0.034),
-                                                  ),
-                                          ],
-                                        ),
+                                                                    ['pk_name'];
+                                                            pickup_cost =
+                                                                pickup_options[
+                                                                        index][
+                                                                    'pk_cost_value'];
+                                                          });
+                                                        },
+                                                      ),
+                                              ),
+                                              pickup_options[index]['pk_id'] ==
+                                                      "0"
+                                                  ? Text(
+                                                      pickup_options[index]
+                                                          ['pk_name'],
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color: Colors
+                                                                  .grey[350],
+                                                              fontSize: width *
+                                                                  0.034),
+                                                    )
+                                                  : Text(
+                                                      pickup_options[index]
+                                                          ['pk_name'],
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color: black,
+                                                              fontSize: width *
+                                                                  0.034),
+                                                    ),
+                                            ]),
+                                        pickup_options[index]['pk_id'] == "0"
+                                            ? Text(
+                                                pickup_options[index]
+                                                            ['pk_cost'] ==
+                                                        "AED 0"
+                                                    ? ST.of(context).free
+                                                    : pickup_options[index]
+                                                        ['pk_cost'],
+                                                textAlign: TextAlign.end,
+                                                overflow: TextOverflow.clip,
+                                                style:
+                                                    montserratMedium.copyWith(
+                                                        color: black,
+                                                        fontSize:
+                                                            width * 0.034),
+                                              )
+                                            : Text(
+                                                pickup_options[index]
+                                                            ['pk_cost'] ==
+                                                        "AED 0"
+                                                    ? ST.of(context).free
+                                                    : pickup_options[index]
+                                                        ['pk_cost'],
+                                                textAlign: TextAlign.end,
+                                                overflow: TextOverflow.clip,
+                                                style:
+                                                    montserratMedium.copyWith(
+                                                        color: warningcolor,
+                                                        fontSize:
+                                                            width * 0.034),
+                                              ),
                                       ],
-                                    );
-                                  })
-                              : Row(),
+                                    ),
+                                  ],
+                                );
+                              }),
                           // isserviceble
                           //     ?
                           Row(
@@ -2144,15 +2051,5 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
         ),
       ),
     );
-  }
-
-  _handleTap(LatLng tappedpoint) {
-    setState(() {
-      myMarker = [];
-      myMarker.add(Marker(
-          markerId: MarkerId(tappedpoint.toString()), position: tappedpoint));
-      Marklat = tappedpoint.latitude;
-      Marklong = tappedpoint.longitude;
-    });
   }
 }
