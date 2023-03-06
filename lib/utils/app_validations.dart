@@ -35,7 +35,7 @@ emirateValidation(value, context) {
 }
 
 addressValidation(value, context) {
-  String pattern = r'(^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$)';
+  String pattern = r'(^[A-Za-z0-9 _-]+$)';
   RegExp regExp = new RegExp(pattern);
   if (value.length == 0) {
     return ST.of(context).address_error;
@@ -46,7 +46,7 @@ addressValidation(value, context) {
 }
 
 buildingValidation(value) {
-  String pattern = r'(^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$)';
+  String pattern = r'(^[A-Za-z0-9 _]+$)';
   RegExp regExp = new RegExp(pattern);
   if (!regExp.hasMatch(value)) {
     return "Enter valid data";

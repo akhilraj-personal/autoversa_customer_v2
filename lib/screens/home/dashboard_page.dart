@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
 import 'package:autoversa/screens/booking/reschedule_screen.dart';
-import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
 import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
-import 'package:autoversa/screens/tryout_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
@@ -64,25 +62,25 @@ class _DashScreenState extends State<DashScreen> {
   @override
   void initState() {
     super.initState();
-    internetconnection = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        setState(() {
-          isoffline = true;
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => NoInternetScreen()));
-        });
-      } else if (result == ConnectivityResult.mobile) {
-        setState(() {
-          isoffline = false;
-        });
-      } else if (result == ConnectivityResult.wifi) {
-        setState(() {
-          isoffline = false;
-        });
-      }
-    });
+    // internetconnection = Connectivity()
+    //     .onConnectivityChanged
+    //     .listen((ConnectivityResult result) {
+    //   if (result == ConnectivityResult.none) {
+    //     setState(() {
+    //       isoffline = true;
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
+    //     });
+    //   } else if (result == ConnectivityResult.mobile) {
+    //     setState(() {
+    //       isoffline = false;
+    //     });
+    //   } else if (result == ConnectivityResult.wifi) {
+    //     setState(() {
+    //       isoffline = false;
+    //     });
+    //   }
+    // });
     Future.delayed(Duration.zero, () {
       _getCustomerVehicles();
       _getPackages();

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
-import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/package_screens/summery_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/AppWidgets.dart';
@@ -53,6 +52,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   List<String?> SelectAreaList = <String?>["Select Area"];
 
   final GlobalKey<FormFieldState> areaKey = GlobalKey<FormFieldState>();
+  final TextEditingController textEditingController = TextEditingController();
 
   var selected_address = 0;
   var selected_drop_address = 0;
@@ -109,25 +109,25 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   @override
   void initState() {
     super.initState();
-    internetconnection = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        setState(() {
-          isoffline = true;
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => NoInternetScreen()));
-        });
-      } else if (result == ConnectivityResult.mobile) {
-        setState(() {
-          isoffline = false;
-        });
-      } else if (result == ConnectivityResult.wifi) {
-        setState(() {
-          isoffline = false;
-        });
-      }
-    });
+    // internetconnection = Connectivity()
+    //     .onConnectivityChanged
+    //     .listen((ConnectivityResult result) {
+    //   if (result == ConnectivityResult.none) {
+    //     setState(() {
+    //       isoffline = true;
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
+    //     });
+    //   } else if (result == ConnectivityResult.mobile) {
+    //     setState(() {
+    //       isoffline = false;
+    //     });
+    //   } else if (result == ConnectivityResult.wifi) {
+    //     setState(() {
+    //       isoffline = false;
+    //     });
+    //   }
+    // });
     init();
     Future.delayed(Duration.zero, () {
       _setdatas();
@@ -871,20 +871,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   temp['state_longitude'])),
                                           zoom: 13.4746,
                                         );
-                                        // setBottomState(() {});
-
-                                        print(data +
-                                            "--------------------000----");
                                         final GoogleMapController controller =
                                             await _controller.future;
-                                        print(data +
-                                            "-----------------------2222-");
                                         controller.moveCamera(
                                             CameraUpdate.newCameraPosition(
                                                 _kLake));
-                                        // setBottomState(() {});
-                                        print(data +
-                                            "-----------------------11111-");
                                         setBottomState(() {
                                           Statelat = temp['state_lattitude'];
                                           Statelong = temp['state_longitude'];
@@ -1267,6 +1258,72 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                         getarealist(
                                                                             value);
                                                                       },
+                                                                      searchController:
+                                                                          textEditingController,
+                                                                      searchInnerWidgetHeight:
+                                                                          height *
+                                                                              0.07,
+                                                                      searchInnerWidget:
+                                                                          Container(
+                                                                        height: height *
+                                                                            0.07,
+                                                                        padding:
+                                                                            const EdgeInsets.only(
+                                                                          top:
+                                                                              8,
+                                                                          bottom:
+                                                                              4,
+                                                                          right:
+                                                                              8,
+                                                                          left:
+                                                                              8,
+                                                                        ),
+                                                                        child:
+                                                                            TextFormField(
+                                                                          expands:
+                                                                              true,
+                                                                          maxLines:
+                                                                              null,
+                                                                          controller:
+                                                                              textEditingController,
+                                                                          decoration:
+                                                                              InputDecoration(
+                                                                            isDense:
+                                                                                true,
+                                                                            contentPadding:
+                                                                                const EdgeInsets.symmetric(
+                                                                              horizontal: 10,
+                                                                              vertical: 8,
+                                                                            ),
+                                                                            hintText:
+                                                                                'Search area...',
+                                                                            hintStyle:
+                                                                                const TextStyle(fontSize: 12),
+                                                                            border:
+                                                                                OutlineInputBorder(
+                                                                              borderRadius: BorderRadius.circular(12),
+                                                                              borderSide: BorderSide(color: syanColor, width: 0.0),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      searchMatchFn:
+                                                                          (item,
+                                                                              searchValue) {
+                                                                        return (item
+                                                                            .value
+                                                                            .toString()
+                                                                            .toLowerCase()
+                                                                            .contains(searchValue.toLowerCase()));
+                                                                      },
+                                                                      //This to clear the search value when you close the menu
+                                                                      onMenuStateChange:
+                                                                          (isOpen) {
+                                                                        if (!isOpen) {
+                                                                          textEditingController
+                                                                              .clear();
+                                                                        }
+                                                                      },
                                                                     ),
                                                                     8.height,
                                                                     Column(
@@ -1308,6 +1365,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                               2,
                                                                           maxLength:
                                                                               80,
+                                                                          autovalidateMode:
+                                                                              AutovalidateMode.onUserInteraction,
                                                                           style: montserratMedium.copyWith(
                                                                               color: Colors.black,
                                                                               fontSize: width * 0.04),
@@ -1377,10 +1436,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                             borderRadius:
                                                                                 BorderRadius.all(Radius.circular(16)),
                                                                             color: white),
-                                                                        child: TextField(
+                                                                        child: TextFormField(
                                                                             keyboardType: TextInputType.multiline,
                                                                             minLines: 1,
                                                                             maxLength: 50,
+                                                                            autovalidateMode: AutovalidateMode.onUserInteraction,
                                                                             style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
                                                                             onChanged: (value) {
                                                                               if (value != "") {
