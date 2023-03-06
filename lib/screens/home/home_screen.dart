@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:autoversa/main.dart';
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
 import 'package:autoversa/screens/booking/reschedule_screen.dart';
-import 'package:autoversa/screens/no_internet_screen.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
 import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
@@ -66,27 +64,27 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    internetconnection = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        setState(() {
-          isoffline = true;
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => NoInternetScreen()));
-        });
-      } else if (result == ConnectivityResult.mobile) {
-        setState(() {
-          isoffline = false;
-          Navigator.pushReplacementNamed(context, Routes.bottombar);
-        });
-      } else if (result == ConnectivityResult.wifi) {
-        setState(() {
-          isoffline = false;
-          Navigator.pushReplacementNamed(context, Routes.bottombar);
-        });
-      }
-    });
+    // internetconnection = Connectivity()
+    //     .onConnectivityChanged
+    //     .listen((ConnectivityResult result) {
+    //   if (result == ConnectivityResult.none) {
+    //     setState(() {
+    //       isoffline = true;
+    //       Navigator.push(context,
+    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
+    //     });
+    //   } else if (result == ConnectivityResult.mobile) {
+    //     setState(() {
+    //       isoffline = false;
+    //       Navigator.pushReplacementNamed(context, Routes.bottombar);
+    //     });
+    //   } else if (result == ConnectivityResult.wifi) {
+    //     setState(() {
+    //       isoffline = false;
+    //       Navigator.pushReplacementNamed(context, Routes.bottombar);
+    //     });
+    //   }
+    // });
     Future.delayed(Duration.zero, () {
       _getCustomerVehicles();
       _getPackages();
