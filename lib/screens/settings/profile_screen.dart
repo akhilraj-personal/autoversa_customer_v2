@@ -96,7 +96,7 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   Future<bool> _onWillPop() async {

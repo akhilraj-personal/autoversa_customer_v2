@@ -84,7 +84,7 @@ class AddressAddState extends State<AddressAdd> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   _fetchdatas(address_index) async {

@@ -123,7 +123,7 @@ class VehiclelistState extends State<Vehiclelist> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   Future<bool> _onWillPop() async {

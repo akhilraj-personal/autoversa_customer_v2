@@ -74,7 +74,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   Future<void> init() async {}

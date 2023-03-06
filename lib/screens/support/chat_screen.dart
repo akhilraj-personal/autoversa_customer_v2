@@ -141,7 +141,7 @@ class ChatState extends State<Chat> {
   @override
   void dispose() {
     socket.disconnect();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
     super.dispose();
   }
 

@@ -103,7 +103,7 @@ class InspectionScreenState extends State<InspectionScreen>
   void dispose() {
     _controller.dispose();
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   _getInspectionDetailsList() async {

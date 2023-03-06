@@ -90,7 +90,7 @@ class WorkcardState extends State<Workcard> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   getBookingDetailsID() async {

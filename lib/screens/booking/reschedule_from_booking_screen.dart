@@ -89,7 +89,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   timeFormatter(date_data) {

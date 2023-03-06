@@ -64,7 +64,7 @@ class AddressListState extends State<AddressList> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   addressList() async {

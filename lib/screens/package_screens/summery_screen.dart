@@ -110,7 +110,7 @@ class SummeryPageState extends State<SummeryPage> {
   void dispose() {
     super.dispose();
     player.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   createBooking() async {

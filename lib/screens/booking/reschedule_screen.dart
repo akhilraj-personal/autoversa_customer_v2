@@ -435,7 +435,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   getTimeSlots(pickdate) async {

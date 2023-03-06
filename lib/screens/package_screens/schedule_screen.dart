@@ -277,7 +277,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       custAddressList = [];
       pickup_options = [];
       var temp_address = selected_address;
-      var temp_drop_address = selected_address;
+      var temp_drop_address = selected_drop_address;
       selected_address = 0;
       selected_drop_address = 0;
       SelectAddressList = <String?>["Select Address"];
@@ -345,6 +345,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           selected_address = temp_address;
           selected_drop_address = SelectAddressList.length - 1;
           dropaddresschange(SelectAddressList.length - 1);
+        } else {
+          selected_address = temp_address;
+          selected_drop_address = temp_drop_address;
         }
       }
       setState(() {});
@@ -394,7 +397,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   getTimeSlots(pickdate) async {
@@ -775,7 +778,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: black,
-                                                      fontSize: width * 0.034),
+                                                      fontSize: width * 0.04),
                                               maxLines: 2)
                                           : SizedBox(),
                                       widget.custvehlist[widget.selectedveh]['cv_variant'] != "" && widget.custvehlist[widget.selectedveh]['cv_variant'] != null
@@ -814,7 +817,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                             package_price.toString(),
                                         style: montserratSemiBold.copyWith(
                                             color: warningcolor,
-                                            fontSize: width * 0.034),
+                                            fontSize: width * 0.04),
                                       ),
                                       SizedBox(height: 8),
                                     ],
@@ -2038,7 +2041,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   child:
                                                       DropdownButtonFormField2(
                                                     value: SelectAddressList[
-                                                        selected_address],
+                                                        selected_drop_address],
                                                     autovalidateMode:
                                                         AutovalidateMode
                                                             .onUserInteraction,
@@ -2257,8 +2260,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 style:
                                                     montserratMedium.copyWith(
                                                         color: Colors.grey[350],
-                                                        fontSize:
-                                                            width * 0.034),
+                                                        fontSize: width * 0.04),
                                               )
                                             : Text(
                                                 pickup_options[index]
@@ -2268,8 +2270,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 style:
                                                     montserratMedium.copyWith(
                                                         color: black,
-                                                        fontSize:
-                                                            width * 0.034),
+                                                        fontSize: width * 0.04),
                                               ),
                                       ]),
                                   pickup_options[index]['pk_id'] == "0"
@@ -2283,7 +2284,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           overflow: TextOverflow.clip,
                                           style: montserratMedium.copyWith(
                                               color: black,
-                                              fontSize: width * 0.034),
+                                              fontSize: width * 0.04),
                                         )
                                       : Text(
                                           pickup_options[index]['pk_cost'] ==
@@ -2295,7 +2296,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           overflow: TextOverflow.clip,
                                           style: montserratMedium.copyWith(
                                               color: warningcolor,
-                                              fontSize: width * 0.034),
+                                              fontSize: width * 0.04),
                                         ),
                                 ],
                               ),
@@ -2360,15 +2361,15 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                 title: Text(
                                     ST.of(context).select_booking_date + " ",
                                     style: montserratMedium.copyWith(
-                                        color: black, fontSize: width * 0.034),
+                                        color: black, fontSize: width * 0.04),
                                     maxLines: 3),
                                 subtitle: Text(
                                   selectedDate == " "
                                       ? " "
                                       : DateFormat('dd-MM-yyyy')
                                           .format(selectedDate),
-                                  style: montserratMedium.copyWith(
-                                      color: black, fontSize: width * 0.034),
+                                  style: montserratSemiBold.copyWith(
+                                      color: black, fontSize: width * 0.04),
                                 ),
                               )),
                         ),
@@ -2427,14 +2428,17 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                               title: Text(ST.of(context).select_a_time_slot,
                                   overflow: TextOverflow.ellipsis,
                                   style: montserratMedium.copyWith(
-                                      color: black, fontSize: width * 0.034),
+                                      color: black, fontSize: width * 0.04),
                                   maxLines: 3),
                               subtitle: Text(
                                   selected_timeslot == ""
-                                      ? ST.of(context).select_a_time_slot + "*"
+                                      ? "Choose time slot"
                                       : selected_timeslot,
-                                  style: montserratMedium.copyWith(
-                                      color: black, fontSize: width * 0.034)),
+                                  style: montserratSemiBold.copyWith(
+                                      color: black,
+                                      fontSize: selected_timeslot == ""
+                                          ? width * 0.034
+                                          : width * 0.04)),
                               textColor: black,
                               trailing: isExpanded
                                   ? Container(

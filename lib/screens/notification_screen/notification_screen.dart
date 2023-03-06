@@ -106,7 +106,7 @@ class NotificationPageState extends State<NotificationPage> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   clearNotification() async {

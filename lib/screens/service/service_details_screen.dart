@@ -75,7 +75,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   timeFormatter(date_data) {

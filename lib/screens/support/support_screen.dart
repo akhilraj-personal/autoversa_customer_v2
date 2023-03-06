@@ -56,7 +56,7 @@ class SupportState extends State<Support> {
   @override
   void dispose() {
     super.dispose();
-    internetconnection!.cancel();
+    // internetconnection!.cancel();
   }
 
   Future<bool> _onWillPop() async {

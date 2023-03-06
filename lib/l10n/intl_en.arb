@@ -52,7 +52,7 @@
   "pickup_options": "Pickup options",
   "free": "FREE",
   "select_booking_date": "Select Booking Date",
-  "select_a_time_slot": "Select a Time Slot",
+  "select_a_time_slot": "Booking Time Slot",
   "slot_is_full": "Slot is Full",
   "no_time_slot_available": "No time slot available",
   "proceed": "PROCEED"
