@@ -5,6 +5,7 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
+import 'package:autoversa/screens/booking/reschedule_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -46,6 +47,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   int bookId = 0;
   var trnxId;
   var vehiclename = "";
+  String selectedTime = "";
+  String currentTime = "";
   TextEditingController additionalcommentsController = TextEditingController();
   @override
   void initState() {
@@ -79,8 +82,22 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   _setdatas() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
+      currentTime = DateFormat("hh:mm a").format(DateTime.now());
+      print("1=============>");
+      print(currentTime);
       packdata = json.decode(prefs.get("booking_data").toString());
-      print(packdata['selected_timeslot'].split('- ')[1]);
+      print("2=============>");
+      selectedTime = packdata['selected_timeslot'].split('- ')[1];
+      print(selectedTime);
+      if (selectedTime.compareTo(currentTime) == 0) {
+        print("Both time are at same moment.");
+      }
+      if (selectedTime.compareTo(currentTime) < 0) {
+        print("Selected time is past");
+      }
+      if (selectedTime.compareTo(currentTime) > 0) {
+        print("Selected time is future");
+      }
       if (packdata['package_cost'] != null) {
         totalamount = double.parse(packdata['package_cost'].toString()) +
             double.parse(packdata['pick_up_price'].toString());
@@ -131,31 +148,50 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   }
 
   createBooking() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      Map<String, dynamic> booking = {
-        "bookid": bookingdetails['bk_id'],
-        "custId": prefs.getString('cust_id'),
-        "vehId": packdata['vehicle_id'],
-        "bookingdate": packdata['selected_date'],
-        "slot": packdata['selected_timeid'],
-        "pickupaddress": packdata['pick_up_location_id'],
-        "dropaddress": packdata['drop_location_id'],
-        "pickuptype": packdata['pick_type_id'],
-        "pickupcost": packdata['pick_up_price'],
-        'complaint': additionalcommentsController.text.toString(),
-        "advance": "0",
-        "discount": "0",
-        "total_amount": totalamount,
-      };
-      await createRescheduleBooking(booking).then((value) {
-        if (value['ret_data'] == "success") {
-          createPayment(bookingdetails['bk_id'], value['payment_details']);
-          trnxId = value['payment_details']['id'];
-        }
+    selectedTime = packdata['selected_timeslot'].split('- ')[1];
+    currentTime = DateFormat("hh:mm a").format(DateTime.now());
+    if (selectedTime.compareTo(currentTime) < 0) {
+      setState(() {
+        isproceeding = false;
       });
-    } catch (e) {
-      print(e.toString());
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) => ReScheduleTimeAndDate(
+            bk_data: widget.bk_data,
+            currency: widget.currency,
+            custvehlist: widget.custvehlist,
+            selectedVeh: widget.selectedveh),
+      );
+      showCustomToast(context, "Selected time slot expired. Kindly reschedule",
+          bgColor: errorcolor, textColor: white);
+    } else {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        Map<String, dynamic> booking = {
+          "bookid": bookingdetails['bk_id'],
+          "custId": prefs.getString('cust_id'),
+          "vehId": packdata['vehicle_id'],
+          "bookingdate": packdata['selected_date'],
+          "slot": packdata['selected_timeid'],
+          "pickupaddress": packdata['pick_up_location_id'],
+          "dropaddress": packdata['drop_location_id'],
+          "pickuptype": packdata['pick_type_id'],
+          "pickupcost": packdata['pick_up_price'],
+          'complaint': additionalcommentsController.text.toString(),
+          "advance": "0",
+          "discount": "0",
+          "total_amount": totalamount,
+        };
+        await createRescheduleBooking(booking).then((value) {
+          if (value['ret_data'] == "success") {
+            createPayment(bookingdetails['bk_id'], value['payment_details']);
+            trnxId = value['payment_details']['id'];
+          }
+        });
+      } catch (e) {
+        print(e.toString());
+      }
     }
   }
 
@@ -883,6 +919,199 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                         ],
                       ),
                     ),
+                    // if (selectedTime.compareTo(currentTime) == 0) ...[
+                    //   GestureDetector(
+                    //     onTap: () async {
+                    //       if (isproceeding) return;
+                    //       setState(() => isproceeding = true);
+                    //       await Future.delayed(Duration(milliseconds: 1000));
+                    //       createBooking();
+                    //     },
+                    //     child: Stack(
+                    //       alignment: Alignment.bottomCenter,
+                    //       children: [
+                    //         Container(
+                    //           height: height * 0.045,
+                    //           width: height * 0.37,
+                    //           decoration: BoxDecoration(
+                    //               borderRadius: BorderRadius.circular(14),
+                    //               boxShadow: [
+                    //                 BoxShadow(
+                    //                     blurRadius: 16,
+                    //                     color: syanColor.withOpacity(.6),
+                    //                     spreadRadius: 0,
+                    //                     blurStyle: BlurStyle.outer,
+                    //                     offset: Offset(0, 0)),
+                    //               ]),
+                    //         ),
+                    //         Container(
+                    //           height: height * 0.075,
+                    //           width: height * 0.4,
+                    //           alignment: Alignment.center,
+                    //           decoration: BoxDecoration(
+                    //             shape: BoxShape.rectangle,
+                    //             borderRadius:
+                    //                 BorderRadius.all(Radius.circular(14)),
+                    //             gradient: LinearGradient(
+                    //               begin: Alignment.topLeft,
+                    //               end: Alignment.bottomRight,
+                    //               colors: [
+                    //                 syanColor,
+                    //                 lightblueColor,
+                    //               ],
+                    //             ),
+                    //           ),
+                    //           child: !isproceeding
+                    //               ? Text(
+                    //                   "PROCEED TO PAY",
+                    //                   style: montserratSemiBold.copyWith(
+                    //                       color: Colors.white),
+                    //                 )
+                    //               : Row(
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.center,
+                    //                   children: [
+                    //                     Transform.scale(
+                    //                       scale: 0.7,
+                    //                       child: CircularProgressIndicator(
+                    //                         color: white,
+                    //                       ),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ],
+                    // if (selectedTime.compareTo(currentTime) < 0) ...[
+                    //   Container(
+                    //     margin: EdgeInsets.only(left: 30.0),
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.start,
+                    //       children: [
+                    //         Text(
+                    //           "Selected time slot expired. Kindly choose new.",
+                    //           textAlign: TextAlign.center,
+                    //           style: montserratSemiBold.copyWith(
+                    //               color: warningcolor, fontSize: width * 0.034),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    //   12.height,
+                    //   GestureDetector(
+                    //     onTap: () async {
+                    //       Navigator.pop(context);
+                    //     },
+                    //     child: Stack(
+                    //       alignment: Alignment.bottomCenter,
+                    //       children: [
+                    //         Container(
+                    //           height: height * 0.045,
+                    //           width: height * 0.37,
+                    //           decoration: BoxDecoration(
+                    //               borderRadius: BorderRadius.circular(14),
+                    //               boxShadow: [
+                    //                 BoxShadow(
+                    //                     blurRadius: 16,
+                    //                     color: syanColor.withOpacity(.6),
+                    //                     spreadRadius: 0,
+                    //                     blurStyle: BlurStyle.outer,
+                    //                     offset: Offset(0, 0)),
+                    //               ]),
+                    //         ),
+                    //         Container(
+                    //             height: height * 0.075,
+                    //             width: height * 0.4,
+                    //             alignment: Alignment.center,
+                    //             decoration: BoxDecoration(
+                    //               shape: BoxShape.rectangle,
+                    //               borderRadius:
+                    //                   BorderRadius.all(Radius.circular(14)),
+                    //               gradient: LinearGradient(
+                    //                 begin: Alignment.topLeft,
+                    //                 end: Alignment.bottomRight,
+                    //                 colors: [
+                    //                   syanColor,
+                    //                   lightblueColor,
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //             child: Text(
+                    //               "RESCHEDULE",
+                    //               style: montserratSemiBold.copyWith(
+                    //                   color: Colors.white),
+                    //             )),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ],
+                    // if (selectedTime.compareTo(currentTime) > 0) ...[
+                    //   GestureDetector(
+                    //     onTap: () async {
+                    //       if (isproceeding) return;
+                    //       setState(() => isproceeding = true);
+                    //       await Future.delayed(Duration(milliseconds: 1000));
+                    //       createBooking();
+                    //     },
+                    //     child: Stack(
+                    //       alignment: Alignment.bottomCenter,
+                    //       children: [
+                    //         Container(
+                    //           height: height * 0.045,
+                    //           width: height * 0.37,
+                    //           decoration: BoxDecoration(
+                    //               borderRadius: BorderRadius.circular(14),
+                    //               boxShadow: [
+                    //                 BoxShadow(
+                    //                     blurRadius: 16,
+                    //                     color: syanColor.withOpacity(.6),
+                    //                     spreadRadius: 0,
+                    //                     blurStyle: BlurStyle.outer,
+                    //                     offset: Offset(0, 0)),
+                    //               ]),
+                    //         ),
+                    //         Container(
+                    //           height: height * 0.075,
+                    //           width: height * 0.4,
+                    //           alignment: Alignment.center,
+                    //           decoration: BoxDecoration(
+                    //             shape: BoxShape.rectangle,
+                    //             borderRadius:
+                    //                 BorderRadius.all(Radius.circular(14)),
+                    //             gradient: LinearGradient(
+                    //               begin: Alignment.topLeft,
+                    //               end: Alignment.bottomRight,
+                    //               colors: [
+                    //                 syanColor,
+                    //                 lightblueColor,
+                    //               ],
+                    //             ),
+                    //           ),
+                    //           child: !isproceeding
+                    //               ? Text(
+                    //                   "PROCEED TO PAY",
+                    //                   style: montserratSemiBold.copyWith(
+                    //                       color: Colors.white),
+                    //                 )
+                    //               : Row(
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.center,
+                    //                   children: [
+                    //                     Transform.scale(
+                    //                       scale: 0.7,
+                    //                       child: CircularProgressIndicator(
+                    //                         color: white,
+                    //                       ),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ],
                     SizedBox(
                       height: 20,
                     ),
@@ -1072,6 +1301,121 @@ class CustomSuccess extends StatelessWidget {
                     )),
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Text('OK',
+                    style: montserratSemiBold.copyWith(color: white)),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ReScheduleTimeAndDate extends StatelessWidget {
+  final Map<String, dynamic> bk_data;
+  final List<dynamic> custvehlist;
+  final int selectedVeh;
+  String currency;
+  ReScheduleTimeAndDate(
+      {required this.bk_data,
+      required this.currency,
+      required this.custvehlist,
+      required this.selectedVeh,
+      super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: new BoxDecoration(
+          color: white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(0),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0)),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To make the card compact
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      white,
+                      white,
+                      white,
+                      white,
+                    ],
+                  )),
+                ),
+                // Container(height: 130, color: blackColor),
+                Column(
+                  children: [
+                    Image.asset(
+                      ImageConst.time_expired_icon,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text("Expired",
+                        textAlign: TextAlign.center,
+                        style: montserratSemiBold.copyWith(
+                            fontSize: width * 0.034, color: black)),
+                  ],
+                )
+              ],
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Text("Selected time slot expired. Kindly reschedule",
+                    textAlign: TextAlign.center,
+                    style: montserratRegular.copyWith(
+                        fontSize: width * 0.034, color: black))),
+            SizedBox(
+              height: 16,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RescheduleScreen(
+                            bk_data: bk_data,
+                            custvehlist: custvehlist,
+                            currency: currency,
+                            selectedVeh: selectedVeh)));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        lightorangeColor,
+                        holdorangeColor,
+                      ],
+                    )),
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Text('RESCHEDULE',
                     style: montserratSemiBold.copyWith(color: white)),
               ),
             ),
