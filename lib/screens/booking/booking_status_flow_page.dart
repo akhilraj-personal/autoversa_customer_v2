@@ -946,8 +946,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             showDialog(
               barrierDismissible: false,
               context: context,
-              builder: (BuildContext context) =>
-                  ScheduleDelivery(bk_id: widget.bk_id),
+              builder: (BuildContext context) => ScheduleDelivery(
+                  bk_id: widget.bk_id,
+                  vehname: widget.vehname,
+                  make: widget.make),
             );
           }
           ;
@@ -2684,7 +2686,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                             0
                                                                         ? Navigator.push(
                                                                             context,
-                                                                            MaterialPageRoute(builder: (context) => ScheduleDropScreen(bk_id: widget.bk_id)))
+                                                                            MaterialPageRoute(builder: (context) => ScheduleDropScreen(bk_id: widget.bk_id, vehname: widget.vehname, make: widget.make)))
                                                                         : Navigator.push(context, MaterialPageRoute(builder: (context) => Workcard(click_id: 2, booking_id: widget.bk_id, vehname: widget.vehname, vehmake: vehicle['cv_make'])));
                                                                   },
                                                                   child: Stack(
@@ -2943,7 +2945,13 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
 
 class ScheduleDelivery extends StatelessWidget {
   final String bk_id;
-  const ScheduleDelivery({required this.bk_id, super.key});
+  final String vehname;
+  final String make;
+  const ScheduleDelivery(
+      {required this.bk_id,
+      required this.vehname,
+      required this.make,
+      super.key});
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -3016,8 +3024,8 @@ class ScheduleDelivery extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            ScheduleDropScreen(bk_id: bk_id)));
+                        builder: (context) => ScheduleDropScreen(
+                            bk_id: bk_id, vehname: vehname, make: make)));
               },
               child: Container(
                 decoration: BoxDecoration(
