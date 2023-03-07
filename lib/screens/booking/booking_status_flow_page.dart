@@ -953,7 +953,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             );
           }
           ;
-
           var cust_status_master = [
             'BKCC',
             'DRPC',
@@ -965,7 +964,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             'RFDC',
             'DEDC',
             'DLCC',
-            'HOLDC'
+            'HOLDC',
           ];
           var position = cust_status_master
               .indexOf(value['booking']['cust_status']['st_code']);
@@ -973,7 +972,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             if (statuslist["bkt_code"] == "BKCC" &&
                 statuslist['bkt_task'] != "Unhold") {
               var temp = {
-                "status": "Booking Created",
+                "status": "Booking created",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -995,7 +994,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             } else if (statuslist["bkt_code"] == "DRPC" &&
                 statuslist['bkt_task'] != "Unhold") {
               var temp = {
-                "status": "Driver enroute\nto location",
+                "status": "Driver en route\nto location",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -1017,7 +1016,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             } else if (statuslist["bkt_code"] == "PIPC" &&
                 statuslist['bkt_task'] != "Unhold") {
               var temp = {
-                "status": "Pickup in progress",
+                "status": "Pick up in progress",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -1039,7 +1038,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             } else if (statuslist["bkt_code"] == "PIWC" &&
                 statuslist['bkt_task'] != "Unhold") {
               var temp = {
-                "status": "Pickedup & enroute\nto workshop",
+                "status": "Picked up & en route\nto workshop",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -1127,7 +1126,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             } else if (statuslist["bkt_code"] == "RFDC" &&
                 statuslist['bkt_task'] != "Unhold") {
               var temp = {
-                "status": "Delivery scheduled On",
+                "status": "Delivery scheduled on",
                 "time": DateFormat('dd-MM-yyyy')
                         .format(DateTime.tryParse(booking['bk_dropdate'])!) +
                     " at " +
@@ -1150,7 +1149,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             } else if (statuslist["bkt_code"] == "DEDC" &&
                 statuslist['bkt_task'] != "Unhold") {
               var temp = {
-                "status": "Vehicle enrouted to\nyour location",
+                "status": "Driver en route to\nyour location",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -1170,6 +1169,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 statusflow.add(temp);
               }
             } else if (statuslist["bkt_code"] == "DLCC") {
+              print("ughuikj");
               var temp = {
                 "status": "Delivery completed",
                 "time": DateFormat('dd-MM-yyyy').format(
@@ -1184,7 +1184,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.firstWhere(
+              if ((statusflow.singleWhere(
                       (it) => it["code"] == statuslist["bkt_code"],
                       orElse: () => null)) ==
                   null) {
@@ -1376,10 +1376,11 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
           }
           ;
+
           for (int i = (position + 1); i < cust_status_master.length; i++) {
             if (cust_status_master[i] == "DRPC") {
               var temp = {
-                "status": "Driver Enroute\nto Location",
+                "status": "Driver en route\nto location",
                 "time": "",
                 "code": "",
                 "icon": 'assets/icons/driver_enrouted_inactive.png',
@@ -1391,7 +1392,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
             if (cust_status_master[i] == "PIPC") {
               var temp = {
-                "status": "Pickup In Progress",
+                "status": "Pick up in progress",
                 "time": "",
                 "code": "",
                 "icon": 'assets/icons/pickup_progress_inactive.png',
@@ -1403,7 +1404,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
             if (cust_status_master[i] == "PIWC") {
               var temp = {
-                "status": "Pickedup & enroute\nto workshop",
+                "status": "Picked up & en route\nto workshop",
                 "time": "",
                 "code": "",
                 "icon": 'assets/icons/pickedup_inactive.png',
@@ -1463,7 +1464,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
             if (cust_status_master[i] == "DEDC") {
               var temp = {
-                "status": "Driver Enroute\nfor Delivery",
+                "status": "Driver en route\nfor delivery",
                 "time": "",
                 "code": "",
                 "icon": 'assets/icons/enrouted_drop_inactive.png',
@@ -1489,7 +1490,15 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
           }
         }
       });
+      setState(() {});
     });
+  }
+
+  void printLongString(String text) {
+    final RegExp pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern
+        .allMatches(text)
+        .forEach((RegExpMatch match) => print(match.group(0)));
   }
 
   Future refresh() async {
@@ -2586,6 +2595,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                         child:
                                                                             Text(
                                                                           "INSPECTION\nREPORT",
+                                                                          textAlign:
+                                                                              TextAlign.center,
                                                                           style: montserratSemiBold.copyWith(
                                                                               color: white,
                                                                               fontSize: width * 0.026),
@@ -2655,6 +2666,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                         child:
                                                                             Text(
                                                                           "WORK CARD",
+                                                                          textAlign:
+                                                                              TextAlign.center,
                                                                           style: montserratSemiBold.copyWith(
                                                                               color: white,
                                                                               fontSize: width * 0.026),
@@ -2730,8 +2743,9 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                         child: temppendingjobs.length ==
                                                                                 0
                                                                             ? Text('SCHEDULE\nDELIVERY',
+                                                                                textAlign: TextAlign.center,
                                                                                 style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026))
-                                                                            : Text('PENDING\nPAYMENT', style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026)),
+                                                                            : Text('PENDING\nPAYMENT', textAlign: TextAlign.center, style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026)),
                                                                       ),
                                                                     ],
                                                                   ),
@@ -2867,6 +2881,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                         child:
                                                                             Text(
                                                                           "VIEW HISTORY",
+                                                                          textAlign:
+                                                                              TextAlign.center,
                                                                           style: montserratSemiBold.copyWith(
                                                                               color: white,
                                                                               fontSize: width * 0.026),
