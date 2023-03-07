@@ -58,6 +58,7 @@ class ImageConst {
   static const vehicle_wrkshp_icon = baseIconURl + 'vehicle_wrkshp_icon.png';
   static const work_in_icon = baseIconURl + 'work_in_icon.png';
   static const confirm_drop_icon = baseIconURl + 'confirm_drop_icon.png';
+  static const time_expired_icon = baseIconURl + 'time_expired_icon.png';
   static const ready_delivery_icon = baseIconURl + 'ready_delivery_icon.png';
   static const drop_enrouted = baseIconURl + 'drop_enrouted.png';
   static const delivery_icon = baseIconURl + 'delivery_icon.png';
