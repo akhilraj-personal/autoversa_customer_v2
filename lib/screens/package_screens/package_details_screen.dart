@@ -136,6 +136,7 @@ class PackageDetailsState extends State<PackageDetails> {
         totalCost = 0.0;
         var nonMapCount = 0;
         await getPackageDetails(req).then((value) {
+          var gs_vat = int.parse(value['settings']['gs_vat']);
           if (value['ret_data'] == "success") {
             optionList = [];
             setState(() {});
@@ -178,6 +179,9 @@ class PackageDetailsState extends State<PackageDetails> {
               } else {
                 nonMapCount++;
               }
+            }
+            if (value['settings']['gs_isvat'] == "1") {
+              totalCost = totalCost + (totalCost * (gs_vat / 100));
             }
             if (nonMapCount == 0) {
               isPriceShow = true;

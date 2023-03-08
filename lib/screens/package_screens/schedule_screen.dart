@@ -17,7 +17,6 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ScheduleScreen extends StatefulWidget {
   final Map<String, dynamic> package_id;
