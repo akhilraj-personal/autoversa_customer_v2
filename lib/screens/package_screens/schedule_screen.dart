@@ -813,7 +813,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                       Text(
                                         widget.currency +
                                             " " +
-                                            package_price.toString(),
+                                            package_price.round().toString(),
                                         style: montserratSemiBold.copyWith(
                                             color: warningcolor,
                                             fontSize: width * 0.04),
@@ -1733,8 +1733,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                               ),
                                               buttonHeight: height * 0.075,
                                               buttonPadding:
-                                                  const EdgeInsets.only(
-                                                      right: 10),
+                                                  const EdgeInsets.all(10),
                                               dropdownDecoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(15),
@@ -3383,7 +3382,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                 montserratMedium
                                                                     .copyWith(
                                                               fontSize:
-                                                                  width * 0.034,
+                                                                  width * 0.04,
                                                               color: black,
                                                             ),
                                                           ),

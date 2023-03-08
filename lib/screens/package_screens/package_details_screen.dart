@@ -454,11 +454,11 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                                   mainAxisAlignment: MainAxisAlignment.end,
                                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                                   children: <Widget>[
-                                                                                    item['cv_plate_number'] != "" && item['cv_plate_number'] != null ? Text(item['cv_plate_number'], style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034), maxLines: 2) : SizedBox(),
+                                                                                    item['cv_plate_number'] != "" && item['cv_plate_number'] != null ? Text(item['cv_plate_number'], style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.04), maxLines: 2) : SizedBox(),
                                                                                     item['cv_variant'] != "" && item['cv_variant'] != null ? Text(item['cv_make'] + " " + item['cv_model'] + " " + item['cv_variant'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034), maxLines: 5) : Text(item['cv_make'] + item['cv_model'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034), maxLines: 5),
                                                                                     Text(
                                                                                       isPriceShow ? widget.currency + " " + (totalCost.round()).toString() : "Loading",
-                                                                                      style: montserratSemiBold.copyWith(color: warningcolor, fontSize: 17),
+                                                                                      style: montserratSemiBold.copyWith(color: warningcolor, fontSize: width * 0.04),
                                                                                     ),
                                                                                   ],
                                                                                 ),
@@ -623,7 +623,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                             color:
                                                                                 black,
                                                                             fontSize:
-                                                                                width * 0.034),
+                                                                                width * 0.04),
                                                                       ),
                                                                     ),
                                                                   ],
