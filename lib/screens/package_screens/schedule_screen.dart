@@ -1734,8 +1734,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                               ),
                                               buttonHeight: height * 0.075,
                                               buttonPadding:
-                                                  const EdgeInsets.only(
-                                                      right: 10),
+                                                  const EdgeInsets.all(10),
                                               dropdownDecoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(15),

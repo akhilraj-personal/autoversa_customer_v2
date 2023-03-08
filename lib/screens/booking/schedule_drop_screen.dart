@@ -1697,8 +1697,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                         //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                                       ),
                                       isExpanded: true,
-                                      dropdownPadding:
-                                          EdgeInsets.fromLTRB(5, 8, 5, 8),
                                       hint: Text(
                                         "Select Address" + "*",
                                         style: montserratMedium.copyWith(
@@ -1706,8 +1704,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                             fontSize: width * 0.04),
                                       ),
                                       buttonHeight: height * 0.075,
-                                      buttonPadding:
-                                          const EdgeInsets.only(right: 10),
+                                      buttonPadding: const EdgeInsets.all(12),
                                       dropdownDecoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
                                       ),
