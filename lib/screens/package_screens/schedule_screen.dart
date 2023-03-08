@@ -35,7 +35,7 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class ScheduleScreenState extends State<ScheduleScreen> {
-  late double package_price = 0.0;
+  late int package_price = 0;
   late List custAddressList = [];
 
   late List citylist = [];
@@ -64,6 +64,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   var isTimeCheck;
   var freeservicedistance = 0;
   var servicedistance = 0;
+  var gs_vat = 0;
+  var gs_isvat = 0;
   bool isdroplocation = false;
   bool isLocationCheck = true;
   bool isserviceble = false;
@@ -101,7 +103,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     final prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> packdata =
         json.decode(prefs.get("booking_data").toString());
-    package_price = double.parse(packdata['package_cost'].toString());
+    package_price = packdata['package_cost'].round();
     setState(() {});
   }
 
@@ -140,12 +142,24 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     pickup_options = [];
     for (var ptemp in temppickup_options) {
       var tempCost = '0';
+      var min_cost = ptemp['pk_min_cost'];
       freeFlag
           ? ptemp['pk_freeFlag'] != "1"
               ? tempCost =
                   (int.parse(ptemp['pk_cost']) * totalDistance).toString()
               : tempCost = "0"
           : tempCost = (int.parse(ptemp['pk_cost']) * totalDistance).toString();
+      if (gs_isvat == 1) {
+        tempCost =
+            ((int.parse(tempCost) + (int.parse(tempCost) * (gs_vat / 100)))
+                    .round())
+                .toString();
+        min_cost =
+            ((int.parse(min_cost) + (int.parse(min_cost) * (gs_vat / 100)))
+                    .round())
+                .toString();
+        ;
+      }
       var temp = {
         "pk_id":
             ptemp['pk_freeFlag'] == "1" && rangestatus ? "0" : ptemp['pk_id'],
@@ -153,15 +167,15 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         "pk_cost": ptemp['pk_freeFlag'] == "1" && rangestatus
             ? "Not Available"
             : serviceAvailability
-                ? (int.parse(tempCost) < int.parse(ptemp['pk_min_cost']) &&
+                ? (int.parse(tempCost) < int.parse(min_cost) &&
                         ptemp['pk_freeFlag'] != "1")
-                    ? (widget.currency + " " + ptemp['pk_min_cost'])
+                    ? (widget.currency + " " + min_cost)
                     : (widget.currency + " " + tempCost)
                 : message,
-        "pk_cost_value": int.parse(tempCost) < int.parse(ptemp['pk_min_cost'])
+        "pk_cost_value": int.parse(tempCost) < int.parse(min_cost)
             ? ptemp['pk_freeFlag'] == "1"
                 ? '0'
-                : (ptemp['pk_min_cost'])
+                : (min_cost)
             : tempCost
       };
       pickup_options.add(temp);
@@ -314,6 +328,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       //   pickupaddresschange(address_index);
       // }
       await getPickupOptions().then((value) {
+        gs_vat = int.parse(value['settings']['gs_vat']);
+        gs_isvat = int.parse(value['settings']['gs_isvat']);
+        print(value['settings']['gs_vat']);
         freeservicedistance =
             int.parse(value['settings']['gs_freeservicearea']);
         servicedistance = int.parse(value['settings']['gs_service_area']);
@@ -813,7 +830,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                       Text(
                                         widget.currency +
                                             " " +
-                                            package_price.round().toString(),
+                                            package_price.toString(),
                                         style: montserratSemiBold.copyWith(
                                             color: warningcolor,
                                             fontSize: width * 0.04),
