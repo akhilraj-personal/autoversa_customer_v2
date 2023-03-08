@@ -1577,13 +1577,13 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 style: montserratSemiBold.copyWith(
                     color:
                         isActive ? Colors.black : Colors.grey.withOpacity(0.5),
-                    fontSize: 14)),
+                    fontSize: width * 0.034)),
             Text(time!,
                 overflow: TextOverflow.clip,
                 style: montserratRegular.copyWith(
                     color:
                         isActive ? Colors.black : Colors.grey.withOpacity(0.5),
-                    fontSize: 12)),
+                    fontSize: width * 0.03)),
           ],
         ),
         SizedBox(height: 50),
@@ -1737,7 +1737,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: black,
-                                                      fontSize: 14)),
+                                                      fontSize: width * 0.04)),
                                         ),
                                       ),
                                     ],

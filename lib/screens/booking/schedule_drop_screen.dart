@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +15,7 @@ import '../../constant/text_style.dart';
 import '../../generated/l10n.dart';
 import '../../services/post_auth_services.dart';
 import '../../utils/AppWidgets.dart';
+import '../../utils/app_validations.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/common_utils.dart';
 import 'booking_status_flow_page.dart';
@@ -38,7 +41,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   bool isLoaded = false,
       isSubmitted = false,
       isExpanded = false,
-      isProceeding = false;
+      isProceeding = false,
+      isgooglemap = false;
 
   List custAddressList = [];
   List timeslots = [];
@@ -61,6 +65,20 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   var isTimeCheck;
   var pending_payment = 0.00;
   var new_selected_drop = 0;
+  var emirates = 0, city = 0;
+  var Statelat = "24.3547";
+  var Statelong = "54.5020";
+  var address = "";
+  var landmark = "";
+  var AddressType = "Home";
+
+  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormFieldState> drop_city = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> drop_area = GlobalKey<FormFieldState>();
+  final TextEditingController textEditingController = TextEditingController();
+  FocusNode addressFocus = FocusNode();
+  FocusNode landmarkFocusNode = FocusNode();
+  bool isDefaultAddressChecked = true;
 
   DateTime selectedDate = DateTime.now();
 
@@ -145,6 +163,95 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
         pickup_options.add(temp);
         setState(() {});
       }
+    }
+  }
+
+  newDropAddress() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      Map req = {"customerId": prefs.getString('cust_id')};
+      custAddressList = [];
+      pickup_options = [];
+      SelectAddressList = <String?>["Select Address"];
+      selected_address = 0;
+      setState(() {});
+      await getCustomerAddresses(req).then((value) {
+        if (value['ret_data'] == "success") {
+          custAddressList = value['cust_addressList'];
+          var ind = 1;
+          for (var add in value['cust_addressList']) {
+            SelectAddressList.add("#" +
+                ind.toString() +
+                ". " +
+                add['cad_address'] +
+                ", " +
+                add['city_name'] +
+                ", " +
+                add['state_name'] +
+                ", " +
+                add['country_code']);
+            ind++;
+          }
+          setState(() {});
+        }
+      });
+      for (var state in citylist) {
+        SelectCityList.add(state['state_name']);
+      }
+      selected_address = SelectAddressList.length - 1;
+      new_selected_drop =
+          int.parse(custAddressList[SelectAddressList.length - 2]['cad_id']);
+      var serviceDistance = int.parse(
+          custAddressList[SelectAddressList.length - 2]['cad_distance']);
+      print(custAddressList[SelectAddressList.length - 2]['cad_address']);
+      var new_distance = serviceDistance - int.parse(selected_distance);
+      if (new_distance < 0) {
+        new_distance = 0;
+      }
+      for (var ptype in temppickup_options) {
+        var tempCost = '0';
+        ptype['pk_id'] == currentDropType['pk_id'] && new_distance == 0
+            ? tempCost = "0"
+            : ptype['pk_freeFlag'] != "1"
+                ? tempCost =
+                    (double.parse(ptype['pk_cost']) * (new_distance)).toString()
+                : tempCost = "0";
+        if (ptype['pk_id'] == currentDropType['pk_id']) {
+          pending_payment = double.parse(tempCost);
+        }
+        var temp = {
+          "pk_id": ptype['pk_freeFlag'] == "1" &&
+                  serviceDistance > freeservicedistance
+              ? "0"
+              : ptype['pk_id'],
+          "pk_name": ptype['pk_name'],
+          "pk_cost":
+              ptype['pk_id'] == currentDropType['pk_id'] && new_distance == 0
+                  ? "PAID"
+                  : ptype['pk_freeFlag'] == "1" &&
+                          serviceDistance > freeservicedistance
+                      ? "Not Available"
+                      : (double.parse(tempCost) <
+                                  double.parse(ptype['pk_min_cost']) &&
+                              ptype['pk_freeFlag'] != "1")
+                          ? ("AED" + " " + ptype['pk_min_cost'])
+                          : ("AED" + " " + tempCost),
+          "pk_cost_value": ptype['pk_id'] == currentDropType['pk_id']
+              ? "0"
+              : double.parse(tempCost) < double.parse(ptype['pk_min_cost'])
+                  ? ptype['pk_freeFlag'] == "1"
+                      ? '0'
+                      : (ptype['pk_min_cost'])
+                  : tempCost
+        };
+        pickup_options.add(temp);
+        setState(() {});
+      }
+    } catch (e) {
+      setState(() => isSubmitted = false);
+      print(e.toString());
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: Colors.white);
     }
   }
 
@@ -502,7 +609,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                           .copyWith(
                                                               color:
                                                                   Colors.black,
-                                                              fontSize: 14)),
+                                                              fontSize: width *
+                                                                  0.04)),
                                                 ),
                                               ),
                                             ],
@@ -601,7 +709,895 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                               ),
                             ),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Completer<GoogleMapController> _controller =
+                                    Completer();
+                                showModalBottomSheet(
+                                  enableDrag: true,
+                                  isDismissible: true,
+                                  isScrollControlled: true,
+                                  context: context,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (builder) {
+                                    return StatefulBuilder(builder: (BuildContext
+                                            context,
+                                        StateSetter
+                                            setBottomState /*You can rename this!*/) {
+                                      CameraPosition _initialPosition =
+                                          CameraPosition(
+                                              target: LatLng(24.3547, 54.5020),
+                                              zoom: 13);
+                                      getcitylist(data) async {
+                                        if (SelectCityList.indexOf(data) > 0) {
+                                          var temp = citylist[
+                                              SelectCityList.indexOf(data) - 1];
+                                          emirates =
+                                              int.parse(temp['state_id']);
+                                          Map state = {
+                                            "stateId": temp['state_id'],
+                                          };
+                                          CameraPosition _kLake =
+                                              CameraPosition(
+                                            target: LatLng(
+                                                double.parse(
+                                                    temp['state_lattitude']),
+                                                double.parse(
+                                                    temp['state_longitude'])),
+                                            zoom: 13.4746,
+                                          );
+                                          final GoogleMapController controller =
+                                              await _controller.future;
+                                          controller.moveCamera(
+                                              CameraUpdate.newCameraPosition(
+                                                  _kLake));
+                                          setBottomState(() {
+                                            Statelat = temp['state_lattitude'];
+                                            Statelong = temp['state_longitude'];
+                                            SelectAreaList = <String?>[
+                                              "Select Area"
+                                            ];
+                                            drop_area.currentState?.reset();
+                                          });
+                                          SelectAreaList.length = 1;
+                                          await getCityList(state)
+                                              .then((value) {
+                                            if (value['ret_data'] ==
+                                                "success") {
+                                              setBottomState(() {
+                                                areaList = [];
+                                                SelectAreaList = <String?>[
+                                                  "Select Area"
+                                                ];
+                                              });
+                                              areaList = value['citylist'];
+                                              for (var city
+                                                  in value['citylist']) {
+                                                SelectAreaList.add(
+                                                    city['city_name']);
+                                              }
+                                            }
+                                          });
+                                          setBottomState(() {});
+                                        }
+                                      }
+
+                                      getarealist(data) async {
+                                        // areaKey.currentState!.reset();
+                                        if (SelectAreaList.indexOf(
+                                                data.toString()) >
+                                            0) {
+                                          setState(() {});
+                                          var temp = areaList[
+                                              SelectAreaList.indexOf(
+                                                      data.toString()) -
+                                                  1];
+                                          CameraPosition _kLake =
+                                              CameraPosition(
+                                            target: LatLng(
+                                                double.parse(
+                                                    temp['city_lattitude']),
+                                                double.parse(
+                                                    temp['city_longitude'])),
+                                            zoom: 15.4746,
+                                          );
+                                          final GoogleMapController controller =
+                                              await _controller.future;
+                                          controller.moveCamera(
+                                              CameraUpdate.newCameraPosition(
+                                                  _kLake));
+                                          setState(() {
+                                            city = int.parse(temp['city_id']);
+                                            Statelat = temp['city_lattitude'];
+                                            Statelong = temp['city_longitude'];
+                                          });
+                                        }
+                                      }
+
+                                      return DraggableScrollableSheet(
+                                        initialChildSize: 0.6,
+                                        minChildSize: 0.2,
+                                        maxChildSize: 1,
+                                        builder: (context, scrollController) {
+                                          return Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 0),
+                                            decoration: BoxDecoration(
+                                              color: context.cardColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              boxShadow: defaultBoxShadow(),
+                                            ),
+                                            child: SingleChildScrollView(
+                                              controller: scrollController,
+                                              child: Form(
+                                                key: _formKey,
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    AnimatedContainer(
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                              8, 8, 8, 8),
+                                                      width: width * 1.85,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            context.cardColor,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16),
+                                                        boxShadow:
+                                                            defaultBoxShadow(),
+                                                      ),
+                                                      duration:
+                                                          1000.milliseconds,
+                                                      curve: Curves
+                                                          .linearToEaseOut,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: <Widget>[
+                                                          Container(
+                                                            child: Stack(
+                                                              children: [
+                                                                Container(
+                                                                  margin:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              8),
+                                                                  decoration: BoxDecoration(
+                                                                      color: context
+                                                                          .cardColor,
+                                                                      borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(8))),
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Column(
+                                                                        children: <
+                                                                            Widget>[
+                                                                          SizedBox(
+                                                                            width:
+                                                                                double.infinity,
+                                                                            child:
+                                                                                Container(
+                                                                              child: Text(
+                                                                                "Select City" + "*",
+                                                                                textAlign: TextAlign.left,
+                                                                                style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      8.height,
+                                                                      DropdownButtonFormField2(
+                                                                        key:
+                                                                            drop_city,
+                                                                        value:
+                                                                            SelectCityList[0],
+                                                                        autovalidateMode:
+                                                                            AutovalidateMode.onUserInteraction,
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          //Add isDense true and zero Padding.
+                                                                          //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                                                          isDense:
+                                                                              true,
+                                                                          contentPadding:
+                                                                              EdgeInsets.zero,
+                                                                          focusedBorder:
+                                                                              OutlineInputBorder(
+                                                                            // width: 0.0 produces a thin "hairline" border
+                                                                            borderSide:
+                                                                                const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(12),
+                                                                          ),
+                                                                          focusedErrorBorder:
+                                                                              OutlineInputBorder(
+                                                                            // width: 0.0 produces a thin "hairline" border
+                                                                            borderSide:
+                                                                                const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(12),
+                                                                          ),
+                                                                          enabledBorder:
+                                                                              OutlineInputBorder(
+                                                                            // width: 0.0 produces a thin "hairline" border
+                                                                            borderSide:
+                                                                                const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(12),
+                                                                          ),
+                                                                          errorBorder:
+                                                                              OutlineInputBorder(
+                                                                            // width: 0.0 produces a thin "hairline" border
+                                                                            borderSide:
+                                                                                const BorderSide(color: const Color(0xfffff), width: 0.0),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(12),
+                                                                          ),
+                                                                          errorStyle:
+                                                                              TextStyle(
+                                                                            fontSize:
+                                                                                12,
+                                                                            color:
+                                                                                warningcolor,
+                                                                          ),
+                                                                          //Add more decoration as you want here
+                                                                          //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                                                        ),
+                                                                        isExpanded:
+                                                                            true,
+                                                                        hint:
+                                                                            Text(
+                                                                          "Select City" +
+                                                                              "*",
+                                                                          style: montserratMedium.copyWith(
+                                                                              color: Colors.black,
+                                                                              fontSize: width * 0.04),
+                                                                        ),
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        buttonHeight:
+                                                                            height *
+                                                                                0.075,
+                                                                        buttonPadding: const EdgeInsets.only(
+                                                                            left:
+                                                                                20,
+                                                                            right:
+                                                                                10),
+                                                                        dropdownDecoration:
+                                                                            BoxDecoration(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(15),
+                                                                        ),
+                                                                        items: SelectCityList.map((String?
+                                                                            value) {
+                                                                          return DropdownMenuItem<
+                                                                              String>(
+                                                                            value:
+                                                                                value,
+                                                                            child:
+                                                                                Text(
+                                                                              value!,
+                                                                              style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
+                                                                            ),
+                                                                          );
+                                                                        }).toList(),
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          setBottomState(
+                                                                              () {
+                                                                            isgooglemap =
+                                                                                true;
+                                                                          });
+                                                                          getcitylist(
+                                                                              value);
+                                                                        },
+                                                                      ),
+                                                                      8.height,
+                                                                      Column(
+                                                                        children: <
+                                                                            Widget>[
+                                                                          SizedBox(
+                                                                            width:
+                                                                                double.infinity,
+                                                                            child:
+                                                                                Container(
+                                                                              child: Text(
+                                                                                "Select Area" + "*",
+                                                                                textAlign: TextAlign.left,
+                                                                                style: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      8.height,
+                                                                      DropdownButtonFormField2(
+                                                                        key:
+                                                                            drop_area,
+                                                                        value:
+                                                                            SelectAreaList[0],
+                                                                        autovalidateMode:
+                                                                            AutovalidateMode.onUserInteraction,
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          //Add isDense true and zero Padding.
+                                                                          //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                                                          isDense:
+                                                                              true,
+                                                                          contentPadding:
+                                                                              EdgeInsets.zero,
+                                                                          focusedBorder:
+                                                                              OutlineInputBorder(
+                                                                            // width: 0.0 produces a thin "hairline" border
+                                                                            borderSide:
+                                                                                const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(12),
+                                                                          ),
+                                                                          focusedErrorBorder:
+                                                                              OutlineInputBorder(
+                                                                            // width: 0.0 produces a thin "hairline" border
+                                                                            borderSide:
+                                                                                const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(12),
+                                                                          ),
+                                                                          enabledBorder:
+                                                                              OutlineInputBorder(
+                                                                            // width: 0.0 produces a thin "hairline" border
+                                                                            borderSide:
+                                                                                const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(12),
+                                                                          ),
+                                                                          errorBorder:
+                                                                              OutlineInputBorder(
+                                                                            // width: 0.0 produces a thin "hairline" border
+                                                                            borderSide:
+                                                                                const BorderSide(color: const Color(0xfffff), width: 0.0),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(12),
+                                                                          ),
+                                                                          errorStyle:
+                                                                              TextStyle(
+                                                                            fontSize:
+                                                                                12,
+                                                                            color:
+                                                                                warningcolor,
+                                                                          ),
+                                                                          //Add more decoration as you want here
+                                                                          //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                                                        ),
+                                                                        isExpanded:
+                                                                            true,
+                                                                        hint:
+                                                                            Text(
+                                                                          "Select Area" +
+                                                                              "*",
+                                                                          style: montserratMedium.copyWith(
+                                                                              color: Colors.black,
+                                                                              fontSize: width * 0.04),
+                                                                        ),
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        buttonHeight:
+                                                                            height *
+                                                                                0.075,
+                                                                        buttonPadding: const EdgeInsets.only(
+                                                                            left:
+                                                                                20,
+                                                                            right:
+                                                                                10),
+                                                                        dropdownDecoration:
+                                                                            BoxDecoration(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(15),
+                                                                        ),
+                                                                        items: SelectAreaList.map((String?
+                                                                            value) {
+                                                                          return DropdownMenuItem<
+                                                                              String>(
+                                                                            value:
+                                                                                value,
+                                                                            child:
+                                                                                Text(value!, style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04)),
+                                                                          );
+                                                                        }).toList(),
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          getarealist(
+                                                                              value);
+                                                                        },
+                                                                        searchController:
+                                                                            textEditingController,
+                                                                        searchInnerWidgetHeight:
+                                                                            height *
+                                                                                0.07,
+                                                                        searchInnerWidget:
+                                                                            Container(
+                                                                          height:
+                                                                              height * 0.07,
+                                                                          padding:
+                                                                              const EdgeInsets.only(
+                                                                            top:
+                                                                                8,
+                                                                            bottom:
+                                                                                4,
+                                                                            right:
+                                                                                8,
+                                                                            left:
+                                                                                8,
+                                                                          ),
+                                                                          child:
+                                                                              TextFormField(
+                                                                            expands:
+                                                                                true,
+                                                                            maxLines:
+                                                                                null,
+                                                                            controller:
+                                                                                textEditingController,
+                                                                            decoration:
+                                                                                InputDecoration(
+                                                                              isDense: true,
+                                                                              contentPadding: const EdgeInsets.symmetric(
+                                                                                horizontal: 10,
+                                                                                vertical: 8,
+                                                                              ),
+                                                                              hintText: 'Search area...',
+                                                                              hintStyle: const TextStyle(fontSize: 12),
+                                                                              border: OutlineInputBorder(
+                                                                                borderRadius: BorderRadius.circular(12),
+                                                                                borderSide: BorderSide(color: syanColor, width: 0.0),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        searchMatchFn:
+                                                                            (item,
+                                                                                searchValue) {
+                                                                          return (item
+                                                                              .value
+                                                                              .toString()
+                                                                              .toLowerCase()
+                                                                              .contains(searchValue.toLowerCase()));
+                                                                        },
+                                                                        //This to clear the search value when you close the menu
+                                                                        onMenuStateChange:
+                                                                            (isOpen) {
+                                                                          if (!isOpen) {
+                                                                            textEditingController.clear();
+                                                                          }
+                                                                        },
+                                                                      ),
+                                                                      8.height,
+                                                                      Column(
+                                                                        children: <
+                                                                            Widget>[
+                                                                          SizedBox(
+                                                                            width:
+                                                                                double.infinity,
+                                                                            child:
+                                                                                Container(
+                                                                              child: Text(
+                                                                                "Address",
+                                                                                textAlign: TextAlign.left,
+                                                                                style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      8.height,
+                                                                      Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(2),
+                                                                        child:
+                                                                            Container(
+                                                                          decoration: const BoxDecoration(
+                                                                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                                                                              color: white),
+                                                                          child:
+                                                                              TextFormField(
+                                                                            keyboardType:
+                                                                                TextInputType.text,
+                                                                            minLines:
+                                                                                1,
+                                                                            maxLines:
+                                                                                2,
+                                                                            maxLength:
+                                                                                80,
+                                                                            autovalidateMode:
+                                                                                AutovalidateMode.onUserInteraction,
+                                                                            style:
+                                                                                montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
+                                                                            onChanged:
+                                                                                (value) {
+                                                                              setState(() {
+                                                                                address = value;
+                                                                              });
+                                                                            },
+                                                                            validator:
+                                                                                (value) {
+                                                                              return addressValidation(value, context);
+                                                                            },
+                                                                            onFieldSubmitted:
+                                                                                (value) {
+                                                                              FocusScope.of(context).requestFocus(landmarkFocusNode);
+                                                                            },
+                                                                            focusNode:
+                                                                                addressFocus,
+                                                                            textCapitalization:
+                                                                                TextCapitalization.sentences,
+                                                                            decoration: InputDecoration(
+                                                                                counterText: "",
+                                                                                hintText: "Address",
+                                                                                hintStyle: montserratMedium.copyWith(color: greyColor, fontSize: width * 0.04),
+                                                                                focusedBorder: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: black, width: 0.5),
+                                                                                  borderRadius: BorderRadius.circular(10),
+                                                                                ),
+                                                                                enabledBorder: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: black, width: 0.5),
+                                                                                  borderRadius: BorderRadius.circular(10),
+                                                                                )),
+                                                                          ),
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                        ),
+                                                                      ),
+                                                                      12.height,
+                                                                      Column(
+                                                                        children: <
+                                                                            Widget>[
+                                                                          SizedBox(
+                                                                            width:
+                                                                                double.infinity,
+                                                                            child:
+                                                                                Container(
+                                                                              child: Text(
+                                                                                "Building Name/Flat No",
+                                                                                textAlign: TextAlign.left,
+                                                                                style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      8.height,
+                                                                      Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(0),
+                                                                        child:
+                                                                            Container(
+                                                                          decoration: const BoxDecoration(
+                                                                              borderRadius: BorderRadius.all(Radius.circular(16)),
+                                                                              color: white),
+                                                                          child: TextFormField(
+                                                                              keyboardType: TextInputType.multiline,
+                                                                              minLines: 1,
+                                                                              maxLength: 50,
+                                                                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                                              style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
+                                                                              onChanged: (value) {
+                                                                                if (value != "") {
+                                                                                  var ret = buildingValidation(value);
+                                                                                  if (ret == null) {
+                                                                                    setState(() {
+                                                                                      landmark = value;
+                                                                                    });
+                                                                                  } else {
+                                                                                    showCustomToast(context, "Enter valid details", bgColor: errorcolor, textColor: white);
+                                                                                  }
+                                                                                }
+                                                                              },
+                                                                              textCapitalization: TextCapitalization.sentences,
+                                                                              decoration: InputDecoration(
+                                                                                  counterText: "",
+                                                                                  hintText: "Building Name/Flat No",
+                                                                                  hintStyle: montserratMedium.copyWith(color: greyColor, fontSize: width * 0.04),
+                                                                                  focusedBorder: OutlineInputBorder(
+                                                                                    borderSide: const BorderSide(color: black, width: 0.5),
+                                                                                    borderRadius: BorderRadius.circular(10),
+                                                                                  ),
+                                                                                  enabledBorder: OutlineInputBorder(
+                                                                                    borderSide: const BorderSide(color: black, width: 0.5),
+                                                                                    borderRadius: BorderRadius.circular(10),
+                                                                                  ))),
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                        ),
+                                                                      ),
+                                                                      8.height,
+                                                                      Wrap(
+                                                                          crossAxisAlignment: WrapCrossAlignment
+                                                                              .center,
+                                                                          alignment: WrapAlignment
+                                                                              .start,
+                                                                          direction:
+                                                                              Axis.horizontal,
+                                                                          children: [
+                                                                            Theme(
+                                                                              data: Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
+                                                                              child: Radio(
+                                                                                value: 'Home',
+                                                                                groupValue: AddressType,
+                                                                                fillColor: MaterialStateColor.resolveWith((states) => syanColor),
+                                                                                onChanged: (dynamic value) {
+                                                                                  setBottomState(() {
+                                                                                    AddressType = value;
+                                                                                  });
+                                                                                },
+                                                                              ),
+                                                                            ),
+                                                                            Text("Home",
+                                                                                style: montserratMedium.copyWith(fontSize: width * 0.034, color: black)),
+                                                                            Theme(
+                                                                              data: Theme.of(context).copyWith(
+                                                                                unselectedWidgetColor: syanColor,
+                                                                              ),
+                                                                              child: Radio(
+                                                                                value: 'Office',
+                                                                                groupValue: AddressType,
+                                                                                fillColor: MaterialStateColor.resolveWith((states) => syanColor),
+                                                                                onChanged: (dynamic value) {
+                                                                                  setBottomState(() {
+                                                                                    AddressType = value;
+                                                                                  });
+                                                                                },
+                                                                              ),
+                                                                            ),
+                                                                            Text("Office",
+                                                                                style: montserratMedium.copyWith(fontSize: width * 0.034, color: black)),
+                                                                            Theme(
+                                                                              data: Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
+                                                                              child: Radio(
+                                                                                value: 'Other',
+                                                                                groupValue: AddressType,
+                                                                                fillColor: MaterialStateColor.resolveWith((states) => syanColor),
+                                                                                onChanged: (dynamic value) {
+                                                                                  setBottomState(() {
+                                                                                    AddressType = value;
+                                                                                  });
+                                                                                },
+                                                                              ),
+                                                                            ),
+                                                                            Text("Other",
+                                                                                style: montserratMedium.copyWith(fontSize: width * 0.034, color: black)),
+                                                                          ]),
+                                                                      8.height,
+                                                                      isgooglemap
+                                                                          ? Column(
+                                                                              children: <Widget>[
+                                                                                SizedBox(
+                                                                                  width: double.infinity,
+                                                                                  child: Container(
+                                                                                    child: Text(
+                                                                                      "Tap to mark",
+                                                                                      textAlign: TextAlign.left,
+                                                                                      style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            )
+                                                                          : Row(),
+                                                                      8.height,
+                                                                      isgooglemap
+                                                                          ? isMobile
+                                                                              ? Container(
+                                                                                  height: 130,
+                                                                                  width: width,
+                                                                                  color: white,
+                                                                                  child: GoogleMap(
+                                                                                    initialCameraPosition: _initialPosition,
+                                                                                    myLocationButtonEnabled: true,
+                                                                                    onMapCreated: (GoogleMapController controller) {
+                                                                                      _controller.complete(controller);
+                                                                                    },
+                                                                                  ),
+                                                                                )
+                                                                              : Container(
+                                                                                  color: Colors.transparent,
+                                                                                  height: context.height(),
+                                                                                  alignment: Alignment.center,
+                                                                                  width: width,
+                                                                                  child: Text("Google Map", style: montserratRegular.copyWith(fontSize: width * 0.034)),
+                                                                                )
+                                                                          : Row(),
+                                                                      8.height,
+                                                                      Row(
+                                                                        children: <
+                                                                            Widget>[
+                                                                          Checkbox(
+                                                                            value:
+                                                                                isDefaultAddressChecked,
+                                                                            fillColor:
+                                                                                MaterialStateProperty.all(syanColor),
+                                                                            onChanged:
+                                                                                (value) {
+                                                                              setBottomState(
+                                                                                () {
+                                                                                  isDefaultAddressChecked = value!;
+                                                                                },
+                                                                              );
+                                                                            },
+                                                                          ),
+                                                                          Text(
+                                                                            "Set as default address",
+                                                                            textAlign:
+                                                                                TextAlign.start,
+                                                                            overflow:
+                                                                                TextOverflow.clip,
+                                                                            style:
+                                                                                montserratMedium.copyWith(
+                                                                              fontSize: 12,
+                                                                              color: black,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      26.height,
+                                                                      GestureDetector(
+                                                                        onTap:
+                                                                            () async {
+                                                                          if (emirates ==
+                                                                              0) {
+                                                                            setState(() =>
+                                                                                isSubmitted = false);
+                                                                            showCustomToast(context,
+                                                                                "Select City",
+                                                                                bgColor: errorcolor,
+                                                                                textColor: white);
+                                                                          } else if (city ==
+                                                                              0) {
+                                                                            setState(() =>
+                                                                                isSubmitted = false);
+                                                                            showCustomToast(context,
+                                                                                "Select Area",
+                                                                                bgColor: errorcolor,
+                                                                                textColor: white);
+                                                                          } else if (address ==
+                                                                              "") {
+                                                                            setState(() =>
+                                                                                isSubmitted = false);
+                                                                            showCustomToast(context,
+                                                                                "Enter Address",
+                                                                                bgColor: errorcolor,
+                                                                                textColor: white);
+                                                                          } else {
+                                                                            final prefs =
+                                                                                await SharedPreferences.getInstance();
+                                                                            try {
+                                                                              setState(() => isSubmitted = true);
+                                                                              await Future.delayed(Duration(milliseconds: 1000));
+                                                                              Map req = {
+                                                                                "countryId": 1,
+                                                                                "stateId": emirates,
+                                                                                "cityId": city,
+                                                                                "address": address,
+                                                                                "landmark": landmark,
+                                                                                "add_type": AddressType,
+                                                                                "lattitude": Statelat,
+                                                                                "longitude": Statelong,
+                                                                                "cust_id": prefs.getString("cust_id")
+                                                                              };
+                                                                              await saveCustomerAddress(req).then((value) {
+                                                                                if (value['ret_data'] == "success") {
+                                                                                  emirates = 0;
+                                                                                  city = 0;
+                                                                                  address = "";
+                                                                                  landmark = "";
+                                                                                  isSubmitted = false;
+                                                                                  AddressType = "Home";
+                                                                                  setBottomState(() {
+                                                                                    drop_city.currentState?.reset();
+                                                                                    drop_area.currentState?.reset();
+                                                                                    SelectCityList = <String?>[
+                                                                                      "Select City"
+                                                                                    ];
+                                                                                    SelectAreaList = <String?>[
+                                                                                      "Select Area"
+                                                                                    ];
+                                                                                  });
+                                                                                  setState(() {});
+                                                                                  newDropAddress();
+                                                                                  setState(() => isgooglemap = false);
+                                                                                  setState(() => isSubmitted = false);
+                                                                                } else {
+                                                                                  setState(() => isSubmitted = false);
+                                                                                }
+                                                                              });
+                                                                            } catch (e) {
+                                                                              setState(() => isSubmitted = false);
+                                                                              print(e.toString());
+                                                                            }
+                                                                            finish(context);
+                                                                          }
+                                                                        },
+                                                                        child:
+                                                                            Stack(
+                                                                          alignment:
+                                                                              Alignment.bottomCenter,
+                                                                          children: [
+                                                                            Container(
+                                                                              height: height * 0.045,
+                                                                              width: height * 0.37,
+                                                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), boxShadow: [
+                                                                                BoxShadow(blurRadius: 16, color: syanColor.withOpacity(.6), spreadRadius: 0, blurStyle: BlurStyle.outer, offset: Offset(0, 0)),
+                                                                              ]),
+                                                                            ),
+                                                                            Container(
+                                                                              height: height * 0.075,
+                                                                              width: height * 0.45,
+                                                                              alignment: Alignment.center,
+                                                                              decoration: BoxDecoration(
+                                                                                shape: BoxShape.rectangle,
+                                                                                borderRadius: BorderRadius.all(Radius.circular(14)),
+                                                                                gradient: LinearGradient(
+                                                                                  begin: Alignment.topLeft,
+                                                                                  end: Alignment.bottomRight,
+                                                                                  colors: [
+                                                                                    syanColor,
+                                                                                    lightblueColor,
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              child: !isSubmitted
+                                                                                  ? Text(
+                                                                                      ST.of(context).save,
+                                                                                      style: montserratSemiBold.copyWith(color: Colors.white),
+                                                                                    )
+                                                                                  : Row(
+                                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                                      children: [
+                                                                                        Transform.scale(
+                                                                                          scale: 0.7,
+                                                                                          child: CircularProgressIndicator(
+                                                                                            color: white,
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    8),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    });
+                                  },
+                                ).whenComplete(() {
+                                  setState(() => isgooglemap = false);
+                                });
+                              },
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -701,6 +1697,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                         //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                                       ),
                                       isExpanded: true,
+                                      dropdownPadding:
+                                          EdgeInsets.fromLTRB(5, 8, 5, 8),
                                       hint: Text(
                                         "Select Address" + "*",
                                         style: montserratMedium.copyWith(
@@ -835,7 +1833,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                           color:
                                                               Colors.grey[350],
                                                           fontSize:
-                                                              width * 0.034),
+                                                              width * 0.04),
                                                 )
                                               : Text(
                                                   pickup_options[index]
@@ -847,7 +1845,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                       montserratMedium.copyWith(
                                                           color: Colors.black,
                                                           fontSize:
-                                                              width * 0.034),
+                                                              width * 0.04),
                                                 ),
                                         ]),
                                     pickup_options[index]['pk_id'] == "0"
@@ -930,13 +1928,13 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                             },
                             title: Text(
                               'Select your Drop date',
-                              style: montserratSemiBold.copyWith(
-                                  color: Colors.black, fontSize: width * 0.034),
+                              style: montserratMedium.copyWith(
+                                  color: Colors.black, fontSize: width * 0.04),
                             ),
                             subtitle: Text(
                               DateFormat('dd-MM-yyyy').format(selectedDate),
-                              style: montserratMedium.copyWith(
-                                  color: Colors.black, fontSize: width * 0.032),
+                              style: montserratSemiBold.copyWith(
+                                  color: Colors.black, fontSize: width * 0.04),
                             ),
                           )),
                       SizedBox(
@@ -968,17 +1966,17 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                 child: Icon(Icons.av_timer_outlined,
                                     color: white, size: 28),
                               )),
-                          title: Text("Select a Time Slot",
+                          title: Text("Select a Time Slot" + "*",
                               overflow: TextOverflow.clip,
-                              style: montserratSemiBold.copyWith(
-                                  color: black, fontSize: width * 0.034),
+                              style: montserratMedium.copyWith(
+                                  color: black, fontSize: width * 0.04),
                               maxLines: 3),
                           subtitle: Text(
                             selected_timeslot == ""
-                                ? "Select a Time Slot" + "*"
+                                ? "Time Slot"
                                 : selected_timeslot,
-                            style: montserratMedium.copyWith(
-                                color: black, fontSize: width * 0.032),
+                            style: montserratSemiBold.copyWith(
+                                color: black, fontSize: width * 0.04),
                           ),
                           textColor: black,
                           trailing: isExpanded
