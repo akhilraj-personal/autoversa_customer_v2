@@ -137,10 +137,11 @@ class SummeryPageState extends State<SummeryPage> {
         "expenses": [],
         "packid": packdata['package_id'],
         "packtype": packdata['packtype'],
-        "packprice": packdata['package_cost'],
-        "gs_vat": packdata['gs_vat'],
-        "gs_isvat": packdata['gs_isvat'],
-        "total_amount": totalamount,
+        "packprice": (packdata['package_cost'] - packdata['pack_vat'])
+            .toStringAsFixed(2),
+        "pack_vat": packdata['pack_vat'].toStringAsFixed(2),
+        "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
+        "total_amount": totalamount.round(),
         "advance": "0",
         "discount": "0",
         "bk_branchid": 1,
@@ -148,37 +149,10 @@ class SummeryPageState extends State<SummeryPage> {
         "slot": packdata['selected_timeid'],
         "pickuptype": packdata['pick_type_id'],
         "sourcetype": "MOB",
-        "bk_pickup_cost": packdata['pick_up_price'],
+        "bk_pickup_cost":
+            (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
+                .toStringAsFixed(2),
       });
-      Map req = {
-        'bookingattachment': audio,
-        "custId": prefs.getString('cust_id'),
-        "cust_name": prefs.getString('name'),
-        "vehId": packdata['vehicle_id'],
-        "bkurl": packdata['audio_location'],
-        "pickupaddress": packdata['pick_up_location_id'],
-        "dropaddress": packdata['drop_location_id'],
-        "bookingdate": packdata['selected_date'],
-        "sub_packages": packdata['sub_packages'],
-        "gs_vat": packdata['gs_vat'],
-        "gs_isvat": packdata['gs_isvat'],
-        "services": packdata['services'],
-        "expenses": [],
-        "packid": packdata['package_id'],
-        "packtype": packdata['packtype'],
-        "packprice": packdata['package_cost'],
-        "total_amount": totalamount,
-        "advance": "0",
-        "discount": "0",
-        "bk_branchid": 1,
-        'complaint': additionalcommentsController.text.toString(),
-        "slot": packdata['selected_timeid'],
-        "pickuptype": packdata['pick_type_id'],
-        "sourcetype": "MOB",
-        "bk_pickup_cost": packdata['pick_up_price'],
-      };
-      print("BKKKKKKKKKKKK");
-      print(req);
       String? token = prefs.getString('token');
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';
@@ -282,7 +256,7 @@ class SummeryPageState extends State<SummeryPage> {
       Map<String, dynamic> booking = {
         'custId': prefs.getString('cust_id'),
         'book_id': bookId,
-        'tot_amount': totalamount,
+        'tot_amount': totalamount.round(),
         'trxn_id': trnxId,
         'audiofile': audiofile,
         'slot': slot,
@@ -561,7 +535,8 @@ class SummeryPageState extends State<SummeryPage> {
                                         packdata['package_cost'] != 0
                                             ? widget.currency +
                                                 " " +
-                                                packdata['package_cost']
+                                                (packdata['package_cost']
+                                                        .round())
                                                     .toString()
                                             : "Based on Quotation",
                                         style: montserratSemiBold.copyWith(
@@ -579,7 +554,9 @@ class SummeryPageState extends State<SummeryPage> {
                                         packdata['pick_up_price'] != null
                                             ? packdata['pick_up_price'] != "0"
                                                 ? "AED " +
-                                                    packdata['pick_up_price']
+                                                    (double.parse(packdata[
+                                                                'pick_up_price'])
+                                                            .round())
                                                         .toString()
                                                 : "FREE"
                                             : "",
@@ -1059,7 +1036,9 @@ class SummeryPageState extends State<SummeryPage> {
                                 color: blackColor, fontSize: width * 0.034),
                           ),
                           Text(
-                            widget.currency + " " + (totalamount).toString(),
+                            widget.currency +
+                                " " +
+                                (totalamount.round()).toString(),
                             style: montserratSemiBold.copyWith(
                                 color: warningcolor, fontSize: width * 0.04),
                           ),

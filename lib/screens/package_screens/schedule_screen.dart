@@ -72,6 +72,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   var pickupoption;
   var pickup_name = "";
   var pickup_cost = "";
+  var pickup_vat = 0.0;
   var emirates = 0, city = 0;
   var AddressType = "Home";
   bool isDefaultAddressChecked = true;
@@ -143,6 +144,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     for (var ptemp in temppickup_options) {
       var tempCost = '0';
       var min_cost = ptemp['pk_min_cost'];
+      var tempCostVat = 0.0;
+      var min_cost_vat = 0.0;
       freeFlag
           ? ptemp['pk_freeFlag'] != "1"
               ? tempCost =
@@ -150,6 +153,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               : tempCost = "0"
           : tempCost = (int.parse(ptemp['pk_cost']) * totalDistance).toString();
       if (gs_isvat == 1) {
+        tempCostVat = (int.parse(tempCost) * (gs_vat / 100)).toDouble();
+        min_cost_vat = (int.parse(min_cost) * (gs_vat / 100)).toDouble();
         tempCost =
             ((int.parse(tempCost) + (int.parse(tempCost) * (gs_vat / 100)))
                     .round())
@@ -176,7 +181,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             ? ptemp['pk_freeFlag'] == "1"
                 ? '0'
                 : (min_cost)
-            : tempCost
+            : tempCost,
+        "pk_vat_value": int.parse(tempCost) < int.parse(min_cost)
+            ? ptemp['pk_freeFlag'] == "1"
+                ? '0'
+                : (min_cost_vat)
+            : tempCostVat
       };
       pickup_options.add(temp);
     }
@@ -530,7 +540,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             : packdata['drop_location'] = SelectAddressList[selected_address];
 
         packdata['pick_up_price'] = pickup_cost;
-
+        packdata['pickup_vat'] = pickup_vat;
         packdata['pick_type_id'] = pickupoption.toString();
         packdata['pick_type_name'] = pickup_name;
         packdata['selected_date'] = selectedDate.toString();
@@ -3079,6 +3089,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                       pickup_cost =
                                                           pickup_options[index]
                                                               ['pk_cost_value'];
+                                                      pickup_vat =
+                                                          pickup_options[index]
+                                                              ['pk_vat_value'];
                                                     });
                                                   },
                                                 ),
