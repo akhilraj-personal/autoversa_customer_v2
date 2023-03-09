@@ -251,7 +251,6 @@ class SummeryPageState extends State<SummeryPage> {
     );
     try {
       await Stripe.instance.presentPaymentSheet();
-
       final prefs = await SharedPreferences.getInstance();
       Map<String, dynamic> booking = {
         'custId': prefs.getString('cust_id'),
