@@ -5,6 +5,7 @@ import 'package:custom_clippers/custom_clippers.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart' hide Card;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -13,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../constant/image_const.dart';
 import '../../constant/text_style.dart';
 import '../../generated/l10n.dart';
+import '../../main.dart';
 import '../../services/post_auth_services.dart';
 import '../../utils/AppWidgets.dart';
 import '../../utils/app_validations.dart';
@@ -71,6 +73,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   var address = "";
   var landmark = "";
   var AddressType = "Home";
+  var trnxId;
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<FormFieldState> drop_city = GlobalKey<FormFieldState>();
@@ -407,6 +410,91 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     }
   }
 
+  createPaymentIntent(data, payment) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var billingDetails = BillingDetails(
+      name: prefs.getString('name'),
+      email: prefs.getString('email'),
+      phone: prefs.getString('phone'),
+      address: Address(
+        city: 'Abu Dhabi',
+        country: 'AE',
+        line1: 'Mussafah',
+        line2: '',
+        state: 'Abu Dhabi',
+        postalCode: '',
+      ),
+    );
+    await Stripe.instance.initPaymentSheet(
+      paymentSheetParameters: SetupPaymentSheetParameters(
+        // Main params
+        paymentIntentClientSecret: payment['client_secret'],
+        merchantDisplayName: 'AutoVersa',
+        // Customer params
+        customerId: payment['customer'],
+        customerEphemeralKeySecret: payment['ephemeralKey']['secret'],
+        // Extra params
+        style: ThemeMode.light,
+        appearance: const PaymentSheetAppearance(
+          colors: PaymentSheetAppearanceColors(
+              background: Colors.white,
+              primary: Color(0xff31BBAC),
+              componentBorder: Color(0xff3186AC),
+              primaryText: Colors.black,
+              secondaryText: Colors.black,
+              componentBackground: Colors.white,
+              placeholderText: Colors.black87,
+              componentText: Colors.black87,
+              icon: Colors.black87),
+          shapes: PaymentSheetShape(
+            borderWidth: 4,
+            borderRadius: 10.00,
+            shadow: PaymentSheetShadowParams(color: Color(0xff31BBAC)),
+          ),
+          primaryButton: PaymentSheetPrimaryButtonAppearance(
+            shapes: PaymentSheetPrimaryButtonShape(blurRadius: 16),
+            colors: PaymentSheetPrimaryButtonTheme(
+              light: PaymentSheetPrimaryButtonThemeColors(
+                background: Color(0xff31BBAC),
+                text: Colors.white,
+                border: Color(0xff31BBAC),
+              ),
+            ),
+          ),
+        ),
+        billingDetails: billingDetails,
+      ),
+    );
+    try {
+      await Stripe.instance.presentPaymentSheet();
+      setState(() {
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) => CustomSuccess(),
+        );
+      });
+    } on Exception catch (e) {
+      if (e is StripeException) {
+        setState(() => isProceeding = false);
+        setState(() {
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) => CustomWarning(),
+          );
+        });
+      } else {
+        setState(() => isProceeding = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Unforeseen error: ${e}'),
+          ),
+        );
+      }
+    }
+  }
+
   scheduleDrop() async {
     if (new_selected_drop == 0) {
       setState(() => isProceeding = false);
@@ -421,31 +509,54 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
       showCustomToast(context, "Choose a time slot",
           bgColor: errorcolor, textColor: white);
     } else {
-      late Map<String, dynamic> packdata = {};
-      packdata['drop_location_id'] = new_selected_drop;
-      packdata['booking_id'] = widget.bk_id;
-      packdata['selected_date'] = selectedDate.toString();
-      packdata['selected_timeid'] = selected_timeid;
-      packdata['selected_timeslot'] = selected_timeslot;
-      await submitdeliverydrop(packdata).then((value) {
-        if (value['ret_data'] == "success") {
-          setState(() {
-            showCustomToast(context, "Drop Details Saved Successfully",
-                bgColor: Colors.black, textColor: white);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BookingStatusFlow(
-                          bk_id: widget.bk_id,
-                          vehname: widget.vehname,
-                          make: widget.make,
-                        )));
-          });
-        } else {
-          setState(() => isProceeding = false);
-        }
-      });
+      if (pending_payment > 0) {
+        final prefs = await SharedPreferences.getInstance();
+        Map<String, dynamic> pay_data = {
+          'custId': prefs.getString('cust_id'),
+          'booking_id': widget.bk_id,
+          'tot_amount': pending_payment.toString(),
+        };
+        await create_workcard_payment(pay_data).then((value) {
+          if (value['ret_data'] == "success") {
+            trnxId = value['payment_details']['id'];
+            createPaymentIntent(widget.bk_id, value['payment_details']);
+          }
+        }).catchError((e) {
+          showCustomToast(context, ST.of(context).toast_application_error,
+              bgColor: errorcolor, textColor: Colors.white);
+        });
+        // createPayment();
+      } else {
+        scheduleDropFinalize();
+      }
     }
+  }
+
+  scheduleDropFinalize() async {
+    late Map<String, dynamic> packdata = {};
+    packdata['drop_location_id'] = new_selected_drop;
+    packdata['booking_id'] = widget.bk_id;
+    packdata['selected_date'] = selectedDate.toString();
+    packdata['selected_timeid'] = selected_timeid;
+    packdata['selected_timeslot'] = selected_timeslot;
+    await submitdeliverydrop(packdata).then((value) {
+      if (value['ret_data'] == "success") {
+        setState(() {
+          showCustomToast(context, "Drop Details Saved Successfully",
+              bgColor: Colors.black, textColor: white);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BookingStatusFlow(
+                        bk_id: widget.bk_id,
+                        vehname: widget.vehname,
+                        make: widget.make,
+                      )));
+        });
+      } else {
+        setState(() => isProceeding = false);
+      }
+    });
   }
 
   @override
@@ -2253,5 +2364,193 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
       time += t;
     }
     return time;
+  }
+}
+
+class CustomWarning extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(0),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0)),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To make the card compact
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(height: 130, color: warningcolor),
+                Column(
+                  children: [
+                    Image.asset(
+                      ImageConst.warning,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text("Awaiting Payment",
+                        textAlign: TextAlign.center,
+                        style: montserratSemiBold.copyWith(
+                            fontSize: width * 0.034, color: Colors.white)),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Text(
+                    "Please check dashboard to complete payment for further proceedings.",
+                    textAlign: TextAlign.center,
+                    style: montserratRegular.copyWith(
+                        fontSize: width * 0.034, color: Colors.black))),
+            SizedBox(
+              height: 16,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushReplacementNamed(context, Routes.bottombar);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(14)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        lightorangeColor,
+                        holdorangeColor,
+                      ],
+                    )),
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Text('OK',
+                    style: montserratSemiBold.copyWith(color: Colors.white)),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomSuccess extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(0),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0)),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To make the card compact
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      lightblueColor,
+                      syanColor,
+                    ],
+                  )),
+                ),
+                // Container(height: 130, color: blackColor),
+                Column(
+                  children: [
+                    Image.asset(
+                      ImageConst.success,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text("Booking Successfull",
+                        textAlign: TextAlign.center,
+                        style: montserratSemiBold.copyWith(
+                            fontSize: width * 0.034, color: Colors.white)),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Text("Please check dashboard for booking status",
+                    textAlign: TextAlign.center,
+                    style: montserratRegular.copyWith(
+                        fontSize: width * 0.034, color: Colors.black))),
+            SizedBox(
+              height: 16,
+            ),
+            GestureDetector(
+              onTap: () {
+                // Navigator.of(context).pop();
+                Navigator.pushReplacementNamed(context, Routes.bottombar);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(14)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        lightblueColor,
+                        syanColor,
+                      ],
+                    )),
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Text('OK',
+                    style: montserratSemiBold.copyWith(color: Colors.white)),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
