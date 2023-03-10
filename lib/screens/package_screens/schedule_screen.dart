@@ -184,7 +184,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             : tempCost,
         "pk_vat_value": int.parse(tempCost) < int.parse(min_cost)
             ? ptemp['pk_freeFlag'] == "1"
-                ? '0'
+                ? 0.0
                 : (min_cost_vat)
             : tempCostVat
       };
