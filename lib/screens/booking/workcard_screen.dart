@@ -944,35 +944,29 @@ class WorkcardState extends State<Workcard> {
                                                   ),
                                                   child: IconButton(
                                                     onPressed: () {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                          content: Text(
+                                                      showConfirmDialogCustom(
+                                                          height: 65,
+                                                          context,
+                                                          title:
                                                               'Are you sure you want to reject this job.?',
-                                                              style: montserratSemiBold
-                                                                  .copyWith(
-                                                                      color: Colors
-                                                                          .white)),
-                                                          action:
-                                                              SnackBarAction(
-                                                                  label:
-                                                                      'REJECT',
-                                                                  textColor:
-                                                                      Colors
-                                                                          .white,
-                                                                  onPressed:
-                                                                      () async {
-                                                                    rejectJob(
-                                                                        pendingjobs[
-                                                                            i]);
-                                                                    setState(
-                                                                        () {});
-                                                                  }),
-                                                        ),
-                                                      );
+                                                          primaryColor:
+                                                              warningcolor,
+                                                          customCenterWidget:
+                                                              Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 8),
+                                                            child: Image.asset(
+                                                                "assets/icons/reject.png",
+                                                                width:
+                                                                    width / 2,
+                                                                height: 95),
+                                                          ),
+                                                          onAccept: (v) async {
+                                                        rejectJob(
+                                                            pendingjobs[i]);
+                                                        setState(() {});
+                                                      });
                                                     },
                                                     icon: Icon(
                                                         Icons.close_outlined,
@@ -990,51 +984,40 @@ class WorkcardState extends State<Workcard> {
                                                   ),
                                                   child: IconButton(
                                                     onPressed: () {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          backgroundColor:
-                                                              Colors.green,
-                                                          content: Text(
-                                                              'Approve Job.?',
-                                                              style: montserratRegular
-                                                                  .copyWith(
-                                                                      color: Colors
-                                                                          .white)),
-                                                          action:
-                                                              SnackBarAction(
-                                                                  label:
-                                                                      'APPROVE',
-                                                                  textColor:
-                                                                      Colors
-                                                                          .white,
-                                                                  onPressed:
-                                                                      () async {
-                                                                    updateJob(
-                                                                        pendingjobs[
-                                                                            i]);
-                                                                    setState(
-                                                                        () {});
-                                                                    final prefs =
-                                                                        await SharedPreferences
-                                                                            .getInstance();
-                                                                    var pendingjob =
-                                                                        pendingjobs[i]
-                                                                            [
-                                                                            'bkj_id'];
-                                                                    prefs.setString(
-                                                                        "pendingjobpayment",
-                                                                        pendingjob);
-                                                                    showCustomToast(
-                                                                        context,
-                                                                        "Approved and waiting for payment",
-                                                                        bgColor:
-                                                                            black,
-                                                                        textColor:
-                                                                            white);
-                                                                  }),
+                                                      showConfirmDialogCustom(
+                                                        height: 65,
+                                                        context,
+                                                        title: 'Approve Job.?',
+                                                        primaryColor: syanColor,
+                                                        customCenterWidget:
+                                                            Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 8),
+                                                          child: Image.asset(
+                                                              "assets/icons/approve.png",
+                                                              width: width / 2,
+                                                              height: 95),
                                                         ),
+                                                        onAccept: (v) async {
+                                                          updateJob(
+                                                              pendingjobs[i]);
+                                                          setState(() {});
+                                                          final prefs =
+                                                              await SharedPreferences
+                                                                  .getInstance();
+                                                          var pendingjob =
+                                                              pendingjobs[i]
+                                                                  ['bkj_id'];
+                                                          prefs.setString(
+                                                              "pendingjobpayment",
+                                                              pendingjob);
+                                                          showCustomToast(
+                                                              context,
+                                                              "Approved and waiting for payment",
+                                                              bgColor: black,
+                                                              textColor: white);
+                                                        },
                                                       );
                                                     },
                                                     icon: Icon(

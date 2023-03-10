@@ -1931,23 +1931,11 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                     child: GestureDetector(
                                                       onTap: () async {
                                                         showConfirmDialogCustom(
-                                                          height: 65,
                                                           context,
-                                                          title:
-                                                              'Unhold Booking.?',
                                                           primaryColor:
                                                               syanColor,
-                                                          customCenterWidget:
-                                                              Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 8),
-                                                            child: Image.asset(
-                                                                "assets/icons/car.png",
-                                                                width:
-                                                                    width / 2,
-                                                                height: 95),
-                                                          ),
+                                                          title:
+                                                              'Unhold Booking.?',
                                                           onAccept: (v) {
                                                             unholdbookingbottomsheet();
                                                           },
@@ -3035,30 +3023,88 @@ class ScheduleDelivery extends StatelessWidget {
             SizedBox(
               height: 16,
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ScheduleDropScreen(
-                            bk_id: bk_id, vehname: vehname, make: make)));
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        lightblueColor,
-                        syanColor,
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () async {
+                      Navigator.pop(context);
+                    },
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 12, right: 12),
+                          height: height * 0.055,
+                          width: height * 0.25,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            border: Border.all(color: syanColor),
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                white,
+                                white,
+                                white,
+                                white,
+                              ],
+                            ),
+                          ),
+                          child: Text(
+                            "CANCEL",
+                            style:
+                                montserratSemiBold.copyWith(color: syanColor),
+                          ),
+                        ),
                       ],
-                    )),
-                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child: Text('SCHEDULE',
-                    style: montserratSemiBold.copyWith(color: white)),
-              ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ScheduleDropScreen(
+                                  bk_id: bk_id, vehname: vehname, make: make)));
+                    },
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 12, right: 12),
+                          height: height * 0.055,
+                          width: height * 0.25,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            border: Border.all(color: syanColor),
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                lightblueColor,
+                                syanColor,
+                              ],
+                            ),
+                          ),
+                          child: Text(
+                            "SCHEDULE",
+                            style: montserratSemiBold.copyWith(color: white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 16,
