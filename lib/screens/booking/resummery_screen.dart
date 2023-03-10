@@ -53,25 +53,6 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     init();
     Future.delayed(Duration.zero, () {
       getBookingDetailsID();
@@ -83,12 +64,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       currentTime = DateFormat("hh:mm a").format(DateTime.now());
-      print("1=============>");
-      print(currentTime);
       packdata = json.decode(prefs.get("booking_data").toString());
-      print("2=============>");
       selectedTime = packdata['selected_timeslot'].split('- ')[1];
-      print(selectedTime);
       if (selectedTime.compareTo(currentTime) == 0) {
         print("Both time are at same moment.");
       }
@@ -117,7 +94,6 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   getBookingDetailsID() async {
@@ -163,8 +139,6 @@ class ResummeryScreenState extends State<ResummeryScreen> {
             custvehlist: widget.custvehlist,
             selectedVeh: widget.selectedveh),
       );
-      showCustomToast(context, "Selected time slot expired. Kindly reschedule",
-          bgColor: errorcolor, textColor: white);
     } else {
       try {
         final prefs = await SharedPreferences.getInstance();
@@ -919,199 +893,6 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                         ],
                       ),
                     ),
-                    // if (selectedTime.compareTo(currentTime) == 0) ...[
-                    //   GestureDetector(
-                    //     onTap: () async {
-                    //       if (isproceeding) return;
-                    //       setState(() => isproceeding = true);
-                    //       await Future.delayed(Duration(milliseconds: 1000));
-                    //       createBooking();
-                    //     },
-                    //     child: Stack(
-                    //       alignment: Alignment.bottomCenter,
-                    //       children: [
-                    //         Container(
-                    //           height: height * 0.045,
-                    //           width: height * 0.37,
-                    //           decoration: BoxDecoration(
-                    //               borderRadius: BorderRadius.circular(14),
-                    //               boxShadow: [
-                    //                 BoxShadow(
-                    //                     blurRadius: 16,
-                    //                     color: syanColor.withOpacity(.6),
-                    //                     spreadRadius: 0,
-                    //                     blurStyle: BlurStyle.outer,
-                    //                     offset: Offset(0, 0)),
-                    //               ]),
-                    //         ),
-                    //         Container(
-                    //           height: height * 0.075,
-                    //           width: height * 0.4,
-                    //           alignment: Alignment.center,
-                    //           decoration: BoxDecoration(
-                    //             shape: BoxShape.rectangle,
-                    //             borderRadius:
-                    //                 BorderRadius.all(Radius.circular(14)),
-                    //             gradient: LinearGradient(
-                    //               begin: Alignment.topLeft,
-                    //               end: Alignment.bottomRight,
-                    //               colors: [
-                    //                 syanColor,
-                    //                 lightblueColor,
-                    //               ],
-                    //             ),
-                    //           ),
-                    //           child: !isproceeding
-                    //               ? Text(
-                    //                   "PROCEED TO PAY",
-                    //                   style: montserratSemiBold.copyWith(
-                    //                       color: Colors.white),
-                    //                 )
-                    //               : Row(
-                    //                   mainAxisAlignment:
-                    //                       MainAxisAlignment.center,
-                    //                   children: [
-                    //                     Transform.scale(
-                    //                       scale: 0.7,
-                    //                       child: CircularProgressIndicator(
-                    //                         color: white,
-                    //                       ),
-                    //                     ),
-                    //                   ],
-                    //                 ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ],
-                    // if (selectedTime.compareTo(currentTime) < 0) ...[
-                    //   Container(
-                    //     margin: EdgeInsets.only(left: 30.0),
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.start,
-                    //       children: [
-                    //         Text(
-                    //           "Selected time slot expired. Kindly choose new.",
-                    //           textAlign: TextAlign.center,
-                    //           style: montserratSemiBold.copyWith(
-                    //               color: warningcolor, fontSize: width * 0.034),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    //   12.height,
-                    //   GestureDetector(
-                    //     onTap: () async {
-                    //       Navigator.pop(context);
-                    //     },
-                    //     child: Stack(
-                    //       alignment: Alignment.bottomCenter,
-                    //       children: [
-                    //         Container(
-                    //           height: height * 0.045,
-                    //           width: height * 0.37,
-                    //           decoration: BoxDecoration(
-                    //               borderRadius: BorderRadius.circular(14),
-                    //               boxShadow: [
-                    //                 BoxShadow(
-                    //                     blurRadius: 16,
-                    //                     color: syanColor.withOpacity(.6),
-                    //                     spreadRadius: 0,
-                    //                     blurStyle: BlurStyle.outer,
-                    //                     offset: Offset(0, 0)),
-                    //               ]),
-                    //         ),
-                    //         Container(
-                    //             height: height * 0.075,
-                    //             width: height * 0.4,
-                    //             alignment: Alignment.center,
-                    //             decoration: BoxDecoration(
-                    //               shape: BoxShape.rectangle,
-                    //               borderRadius:
-                    //                   BorderRadius.all(Radius.circular(14)),
-                    //               gradient: LinearGradient(
-                    //                 begin: Alignment.topLeft,
-                    //                 end: Alignment.bottomRight,
-                    //                 colors: [
-                    //                   syanColor,
-                    //                   lightblueColor,
-                    //                 ],
-                    //               ),
-                    //             ),
-                    //             child: Text(
-                    //               "RESCHEDULE",
-                    //               style: montserratSemiBold.copyWith(
-                    //                   color: Colors.white),
-                    //             )),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ],
-                    // if (selectedTime.compareTo(currentTime) > 0) ...[
-                    //   GestureDetector(
-                    //     onTap: () async {
-                    //       if (isproceeding) return;
-                    //       setState(() => isproceeding = true);
-                    //       await Future.delayed(Duration(milliseconds: 1000));
-                    //       createBooking();
-                    //     },
-                    //     child: Stack(
-                    //       alignment: Alignment.bottomCenter,
-                    //       children: [
-                    //         Container(
-                    //           height: height * 0.045,
-                    //           width: height * 0.37,
-                    //           decoration: BoxDecoration(
-                    //               borderRadius: BorderRadius.circular(14),
-                    //               boxShadow: [
-                    //                 BoxShadow(
-                    //                     blurRadius: 16,
-                    //                     color: syanColor.withOpacity(.6),
-                    //                     spreadRadius: 0,
-                    //                     blurStyle: BlurStyle.outer,
-                    //                     offset: Offset(0, 0)),
-                    //               ]),
-                    //         ),
-                    //         Container(
-                    //           height: height * 0.075,
-                    //           width: height * 0.4,
-                    //           alignment: Alignment.center,
-                    //           decoration: BoxDecoration(
-                    //             shape: BoxShape.rectangle,
-                    //             borderRadius:
-                    //                 BorderRadius.all(Radius.circular(14)),
-                    //             gradient: LinearGradient(
-                    //               begin: Alignment.topLeft,
-                    //               end: Alignment.bottomRight,
-                    //               colors: [
-                    //                 syanColor,
-                    //                 lightblueColor,
-                    //               ],
-                    //             ),
-                    //           ),
-                    //           child: !isproceeding
-                    //               ? Text(
-                    //                   "PROCEED TO PAY",
-                    //                   style: montserratSemiBold.copyWith(
-                    //                       color: Colors.white),
-                    //                 )
-                    //               : Row(
-                    //                   mainAxisAlignment:
-                    //                       MainAxisAlignment.center,
-                    //                   children: [
-                    //                     Transform.scale(
-                    //                       scale: 0.7,
-                    //                       child: CircularProgressIndicator(
-                    //                         color: white,
-                    //                       ),
-                    //                     ),
-                    //                   ],
-                    //                 ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ],
                     SizedBox(
                       height: 20,
                     ),
