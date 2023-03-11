@@ -2003,7 +2003,22 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                         "RFDC" ||
                                                     status['st_code'] ==
                                                         "DEDC" ||
-                                                    status['st_code'] == "HOLDC"
+                                                    status['st_code'] ==
+                                                            "HOLDC" &&
+                                                        (pastcustomerstatus ==
+                                                            "BKCC") ||
+                                                    status['st_code'] ==
+                                                            "HOLDC" &&
+                                                        (pastcustomerstatus ==
+                                                            "CDLC") ||
+                                                    status['st_code'] ==
+                                                            "HOLDC" &&
+                                                        (pastcustomerstatus ==
+                                                            "RFDC") ||
+                                                    status['st_code'] ==
+                                                            "HOLDC" &&
+                                                        (pastcustomerstatus ==
+                                                            "DEDC")
                                                 ? Expanded(
                                                     flex: 1,
                                                     child: GestureDetector(

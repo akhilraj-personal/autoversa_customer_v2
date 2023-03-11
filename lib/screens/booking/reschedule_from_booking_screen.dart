@@ -42,25 +42,6 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     getBookingDetailsID();
     _fetchdatas();
     init();
@@ -79,6 +60,12 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
     });
   }
 
+  _fetchdatas() async {
+    await getPickupOptions().then((value) {
+      max_days = int.parse(value['settings']['gs_nofdays']);
+    });
+  }
+
   Future<void> init() async {}
 
   @override
@@ -89,7 +76,6 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   timeFormatter(date_data) {
@@ -201,12 +187,6 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
     }
   }
 
-  _fetchdatas() async {
-    await getPickupOptions().then((value) {
-      max_days = int.parse(value['settings']['gs_nofdays']);
-    });
-  }
-
   RescheduleClick() async {
     late Map<String, dynamic> packdata = {};
     if (selected_timeid == 0) {
@@ -280,8 +260,8 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
           ),
           title: Text(
             "Reschedule Booking",
-            style: myriadproregular.copyWith(
-              fontSize: 18,
+            style: montserratRegular.copyWith(
+              fontSize: width * 0.044,
               color: Colors.white,
             ),
           ),
@@ -305,53 +285,27 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                       margin: const EdgeInsets.all(8),
                       padding: EdgeInsets.all(8),
                       width: width * 1.85,
-                      decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: defaultBoxShadow(),
-                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                          ),
-                          Container(
-                            margin: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: white,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  topRight: Radius.circular(5),
-                                  bottomLeft: Radius.circular(5),
-                                  bottomRight: Radius.circular(5)),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Color(0xFF808080).withOpacity(0.3),
-                                    offset: Offset(0.0, 1.0),
-                                    blurRadius: 2.0)
-                              ],
-                            ),
-                          ),
                           Row(
                             children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(4, 0, 0, 0),
-                              ),
                               Expanded(
-                                flex: 1,
-                                child: Text(
-                                  "Selected Location",
-                                  textAlign: TextAlign.start,
-                                  style: montserratRegular.copyWith(
-                                    fontSize: width * 0.032,
-                                    color: black,
-                                  ),
-                                ),
-                              ),
+                                  flex: 1,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Selected Location",
+                                      textAlign: TextAlign.start,
+                                      style: montserratMedium.copyWith(
+                                        fontSize: width * 0.035,
+                                        color: black,
+                                      ),
+                                    ),
+                                  )),
                               Expanded(
-                                flex: 2,
+                                flex: 3,
                                 child: Text(
                                   dropdetails['cad_address'] != null
                                       ? dropdetails['cad_landmark'] != null
@@ -371,8 +325,8 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                               dropdetails['state_name']
                                       : "",
                                   textAlign: TextAlign.start,
-                                  style: montserratRegular.copyWith(
-                                    fontSize: width * 0.032,
+                                  style: montserratMedium.copyWith(
+                                    fontSize: width * 0.035,
                                     color: black,
                                   ),
                                 ),
@@ -383,155 +337,257 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                           Column(
                             children: <Widget>[
                               Padding(
-                                padding: EdgeInsets.fromLTRB(4, 4, 0, 0),
-                              ),
-                              Text(
-                                "Select Date & Time",
-                                textAlign: TextAlign.start,
-                                style: montserratRegular.copyWith(
-                                  fontSize: width * 0.032,
-                                  color: black,
+                                padding: EdgeInsets.fromLTRB(8, 4, 0, 0),
+                                child: Text(
+                                  "Select Date & Time",
+                                  textAlign: TextAlign.start,
+                                  style: montserratSemiBold.copyWith(
+                                      color: Colors.black,
+                                      fontSize: width * 0.034),
                                 ),
                               ),
                             ],
                           ),
                           8.height,
-                          Card(
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(10),
-                                      topRight: Radius.circular(10),
-                                      topLeft: Radius.circular(10)),
-                                  side: BorderSide(
-                                      width: 1, color: Colors.black)),
-                              elevation: 4,
-                              child: ListTile(
-                                trailing: RadiantGradientMask(
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.date_range,
-                                      color: white,
-                                    ),
-                                    onPressed: () {
-                                      _selectDate(context);
-                                    },
-                                  ),
-                                ),
-                                onTap: () {
-                                  _selectDate(context);
-                                },
-                                title: Text(
-                                  'Select Reschedule date',
-                                  style: montserratSemiBold.copyWith(
-                                      fontSize: width * 0.034, color: black),
-                                ),
-                                subtitle: Text(
-                                  DateFormat('dd-MM-yyyy').format(selectedDate),
-                                  style: montserratRegular.copyWith(
-                                      fontSize: width * 0.032, color: black),
-                                ),
-                              )),
+                          Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.all(16.0),
+                                padding: EdgeInsets.all(12),
+                                height: height * 0.045,
+                                width: height * 0.37,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 16,
+                                          color: syanColor.withOpacity(.6),
+                                          spreadRadius: 0,
+                                          blurStyle: BlurStyle.outer,
+                                          offset: Offset(0, 0)),
+                                    ]),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(0),
+                                child: Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        side: BorderSide(
+                                            width: 1, color: Colors.black)),
+                                    elevation: 4,
+                                    child: ListTile(
+                                      trailing: RadiantGradientMask(
+                                        child: IconButton(
+                                          icon: Icon(
+                                            Icons.date_range,
+                                            color: white,
+                                          ),
+                                          onPressed: () {
+                                            _selectDate(context);
+                                          },
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        _selectDate(context);
+                                      },
+                                      title: Text(
+                                          ST.of(context).select_booking_date +
+                                              " ",
+                                          style: montserratMedium.copyWith(
+                                              color: black,
+                                              fontSize: width * 0.04),
+                                          maxLines: 3),
+                                      subtitle: Text(
+                                        selectedDate == " "
+                                            ? " "
+                                            : DateFormat('dd-MM-yyyy')
+                                                .format(selectedDate),
+                                        style: montserratSemiBold.copyWith(
+                                            color: black,
+                                            fontSize: width * 0.04),
+                                      ),
+                                    )),
+                              ),
+                            ],
+                          ),
                           const SizedBox(
                             height: 8.0,
                           ),
-                          Container(
-                            margin: EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                              borderRadius: radius(10),
-                              color: context.cardColor,
-                              border: Border.all(
-                                color: black,
+                          Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.all(16.0),
+                                padding: EdgeInsets.all(12),
+                                height: height * 0.045,
+                                width: height * 0.37,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 16,
+                                          color: syanColor.withOpacity(.6),
+                                          spreadRadius: 0,
+                                          blurStyle: BlurStyle.outer,
+                                          offset: Offset(0, 0)),
+                                    ]),
                               ),
-                            ),
-                            child: ExpansionTile(
-                              childrenPadding: EdgeInsets.all(8),
-                              leading: Container(
-                                width: 25,
-                                height: 25,
-                                child: RadiantGradientMask(
-                                  child: Icon(Icons.av_timer_outlined,
-                                      color: white, size: 28),
-                                ),
-                              ),
-                              title: Text(ST.of(context).select_a_time_slot,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: montserratLight.copyWith(
-                                      color: black, fontSize: width * 0.034),
-                                  maxLines: 3),
-                              subtitle: Text(
-                                  selected_timeslot == ""
-                                      ? ST.of(context).select_a_time_slot + "*"
-                                      : selected_timeslot,
-                                  style: montserratLight.copyWith(
-                                      color: black, fontSize: width * 0.034)),
-                              textColor: black,
-                              trailing: isExpanded
-                                  ? Container(
-                                      child: Icon(Icons.keyboard_arrow_up,
-                                          color: syanColor, size: 30),
-                                      padding: EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                          borderRadius: radius(100),
-                                          color: context.accentColor
-                                              .withAlpha(32)),
-                                    )
-                                  : Icon(Icons.keyboard_arrow_down,
-                                      color: syanColor, size: 30),
-                              onExpansionChanged: (t1) {
-                                isExpanded = !isExpanded;
-                                setState(() {});
-                              },
-                              children: [
-                                Container(
-                                  decoration: boxDecorationDefault(
-                                      color: context.cardColor,
-                                      boxShadow: null),
-                                  padding: EdgeInsets.all(8),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                              Padding(
+                                padding: EdgeInsets.all(0),
+                                child: Container(
+                                  margin: EdgeInsets.all(4.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: white,
+                                    border: Border.all(
+                                      color: black,
+                                    ),
+                                  ),
+                                  child: ExpansionTile(
+                                    childrenPadding: EdgeInsets.all(8),
+                                    leading: Container(
+                                      width: 30,
+                                      height: 30,
+                                      child: RadiantGradientMask(
+                                        child: Icon(Icons.av_timer_outlined,
+                                            color: white, size: 28),
+                                      ),
+                                    ),
+                                    title: Text(
+                                        ST.of(context).select_a_time_slot,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: montserratMedium.copyWith(
+                                            color: black,
+                                            fontSize: width * 0.04),
+                                        maxLines: 3),
+                                    subtitle: Text(
+                                        selected_timeslot == ""
+                                            ? "Choose time slot"
+                                            : selected_timeslot,
+                                        style: montserratSemiBold.copyWith(
+                                            color: black,
+                                            fontSize: selected_timeslot == ""
+                                                ? width * 0.034
+                                                : width * 0.04)),
+                                    textColor: black,
+                                    trailing: isExpanded
+                                        ? Container(
+                                            child: RadiantGradientMask(
+                                              child: Icon(
+                                                  Icons.keyboard_arrow_up,
+                                                  color: white,
+                                                  size: 30),
+                                            ),
+                                            padding: EdgeInsets.all(4),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                color: white.withAlpha(32)),
+                                          )
+                                        : RadiantGradientMask(
+                                            child: Icon(
+                                                Icons.keyboard_arrow_down,
+                                                color: white,
+                                                size: 30),
+                                          ),
+                                    onExpansionChanged: (t1) {
+                                      isExpanded = !isExpanded;
+                                      setState(() {});
+                                    },
                                     children: [
-                                      timeslots.length > 0
-                                          ? ListView.builder(
-                                              scrollDirection: Axis.vertical,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              padding: EdgeInsets.only(
-                                                  top: 16, bottom: 16),
-                                              itemCount: timeslots.length,
-                                              itemBuilder: (context, index) {
-                                                return Row(
-                                                  children: <Widget>[
-                                                    Theme(
-                                                      data: Theme.of(context)
-                                                          .copyWith(
-                                                              unselectedWidgetColor:
-                                                                  syanColor),
-                                                      child: Radio(
-                                                        value: timeslots[index][
-                                                                'tm_start_time'] +
-                                                            " - " +
-                                                            timeslots[index]
-                                                                ['tm_end_time'],
-                                                        groupValue: isTimeCheck,
-                                                        onChanged:
-                                                            (dynamic value) {
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: white, boxShadow: null),
+                                        padding: EdgeInsets.all(8),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            timeslots.length > 0
+                                                ? ListView.builder(
+                                                    scrollDirection:
+                                                        Axis.vertical,
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    padding: EdgeInsets.only(
+                                                        top: 16, bottom: 16),
+                                                    itemCount: timeslots.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Row(
+                                                        children: <Widget>[
+                                                          Theme(
+                                                            data: Theme.of(
+                                                                    context)
+                                                                .copyWith(
+                                                                    unselectedWidgetColor:
+                                                                        black),
+                                                            child: Radio(
+                                                              value: timeslots[
+                                                                          index]
+                                                                      [
+                                                                      'tm_start_time'] +
+                                                                  " - " +
+                                                                  timeslots[
+                                                                          index]
+                                                                      [
+                                                                      'tm_end_time'],
+                                                              groupValue:
+                                                                  isTimeCheck,
+                                                              fillColor: MaterialStateColor
+                                                                  .resolveWith(
+                                                                      (states) =>
+                                                                          syanColor),
+                                                              onChanged:
+                                                                  (dynamic
+                                                                      value) {
+                                                                timeslots[index]
+                                                                            [
+                                                                            'active_flag'] ==
+                                                                        1
+                                                                    ? value = 0
+                                                                    : setState(
+                                                                        () {
+                                                                        isTimeCheck =
+                                                                            value;
+                                                                        selected_timeid =
+                                                                            int.parse(timeslots[index]['tm_id']);
+                                                                        selected_timeslot = timeFormatter(timeslots[index]['tm_start_time']) +
+                                                                            " - " +
+                                                                            timeFormatter(timeslots[index]['tm_end_time']);
+                                                                      });
+                                                              },
+                                                            ),
+                                                          ),
                                                           timeslots[index][
                                                                       'active_flag'] ==
                                                                   1
-                                                              ? value = 0
-                                                              : setState(() {
-                                                                  isTimeCheck =
-                                                                      value;
-                                                                  selected_timeid =
-                                                                      int.parse(
+                                                              ? Text(
+                                                                  timeFormatter(timeslots[index]['tm_start_time']) +
+                                                                      " - " +
+                                                                      timeFormatter(
                                                                           timeslots[index]
                                                                               [
-                                                                              'tm_id']);
-                                                                  selected_timeslot = timeFormatter(
+                                                                              'tm_end_time']) +
+                                                                      "\n" +
+                                                                      ST
+                                                                          .of(context)
+                                                                          .slot_is_full,
+                                                                  style: montserratMedium
+                                                                      .copyWith(
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.034,
+                                                                    color:
+                                                                        errorcolor,
+                                                                  ),
+                                                                )
+                                                              : Text(
+                                                                  timeFormatter(
                                                                           timeslots[index]
                                                                               [
                                                                               'tm_start_time']) +
@@ -539,74 +595,40 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                                                       timeFormatter(
                                                                           timeslots[index]
                                                                               [
-                                                                              'tm_end_time']);
-                                                                });
-                                                        },
-                                                      ),
+                                                                              'tm_end_time']),
+                                                                  style: montserratMedium
+                                                                      .copyWith(
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.04,
+                                                                    color:
+                                                                        black,
+                                                                  ),
+                                                                ),
+                                                        ],
+                                                      );
+                                                    })
+                                                : Text(
+                                                    ST
+                                                        .of(context)
+                                                        .no_time_slot_available,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                      fontSize: width * 0.034,
+                                                      color: black,
                                                     ),
-                                                    timeslots[index][
-                                                                'active_flag'] ==
-                                                            1
-                                                        ? Text(
-                                                            timeFormatter(
-                                                                    timeslots[
-                                                                            index]
-                                                                        [
-                                                                        'tm_start_time']) +
-                                                                " - " +
-                                                                timeFormatter(
-                                                                    timeslots[
-                                                                            index]
-                                                                        [
-                                                                        'tm_end_time']) +
-                                                                "\n" +
-                                                                ST
-                                                                    .of(context)
-                                                                    .slot_is_full,
-                                                            style:
-                                                                montserratLight
-                                                                    .copyWith(
-                                                              fontSize:
-                                                                  width * 0.034,
-                                                              color: black,
-                                                            ),
-                                                          )
-                                                        : Text(
-                                                            timeFormatter(timeslots[
-                                                                        index][
-                                                                    'tm_start_time']) +
-                                                                " - " +
-                                                                timeFormatter(
-                                                                    timeslots[
-                                                                            index]
-                                                                        [
-                                                                        'tm_end_time']),
-                                                            style:
-                                                                montserratLight
-                                                                    .copyWith(
-                                                              fontSize:
-                                                                  width * 0.034,
-                                                              color: black,
-                                                            ),
-                                                          ),
-                                                  ],
-                                                );
-                                              })
-                                          : Text(
-                                              ST
-                                                  .of(context)
-                                                  .no_time_slot_available,
-                                              style: montserratLight.copyWith(
-                                                fontSize: width * 0.034,
-                                                color: black,
-                                              ),
+                                                  ),
+                                            SizedBox(
+                                              height: 8,
                                             ),
-                                      8.height,
+                                          ],
+                                        ),
+                                      )
                                     ],
-                                  ).paddingAll(8),
-                                )
-                              ],
-                            ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           12.height,
                           GestureDetector(

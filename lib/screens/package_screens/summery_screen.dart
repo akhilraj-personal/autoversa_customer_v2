@@ -153,6 +153,37 @@ class SummeryPageState extends State<SummeryPage> {
             (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
                 .toStringAsFixed(2),
       });
+      Map req = {
+        'bookingattachment': audio,
+        "custId": prefs.getString('cust_id'),
+        "cust_name": prefs.getString('name'),
+        "vehId": packdata['vehicle_id'],
+        "bkurl": packdata['audio_location'],
+        "pickupaddress": packdata['pick_up_location_id'],
+        "dropaddress": packdata['drop_location_id'],
+        "bookingdate": packdata['selected_date'],
+        "sub_packages": packdata['sub_packages'],
+        "services": packdata['services'],
+        "expenses": [],
+        "packid": packdata['package_id'],
+        "packtype": packdata['packtype'],
+        "packprice": (packdata['package_cost'] - packdata['pack_vat'])
+            .toStringAsFixed(2),
+        "pack_vat": packdata['pack_vat'].toStringAsFixed(2),
+        "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
+        "total_amount": totalamount.round(),
+        "advance": "0",
+        "discount": "0",
+        "bk_branchid": 1,
+        'complaint': additionalcommentsController.text.toString(),
+        "slot": packdata['selected_timeid'],
+        "pickuptype": packdata['pick_type_id'],
+        "sourcetype": "MOB",
+        "bk_pickup_cost":
+            (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
+                .toStringAsFixed(2),
+      };
+      print(req);
       String? token = prefs.getString('token');
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';
@@ -1146,7 +1177,19 @@ class CustomWarning extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(height: 130, color: warningcolor),
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      lightorangeColor,
+                      holdorangeColor,
+                    ],
+                  )),
+                ),
+                // Container(height: 130, color: warningcolor),
                 Column(
                   children: [
                     Image.asset(

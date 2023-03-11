@@ -148,8 +148,6 @@ class PackageDetailsState extends State<PackageDetails> {
               optionList.add(sup_packs['sp_name']);
               for (var operations in sup_packs['operations']) {
                 if (operations['opvm_timeunit'] != null) {
-                  print(double.parse(operations['opvm_timeunit']) *
-                      double.parse(value['labourrate']['lr_rate']));
                   totalCost = totalCost +
                       (double.parse(operations['opvm_timeunit']) *
                               double.parse(value['labourrate']['lr_rate']))
@@ -162,8 +160,6 @@ class PackageDetailsState extends State<PackageDetails> {
                 if (spares['spares_used'].length > 0) {
                   for (var spareused in spares['spares_used']) {
                     if (spareused['scvm_price'] != null) {
-                      print(double.parse(spareused['scvm_price']) *
-                          double.parse(spareused['scvm_quantity']));
                       totalCost = totalCost +
                           (double.parse(spareused['scvm_price']) *
                                   double.parse(spareused['scvm_quantity']))
@@ -178,8 +174,6 @@ class PackageDetailsState extends State<PackageDetails> {
             for (var serv in value['services']) {
               optionList.add(serv['ser_name']);
               if (serv['sevm_timeunit'] != null) {
-                print(double.parse(serv['sevm_timeunit']) *
-                    double.parse(value['labourrate']['lr_rate']));
                 totalCost = totalCost +
                     (double.parse(serv['sevm_timeunit']) *
                             double.parse(value['labourrate']['lr_rate']))
@@ -189,7 +183,6 @@ class PackageDetailsState extends State<PackageDetails> {
               }
             }
             if (value['settings']['gs_isvat'] == "1") {
-              print(totalCost);
               packVat = totalCost * (gs_vat / 100);
               totalCost = totalCost + (totalCost * (gs_vat / 100));
             }
