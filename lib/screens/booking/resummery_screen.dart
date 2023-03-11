@@ -152,11 +152,14 @@ class ResummeryScreenState extends State<ResummeryScreen> {
           "dropaddress": packdata['drop_location_id'],
           "pickuptype": packdata['pick_type_id'],
           "pickupcost": packdata['pick_up_price'],
+          "pack_vat": packdata['pack_vat'].toStringAsFixed(2),
+          "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
           'complaint': additionalcommentsController.text.toString(),
           "advance": "0",
           "discount": "0",
           "total_amount": totalamount,
         };
+        print(booking);
         await createRescheduleBooking(booking).then((value) {
           if (value['ret_data'] == "success") {
             createPayment(bookingdetails['bk_id'], value['payment_details']);
