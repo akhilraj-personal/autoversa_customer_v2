@@ -847,6 +847,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
             bgColor: errorcolor, textColor: white);
       } else {
         packdata['package_cost'] = booking_package['bkp_cust_amount'];
+        packdata['pack_vat'] = booking_package['bkp_vat'];
+        packdata['pickup_vat'] = bookingdetails['bk_pickup_vat'];
         packdata['pick_up_location'] = SelectAddressList[selected_address];
         packdata['pick_up_location_id'] = ptemp;
         packdata['drop_location_id'] = dtemp;
@@ -899,6 +901,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
         packdata['pick_up_location_id'] = ptemp;
         packdata['drop_location_id'] = dtemp;
         packdata['drop_location'] = SelectAddressList[selected_drop_address];
+        packdata['pack_vat'] = booking_package['bkp_vat'];
+        packdata['pickup_vat'] = bookingdetails['bk_pickup_vat'];
         packdata['pick_up_price'] = pickup_cost;
         if (pickup_name == "") {
           setState(() => isproceeding = false);

@@ -582,6 +582,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         packdata['drop_location_id'] = dtemp;
         packdata['drop_location'] = SelectAddressList[selected_drop_address];
         packdata['pick_up_price'] = pickup_cost;
+        packdata['pickup_vat'] = pickup_vat;
         if (pickup_name == "") {
           setState(() => isproceeding = false);
           showCustomToast(context, "Choose a pickup type",
