@@ -63,6 +63,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   var isTimeCheck;
   var freeservicedistance = 0;
   var servicedistance = 0;
+  var selected_package_cost = 0.0;
   bool isdroplocation = false;
   bool isLocationCheck = true;
   var pickupoption;
@@ -83,6 +84,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   FocusNode cancelFocus = FocusNode();
   var cancel = "";
   var vehiclename = "";
+  var gs_vat = 0;
+  var gs_isvat = 0;
 
   CameraPosition _initialPosition =
       CameraPosition(target: LatLng(24.3547, 54.5020), zoom: 13);
@@ -109,25 +112,6 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     init();
     Future.delayed(Duration.zero, () {
       getBookingDetailsID();
@@ -146,6 +130,11 @@ class RescheduleScreenState extends State<RescheduleScreen> {
           vehicle = value['booking']['vehicle'];
           booking_package = value['booking']['booking_package'];
         });
+        selected_package_cost = double.parse(
+                value['booking']['booking_package']['bkp_cust_amount']) +
+            double.parse(value['booking']['booking_package']['bkp_vat'])
+                .round();
+        print(selected_package_cost);
         setState(() {
           vehiclename = vehicle['cv_variant'] != null
               ? vehicle['cv_make'] +
@@ -163,12 +152,28 @@ class RescheduleScreenState extends State<RescheduleScreen> {
     pickup_options = [];
     for (var ptemp in temppickup_options) {
       var tempCost = '0';
+      var min_cost = ptemp['pk_min_cost'];
+      var tempCostVat = 0.0;
+      var min_cost_vat = 0.0;
       freeFlag
           ? ptemp['pk_freeFlag'] != "1"
               ? tempCost =
                   (int.parse(ptemp['pk_cost']) * totalDistance).toString()
               : tempCost = "0"
           : tempCost = (int.parse(ptemp['pk_cost']) * totalDistance).toString();
+      if (gs_isvat == 1) {
+        tempCostVat = (int.parse(tempCost) * (gs_vat / 100)).toDouble();
+        min_cost_vat = (int.parse(min_cost) * (gs_vat / 100)).toDouble();
+        tempCost =
+            ((int.parse(tempCost) + (int.parse(tempCost) * (gs_vat / 100)))
+                    .round())
+                .toString();
+        min_cost =
+            ((int.parse(min_cost) + (int.parse(min_cost) * (gs_vat / 100)))
+                    .round())
+                .toString();
+        ;
+      }
       var temp = {
         "pk_id":
             ptemp['pk_freeFlag'] == "1" && rangestatus ? "0" : ptemp['pk_id'],
@@ -176,16 +181,21 @@ class RescheduleScreenState extends State<RescheduleScreen> {
         "pk_cost": ptemp['pk_freeFlag'] == "1" && rangestatus
             ? "Not Available"
             : serviceAvailability
-                ? (int.parse(tempCost) < int.parse(ptemp['pk_min_cost']) &&
+                ? (int.parse(tempCost) < int.parse(min_cost) &&
                         ptemp['pk_freeFlag'] != "1")
-                    ? (widget.currency + " " + ptemp['pk_min_cost'])
+                    ? (widget.currency + " " + min_cost)
                     : (widget.currency + " " + tempCost)
                 : message,
-        "pk_cost_value": int.parse(tempCost) < int.parse(ptemp['pk_min_cost'])
+        "pk_cost_value": int.parse(tempCost) < int.parse(min_cost)
             ? ptemp['pk_freeFlag'] == "1"
                 ? '0'
-                : (ptemp['pk_min_cost'])
-            : tempCost
+                : (min_cost)
+            : tempCost,
+        "pk_vat_value": int.parse(tempCost) < int.parse(min_cost)
+            ? ptemp['pk_freeFlag'] == "1"
+                ? 0.0
+                : (min_cost_vat)
+            : tempCostVat
       };
       pickup_options.add(temp);
     }
@@ -336,6 +346,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
         }
       });
       await getPickupOptions().then((value) {
+        gs_vat = int.parse(value['settings']['gs_vat']);
+        gs_isvat = int.parse(value['settings']['gs_isvat']);
         freeservicedistance =
             int.parse(value['settings']['gs_freeservicearea']);
         servicedistance = int.parse(value['settings']['gs_service_area']);
@@ -1109,13 +1121,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                         height: 2,
                                       ),
                                       Text(
-                                        booking_package['bkp_cust_amount'] !=
-                                                null
-                                            ? widget.currency +
-                                                " " +
-                                                booking_package[
-                                                    'bkp_cust_amount']
-                                            : "0",
+                                        selected_package_cost.toString(),
                                         style: montserratSemiBold.copyWith(
                                             color: warningcolor,
                                             fontSize: width * 0.04),
@@ -2188,10 +2194,10 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                           ),
                                           isExpanded: true,
                                           hint: Text(
-                                            "",
+                                            "Select Address" + "*",
                                             style: montserratMedium.copyWith(
-                                                color: black,
-                                                fontSize: width * 0.035),
+                                                color: Colors.black,
+                                                fontSize: width * 0.04),
                                           ),
                                           buttonHeight: height * 0.075,
                                           buttonPadding:
@@ -2207,10 +2213,9 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                               child: Text(
                                                 value!,
                                                 style:
-                                                    montserratRegular.copyWith(
-                                                        color: black,
-                                                        fontSize:
-                                                            width * 0.034),
+                                                    montserratMedium.copyWith(
+                                                        color: Colors.black,
+                                                        fontSize: width * 0.04),
                                               ),
                                             );
                                           }).toList(),
@@ -2412,10 +2417,11 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                     ),
                                                     isExpanded: true,
                                                     hint: Text(
-                                                      "",
+                                                      "Select Address" + "*",
                                                       style: montserratMedium
                                                           .copyWith(
-                                                              color: black,
+                                                              color:
+                                                                  Colors.black,
                                                               fontSize:
                                                                   width * 0.04),
                                                     ),
@@ -2440,7 +2446,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                           value!,
                                                           style: montserratMedium
                                                               .copyWith(
-                                                                  color: black,
+                                                                  color: Colors
+                                                                      .black,
                                                                   fontSize:
                                                                       width *
                                                                           0.04),

@@ -44,6 +44,8 @@ class WorkcardState extends State<Workcard> {
   var totalamount = 0.0;
   var amounttopay = 0.0;
   var pickupcost = 0.0;
+  var selected_package_cost = 0.0;
+  var selected_pickup_type_cost = 0.0;
   var paidamount = 0.0;
   var grandtotal = 0.0;
   var grandpaidamount = 0.0;
@@ -56,25 +58,6 @@ class WorkcardState extends State<Workcard> {
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     getBookingDetailsID();
     getCardJobDetails();
     init();
@@ -90,7 +73,6 @@ class WorkcardState extends State<Workcard> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   getBookingDetailsID() async {
@@ -109,6 +91,8 @@ class WorkcardState extends State<Workcard> {
 
   getCardJobDetails() async {
     Map req = {"bookid": widget.booking_id};
+    print("+++++++++++++++++++++++++");
+    print(req);
     pendingjobs = [];
     approvedjobs = [];
     await getcardjobdetails(req)
@@ -118,15 +102,19 @@ class WorkcardState extends State<Workcard> {
                   setState(() {
                     packagebooking = value['booking'];
                   }),
+                  selected_package_cost =
+                      double.parse(value['booking']['bkp_cust_amount']) +
+                          double.parse(value['booking']['bkp_vat']).round(),
+                  selected_pickup_type_cost =
+                      double.parse(value['booking']['bk_pickup_cost']) +
+                          double.parse(value['booking']['bk_pickup_vat'])
+                              .round(),
                   pickupcost =
                       double.parse(value['booking']['bk_total_amount']) -
                           double.parse(value['booking']['bkp_cust_amount']),
                   totalamount = totalamount +
-                      (double.parse(value['booking']['bkp_cust_amount']) +
-                          pickupcost),
-                  pickuppackagecost =
-                      double.parse(value['booking']['bkp_cust_amount']) +
-                          pickupcost,
+                      (selected_package_cost + selected_pickup_type_cost)
+                          .round(),
                   for (var paylist in value['payments'])
                     {
                       paidamount = paidamount +
@@ -143,6 +131,7 @@ class WorkcardState extends State<Workcard> {
                           setState(() {
                             var pendingjobid = {"jobid": joblist['bkj_id']};
                             temppendingjobs.add(pendingjobid);
+                            setState(() {});
                           })
                         }
                       else if (joblist['bkj_status'] == "0")
@@ -659,10 +648,7 @@ class WorkcardState extends State<Workcard> {
                                     Container(
                                       padding: EdgeInsets.all(6),
                                       child: Text(
-                                        packagebooking['bkp_cust_amount'] !=
-                                                null
-                                            ? packagebooking['bkp_cust_amount']
-                                            : "",
+                                        selected_package_cost.toString(),
                                         style: montserratSemiBold.copyWith(
                                             color: warningcolor,
                                             fontSize: width * 0.034),
@@ -703,9 +689,12 @@ class WorkcardState extends State<Workcard> {
                                     Container(
                                       padding: EdgeInsets.all(6),
                                       child: Text(
-                                          pickupcost.toString() == "0.0"
+                                          selected_pickup_type_cost
+                                                      .toString() ==
+                                                  "0.0"
                                               ? "FREE"
-                                              : (pickupcost.toStringAsFixed(2)),
+                                              : (selected_pickup_type_cost
+                                                  .toStringAsFixed(2)),
                                           style: montserratSemiBold.copyWith(
                                               fontSize: width * 0.034,
                                               color: warningcolor)),
