@@ -915,15 +915,15 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             temppendingjobs = [];
             if (joblist['bkj_status'] == "1" &&
                 joblist['bkj_payment_status'] == "0") {
-              setState(() {
-                var paymentpendingjobid = {"jobid": joblist['bkj_id']};
-                temppendingjobs.add(paymentpendingjobid);
-              });
+              var paymentpendingjobid = {"jobid": joblist['bkj_id']};
+              temppendingjobs.add(paymentpendingjobid);
+              print(temppendingjobs);
+              setState(() {});
             }
             ;
           }
-          if (value['booking']['cust_status']['st_code'] == "CDLC" &&
-              temppendingjobs.length == 0) {
+          if (temppendingjobs.length == 0 &&
+              value['booking']['cust_status']['st_code'] == "CDLC") {
             showDialog(
               barrierDismissible: false,
               context: context,
