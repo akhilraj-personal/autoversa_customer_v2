@@ -91,7 +91,6 @@ class WorkcardState extends State<Workcard> {
 
   getCardJobDetails() async {
     Map req = {"bookid": widget.booking_id};
-    print("+++++++++++++++++++++++++");
     print(req);
     pendingjobs = [];
     approvedjobs = [];

@@ -69,25 +69,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     getBookingDetailsID();
     init();
   }
@@ -97,7 +78,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   timeFormatter(date_data) {
@@ -942,7 +922,8 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             }
             ;
           }
-          if (value['booking']['cust_status']['st_code'] == "CDLC") {
+          if (value['booking']['cust_status']['st_code'] == "CDLC" &&
+              temppendingjobs.length == 0) {
             showDialog(
               barrierDismissible: false,
               context: context,
