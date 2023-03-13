@@ -35,31 +35,14 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
   var grandtotal = 0.0;
   var grandpaidamount = 0.0;
   var pickuppackagecost = 0.0;
+  var selected_package_cost = 0.0;
+  var selected_pickup_type_cost = 0.0;
   bool isoffline = false;
   StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     getBookingDetailsID();
     getCardJobDetails();
     init();
@@ -75,7 +58,6 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   timeFormatter(date_data) {
@@ -132,12 +114,18 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                   setState(() {
                     packagebooking = value['booking'];
                   }),
+                  selected_package_cost =
+                      double.parse(value['booking']['bkp_cust_amount']) +
+                          double.parse(value['booking']['bkp_vat']).round(),
+                  selected_pickup_type_cost =
+                      double.parse(value['booking']['bk_pickup_cost']) +
+                          double.parse(value['booking']['bk_pickup_vat'])
+                              .round(),
                   pickupcost =
                       double.parse(value['booking']['bk_total_amount']) -
                           double.parse(value['booking']['bkp_cust_amount']),
                   totalamount = totalamount +
-                      (double.parse(value['booking']['bkp_cust_amount']) +
-                          pickupcost),
+                      (selected_package_cost + selected_pickup_type_cost),
                   pickuppackagecost =
                       double.parse(value['booking']['bkp_cust_amount']) +
                           pickupcost,
@@ -489,11 +477,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                     Container(
                                       padding: EdgeInsets.all(6),
                                       child: Text(
-                                          packagebooking['bkp_cust_amount'] !=
-                                                  null
-                                              ? packagebooking[
-                                                  'bkp_cust_amount']
-                                              : "",
+                                          selected_package_cost.toString(),
                                           style: montserratSemiBold.copyWith(
                                               fontSize: width * 0.032,
                                               color: warningcolor)),
@@ -529,7 +513,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                       child: Text(
                                           pickupcost.toString() == "0.0"
                                               ? "FREE"
-                                              : pickupcost.toString(),
+                                              : (selected_pickup_type_cost
+                                                  .toStringAsFixed(2)),
                                           style: montserratSemiBold.copyWith(
                                               fontSize: width * 0.032,
                                               color: warningcolor)),
