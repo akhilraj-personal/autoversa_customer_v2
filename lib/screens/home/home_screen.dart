@@ -157,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
   _getCustomerBookingList() async {
     bookingList = [];
     final prefs = await SharedPreferences.getInstance();
+    isExpanded = false;
     Map req = {"custId": prefs.getString("cust_id")};
     await getCustomerBookingList(req).then((value) {
       if (value['ret_data'] == "success") {
@@ -242,7 +243,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future refresh() async {
+    _getCustomerVehicles();
     _getCustomerBookingList();
+    _getNotificationList();
     setState(() {});
   }
 
