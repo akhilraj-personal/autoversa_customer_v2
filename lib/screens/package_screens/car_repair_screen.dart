@@ -64,6 +64,7 @@ class CarRepairState extends State<CarRepair> {
   String serviceMsg = '';
   bool recordPending = false;
   bool isbooked = false;
+  double packVat = 0.0;
 
   late Map<String, dynamic> packageinfo;
 
@@ -122,6 +123,7 @@ class CarRepairState extends State<CarRepair> {
         var nonMapCount = 0;
         await getServicePackageDetails(req).then((value) {
           if (value['ret_data'] == "success") {
+            var gs_vat = int.parse(value['settings']['gs_vat']);
             serviceList = [];
             isServicing = true;
             packageinfo = value;
@@ -185,6 +187,11 @@ class CarRepairState extends State<CarRepair> {
               sertemp.packcost = pack_cost;
               serviceList.add(sertemp);
             }
+            // if (value['settings']['gs_isvat'] == "1") {
+            //   packVat = totalCost * (gs_vat / 100);
+            //   totalCost = totalCost + (totalCost * (gs_vat / 100));
+            //   setState(() {});
+            // }
             if (nonMapCount == 0) {
               isPriceShow = true;
               setState(() {});

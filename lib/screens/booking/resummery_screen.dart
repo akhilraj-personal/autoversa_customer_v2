@@ -63,18 +63,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   _setdatas() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      currentTime = DateFormat("hh:mm a").format(DateTime.now());
       packdata = json.decode(prefs.get("booking_data").toString());
       selectedTime = packdata['selected_timeslot'].split('- ')[1];
-      if (selectedTime.compareTo(currentTime) == 0) {
-        print("Both time are at same moment.");
-      }
-      if (selectedTime.compareTo(currentTime) < 0) {
-        print("Selected time is past");
-      }
-      if (selectedTime.compareTo(currentTime) > 0) {
-        print("Selected time is future");
-      }
       if (packdata['package_cost'] != null) {
         totalamount = double.parse(packdata['package_cost'].toString()) +
             double.parse(packdata['pick_up_price'].toString());
