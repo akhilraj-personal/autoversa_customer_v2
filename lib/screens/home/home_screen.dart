@@ -304,9 +304,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: isExpanded == false
                                 ? bookingList.length > 0
                                     ? bookingList.length > 1
-                                        ? height *
-                                            0.4 *
-                                            (bookingList.length * 0.6)
+                                        ? bookingList.length < 3
+                                            ? (height * 0.4) +
+                                                (bookingList.length *
+                                                    height *
+                                                    0.07)
+                                            : (height * 0.4) +
+                                                (bookingList.length *
+                                                    height *
+                                                    0.082)
                                         : height * 0.4
                                     : isVehicleLoaded
                                         ? customerVehList.length == 0
@@ -314,7 +320,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             : height * 0.3
                                         : height * 0.3
                                 : bookingList.length > 1
-                                    ? height * 0.7 * (bookingList.length * 0.6)
+                                    ? (height * 0.7) +
+                                        (bookingList.length * height * 0.082)
                                     : height * 0.7,
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
@@ -862,16 +869,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         Container(
                             height:
                                 isVehicleLoaded && customerVehList.length > 1
-                                    ? isBookingLoaded &&
-                                            bookingList.length > 0 &&
-                                            bookingList.length < 2
+                                    ? isBookingLoaded && bookingList.length == 1
                                         ? height * 0.11
                                         : bookingList.length > 1
-                                            ? height * 0.13
+                                            ? height * 0.08
                                             : height * 0.08
-                                    : isBookingLoaded &&
-                                            bookingList.length > 0 &&
-                                            bookingList.length < 2
+                                    : isBookingLoaded && bookingList.length == 1
                                         ? height * 0.07
                                         : bookingList.length > 1
                                             ? height * 0.09
