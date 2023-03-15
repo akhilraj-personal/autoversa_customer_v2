@@ -16,6 +16,7 @@ import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../utils/common_utils.dart';
@@ -969,29 +970,53 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                     size: 25),
                                                                 onPressed:
                                                                     () async {
-                                                                  await recorder
-                                                                      .toggleRecording();
+                                                                  PermissionStatus
+                                                                      microphoneStatus =
+                                                                      await Permission
+                                                                          .microphone
+                                                                          .request();
 
-                                                                  final isRecording =
-                                                                      recorder
-                                                                          .isRecording;
-                                                                  recordPending =
-                                                                      recorder
-                                                                          .isRecording;
-                                                                  setState(
-                                                                      () {});
+                                                                  if (microphoneStatus ==
+                                                                      PermissionStatus
+                                                                          .granted) {
+                                                                    await recorder
+                                                                        .toggleRecording();
 
-                                                                  if (isRecording) {
-                                                                    timeController
-                                                                        .startTimer();
-                                                                  } else {
-                                                                    timeController
-                                                                        .stopTimer();
+                                                                    final isRecording =
+                                                                        recorder
+                                                                            .isRecording;
+                                                                    recordPending =
+                                                                        recorder
+                                                                            .isRecording;
                                                                     setState(
-                                                                        () {
-                                                                      recordLocation =
-                                                                          true;
-                                                                    });
+                                                                        () {});
+
+                                                                    if (isRecording) {
+                                                                      timeController
+                                                                          .startTimer();
+                                                                    } else {
+                                                                      timeController
+                                                                          .stopTimer();
+                                                                      setState(
+                                                                          () {
+                                                                        recordLocation =
+                                                                            true;
+                                                                      });
+                                                                    }
+                                                                  }
+                                                                  if (microphoneStatus ==
+                                                                      PermissionStatus
+                                                                          .denied) {
+                                                                    ScaffoldMessenger.of(
+                                                                            context)
+                                                                        .showSnackBar(const SnackBar(
+                                                                            content:
+                                                                                Text("This Permission is recommended for audio recording.")));
+                                                                  }
+                                                                  if (microphoneStatus ==
+                                                                      PermissionStatus
+                                                                          .permanentlyDenied) {
+                                                                    openAppSettings();
                                                                   }
                                                                 },
                                                               ),
