@@ -20,6 +20,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:permission_handler/permission_handler.dart';
 
 import '../bottom_tab/bottomtab.dart';
 
@@ -1135,7 +1136,26 @@ class EditprofieState extends State<Editprofie> {
                               color: white,
                             ),
                             onPressed: () async {
-                              profilepictureclick();
+                              PermissionStatus storageStatus =
+                                  await Permission.storage.request();
+                              PermissionStatus cameraStatus =
+                                  await Permission.storage.request();
+                              if (cameraStatus == PermissionStatus.denied ||
+                                  storageStatus == PermissionStatus.denied) {
+                                showCustomToast(context,
+                                    "This Permission is recommended for camera / gallery access.",
+                                    bgColor: errorcolor, textColor: white);
+                              }
+                              if (cameraStatus ==
+                                      PermissionStatus.permanentlyDenied ||
+                                  storageStatus ==
+                                      PermissionStatus.permanentlyDenied) {
+                                openAppSettings();
+                              }
+                              if (cameraStatus == PermissionStatus.granted ||
+                                  storageStatus == PermissionStatus.granted) {
+                                profilepictureclick();
+                              }
                             }),
                         decoration: BoxDecoration(
                             gradient: LinearGradient(

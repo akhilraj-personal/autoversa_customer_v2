@@ -9,6 +9,7 @@ import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -45,31 +46,14 @@ class AddressAddState extends State<AddressAdd> {
   FocusNode addressFocus = FocusNode();
   FocusNode flatnoFocus = FocusNode();
   final GlobalKey<FormFieldState> areaKey = GlobalKey<FormFieldState>();
-  StreamSubscription? internetconnection;
+
+  final TextEditingController textEditingController = TextEditingController();
+  final GlobalKey<FormFieldState> addAddresscity = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> addAddressarea = GlobalKey<FormFieldState>();
 
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       Navigator.push(
-    //           context, MaterialPageRoute(builder: (context) => AddressAdd()));
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       Navigator.push(
-    //           context, MaterialPageRoute(builder: (context) => AddressAdd()));
-    //     });
-    //   }
-    // });
     Future.delayed(Duration.zero, () {
       _fetchdatas(0);
       getcitylist(0);
@@ -84,7 +68,6 @@ class AddressAddState extends State<AddressAdd> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   _fetchdatas(address_index) async {
@@ -123,12 +106,14 @@ class AddressAddState extends State<AddressAdd> {
       setState(() {
         Statelat = temp['state_lattitude'];
         Statelong = temp['state_longitude'];
+        SelectAreaList = <String?>["Select Area"];
+        addAddressarea.currentState?.reset();
       });
       SelectAreaList.length = 1;
       await getCityList(state).then((value) {
         if (value['ret_data'] == "success") {
           setState(() {
-            areaList = value['citylist'];
+            areaList = [];
             SelectAreaList = <String?>["Select Area"];
           });
           areaList = value['citylist'];
@@ -137,6 +122,7 @@ class AddressAddState extends State<AddressAdd> {
           }
         }
       });
+      setState(() {});
     }
   }
 
@@ -148,7 +134,7 @@ class AddressAddState extends State<AddressAdd> {
       CameraPosition _kLake = CameraPosition(
         target: LatLng(double.parse(temp['city_lattitude']),
             double.parse(temp['city_longitude'])),
-        zoom: 13.4746,
+        zoom: 15.4746,
       );
       final GoogleMapController controller = await _controller.future;
       controller.moveCamera(CameraUpdate.newCameraPosition(_kLake));
@@ -206,7 +192,7 @@ class AddressAddState extends State<AddressAdd> {
             ),
             title: Text(
               "Address Add",
-              style: myriadproregular.copyWith(
+              style: montserratSemiBold.copyWith(
                 fontSize: 18,
                 color: Colors.white,
               ),
@@ -281,48 +267,119 @@ class AddressAddState extends State<AddressAdd> {
                                             children: <Widget>[
                                               Expanded(
                                                 child: Container(
-                                                  padding: EdgeInsets.only(
-                                                    left: width * 0.025,
-                                                    right: width * 0.025,
-                                                  ),
                                                   child:
-                                                      DropdownButtonFormField(
+                                                      DropdownButtonFormField2(
                                                     value: SelectCityList[0],
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    decoration: InputDecoration(
+                                                      //Add isDense true and zero Padding.
+                                                      //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      focusedErrorBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    const Color(
+                                                                        0xfffff),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorStyle: TextStyle(
+                                                        fontSize: 12,
+                                                        color: warningcolor,
+                                                      ),
+                                                      //Add more decoration as you want here
+                                                      //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                                    ),
                                                     isExpanded: true,
-                                                    decoration: InputDecoration
-                                                        .collapsed(
-                                                            hintText: ''),
-                                                    hint: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          "Select City",
-                                                          style:
-                                                              montserratRegular
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          14),
-                                                        )),
+                                                    hint: Text(
+                                                      "Select City" + "*",
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width * 0.04),
+                                                    ),
+                                                    alignment: Alignment.center,
+                                                    buttonHeight:
+                                                        height * 0.075,
+                                                    buttonPadding:
+                                                        const EdgeInsets.only(
+                                                            left: 20,
+                                                            right: 10),
+                                                    dropdownDecoration:
+                                                        BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                    ),
                                                     items: SelectCityList.map(
                                                         (String? value) {
                                                       return DropdownMenuItem<
                                                           String>(
                                                         value: value,
-                                                        child: Text(value!,
-                                                            style:
-                                                                montserratRegular
-                                                                    .copyWith(
-                                                                        fontSize:
-                                                                            14)),
+                                                        child: Text(
+                                                          value!,
+                                                          style: montserratMedium
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.04),
+                                                        ),
                                                       );
                                                     }).toList(),
                                                     onChanged: (value) {
-                                                      getcitylist(value);
                                                       setState(() {
                                                         isgooglemap = true;
                                                       });
+                                                      getcitylist(value);
                                                     },
                                                   ),
                                                 ),
@@ -388,47 +445,180 @@ class AddressAddState extends State<AddressAdd> {
                                             children: <Widget>[
                                               Expanded(
                                                 child: Container(
-                                                  padding: EdgeInsets.only(
-                                                    left: width * 0.025,
-                                                    right: width * 0.025,
-                                                  ),
                                                   child:
-                                                      DropdownButtonFormField(
-                                                    key: areaKey,
+                                                      DropdownButtonFormField2(
+                                                    key: addAddressarea,
+                                                    value: SelectAreaList[0],
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    decoration: InputDecoration(
+                                                      //Add isDense true and zero Padding.
+                                                      //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      focusedErrorBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        // width: 0.0 produces a thin "hairline" border
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    const Color(
+                                                                        0xfffff),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorStyle: TextStyle(
+                                                        fontSize: 12,
+                                                        color: warningcolor,
+                                                      ),
+                                                      //Add more decoration as you want here
+                                                      //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                                    ),
                                                     isExpanded: true,
-                                                    decoration: InputDecoration
-                                                        .collapsed(
-                                                            hintText: ''),
-                                                    hint: Align(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          "Select Area",
-                                                          style:
-                                                              montserratRegular
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          14),
-                                                        )),
+                                                    hint: Text(
+                                                      "Select Area" + "*",
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width * 0.04),
+                                                    ),
+                                                    alignment: Alignment.center,
+                                                    buttonHeight:
+                                                        height * 0.075,
+                                                    buttonPadding:
+                                                        const EdgeInsets.only(
+                                                            left: 20,
+                                                            right: 10),
+                                                    dropdownDecoration:
+                                                        BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                    ),
                                                     items: SelectAreaList.map(
                                                         (String? value) {
                                                       return DropdownMenuItem<
                                                           String>(
                                                         value: value,
                                                         child: Text(value!,
-                                                            style:
-                                                                montserratRegular
-                                                                    .copyWith(
-                                                                        fontSize:
-                                                                            14)),
+                                                            style: montserratMedium
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.04)),
                                                       );
                                                     }).toList(),
                                                     onChanged: (value) {
                                                       getarealist(value);
                                                     },
-                                                    value: SelectAreaList[0],
+                                                    searchController:
+                                                        textEditingController,
+                                                    searchInnerWidgetHeight:
+                                                        height * 0.07,
+                                                    searchInnerWidget:
+                                                        Container(
+                                                      height: height * 0.07,
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                        top: 8,
+                                                        bottom: 4,
+                                                        right: 8,
+                                                        left: 8,
+                                                      ),
+                                                      child: TextFormField(
+                                                        expands: true,
+                                                        maxLines: null,
+                                                        controller:
+                                                            textEditingController,
+                                                        decoration:
+                                                            InputDecoration(
+                                                          isDense: true,
+                                                          contentPadding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 10,
+                                                            vertical: 8,
+                                                          ),
+                                                          hintText:
+                                                              'Search area...',
+                                                          hintStyle:
+                                                              const TextStyle(
+                                                                  fontSize: 12),
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12),
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color:
+                                                                        syanColor,
+                                                                    width: 0.0),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    searchMatchFn:
+                                                        (item, searchValue) {
+                                                      return (item.value
+                                                          .toString()
+                                                          .toLowerCase()
+                                                          .contains(searchValue
+                                                              .toLowerCase()));
+                                                    },
+                                                    //This to clear the search value when you close the menu
+                                                    onMenuStateChange:
+                                                        (isOpen) {
+                                                      if (!isOpen) {
+                                                        textEditingController
+                                                            .clear();
+                                                      }
+                                                    },
                                                   ),
                                                 ),
                                               ),
@@ -439,36 +629,6 @@ class AddressAddState extends State<AddressAdd> {
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          // isgooglemap
-                          //     ? Container(
-                          //         height: 200,
-                          //         width: width,
-                          //         color: blackColor,
-                          //         child: GoogleMap(
-                          //           initialCameraPosition: _initialPosition,
-                          //           myLocationEnabled: true,
-                          //           markers: Set.from(myMarker),
-                          //           onTap: _handleTap,
-                          //           myLocationButtonEnabled: true,
-                          //           onMapCreated:
-                          //               (GoogleMapController controller) {
-                          //             _controller.complete(controller);
-                          //           },
-                          //         ),
-                          //       )
-                          //     : Container(
-                          //         color: Colors.transparent,
-                          //         height: 200,
-                          //         alignment: Alignment.center,
-                          //         width: width,
-                          //         child: Text(
-                          //             'Google Maps support is coming soon',
-                          //             style: montserratRegular.copyWith(
-                          //                 fontSize: 14)),
-                          //       ),
                           SizedBox(
                             height: 8,
                           ),
@@ -527,9 +687,10 @@ class AddressAddState extends State<AddressAdd> {
                                           style: montserratLight.copyWith(
                                               color: black, fontSize: 14),
                                           decoration: InputDecoration(
-                                              errorStyle: TextStyle(
-                                                  fontSize: 12,
-                                                  color: warningcolor),
+                                              errorStyle:
+                                                  montserratRegular.copyWith(
+                                                      fontSize: 12,
+                                                      color: warningcolor),
                                               counterText: "",
                                               filled: true,
                                               hintText: "Address",
@@ -562,7 +723,6 @@ class AddressAddState extends State<AddressAdd> {
                                   ],
                                 ))
                           ]),
-
                           SizedBox(
                             height: 8,
                           ),
@@ -891,11 +1051,24 @@ class AddressAddState extends State<AddressAdd> {
                                       ],
                                     ),
                                   ),
-                                  child: Text(
-                                    ST.of(context).save.toUpperCase(),
-                                    style: montserratSemiBold.copyWith(
-                                        color: Colors.white),
-                                  ),
+                                  child: issubmitted
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Transform.scale(
+                                              scale: 0.7,
+                                              child: CircularProgressIndicator(
+                                                color: white,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Text(
+                                          ST.of(context).save.toUpperCase(),
+                                          style: montserratSemiBold.copyWith(
+                                              color: Colors.white),
+                                        ),
                                 ),
                               ],
                             ),

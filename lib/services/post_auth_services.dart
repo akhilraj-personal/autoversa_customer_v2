@@ -1,5 +1,4 @@
-import 'package:autoversa/utils/app_validations.dart';
-
+import 'dart:convert';
 import 'network_services.dart';
 
 Future getStateList(Map req) async {
@@ -195,4 +194,24 @@ Future clear_notification(Map req) async {
 Future deleteCustomerAddress(Map req) async {
   return handleResponse(await securedPostRequest(
       'Customer/CustomerAddressController/delete', req));
+}
+
+Future getCustomerAddressDetails(req) async {
+  return handleResponse(await securedGetRequest(
+      'Customer/CustomerAddressController/' + base64.encode(utf8.encode(req))));
+}
+
+Future updateCustomerAddress(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Customer/CustomerAddressController/update', req));
+}
+
+Future getCustomerVehicleDetails(req) async {
+  return handleResponse(await securedGetRequest(
+      'Customer/CustomerVehicleController/' + base64.encode(utf8.encode(req))));
+}
+
+Future updateCustomerVehicle(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Customer/CustomerVehicleController/update', req));
 }
