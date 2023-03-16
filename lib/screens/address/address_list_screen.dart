@@ -103,8 +103,8 @@ class AddressListState extends State<AddressList> {
         showCustomToast(context, "Address Deleted",
             bgColor: Colors.black, textColor: Colors.white);
       } else {
-        showCustomToast(
-            context, "Created a booking. so can't delete the address",
+        showCustomToast(context,
+            "The selected address is already used in an active booking. Can't delete the address.",
             bgColor: warningcolor, textColor: Colors.white);
       }
     });
