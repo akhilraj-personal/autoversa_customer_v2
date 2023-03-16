@@ -57,32 +57,13 @@ class PackageDetailsState extends State<PackageDetails> {
   bool isServicing = true;
   String serviceMsg = '';
   bool recordPending = false;
-  StreamSubscription? internetconnection;
-  bool isoffline = false;
   TextEditingController complaint = new TextEditingController();
+  var gs_vat;
+  var veh_groupid;
 
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     init();
     Future.delayed(Duration.zero, () {
       _getpackageinfo();
@@ -101,6 +82,8 @@ class PackageDetailsState extends State<PackageDetails> {
           ? prefs.containsKey('comp_audio')
           : "",
       "package_cost": totalCost,
+      "gs_vat": gs_vat,
+      "veh_groupid": veh_groupid,
       "pack_vat": packVat
     };
     prefs.setString("booking_data", json.encode(packdata));
@@ -141,7 +124,8 @@ class PackageDetailsState extends State<PackageDetails> {
         var nonMapCount = 0;
         await getPackageDetails(req).then((value) {
           if (value['ret_data'] == "success") {
-            var gs_vat = int.parse(value['settings']['gs_vat']);
+            gs_vat = int.parse(value['settings']['gs_vat']);
+            veh_groupid = int.parse(value['veh_group']['vgroup_id']);
             optionList = [];
             setState(() {});
             isServicing = true;
