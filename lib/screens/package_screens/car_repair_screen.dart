@@ -57,7 +57,7 @@ class CarRepairState extends State<CarRepair> {
   double totalSubPackageCost = 0;
   double totalServiceCost = 0;
   bool recordLocation = false;
-  double totalCost = 0;
+  double totalCost = 0, totalVat = 0;
   TextEditingController complaint = new TextEditingController();
   bool isoffline = false;
   StreamSubscription? internetconnection;
@@ -66,6 +66,7 @@ class CarRepairState extends State<CarRepair> {
   bool recordPending = false;
   bool isbooked = false;
   double packVat = 0.0;
+  var gs_vat, gs_isVat;
 
   late Map<String, dynamic> packageinfo;
 
@@ -104,7 +105,8 @@ class CarRepairState extends State<CarRepair> {
         var nonMapCount = 0;
         await getServicePackageDetails(req).then((value) {
           if (value['ret_data'] == "success") {
-            var gs_vat = int.parse(value['settings']['gs_vat']);
+            gs_vat = int.parse(value['settings']['gs_vat']);
+            gs_isVat = int.parse(value['settings']['gs_isvat']);
             serviceList = [];
             isServicing = true;
             packageinfo = value;
@@ -121,10 +123,12 @@ class CarRepairState extends State<CarRepair> {
                   var servCostNoTax =
                       double.parse(getservice['sevm_timeunit']) *
                           double.parse(value['labourrate']['lr_rate']);
+                  sertemp.serVat = servCostNoTax * (gs_vat / 100);
                   sertemp.sercost =
                       (servCostNoTax + (servCostNoTax * ((gs_vat / 100))))
                           .round();
                 } else {
+                  sertemp.serVat = 0;
                   sertemp.sercost = (double.parse(getservice['sevm_timeunit']) *
                       double.parse(value['labourrate']['lr_rate']));
                 }
@@ -149,6 +153,7 @@ class CarRepairState extends State<CarRepair> {
               sertemp.ser_type = "subpackage";
               sertemp.isPackageCheck = false;
               var pack_cost = 0.0;
+              var pack_vat = 0.0;
               for (var operations in sup_packs['operations']) {
                 if (operations['opvm_timeunit'] != null) {
                   sertemp.ser_pack_desc.add(operations['op_name']);
@@ -157,9 +162,11 @@ class CarRepairState extends State<CarRepair> {
                     var opCostNoTax =
                         (double.parse(operations['opvm_timeunit']) *
                             double.parse(value['labourrate']['lr_rate']));
+                    pack_vat = pack_vat + (opCostNoTax * (gs_vat / 100));
                     pack_cost = pack_cost +
                         (opCostNoTax + (opCostNoTax * ((gs_vat / 100))));
                   } else {
+                    pack_vat = 0.0;
                     pack_cost = pack_cost +
                         (double.parse(operations['opvm_timeunit']) *
                             double.parse(value['labourrate']['lr_rate']));
@@ -178,9 +185,11 @@ class CarRepairState extends State<CarRepair> {
                         var spCostNoTax =
                             (double.parse(spareused['scvm_price']) *
                                 double.parse(spareused['scvm_quantity']));
+                        pack_vat = pack_vat + (spCostNoTax * (gs_vat / 100));
                         pack_cost = pack_cost +
                             (spCostNoTax + (spCostNoTax * ((gs_vat / 100))));
                       } else {
+                        pack_vat = 0.0;
                         pack_cost = pack_cost +
                             (double.parse(spareused['scvm_price']) *
                                 double.parse(spareused['scvm_quantity']));
@@ -192,13 +201,8 @@ class CarRepairState extends State<CarRepair> {
                 }
               }
               sertemp.packcost = pack_cost.round();
+              sertemp.packVat = packVat.round();
               serviceList.add(sertemp);
-            }
-            if (value['settings']['gs_isvat'] == "1") {
-              packVat = totalCost * (gs_vat / 100);
-              totalCost = totalCost + (totalCost * (gs_vat / 100));
-              updatePackCost();
-              setState(() {});
             }
             if (nonMapCount == 0) {
               isPriceShow = true;
@@ -231,12 +235,15 @@ class CarRepairState extends State<CarRepair> {
 
   updatePackCost() {
     totalCost = 0;
+    totalVat = 0;
     for (var items in serviceList) {
       AMSeviceModel sertemp = items;
       if (sertemp.isPackageCheck) {
         if (sertemp.ser_type == "subpackage") {
+          totalVat = totalVat + sertemp.packVat;
           totalCost = totalCost + sertemp.packcost;
         } else {
+          totalVat = totalVat + sertemp.serVat;
           totalCost = totalCost + sertemp.sercost;
         }
       }
@@ -278,7 +285,7 @@ class CarRepairState extends State<CarRepair> {
       "package_cost": totalCost,
       "services": select_services,
       "sub_packages": select_packages,
-      "pack_vat": 50
+      "pack_vat": totalVat
     };
     prefs.setString("booking_data", json.encode(packdata));
     print(json.encode(packdata));
