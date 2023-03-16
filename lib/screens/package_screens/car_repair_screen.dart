@@ -117,8 +117,18 @@ class CarRepairState extends State<CarRepair> {
                 sertemp.serdesctypeid = getservice['ser_desc_type_id'];
                 sertemp.ser_type = "givenservice";
                 sertemp.isServiceCheck = false;
-                sertemp.sercost = (double.parse(getservice['sevm_timeunit']) *
-                    double.parse(value['labourrate']['lr_rate']));
+                if (value['settings']['gs_isvat'] == "1") {
+                  var servCostNoTax =
+                      double.parse(getservice['sevm_timeunit']) *
+                          double.parse(value['labourrate']['lr_rate']);
+                  sertemp.sercost =
+                      (servCostNoTax + (servCostNoTax * ((gs_vat / 100))))
+                          .round();
+                } else {
+                  sertemp.sercost = (double.parse(getservice['sevm_timeunit']) *
+                      double.parse(value['labourrate']['lr_rate']));
+                }
+
                 for (var descriptions in getservice['descriptions']) {
                   var temp = {
                     "id": descriptions['sdesc_id'],
@@ -143,9 +153,17 @@ class CarRepairState extends State<CarRepair> {
                 if (operations['opvm_timeunit'] != null) {
                   sertemp.ser_pack_desc.add(operations['op_name']);
                   optionList.add(operations['op_name']);
-                  pack_cost = pack_cost +
-                      (double.parse(operations['opvm_timeunit']) *
-                          double.parse(value['labourrate']['lr_rate']));
+                  if (value['settings']['gs_isvat'] == "1") {
+                    var opCostNoTax =
+                        (double.parse(operations['opvm_timeunit']) *
+                            double.parse(value['labourrate']['lr_rate']));
+                    pack_cost = pack_cost +
+                        (opCostNoTax + (opCostNoTax * ((gs_vat / 100))));
+                  } else {
+                    pack_cost = pack_cost +
+                        (double.parse(operations['opvm_timeunit']) *
+                            double.parse(value['labourrate']['lr_rate']));
+                  }
                 } else {
                   nonMapCount++;
                 }
@@ -156,16 +174,24 @@ class CarRepairState extends State<CarRepair> {
                     if (spareused['scvm_price'] != null) {
                       sertemp.ser_pack_desc.add(spares['spc_name']);
                       optionList.add(spares['spc_name']);
-                      pack_cost = pack_cost +
-                          (double.parse(spareused['scvm_price']) *
-                              double.parse(spareused['scvm_quantity']));
+                      if (value['settings']['gs_isvat'] == "1") {
+                        var spCostNoTax =
+                            (double.parse(spareused['scvm_price']) *
+                                double.parse(spareused['scvm_quantity']));
+                        pack_cost = pack_cost +
+                            (spCostNoTax + (spCostNoTax * ((gs_vat / 100))));
+                      } else {
+                        pack_cost = pack_cost +
+                            (double.parse(spareused['scvm_price']) *
+                                double.parse(spareused['scvm_quantity']));
+                      }
                     }
                   }
                 } else {
                   nonMapCount++;
                 }
               }
-              sertemp.packcost = pack_cost;
+              sertemp.packcost = pack_cost.round();
               serviceList.add(sertemp);
             }
             if (value['settings']['gs_isvat'] == "1") {
