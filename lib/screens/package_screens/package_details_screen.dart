@@ -1007,11 +1007,13 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                   if (microphoneStatus ==
                                                                       PermissionStatus
                                                                           .denied) {
-                                                                    ScaffoldMessenger.of(
-                                                                            context)
-                                                                        .showSnackBar(const SnackBar(
-                                                                            content:
-                                                                                Text("This Permission is recommended for audio recording.")));
+                                                                    showCustomToast(
+                                                                        context,
+                                                                        "This Permission is recommended for audio recording.",
+                                                                        bgColor:
+                                                                            errorcolor,
+                                                                        textColor:
+                                                                            white);
                                                                   }
                                                                   if (microphoneStatus ==
                                                                       PermissionStatus

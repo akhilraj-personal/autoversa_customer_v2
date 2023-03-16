@@ -4,6 +4,7 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/screens/address/address_add_screen.dart';
+import 'package:autoversa/screens/address/address_edit_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -11,6 +12,7 @@ import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AddressList extends StatefulWidget {
@@ -25,32 +27,11 @@ class AddressListState extends State<AddressList> {
   late List stateList = [];
   List<String?> SelectAddressList = <String?>["Select Address"];
   List<String?> SelectCityList = <String?>["Select City"];
-  StreamSubscription? internetconnection;
   bool isActive = true;
 
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       Navigator.push(
-    //           context, MaterialPageRoute(builder: (context) => AddressList()));
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       Navigator.push(
-    //           context, MaterialPageRoute(builder: (context) => AddressList()));
-    //     });
-    //   }
-    // });
     Future.delayed(Duration.zero, () {
       addressList();
     });
@@ -64,7 +45,6 @@ class AddressListState extends State<AddressList> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   addressList() async {
@@ -112,6 +92,22 @@ class AddressListState extends State<AddressList> {
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     }
+  }
+
+  address_delete(id) async {
+    Map delreq = {"cad_id": id};
+    await deleteCustomerAddress(delreq).then((value) async {
+      if (value['ret_data'] == "success") {
+        await Future.delayed(Duration(milliseconds: 1000));
+        addressList();
+        showCustomToast(context, "Address Deleted",
+            bgColor: Colors.black, textColor: Colors.white);
+      } else {
+        showCustomToast(
+            context, "Created a booking. so can't delete the address",
+            bgColor: warningcolor, textColor: Colors.white);
+      }
+    });
   }
 
   @override
@@ -166,13 +162,6 @@ class AddressListState extends State<AddressList> {
               color: Colors.white,
             ),
           ),
-          // leading: IconButton(
-          //   onPressed: () {
-          //     Navigator.pop(context);
-          //   },
-          //   icon: const Icon(Icons.arrow_back, color: Colors.white),
-          //   iconSize: 18,
-          // ),
         ),
         body: Container(
           child: Column(
@@ -309,14 +298,23 @@ class AddressListState extends State<AddressList> {
                                             ),
                                             child: Row(
                                               children: <Widget>[
-                                                SizedBox(width: 16.0),
-                                                Image.asset(
-                                                    ImageConst.adrresslist_logo,
-                                                    width: width / 8,
-                                                    height: 50),
-                                                SizedBox(width: 16.0),
                                                 Expanded(
                                                   flex: 2,
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(
+                                                        left: 0, right: 16),
+                                                    width: width * 0.2,
+                                                    child: Image.asset(
+                                                        ImageConst
+                                                            .adrresslist_logo,
+                                                        width: width / 8,
+                                                        height: 50),
+                                                    padding: EdgeInsets.all(
+                                                        width / 30),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 4,
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
@@ -328,14 +326,8 @@ class AddressListState extends State<AddressList> {
                                                                 .start,
                                                         children: <Widget>[
                                                           Flexible(
-                                                            child:
-                                                                new Container(
-                                                              padding:
-                                                                  new EdgeInsets
-                                                                          .only(
-                                                                      right:
-                                                                          13.0),
-                                                              child: new Text(
+                                                            child: Container(
+                                                              child: Text(
                                                                 custAddressList[index]
                                                                             [
                                                                             'cad_address'] !=
@@ -348,12 +340,12 @@ class AddressListState extends State<AddressList> {
                                                                 overflow:
                                                                     TextOverflow
                                                                         .clip,
-                                                                style:
-                                                                    new TextStyle(
-                                                                  fontSize:
-                                                                      13.0,
-                                                                  color: black,
-                                                                ),
+                                                                style: montserratMedium.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.034),
                                                               ),
                                                             ),
                                                           ),
@@ -365,24 +357,31 @@ class AddressListState extends State<AddressList> {
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: <Widget>[
-                                                          Text(
-                                                              custAddressList[index]
-                                                                          [
-                                                                          'state_name'] !=
-                                                                      null
-                                                                  ? "City" +
-                                                                      ": " +
-                                                                      custAddressList[
-                                                                              index]
-                                                                          [
-                                                                          'state_name']
-                                                                  : "",
-                                                              style: montserratRegular
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          12)),
+                                                          Flexible(
+                                                            child: Container(
+                                                              child: Text(
+                                                                custAddressList[index]
+                                                                            [
+                                                                            'state_name'] !=
+                                                                        null
+                                                                    ? "City" +
+                                                                        ": " +
+                                                                        custAddressList[index]
+                                                                            [
+                                                                            'state_name']
+                                                                    : "",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .clip,
+                                                                style: montserratMedium.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.034),
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                       4.height,
@@ -391,24 +390,31 @@ class AddressListState extends State<AddressList> {
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: <Widget>[
-                                                          Text(
-                                                              custAddressList[index]
-                                                                          [
-                                                                          'city_name'] !=
-                                                                      null
-                                                                  ? "Area" +
-                                                                      ": " +
-                                                                      custAddressList[
-                                                                              index]
-                                                                          [
-                                                                          'city_name']
-                                                                  : "",
-                                                              style: montserratRegular
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          12)),
+                                                          Flexible(
+                                                            child: Container(
+                                                              child: Text(
+                                                                custAddressList[index]
+                                                                            [
+                                                                            'city_name'] !=
+                                                                        null
+                                                                    ? "Area" +
+                                                                        ": " +
+                                                                        custAddressList[index]
+                                                                            [
+                                                                            'city_name']
+                                                                    : "",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .clip,
+                                                                style: montserratMedium.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.034),
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                       4.height,
@@ -417,34 +423,31 @@ class AddressListState extends State<AddressList> {
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: <Widget>[
-                                                          Text(
-                                                              custAddressList[
-                                                                              index][
-                                                                          'cad_landmark'] !=
-                                                                      null
-                                                                  ? "Building Name/Flat No" +
-                                                                      ": " +
-                                                                      custAddressList[
-                                                                              index]
-                                                                          [
-                                                                          'cad_landmark']
-                                                                  : "",
-                                                              maxLines: 5,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textDirection:
-                                                                  TextDirection
-                                                                      .rtl,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .justify,
-                                                              style: montserratRegular
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          12)),
+                                                          Flexible(
+                                                            child: Container(
+                                                              child: Text(
+                                                                custAddressList[index]
+                                                                            [
+                                                                            'cad_landmark'] !=
+                                                                        null
+                                                                    ? "Building Name/Flat No" +
+                                                                        ": " +
+                                                                        custAddressList[index]
+                                                                            [
+                                                                            'cad_landmark']
+                                                                    : "",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .clip,
+                                                                style: montserratMedium.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.034),
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                       4.height,
@@ -453,31 +456,90 @@ class AddressListState extends State<AddressList> {
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: <Widget>[
-                                                          Text(
-                                                              custAddressList[index]
-                                                                          [
-                                                                          'cad_address_type'] !=
-                                                                      null
-                                                                  ? "Type" +
-                                                                      ": " +
-                                                                      custAddressList[
-                                                                              index]
-                                                                          [
-                                                                          'cad_address_type']
-                                                                  : "",
-                                                              style: montserratRegular
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          13)),
+                                                          Flexible(
+                                                            child: Container(
+                                                              child: Text(
+                                                                custAddressList[index]
+                                                                            [
+                                                                            'cad_address_type'] !=
+                                                                        null
+                                                                    ? "Type" +
+                                                                        ": " +
+                                                                        custAddressList[index]
+                                                                            [
+                                                                            'cad_address_type']
+                                                                    : "",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .clip,
+                                                                style: montserratMedium.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.034),
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                     ],
                                                   ),
                                                 ),
+                                                Expanded(
+                                                    flex: 1,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        showConfirmDialogCustom(
+                                                          height: 65,
+                                                          context,
+                                                          title:
+                                                              'Are you sure you want to delete this address.?',
+                                                          primaryColor:
+                                                              syanColor,
+                                                          customCenterWidget:
+                                                              Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 8),
+                                                            child: Image.asset(
+                                                                "assets/icons/address_list_icon.png",
+                                                                width:
+                                                                    width / 2,
+                                                                height: 95),
+                                                          ),
+                                                          onAccept: (v) {
+                                                            address_delete(
+                                                                custAddressList[
+                                                                        index]
+                                                                    ['cad_id']);
+                                                          },
+                                                        );
+                                                      },
+                                                      child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                            right: 8,
+                                                          ),
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            color: black,
+                                                            size: 22,
+                                                          )),
+                                                    )),
                                               ],
-                                            )),
+                                            ).onTap(() {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddressEdit(
+                                                              address_id:
+                                                                  custAddressList[
+                                                                          index]
+                                                                      [
+                                                                      'cad_id'])));
+                                            })),
                                       ],
                                     ),
                                   ],
@@ -589,9 +651,21 @@ class AddressListState extends State<AddressList> {
                 shape: BoxShape.circle,
                 gradient: LinearGradient(colors: [lightblueColor, syanColor])),
           ),
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => AddressAdd()));
+          onPressed: () async {
+            PermissionStatus locationStatus =
+                await Permission.location.request();
+            if (locationStatus == PermissionStatus.denied) {
+              showCustomToast(context,
+                  "This Permission is recommended for location access.",
+                  bgColor: errorcolor, textColor: white);
+            }
+            if (locationStatus == PermissionStatus.permanentlyDenied) {
+              openAppSettings();
+            }
+            if (locationStatus == PermissionStatus.granted) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AddressAdd()));
+            }
           },
           heroTag: 'Add Address',
         ),

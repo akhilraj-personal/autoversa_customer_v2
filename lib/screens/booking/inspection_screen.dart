@@ -61,25 +61,6 @@ class InspectionScreenState extends State<InspectionScreen>
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     Future.delayed(Duration.zero, () {
       _getInspectionDetailsList();
     });
@@ -103,7 +84,6 @@ class InspectionScreenState extends State<InspectionScreen>
   void dispose() {
     _controller.dispose();
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   _getInspectionDetailsList() async {

@@ -9,8 +9,6 @@ import 'package:flutter_stripe/flutter_stripe.dart' hide Card;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../constant/image_const.dart';
 import '../../constant/text_style.dart';
 import '../../generated/l10n.dart';

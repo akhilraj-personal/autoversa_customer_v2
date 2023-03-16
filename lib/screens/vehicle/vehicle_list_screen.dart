@@ -5,6 +5,7 @@ import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/vehicle/vehicle_add_page.dart';
+import 'package:autoversa/screens/vehicle/vehicle_update_page.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -27,31 +28,10 @@ class Vehiclelist extends StatefulWidget {
 class VehiclelistState extends State<Vehiclelist> {
   late List<VehicleModel> custvehlist = [];
   bool isActive = true;
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     Future.delayed(Duration.zero, () {
       _getCustomerVehicles();
     });
@@ -337,226 +317,232 @@ class VehiclelistState extends State<Vehiclelist> {
                                                   ]),
                                             ),
                                             Container(
-                                              margin: EdgeInsets.all(8.0),
-                                              padding: EdgeInsets.all(4.0),
-                                              decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.white,
-                                                    blurRadius: 0.1,
-                                                    spreadRadius: 0,
-                                                  ),
-                                                ],
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                border: Border.all(
-                                                    color: Colors.grey
-                                                        .withOpacity(0.19)),
-                                              ),
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        8),
-                                                                topRight:
-                                                                    Radius
-                                                                        .circular(
-                                                                            8),
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        8),
-                                                                bottomRight:
-                                                                    Radius
-                                                                        .circular(
-                                                                            8)),
-                                                      ),
-                                                      margin: EdgeInsets.only(
-                                                          left: 0, right: 16),
-                                                      width: width * 0.2,
-                                                      child: Image.asset(
-                                                        custvehlist[index]
-                                                                    .cv_make ==
-                                                                'Mercedes Benz'
-                                                            ? ImageConst
-                                                                .benz_ico
-                                                            : custvehlist[index]
-                                                                        .cv_make ==
-                                                                    'BMW'
-                                                                ? ImageConst
-                                                                    .bmw_ico
-                                                                : custvehlist[index]
-                                                                            .cv_make ==
-                                                                        'Skoda'
-                                                                    ? ImageConst
-                                                                        .skod_ico
-                                                                    : custvehlist[index].cv_make ==
-                                                                            'Audi'
-                                                                        ? ImageConst
-                                                                            .aud_ico
-                                                                        : custvehlist[index].cv_make ==
-                                                                                'Porsche'
-                                                                            ? ImageConst.porsche_ico
-                                                                            : custvehlist[index].cv_make == 'Volkswagen'
-                                                                                ? ImageConst.volkswagen_icon
-                                                                                : ImageConst.defcar_ico,
-                                                      ),
-                                                      padding: EdgeInsets.all(
-                                                          width / 30),
+                                                margin: EdgeInsets.all(8.0),
+                                                padding: EdgeInsets.all(4.0),
+                                                decoration: BoxDecoration(
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.white,
+                                                      blurRadius: 0.1,
+                                                      spreadRadius: 0,
                                                     ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 4,
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: <Widget>[
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                          0,
-                                                                          8,
-                                                                          8,
-                                                                          0),
-                                                              child: Text(
-                                                                  custvehlist[index]
-                                                                      .cv_plate_number,
-                                                                  style: montserratSemiBold.copyWith(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.043)),
-                                                            ),
-                                                          ],
+                                                  ],
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.19)),
+                                                ),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius: BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(8),
+                                                              topRight: Radius
+                                                                  .circular(8),
+                                                              bottomLeft: Radius
+                                                                  .circular(8),
+                                                              bottomRight:
+                                                                  Radius
+                                                                      .circular(
+                                                                          8)),
                                                         ),
-                                                        SizedBox(
-                                                          height: 4,
+                                                        margin: EdgeInsets.only(
+                                                            left: 0, right: 16),
+                                                        width: width * 0.2,
+                                                        child: Image.asset(
+                                                          custvehlist[index]
+                                                                      .cv_make ==
+                                                                  'Mercedes Benz'
+                                                              ? ImageConst
+                                                                  .benz_ico
+                                                              : custvehlist[index]
+                                                                          .cv_make ==
+                                                                      'BMW'
+                                                                  ? ImageConst
+                                                                      .bmw_ico
+                                                                  : custvehlist[index]
+                                                                              .cv_make ==
+                                                                          'Skoda'
+                                                                      ? ImageConst
+                                                                          .skod_ico
+                                                                      : custvehlist[index].cv_make ==
+                                                                              'Audi'
+                                                                          ? ImageConst
+                                                                              .aud_ico
+                                                                          : custvehlist[index].cv_make == 'Porsche'
+                                                                              ? ImageConst.porsche_ico
+                                                                              : custvehlist[index].cv_make == 'Volkswagen'
+                                                                                  ? ImageConst.volkswagen_icon
+                                                                                  : ImageConst.defcar_ico,
                                                         ),
-                                                        Row(
-                                                          children: <Widget>[
-                                                            Flexible(
-                                                              child: Container(
+                                                        padding: EdgeInsets.all(
+                                                            width / 30),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 4,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: <Widget>[
+                                                              Container(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .fromLTRB(
+                                                                            0,
+                                                                            8,
+                                                                            8,
+                                                                            0),
                                                                 child: Text(
-                                                                    custvehlist[index].cv_make +
-                                                                        " " +
-                                                                        custvehlist[index]
-                                                                            .cv_model +
-                                                                        " " +
-                                                                        (custvehlist[index].cv_variant !=
-                                                                                null
-                                                                            ? custvehlist[index]
-                                                                                .cv_variant
-                                                                            : "") +
-                                                                        " (" +
-                                                                        custvehlist[index]
-                                                                            .cv_year +
-                                                                        ")",
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .clip,
-                                                                    style: montserratRegular.copyWith(
-                                                                        color:
-                                                                            black,
+                                                                    custvehlist[
+                                                                            index]
+                                                                        .cv_plate_number,
+                                                                    style: montserratSemiBold.copyWith(
+                                                                        color: Colors
+                                                                            .black,
                                                                         fontSize:
                                                                             width *
-                                                                                0.034)),
+                                                                                0.043)),
                                                               ),
-                                                            ),
-                                                          ],
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                        ),
-                                                        SizedBox(
-                                                          height: 4,
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: <Widget>[
-                                                            Container(
-                                                              child: Text(
-                                                                  custvehlist[index].cv_odometer !=
-                                                                          null
-                                                                      ? "Odometer: " +
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 4,
+                                                          ),
+                                                          Row(
+                                                            children: <Widget>[
+                                                              Flexible(
+                                                                child:
+                                                                    Container(
+                                                                  child: Text(
+                                                                      custvehlist[index].cv_make +
+                                                                          " " +
                                                                           custvehlist[index]
-                                                                              .cv_odometer
-                                                                      : "",
-                                                                  style: montserratRegular.copyWith(
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.034,
-                                                                      color: Colors
-                                                                          .black)),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                      ],
+                                                                              .cv_model +
+                                                                          " " +
+                                                                          (custvehlist[index].cv_variant != null
+                                                                              ? custvehlist[index]
+                                                                                  .cv_variant
+                                                                              : "") +
+                                                                          " (" +
+                                                                          custvehlist[index]
+                                                                              .cv_year +
+                                                                          ")",
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .clip,
+                                                                      style: montserratRegular.copyWith(
+                                                                          color:
+                                                                              black,
+                                                                          fontSize:
+                                                                              width * 0.034)),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 4,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: <Widget>[
+                                                              Container(
+                                                                child: Text(
+                                                                    custvehlist[index].cv_odometer !=
+                                                                            null
+                                                                        ? "Odometer: " +
+                                                                            custvehlist[index]
+                                                                                .cv_odometer
+                                                                        : "",
+                                                                    style: montserratRegular.copyWith(
+                                                                        fontSize:
+                                                                            width *
+                                                                                0.034,
+                                                                        color: Colors
+                                                                            .black)),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 8,
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Expanded(
-                                                      flex: 1,
-                                                      child: GestureDetector(
-                                                        onTap: () {
-                                                          showConfirmDialogCustom(
-                                                            height: 65,
-                                                            context,
-                                                            title:
-                                                                'Are you sure you want to delete this vehicle.?',
-                                                            primaryColor:
-                                                                syanColor,
-                                                            customCenterWidget:
-                                                                Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(top: 8),
-                                                              child: Image.asset(
-                                                                  "assets/icons/car.png",
-                                                                  width:
-                                                                      width / 2,
-                                                                  height: 95),
-                                                            ),
-                                                            onAccept: (v) {
-                                                              vehicle_delete(
-                                                                  custvehlist[
+                                                    Expanded(
+                                                        flex: 1,
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            showConfirmDialogCustom(
+                                                              height: 65,
+                                                              context,
+                                                              title:
+                                                                  'Are you sure you want to delete this vehicle.?',
+                                                              primaryColor:
+                                                                  syanColor,
+                                                              customCenterWidget:
+                                                                  Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        top: 8),
+                                                                child: Image.asset(
+                                                                    "assets/icons/car.png",
+                                                                    width:
+                                                                        width /
+                                                                            2,
+                                                                    height: 95),
+                                                              ),
+                                                              onAccept: (v) {
+                                                                vehicle_delete(
+                                                                    custvehlist[
+                                                                            index]
+                                                                        .cv_id);
+                                                              },
+                                                            );
+                                                          },
+                                                          child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .only(
+                                                                right: 8,
+                                                              ),
+                                                              child: Icon(
+                                                                Icons.delete,
+                                                                color: black,
+                                                                size: 22,
+                                                              )),
+                                                        )),
+                                                  ],
+                                                ).onTap(() {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              VehicleUpdate(
+                                                                  vehicle_id: custvehlist[
                                                                           index]
-                                                                      .cv_id);
-                                                            },
-                                                          );
-                                                        },
-                                                        child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                              right: 8,
-                                                            ),
-                                                            child: Icon(
-                                                              Icons.delete,
-                                                              color: black,
-                                                              size: 22,
-                                                            )),
-                                                      )),
-                                                ],
-                                              ),
-                                            ),
+                                                                      .cv_id)));
+                                                })),
                                           ],
                                         ),
                                       );
