@@ -59,13 +59,13 @@ class CarRepairState extends State<CarRepair> {
   bool recordLocation = false;
   double totalCost = 0;
   TextEditingController complaint = new TextEditingController();
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
   bool isServicing = true;
   String serviceMsg = '';
   bool recordPending = false;
   bool isbooked = false;
   double packVat = 0.0;
+  var gs_vat;
+  var veh_groupid;
 
   late Map<String, dynamic> packageinfo;
 
@@ -104,7 +104,8 @@ class CarRepairState extends State<CarRepair> {
         var nonMapCount = 0;
         await getServicePackageDetails(req).then((value) {
           if (value['ret_data'] == "success") {
-            var gs_vat = int.parse(value['settings']['gs_vat']);
+            gs_vat = int.parse(value['settings']['gs_vat']);
+            veh_groupid = int.parse(value['veh_group']['vgroup_id']);
             serviceList = [];
             isServicing = true;
             packageinfo = value;
@@ -252,7 +253,9 @@ class CarRepairState extends State<CarRepair> {
       "package_cost": totalCost,
       "services": select_services,
       "sub_packages": select_packages,
-      "pack_vat": 50
+      "pack_vat": 50,
+      "veh_groupid": veh_groupid,
+      "gs_vat": gs_vat
     };
     prefs.setString("booking_data", json.encode(packdata));
     print(json.encode(packdata));
