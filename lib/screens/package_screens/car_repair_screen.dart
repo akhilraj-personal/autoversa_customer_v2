@@ -252,8 +252,10 @@ class CarRepairState extends State<CarRepair> {
       "package_cost": totalCost,
       "services": select_services,
       "sub_packages": select_packages,
+      "pack_vat": 50
     };
     prefs.setString("booking_data", json.encode(packdata));
+    print(json.encode(packdata));
     setState(() => isbooked = false);
     Navigator.push(
         context,

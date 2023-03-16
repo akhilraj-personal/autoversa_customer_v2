@@ -2778,10 +2778,35 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                       GestureDetector(
                                                                 onTap:
                                                                     () async {
-                                                                  bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
-                                                                          'us_country_code'] +
-                                                                      drivercontact[
-                                                                          'us_phone']);
+                                                                  PermissionStatus
+                                                                      phoneStatus =
+                                                                      await Permission
+                                                                          .phone
+                                                                          .request();
+                                                                  if (phoneStatus ==
+                                                                      PermissionStatus
+                                                                          .denied) {
+                                                                    showCustomToast(
+                                                                        context,
+                                                                        "This Permission is recommended for calling.",
+                                                                        bgColor:
+                                                                            errorcolor,
+                                                                        textColor:
+                                                                            white);
+                                                                  }
+                                                                  if (phoneStatus ==
+                                                                      PermissionStatus
+                                                                          .permanentlyDenied) {
+                                                                    openAppSettings();
+                                                                  }
+                                                                  if (phoneStatus ==
+                                                                      PermissionStatus
+                                                                          .granted) {
+                                                                    bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
+                                                                            'us_country_code'] +
+                                                                        drivercontact[
+                                                                            'us_phone']);
+                                                                  }
                                                                 },
                                                                 child: Stack(
                                                                   alignment:
