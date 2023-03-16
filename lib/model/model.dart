@@ -137,6 +137,8 @@ class AMSeviceModel {
   var ser_pack_desc = [];
   var sercost;
   var packcost;
+  var packVat;
+  var serVat;
   bool isPackageCheck;
   bool isServiceCheck;
 
