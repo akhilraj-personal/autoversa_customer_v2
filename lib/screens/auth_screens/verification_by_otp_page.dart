@@ -13,6 +13,7 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
 
 import '../../services/pre_auth_services.dart';
 import '../../utils/common_utils.dart';
@@ -41,30 +42,22 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
   String otppin = '';
   String codeValue = "";
 
+  int _otpCodeLength = 4;
+  bool _isLoadingButton = false;
+  bool _enableButton = false;
+  String _otpCode = "";
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final intRegex = RegExp(r'\d+', multiLine: true);
+  TextEditingController textEditingController =
+      new TextEditingController(text: "");
+
   @override
   void initState() {
     OTPtimer = int.parse(widget.timer['gs_reotp_time']);
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     startTimer();
+    _getSignatureCode();
+    _startListeningSms();
   }
 
   void startTimer() {
@@ -83,11 +76,74 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
     );
   }
 
+  BoxDecoration get _pinPutDecoration {
+    return BoxDecoration(
+      border: Border.all(color: greyColor),
+      borderRadius: BorderRadius.circular(12.0),
+    );
+  }
+
+  /// get signature code
+  _getSignatureCode() async {
+    String? signature = await SmsVerification.getAppSignature();
+    print("signature $signature");
+  }
+
+  /// listen sms
+  _startListeningSms() {
+    SmsVerification.startListeningSms().then((message) {
+      setState(() {
+        _otpCode = SmsVerification.getCode(message, intRegex);
+        print("================");
+        print(_otpCode);
+        textEditingController.text = _otpCode;
+        _onOtpCallBack(_otpCode, true);
+      });
+    });
+  }
+
+  // _onSubmitOtp() {
+  //   setState(() {
+  //     _isLoadingButton = !_isLoadingButton;
+  //     _verifyOtpCode();
+  //   });
+  // }
+
+  // _onClickRetry() {
+  //   _startListeningSms();
+  // }
+
+  _onOtpCallBack(String otpCode, bool isAutofill) {
+    setState(() {
+      this._otpCode = otpCode;
+      if (otpCode.length == _otpCodeLength && isAutofill) {
+        _enableButton = false;
+        _isLoadingButton = true;
+        // submit_otp(otpCode);
+      } else if (otpCode.length == _otpCodeLength && !isAutofill) {
+        _enableButton = true;
+        _isLoadingButton = false;
+      } else {
+        _enableButton = false;
+      }
+    });
+  }
+
+  // _verifyOtpCode() {
+  //   FocusScope.of(context).requestFocus(new FocusNode());
+  //   Timer(Duration(milliseconds: 4000), () {
+  //     setState(() {
+  //       _isLoadingButton = false;
+  //       _enableButton = false;
+  //     });
+  //   });
+  // }
+
   @override
   void dispose() {
     _timer.cancel();
     super.dispose();
-    // internetconnection!.cancel();
+    SmsVerification.stopListening();
   }
 
   reSendOTP() async {
@@ -98,6 +154,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
     };
     await customerLoginService(req).then((value) {
       if (value['ret_data'] == "success") {
+        _startListeningSms();
         isResend = false;
         OTPtimer = int.parse(value['timer']['gs_reotp_time']);
         click_count++;
@@ -353,36 +410,48 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: height * 0.02),
-                        OtpTextField(
-                          numberOfFields: 4,
-                          fieldWidth: width * 0.14,
-                          clearText: true,
-                          focusedBorderColor: syanColor,
-                          cursorColor: syanColor,
-                          showFieldAsBox: true,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(12.0)),
-                          onCodeChanged: (String code) {
-                            setState(() {
-                              otppin = "";
-                            });
-                          },
-                          onSubmit: (String verificationCode) {
-                            setState(() {
-                              otppin = verificationCode;
-                            });
-                          }, // end onSubmit
-                        ),
-                        // Padding(
-                        //   padding: EdgeInsets.fromLTRB(24, 8, 24, 0),
-                        //   child: PinFieldAutoFill(
-                        //     codeLength: 4,
-                        //     onCodeChanged: (code) {
-                        //       codeValue = code.toString();
-                        //     },
-                        //     onCodeSubmitted: (val) {},
-                        //   ),
+                        // OtpTextField(
+                        //   numberOfFields: 4,
+                        //   fieldWidth: width * 0.14,
+                        //   clearText: true,
+                        //   focusedBorderColor: syanColor,
+                        //   cursorColor: syanColor,
+                        //   showFieldAsBox: true,
+                        //   borderRadius:
+                        //       const BorderRadius.all(Radius.circular(12.0)),
+                        //   onCodeChanged: (String code) {
+                        //     setState(() {
+                        //       otppin = "";
+                        //     });
+                        //   },
+                        //   onSubmit: (String verificationCode) {
+                        //     setState(() {
+                        //       otppin = verificationCode;
+                        //     });
+                        //   }, // end onSubmit
                         // ),
+
+                        TextFieldPin(
+                            textController: textEditingController,
+                            autoFocus: true,
+                            codeLength: _otpCodeLength,
+                            alignment: MainAxisAlignment.center,
+                            defaultBoxSize: width * 0.135,
+                            margin: 5,
+                            selectedBoxSize: width * 0.135,
+                            textStyle:
+                                montserratSemiBold.copyWith(fontSize: 16),
+                            defaultDecoration: _pinPutDecoration.copyWith(
+                                border: Border.all(
+                                    color: greyColor.withOpacity(0.6))),
+                            selectedDecoration: _pinPutDecoration,
+                            onChange: (verificationCode) {
+                              setState(() {
+                                otppin = verificationCode;
+                                print(otppin);
+                              });
+                              _onOtpCallBack(verificationCode, false);
+                            }),
                         SizedBox(height: 16),
                         Container(
                           child: isResend
