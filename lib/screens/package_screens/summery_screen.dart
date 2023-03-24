@@ -904,7 +904,7 @@ class SummeryPageState extends State<SummeryPage> {
                             decoration: InputDecoration(
                                 counterText: "",
                                 hintText: ST.of(context).your_message_here,
-                                hintStyle: montserratRegular.copyWith(
+                                hintStyle: montserratMedium.copyWith(
                                     color: blackColor, fontSize: width * 0.04),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide:
