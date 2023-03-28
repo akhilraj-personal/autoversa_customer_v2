@@ -119,8 +119,7 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                           double.parse(value['booking']['bkp_vat']).round(),
                   selected_pickup_type_cost =
                       double.parse(value['booking']['bk_pickup_cost']) +
-                          double.parse(value['booking']['bk_pickup_vat'])
-                              .round(),
+                          double.parse(value['booking']['bk_pickup_vat']),
                   pickupcost =
                       double.parse(value['booking']['bk_total_amount']) -
                           double.parse(value['booking']['bkp_cust_amount']),
