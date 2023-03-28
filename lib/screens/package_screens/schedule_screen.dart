@@ -341,7 +341,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       await getPickupOptions().then((value) {
         gs_vat = int.parse(value['settings']['gs_vat']);
         gs_isvat = int.parse(value['settings']['gs_isvat']);
-        print(value['settings']['gs_vat']);
         freeservicedistance =
             int.parse(value['settings']['gs_freeservicearea']);
         servicedistance = int.parse(value['settings']['gs_service_area']);

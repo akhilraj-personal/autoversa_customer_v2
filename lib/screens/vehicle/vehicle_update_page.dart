@@ -235,7 +235,7 @@ class VehicleUpdateState extends State<VehicleUpdate> {
                                         child: TextField(
                                           controller: makeController,
                                           enabled: false,
-                                          textAlign: TextAlign.left,
+                                          textAlign: TextAlign.center,
                                           keyboardType: TextInputType.text,
                                           maxLines: 1,
                                           style: montserratMedium.copyWith(
@@ -298,7 +298,7 @@ class VehicleUpdateState extends State<VehicleUpdate> {
                                         child: TextField(
                                           controller: modelController,
                                           enabled: false,
-                                          textAlign: TextAlign.left,
+                                          textAlign: TextAlign.center,
                                           keyboardType: TextInputType.text,
                                           maxLines: 1,
                                           style: montserratMedium.copyWith(
@@ -372,7 +372,7 @@ class VehicleUpdateState extends State<VehicleUpdate> {
                                                     controller:
                                                         varientController,
                                                     enabled: false,
-                                                    textAlign: TextAlign.left,
+                                                    textAlign: TextAlign.center,
                                                     keyboardType:
                                                         TextInputType.text,
                                                     maxLines: 1,
@@ -446,7 +446,7 @@ class VehicleUpdateState extends State<VehicleUpdate> {
                                         child: TextField(
                                           controller: yearController,
                                           enabled: false,
-                                          textAlign: TextAlign.left,
+                                          textAlign: TextAlign.center,
                                           keyboardType: TextInputType.text,
                                           maxLines: 1,
                                           style: montserratMedium.copyWith(
@@ -507,6 +507,7 @@ class VehicleUpdateState extends State<VehicleUpdate> {
                                             left: width * 0.025),
                                         child: TextFormField(
                                           controller: platenumberController,
+                                          textAlign: TextAlign.center,
                                           keyboardType: TextInputType.multiline,
                                           minLines: 1,
                                           maxLength: 80,

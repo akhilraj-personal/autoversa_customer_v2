@@ -1702,7 +1702,10 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            showCustomToast(context, "Coming Soon",
+                bgColor: warningcolor, textColor: white);
+          },
           child: Container(
             padding: EdgeInsets.all(height * 0.023),
             decoration: BoxDecoration(
