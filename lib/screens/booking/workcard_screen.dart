@@ -106,8 +106,7 @@ class WorkcardState extends State<Workcard> {
                           double.parse(value['booking']['bkp_vat']).round(),
                   selected_pickup_type_cost =
                       double.parse(value['booking']['bk_pickup_cost']) +
-                          double.parse(value['booking']['bk_pickup_vat'])
-                              .round(),
+                          double.parse(value['booking']['bk_pickup_vat']),
                   pickupcost =
                       double.parse(value['booking']['bk_total_amount']) -
                           double.parse(value['booking']['bkp_cust_amount']),
@@ -374,7 +373,7 @@ class WorkcardState extends State<Workcard> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 10),
+              // SizedBox(height: 10),
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: SingleChildScrollView(
