@@ -477,7 +477,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                 children: [
                                   Container(
                                     margin: EdgeInsets.fromLTRB(
-                                        16.5, height * 0.11, 16.5, 16.5),
+                                        24.5, height * 0.11, 24.5, 16.5),
                                     padding: EdgeInsets.all(8.5),
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(12),
