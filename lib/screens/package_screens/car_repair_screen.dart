@@ -567,7 +567,8 @@ class CarRepairState extends State<CarRepair> {
                                 alignment: Alignment.bottomCenter,
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.all(17.5),
+                                    margin: EdgeInsets.fromLTRB(
+                                        24.5, height * 0.11, 24.5, 16.5),
                                     padding: EdgeInsets.all(8.5),
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(12),
@@ -581,10 +582,9 @@ class CarRepairState extends State<CarRepair> {
                                         ]),
                                   ),
                                   Container(
-                                    // padding: EdgeInsets.only(top: 8.0),
                                     margin:
                                         EdgeInsets.only(top: 12, bottom: 12),
-                                    width: width * 0.90,
+                                    width: width * 0.92,
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
@@ -598,7 +598,7 @@ class CarRepairState extends State<CarRepair> {
                                       color: Colors.white,
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsets.all(8),
+                                      padding: EdgeInsets.all(height * 0.02),
                                       child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -703,7 +703,7 @@ class CarRepairState extends State<CarRepair> {
                                                                             color:
                                                                                 black,
                                                                             fontSize:
-                                                                                14),
+                                                                                width * 0.04),
                                                                       ),
                                                                     ),
                                                                   ],
@@ -723,40 +723,43 @@ class CarRepairState extends State<CarRepair> {
                                                                     color:
                                                                         black,
                                                                     fontSize:
-                                                                        14),
+                                                                        width *
+                                                                            0.034),
                                                           ),
                                                           Text(
-                                                              widget.custvehlist[
-                                                                          0][
-                                                                      'cv_model'] +
-                                                                  " ",
-                                                              style: montserratSemiBold
+                                                              widget.custvehlist[0]['cv_variant'] !=
+                                                                          "" &&
+                                                                      widget.custvehlist[0]['cv_variant'] !=
+                                                                          null
+                                                                  ? widget.custvehlist[0][
+                                                                          'cv_model'] +
+                                                                      " - " +
+                                                                      widget.custvehlist[0][
+                                                                          'cv_variant']
+                                                                  : widget.custvehlist[0][
+                                                                      'cv_model'],
+                                                              style: montserratRegular
                                                                   .copyWith(
                                                                       color:
                                                                           black,
-                                                                      fontSize:
-                                                                          10),
+                                                                      fontSize: width *
+                                                                          0.028),
                                                               maxLines: 2),
                                                           Text(
-                                                              widget.custvehlist[0]
-                                                                              [
-                                                                              'cv_variant'] !=
-                                                                          "" &&
-                                                                      widget.custvehlist[0]
-                                                                              [
-                                                                              'cv_variant'] !=
-                                                                          null
-                                                                  ? widget.custvehlist[
-                                                                          0][
-                                                                      'cv_variant']
-                                                                  : "",
-                                                              style: montserratSemiBold
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          10),
-                                                              maxLines: 2),
+                                                            isPriceShow
+                                                                ? widget.currency +
+                                                                    " " +
+                                                                    (totalCost
+                                                                            .round())
+                                                                        .toString()
+                                                                : "Loading",
+                                                            style: montserratSemiBold
+                                                                .copyWith(
+                                                                    color:
+                                                                        warningcolor,
+                                                                    fontSize:
+                                                                        17),
+                                                          ),
                                                         ],
                                                       )),
                                                   const SizedBox(width: 5),
