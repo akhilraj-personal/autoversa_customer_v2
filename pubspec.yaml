@@ -55,7 +55,7 @@ dependencies:
   video_player: ^2.4.10
   flutter_stripe: ^7.0.0
   camera: ^0.10.3
-  sms_autofill: ^2.3.0
+  sms_otp_auto_verify: ^2.1.0
 
 
 dev_dependencies:

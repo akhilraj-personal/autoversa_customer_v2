@@ -72,6 +72,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   var landmark = "";
   var AddressType = "Home";
   var trnxId;
+  var gs_vat = 0;
+  var gs_isvat = 0;
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<FormFieldState> drop_city = GlobalKey<FormFieldState>();
@@ -298,6 +300,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
         }
       });
       await getPickupOptions().then((value) {
+        gs_vat = int.parse(value['settings']['gs_vat']);
+        gs_isvat = int.parse(value['settings']['gs_isvat']);
         freeservicedistance =
             int.parse(value['settings']['gs_freeservicearea']);
         servicedistance = int.parse(value['settings']['gs_service_area']);

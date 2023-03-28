@@ -3,7 +3,6 @@ import 'package:autoversa/services/google_signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../constant/image_const.dart';
 import '../../constant/text_style.dart';
@@ -33,18 +32,15 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       FocusScope.of(context).unfocus();
     });
-    var appSignatureID = await SmsAutoFill().getAppSignature;
     var in_mobile = mobileNumber.text.toString();
     var valid_number = in_mobile.substring(in_mobile.length - 9);
     Map req = {
       "phone": valid_number,
       "country_code": country_code,
-      "deviceid": appSignatureID,
     };
     // Map req = {
     //   "phone": in_mobile,
     //   "country_code": country_code,
-    //   "deviceid": appSignatureID,
     // };
     print(req);
     await customerLoginService(req).then((value) {
