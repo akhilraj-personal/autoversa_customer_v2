@@ -917,7 +917,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 joblist['bkj_payment_status'] == "0") {
               var paymentpendingjobid = {"jobid": joblist['bkj_id']};
               temppendingjobs.add(paymentpendingjobid);
-              print(temppendingjobs);
               setState(() {});
             }
             ;
@@ -1150,7 +1149,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 statusflow.add(temp);
               }
             } else if (statuslist["bkt_code"] == "DLCC") {
-              print("ughuikj");
               var temp = {
                 "status": "Delivery completed",
                 "time": DateFormat('dd-MM-yyyy').format(
@@ -1473,13 +1471,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
       });
       setState(() {});
     });
-  }
-
-  void printLongString(String text) {
-    final RegExp pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
-    pattern
-        .allMatches(text)
-        .forEach((RegExpMatch match) => print(match.group(0)));
   }
 
   Future refresh() async {
@@ -2953,45 +2944,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
         ));
   }
 }
-
-// Widget commonCacheImageWidget(String? url, double height,
-//     {double? width, BoxFit? fit}) {
-//   if (url.validate().startsWith('http')) {
-//     if (isMobile) {
-//       return CachedNetworkImage(
-//         placeholder:
-//             placeholderWidgetFn() as Widget Function(BuildContext, String)?,
-//         imageUrl: '$url',
-//         height: height,
-//         width: width,
-//         fit: fit ?? BoxFit.cover,
-//         errorWidget: (_, __, ___) {
-//           return SizedBox(height: height, width: width);
-//         },
-//       );
-//     } else {
-//       return Image.network(url!,
-//           height: height, width: width, fit: fit ?? BoxFit.cover);
-//     }
-//   } else {
-//     return Image.asset(url!,
-//         height: height, width: width, fit: fit ?? BoxFit.cover);
-//   }
-// }
-
-// Widget? Function(BuildContext, String) placeholderWidgetFn() =>
-//     (_, s) => placeholderWidget();
-
-// Widget placeholderWidget() =>
-//     Image.asset('images/app/placeholder.jpg', fit: BoxFit.cover);
-
-// BoxConstraints dynamicBoxConstraints({double? maxWidth}) {
-//   return BoxConstraints(maxWidth: maxWidth ?? width);
-// }
-
-// double dynamicWidth(BuildContext context) {
-//   return isMobile ? context.width() : width;
-// }
 
 class ScheduleDelivery extends StatelessWidget {
   final String bk_id;

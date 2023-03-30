@@ -100,7 +100,6 @@ class CarRepairState extends State<CarRepair> {
           "variant": widget.custvehlist[currentveh]['cv_variant'],
           "year": widget.custvehlist[currentveh]['cv_year'],
         };
-        print(req);
         var nonMapCount = 0;
         await getServicePackageDetails(req).then((value) {
           if (value['ret_data'] == "success") {
@@ -290,7 +289,6 @@ class CarRepairState extends State<CarRepair> {
       "gs_vat": gs_vat
     };
     prefs.setString("booking_data", json.encode(packdata));
-    print(json.encode(packdata));
     setState(() => isbooked = false);
     Navigator.push(
         context,
