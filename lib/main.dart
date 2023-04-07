@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
       child: ChangeNotifierProvider<LanguageChangeProvider>(
         create: (context) => LanguageChangeProvider(),
         child: Builder(
-          builder: (context) => MaterialApp(
+          builder: (context) => GetMaterialApp(
             locale: Provider.of<LanguageChangeProvider>(context, listen: true)
                 .currentLocale,
             localizationsDelegates: [
