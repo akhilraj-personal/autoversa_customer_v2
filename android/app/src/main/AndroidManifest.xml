@@ -7,7 +7,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
    <application
@@ -45,7 +47,7 @@
             android:value="2" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC7jFdJbelsBvl_fiTRUICt0mjbb5etn9I" />
+            android:value="AIzaSyCMBcZcBYFb0iCEKh4ntoRFF4LtVnnAMYo" />
         <receiver android:name="com.khuttun.sms_otp_auto_verify.SmsBroadcastReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="com.khuttun.sms_otp_auto_verify.SMS_RECEIVED_ACTION" />

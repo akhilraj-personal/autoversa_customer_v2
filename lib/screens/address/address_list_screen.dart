@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
-import 'package:autoversa/screens/address/address_add_screen.dart';
+import 'package:autoversa/screens/address/address_add_gmap_screen.dart';
 import 'package:autoversa/screens/address/address_edit_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -11,9 +11,12 @@ import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../services/location_controller.dart';
 
 class AddressList extends StatefulWidget {
   const AddressList({super.key});
@@ -663,8 +666,9 @@ class AddressListState extends State<AddressList> {
               openAppSettings();
             }
             if (locationStatus == PermissionStatus.granted) {
+              Get.put(LocationController());
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddressAdd()));
+                  MaterialPageRoute(builder: (context) => AddAddressViaGmap()));
             }
           },
           heroTag: 'Add Address',
