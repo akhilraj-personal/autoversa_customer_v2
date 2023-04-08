@@ -62,15 +62,16 @@ class AddressEditState extends State<AddressEdit> {
   }
 
   CustomerAddressDetails() async {
+    print(widget.address_id);
     await getCustomerAddressDetails(widget.address_id).then((value) async {
       if (value['ret_data'] == "success") {
         customeraddressdetails = value['cust_address'];
         AddressType = value['cust_address']['cad_address_type'];
-        cityController.text = customeraddressdetails['state_name'] != null
-            ? customeraddressdetails['state_name']
+        cityController.text = customeraddressdetails['cad_state'] != null
+            ? customeraddressdetails['cad_state']
             : "";
-        stateController.text = customeraddressdetails['city_name'] != null
-            ? customeraddressdetails['city_name']
+        stateController.text = customeraddressdetails['cad_city'] != null
+            ? customeraddressdetails['cad_city']
             : "";
         addressController.text = customeraddressdetails['cad_address'] != null
             ? customeraddressdetails['cad_address']
@@ -86,7 +87,6 @@ class AddressEditState extends State<AddressEdit> {
         final GoogleMapController controller = await _controller.future;
         controller.moveCamera(CameraUpdate.newCameraPosition(_kLake));
         setState(() {});
-        print(customeraddressdetails);
       }
     });
   }
@@ -167,414 +167,37 @@ class AddressEditState extends State<AddressEdit> {
                       child: Column(
                         children: [
                           Container(
-                            margin: EdgeInsets.only(top: 16.0, left: 20.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Select City*",
-                                  style: montserratLight.copyWith(
-                                      color: black, fontSize: 14),
-                                ),
-                              ],
+                            width: width,
+                            height: width * 0.45,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: black,
+                              ),
+                            ),
+                            child: GoogleMap(
+                              myLocationButtonEnabled: false,
+                              zoomControlsEnabled: false,
+                              initialCameraPosition: _initialPosition,
+                              onMapCreated: (GoogleMapController controller) {
+                                _controller.complete(controller);
+                              },
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(top: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Stack(
-                                    alignment: Alignment.bottomCenter,
-                                    children: [
-                                      Container(
-                                        height: height * 0.045,
-                                        width: height * 0.37,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 16,
-                                                  color:
-                                                      syanColor.withOpacity(.5),
-                                                  spreadRadius: 0,
-                                                  blurStyle: BlurStyle.outer,
-                                                  offset: Offset(0, 0)),
-                                            ]),
-                                      ),
-                                      Container(
-                                          height: height * 0.075,
-                                          width: height * 0.4,
-                                          decoration: BoxDecoration(
-                                            color: lightGreyColor,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            border: Border.all(
-                                                color: borderGreyColor),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: lightGreyColor),
-                                                  padding: EdgeInsets.only(
-                                                      right: width * 0.025),
-                                                  child: TextField(
-                                                    controller: cityController,
-                                                    enabled: false,
-                                                    textAlign: TextAlign.left,
-                                                    keyboardType:
-                                                        TextInputType.text,
-                                                    maxLines: 1,
-                                                    style: montserratMedium
-                                                        .copyWith(
-                                                            color: Colors.black,
-                                                            fontSize:
-                                                                width * 0.04),
-                                                    decoration: InputDecoration(
-                                                        errorStyle: TextStyle(
-                                                            fontSize:
-                                                                width * 0.032,
-                                                            color:
-                                                                warningcolor),
-                                                        counterText: "",
-                                                        filled: true,
-                                                        hintText: "Select City",
-                                                        hintStyle: montserratRegular
-                                                            .copyWith(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize:
-                                                                    width *
-                                                                        0.034),
-                                                        border:
-                                                            InputBorder.none,
-                                                        fillColor:
-                                                            lightGreyColor),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ))
-                                    ]),
-                                SizedBox(height: height * 0.04),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 16.0, left: 20.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Select Area*",
-                                  style: montserratLight.copyWith(
-                                      color: black, fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Stack(
-                                    alignment: Alignment.bottomCenter,
-                                    children: [
-                                      Container(
-                                        height: height * 0.045,
-                                        width: height * 0.37,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 16,
-                                                  color:
-                                                      syanColor.withOpacity(.5),
-                                                  spreadRadius: 0,
-                                                  blurStyle: BlurStyle.outer,
-                                                  offset: Offset(0, 0)),
-                                            ]),
-                                      ),
-                                      Container(
-                                          height: height * 0.075,
-                                          width: height * 0.4,
-                                          decoration: BoxDecoration(
-                                            color: lightGreyColor,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            border: Border.all(
-                                                color: borderGreyColor),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: lightGreyColor),
-                                                  padding: EdgeInsets.only(
-                                                      right: width * 0.025),
-                                                  child: TextField(
-                                                    controller: stateController,
-                                                    enabled: false,
-                                                    textAlign: TextAlign.left,
-                                                    keyboardType:
-                                                        TextInputType.text,
-                                                    maxLines: 1,
-                                                    style: montserratMedium
-                                                        .copyWith(
-                                                            color: Colors.black,
-                                                            fontSize:
-                                                                width * 0.04),
-                                                    decoration: InputDecoration(
-                                                        errorStyle: TextStyle(
-                                                            fontSize:
-                                                                width * 0.032,
-                                                            color:
-                                                                warningcolor),
-                                                        counterText: "",
-                                                        filled: true,
-                                                        hintText: "Select City",
-                                                        hintStyle: montserratRegular
-                                                            .copyWith(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize:
-                                                                    width *
-                                                                        0.034),
-                                                        border:
-                                                            InputBorder.none,
-                                                        fillColor:
-                                                            lightGreyColor),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ))
-                                    ]),
-                                SizedBox(height: height * 0.04),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 16.0, left: 20.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Address*",
-                                  style: montserratLight.copyWith(
-                                      color: black, fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Stack(alignment: Alignment.bottomCenter, children: [
-                            Container(
-                              height: height * 0.045,
-                              width: height * 0.37,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 16,
-                                        color: syanColor.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurStyle: BlurStyle.outer,
-                                        offset: Offset(0, 0)),
-                                  ]),
-                            ),
-                            Container(
-                                height: height * 0.075,
-                                width: height * 0.4,
-                                decoration: BoxDecoration(
-                                  color: white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: borderGreyColor),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.only(
-                                            right: width * 0.025,
-                                            left: width * 0.025),
-                                        child: TextFormField(
-                                          controller: addressController,
-                                          keyboardType: TextInputType.multiline,
-                                          minLines: 1,
-                                          maxLength: 80,
-                                          maxLines: 3,
-                                          style: montserratLight.copyWith(
-                                              color: black, fontSize: 14),
-                                          decoration: InputDecoration(
-                                              errorStyle:
-                                                  montserratRegular.copyWith(
-                                                      fontSize: 12,
-                                                      color: warningcolor),
-                                              counterText: "",
-                                              filled: true,
-                                              hintText: "Address",
-                                              hintStyle:
-                                                  montserratRegular.copyWith(
-                                                      color: black,
-                                                      fontSize: 14),
-                                              border: InputBorder.none,
-                                              fillColor: white),
-                                          onFieldSubmitted: (value) {
-                                            FocusScope.of(context)
-                                                .requestFocus(flatnoFocus);
-                                          },
-                                          onChanged: (value) {
-                                            setState(() {
-                                              address = value;
-                                            });
-                                          },
-                                          validator: (value) {
-                                            if (value == null) {
-                                              return addressValidation(
-                                                  value, context);
-                                            }
-                                          },
-                                          textCapitalization:
-                                              TextCapitalization.sentences,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ))
-                          ]),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 16.0, left: 20.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Building Name/Flat No",
-                                  style: montserratLight.copyWith(
-                                      color: black, fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Stack(alignment: Alignment.bottomCenter, children: [
-                            Container(
-                              height: height * 0.045,
-                              width: height * 0.37,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 16,
-                                        color: syanColor.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurStyle: BlurStyle.outer,
-                                        offset: Offset(0, 0)),
-                                  ]),
-                            ),
-                            Container(
-                                height: height * 0.075,
-                                width: height * 0.4,
-                                decoration: BoxDecoration(
-                                  color: white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: borderGreyColor),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.only(
-                                            right: width * 0.025,
-                                            left: width * 0.025),
-                                        child: TextFormField(
-                                          controller: builderController,
-                                          maxLength: 60,
-                                          focusNode: flatnoFocus,
-                                          style: montserratLight.copyWith(
-                                              color: black, fontSize: 14),
-                                          decoration: InputDecoration(
-                                              errorStyle:
-                                                  montserratRegular.copyWith(
-                                                      fontSize: 12,
-                                                      color: warningcolor),
-                                              counterText: "",
-                                              filled: true,
-                                              hintText: "Building Name/Flat No",
-                                              hintStyle:
-                                                  montserratRegular.copyWith(
-                                                      color: black,
-                                                      fontSize: 14),
-                                              border: InputBorder.none,
-                                              fillColor: white),
-                                          onChanged: (value) {
-                                            if (value != "") {
-                                              var ret =
-                                                  buildingValidation(value);
-                                              if (ret == null) {
-                                                setState(() {
-                                                  landmark = value;
-                                                });
-                                              } else {
-                                                showCustomToast(context,
-                                                    "Enter valid details",
-                                                    bgColor: errorcolor,
-                                                    textColor: white);
-                                              }
-                                            }
-                                          },
-                                          textCapitalization:
-                                              TextCapitalization.sentences,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ))
-                          ]),
-                          SizedBox(height: 8),
-                          Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              alignment: WrapAlignment.start,
-                              direction: Axis.horizontal,
-                              children: [
+                          SizedBox(height: height * 0.02),
+                          Center(
+                              child: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  alignment: WrapAlignment.start,
+                                  direction: Axis.horizontal,
+                                  children: [
                                 Theme(
                                   data: Theme.of(context).copyWith(
-                                    unselectedWidgetColor: syanColor,
-                                  ),
+                                      unselectedWidgetColor: syanColor),
                                   child: Radio(
                                     value: 'Home',
+                                    groupValue: AddressType,
                                     fillColor: MaterialStateColor.resolveWith(
                                         (states) => syanColor),
-                                    groupValue: AddressType,
                                     onChanged: (dynamic value) {
                                       setState(() {
                                         AddressType = value;
@@ -583,17 +206,17 @@ class AddressEditState extends State<AddressEdit> {
                                   ),
                                 ),
                                 Text("Home",
-                                    style: montserratRegular.copyWith(
-                                        fontSize: 14)),
+                                    style: montserratMedium.copyWith(
+                                        fontSize: width * 0.034, color: black)),
                                 Theme(
                                   data: Theme.of(context).copyWith(
                                     unselectedWidgetColor: syanColor,
                                   ),
                                   child: Radio(
                                     value: 'Office',
+                                    groupValue: AddressType,
                                     fillColor: MaterialStateColor.resolveWith(
                                         (states) => syanColor),
-                                    groupValue: AddressType,
                                     onChanged: (dynamic value) {
                                       setState(() {
                                         AddressType = value;
@@ -602,17 +225,16 @@ class AddressEditState extends State<AddressEdit> {
                                   ),
                                 ),
                                 Text("Office",
-                                    style: montserratRegular.copyWith(
-                                        fontSize: 14)),
+                                    style: montserratMedium.copyWith(
+                                        fontSize: width * 0.034, color: black)),
                                 Theme(
                                   data: Theme.of(context).copyWith(
-                                    unselectedWidgetColor: syanColor,
-                                  ),
+                                      unselectedWidgetColor: syanColor),
                                   child: Radio(
                                     value: 'Other',
+                                    groupValue: AddressType,
                                     fillColor: MaterialStateColor.resolveWith(
                                         (states) => syanColor),
-                                    groupValue: AddressType,
                                     onChanged: (dynamic value) {
                                       setState(() {
                                         AddressType = value;
@@ -621,38 +243,344 @@ class AddressEditState extends State<AddressEdit> {
                                   ),
                                 ),
                                 Text("Other",
-                                    style: montserratRegular.copyWith(
-                                        fontSize: 14)),
-                              ]),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          isMobile
-                              ? Container(
-                                  margin: EdgeInsets.only(top: 8.0, left: 20.0),
-                                  height: 200,
-                                  width: context.width(),
-                                  color: white,
-                                  child: GoogleMap(
-                                    initialCameraPosition: _initialPosition,
-                                    myLocationEnabled: true,
-                                    myLocationButtonEnabled: true,
-                                    onMapCreated:
-                                        (GoogleMapController controller) {
-                                      _controller.complete(controller);
-                                    },
-                                  ),
-                                )
-                              : Container(
-                                  color: Colors.transparent,
-                                  height: 200,
-                                  alignment: Alignment.center,
-                                  width: width,
+                                    style: montserratMedium.copyWith(
+                                        fontSize: width * 0.034, color: black)),
+                              ])),
+                          SizedBox(height: height * 0.02),
+                          Column(
+                            children: <Widget>[
+                              SizedBox(
+                                width: double.infinity,
+                                child: Container(
                                   child: Text(
-                                      'Google Maps support is coming soon',
-                                      style: montserratRegular.copyWith(
-                                          fontSize: 14)),
+                                    "City",
+                                    textAlign: TextAlign.left,
+                                    style: montserratMedium.copyWith(
+                                        fontSize: width * 0.04, color: black),
+                                  ),
                                 ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.02),
+                          Stack(alignment: Alignment.bottomCenter, children: [
+                            Container(
+                              height: height * 0.045,
+                              width: height * 0.37,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 12,
+                                        color: syanColor.withOpacity(.5),
+                                        spreadRadius: 0,
+                                        blurStyle: BlurStyle.outer,
+                                        offset: Offset(0, 0)),
+                                  ]),
+                            ),
+                            Container(
+                                height: height * 0.075,
+                                decoration: BoxDecoration(
+                                  color: lightGreyColor,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: borderGreyColor),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: lightGreyColor,
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                        ),
+                                        padding: EdgeInsets.only(
+                                            right: width * 0.05,
+                                            left: width * 0.05),
+                                        child: TextField(
+                                          controller: cityController,
+                                          enabled: false,
+                                          textAlign: TextAlign.left,
+                                          keyboardType: TextInputType.number,
+                                          maxLines: 1,
+                                          style: montserratMedium.copyWith(
+                                              color: Colors.black,
+                                              fontSize: width * 0.04),
+                                          decoration: InputDecoration(
+                                              errorStyle: TextStyle(
+                                                  fontSize: width * 0.032,
+                                                  color: warningcolor),
+                                              counterText: "",
+                                              filled: true,
+                                              hintText: "Selected city",
+                                              hintStyle:
+                                                  montserratRegular.copyWith(
+                                                      color: Colors.black,
+                                                      fontSize: width * 0.034),
+                                              border: InputBorder.none,
+                                              fillColor: lightGreyColor),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                          ]),
+                          SizedBox(height: height * 0.02),
+                          Column(
+                            children: <Widget>[
+                              SizedBox(
+                                width: double.infinity,
+                                child: Container(
+                                  child: Text(
+                                    "Area",
+                                    textAlign: TextAlign.left,
+                                    style: montserratMedium.copyWith(
+                                        fontSize: width * 0.04, color: black),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.02),
+                          Stack(alignment: Alignment.bottomCenter, children: [
+                            Container(
+                              height: height * 0.045,
+                              width: height * 0.37,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 12,
+                                        color: syanColor.withOpacity(.5),
+                                        spreadRadius: 0,
+                                        blurStyle: BlurStyle.outer,
+                                        offset: Offset(0, 0)),
+                                  ]),
+                            ),
+                            Container(
+                                height: height * 0.075,
+                                decoration: BoxDecoration(
+                                  color: lightGreyColor,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: borderGreyColor),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: lightGreyColor,
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                        ),
+                                        padding: EdgeInsets.only(
+                                            right: width * 0.05,
+                                            left: width * 0.05),
+                                        child: TextField(
+                                          controller: stateController,
+                                          enabled: false,
+                                          textAlign: TextAlign.left,
+                                          keyboardType: TextInputType.number,
+                                          maxLines: 1,
+                                          style: montserratMedium.copyWith(
+                                              color: Colors.black,
+                                              fontSize: width * 0.04),
+                                          decoration: InputDecoration(
+                                              errorStyle: TextStyle(
+                                                  fontSize: width * 0.032,
+                                                  color: warningcolor),
+                                              counterText: "",
+                                              filled: true,
+                                              hintText: "Selected area",
+                                              hintStyle:
+                                                  montserratRegular.copyWith(
+                                                      color: Colors.black,
+                                                      fontSize: width * 0.034),
+                                              border: InputBorder.none,
+                                              fillColor: lightGreyColor),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                          ]),
+                          SizedBox(height: height * 0.02),
+                          Column(
+                            children: <Widget>[
+                              SizedBox(
+                                width: double.infinity,
+                                child: Container(
+                                  child: Text(
+                                    "Address",
+                                    textAlign: TextAlign.left,
+                                    style: montserratMedium.copyWith(
+                                        fontSize: width * 0.04, color: black),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.02),
+                          Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Container(
+                                height: height * 0.045,
+                                width: height * 0.37,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 12,
+                                          color: syanColor.withOpacity(.5),
+                                          spreadRadius: 0,
+                                          blurStyle: BlurStyle.outer,
+                                          offset: Offset(0, 0)),
+                                    ]),
+                              ),
+                              Container(
+                                decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(16)),
+                                    color: white),
+                                child: TextFormField(
+                                  keyboardType: TextInputType.text,
+                                  controller: addressController,
+                                  minLines: 1,
+                                  maxLines: 6,
+                                  maxLength: 120,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  style: montserratMedium.copyWith(
+                                      color: Colors.black,
+                                      fontSize: width * 0.04),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      address = value;
+                                    });
+                                  },
+                                  onFieldSubmitted: (value) {
+                                    FocusScope.of(context)
+                                        .requestFocus(flatnoFocus);
+                                  },
+                                  focusNode: addressFocus,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  decoration: InputDecoration(
+                                      counterText: "",
+                                      hintText: "Address",
+                                      hintStyle: montserratMedium.copyWith(
+                                          color: greyColor,
+                                          fontSize: width * 0.04),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: black, width: 0.5),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: black, width: 0.5),
+                                        borderRadius: BorderRadius.circular(10),
+                                      )),
+                                ),
+                                alignment: Alignment.center,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.02),
+                          Column(
+                            children: <Widget>[
+                              SizedBox(
+                                width: double.infinity,
+                                child: Container(
+                                  child: Text(
+                                    "Building Name/Flat No",
+                                    textAlign: TextAlign.left,
+                                    style: montserratMedium.copyWith(
+                                        fontSize: width * 0.04, color: black),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.02),
+                          Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Container(
+                                height: height * 0.045,
+                                width: height * 0.37,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 12,
+                                          color: syanColor.withOpacity(.5),
+                                          spreadRadius: 0,
+                                          blurStyle: BlurStyle.outer,
+                                          offset: Offset(0, 0)),
+                                    ]),
+                              ),
+                              Container(
+                                decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(16)),
+                                    color: white),
+                                child: TextFormField(
+                                    keyboardType: TextInputType.multiline,
+                                    controller: builderController,
+                                    minLines: 1,
+                                    maxLength: 50,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    style: montserratMedium.copyWith(
+                                        color: Colors.black,
+                                        fontSize: width * 0.04),
+                                    onChanged: (value) {
+                                      if (value != "") {
+                                        var ret = buildingValidation(value);
+                                        if (ret == null) {
+                                          setState(() {
+                                            landmark = value;
+                                          });
+                                        } else {
+                                          showCustomToast(
+                                              context, "Enter valid details",
+                                              bgColor: errorcolor,
+                                              textColor: white);
+                                        }
+                                      }
+                                    },
+                                    textCapitalization:
+                                        TextCapitalization.sentences,
+                                    decoration: InputDecoration(
+                                        counterText: "",
+                                        hintText: "Building Name/Flat No",
+                                        hintStyle: montserratMedium.copyWith(
+                                            color: greyColor,
+                                            fontSize: width * 0.04),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: black, width: 0.5),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: black, width: 0.5),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ))),
+                                alignment: Alignment.center,
+                              ),
+                            ],
+                          ),
                           SizedBox(
                             height: 20,
                           ),
@@ -673,10 +601,8 @@ class AddressEditState extends State<AddressEdit> {
                                     Map req = {
                                       "addressId": widget.address_id,
                                       "countryId": 1,
-                                      "stateId":
-                                          customeraddressdetails['state_id'],
-                                      "cityId":
-                                          customeraddressdetails['city_id'],
+                                      "stateId": cityController.text.toString(),
+                                      "cityId": stateController.text.toString(),
                                       "address": addressController.text
                                                   .toString() !=
                                               null
@@ -694,7 +620,6 @@ class AddressEditState extends State<AddressEdit> {
                                           'cad_longitude'],
                                       "cust_id": prefs.getString("cust_id")
                                     };
-                                    print(req);
                                     await updateCustomerAddress(req)
                                         .then((value) {
                                       if (value['ret_data'] == "success") {

@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/screens/address/address_list_screen.dart';
+import 'package:autoversa/screens/package_screens/schedule_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -16,23 +17,33 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AddressAddFinalScreen extends StatefulWidget {
+  final int click_id;
+  final Map<String, dynamic> package_id;
+  final List<dynamic> custvehlist;
+  final int selectedveh;
+  String currency;
+  final int pickup_loc;
+  final int drop_loc;
+  final bool drop_flag;
   final String selected_street;
-  final String selected_locality;
   final String selected_sublocality;
   final String selected_administrativeArea;
-  final String selected_country;
   final String selected_latitude;
   final String selected_longitude;
-  final String selected_address;
   AddressAddFinalScreen(
-      {required this.selected_street,
-      required this.selected_locality,
+      {required this.package_id,
+      required this.custvehlist,
+      required this.selectedveh,
+      required this.currency,
+      required this.pickup_loc,
+      required this.drop_loc,
+      required this.click_id,
+      required this.drop_flag,
+      required this.selected_street,
       required this.selected_sublocality,
       required this.selected_administrativeArea,
-      required this.selected_country,
       required this.selected_latitude,
       required this.selected_longitude,
-      required this.selected_address,
       super.key});
 
   @override
@@ -54,9 +65,18 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
   bool isproceeding = false;
   bool isDefaultAddressChecked = true;
   bool isgooglemap = false;
+  int pickup_loc_map = 0;
+  int drop_loc_map = 0;
+  bool drop_flag_map = false;
   @override
   void initState() {
     super.initState();
+    pickup_loc_map = widget.pickup_loc;
+    drop_loc_map = widget.drop_loc;
+    print(widget.pickup_loc.toString() +
+        "-----address page----" +
+        widget.drop_loc.toString());
+    drop_flag_map = widget.drop_flag;
     new_map_location();
   }
 
@@ -589,7 +609,7 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                           26.height,
                           GestureDetector(
                             onTap: () async {
-                              if (address == "") {
+                              if (addressController.text == "") {
                                 setState(() => isproceeding = false);
                                 showCustomToast(context, "Enter Address",
                                     bgColor: errorcolor, textColor: white);
@@ -605,7 +625,7 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                     "stateId":
                                         widget.selected_administrativeArea,
                                     "cityId": widget.selected_sublocality,
-                                    "address": addressController,
+                                    "address": addressController.text,
                                     "landmark": landmark,
                                     "add_type": AddressType,
                                     "lattitude": widget.selected_latitude,
@@ -614,22 +634,58 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                   };
                                   print("SEND REQ ========>");
                                   print(req);
-                                  // await saveCustomerAddress(req).then((value) {
-                                  //   if (value['ret_data'] == "success") {
-                                  //     Navigator.push(
-                                  //       context,
-                                  //       MaterialPageRoute(
-                                  //         builder: (context) {
-                                  //           return AddressList();
-                                  //         },
-                                  //       ),
-                                  //     );
-                                  //     setState(() => isgooglemap = false);
-                                  //     setState(() => isproceeding = false);
-                                  //   } else {
-                                  //     setState(() => isproceeding = false);
-                                  //   }
-                                  // });
+                                  print(pickup_loc_map.toString() +
+                                      "-----address page before----" +
+                                      drop_loc_map.toString());
+                                  await saveCustomerAddress(req).then((value) {
+                                    if (value['ret_data'] == "success") {
+                                      // int count = 0;
+                                      if (drop_flag_map == true) {
+                                        pickup_loc_map = -1;
+                                        drop_loc_map = 0;
+                                      } else {
+                                        pickup_loc_map = widget.pickup_loc;
+                                        drop_loc_map = -1;
+                                      }
+                                      print(pickup_loc_map.toString() +
+                                          "-----address page save after----" +
+                                          drop_loc_map.toString());
+                                      widget.click_id == 1
+                                          ? Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return AddressList();
+                                                },
+                                              ),
+                                            )
+
+                                          // : Navigator.of(context)
+                                          //     .popUntil((_) => count++ >= 2);
+                                          : Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return ScheduleScreen(
+                                                      package_id:
+                                                          widget.package_id,
+                                                      custvehlist:
+                                                          widget.custvehlist,
+                                                      currency: widget.currency,
+                                                      selectedveh:
+                                                          widget.selectedveh,
+                                                      pickup_loc:
+                                                          pickup_loc_map,
+                                                      drop_loc: drop_loc_map);
+                                                },
+                                              ),
+                                            );
+                                      setState(() => isgooglemap = false);
+                                      setState(() => isproceeding = false);
+                                    } else {
+                                      setState(() => isproceeding = false);
+                                    }
+                                  });
                                 } catch (e) {
                                   setState(() => isproceeding = false);
                                   print(e.toString());

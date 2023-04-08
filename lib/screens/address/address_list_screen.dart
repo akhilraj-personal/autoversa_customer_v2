@@ -27,9 +27,6 @@ class AddressList extends StatefulWidget {
 
 class AddressListState extends State<AddressList> {
   late List custAddressList = [];
-  late List stateList = [];
-  List<String?> SelectAddressList = <String?>["Select Address"];
-  List<String?> SelectCityList = <String?>["Select City"];
   bool isActive = true;
 
   @override
@@ -58,15 +55,6 @@ class AddressListState extends State<AddressList> {
       await getCustomerAddresses(req).then((value) {
         if (value['ret_data'] == "success") {
           custAddressList = value['cust_addressList'];
-          for (var address in value['cust_addressList']) {
-            SelectAddressList.add(address['cad_address'] +
-                "\n" +
-                address['city_name'] +
-                ", " +
-                address['state_name'] +
-                ", " +
-                address['country_code']);
-          }
           setState(() {
             isActive = false;
           });
@@ -76,19 +64,8 @@ class AddressListState extends State<AddressList> {
           });
         }
       });
-      Map country = {
-        "countryId": 1,
-      };
-      await getStateList(country).then((value) {
-        if (value['ret_data'] == "success") {
-          stateList = value['statelist'];
-          for (var state in value['statelist']) {
-            SelectCityList.add(state['state_name']);
-          }
-        }
-      });
-      setState(() {});
     } catch (e) {
+      print(e.toString());
       setState(() {
         isActive = false;
       });
@@ -365,13 +342,13 @@ class AddressListState extends State<AddressList> {
                                                               child: Text(
                                                                 custAddressList[index]
                                                                             [
-                                                                            'state_name'] !=
+                                                                            'cad_state'] !=
                                                                         null
                                                                     ? "City" +
                                                                         ": " +
                                                                         custAddressList[index]
                                                                             [
-                                                                            'state_name']
+                                                                            'cad_state']
                                                                     : "",
                                                                 overflow:
                                                                     TextOverflow
@@ -398,13 +375,13 @@ class AddressListState extends State<AddressList> {
                                                               child: Text(
                                                                 custAddressList[index]
                                                                             [
-                                                                            'city_name'] !=
+                                                                            'cad_city'] !=
                                                                         null
                                                                     ? "Area" +
                                                                         ": " +
                                                                         custAddressList[index]
                                                                             [
-                                                                            'city_name']
+                                                                            'cad_city']
                                                                     : "",
                                                                 overflow:
                                                                     TextOverflow
@@ -531,17 +508,34 @@ class AddressListState extends State<AddressList> {
                                                           )),
                                                     )),
                                               ],
-                                            ).onTap(() {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          AddressEdit(
-                                                              address_id:
-                                                                  custAddressList[
-                                                                          index]
-                                                                      [
-                                                                      'cad_id'])));
+                                            ).onTap(() async {
+                                              PermissionStatus locationStatus =
+                                                  await Permission.location
+                                                      .request();
+                                              if (locationStatus ==
+                                                  PermissionStatus.denied) {
+                                                showCustomToast(context,
+                                                    "This Permission is recommended for location access.",
+                                                    bgColor: errorcolor,
+                                                    textColor: white);
+                                              }
+                                              if (locationStatus ==
+                                                  PermissionStatus
+                                                      .permanentlyDenied) {
+                                                openAppSettings();
+                                              }
+                                              if (locationStatus ==
+                                                  PermissionStatus.granted) {
+                                                Get.put(LocationController());
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => AddressEdit(
+                                                            address_id:
+                                                                custAddressList[
+                                                                        index][
+                                                                    'cad_id'])));
+                                              }
                                             })),
                                       ],
                                     ),
@@ -667,8 +661,19 @@ class AddressListState extends State<AddressList> {
             }
             if (locationStatus == PermissionStatus.granted) {
               Get.put(LocationController());
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddAddressViaGmap()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddAddressViaGmap(
+                            click_id: 1,
+                            package_id: {},
+                            custvehlist: [],
+                            currency: "",
+                            selectedveh: 0,
+                            pickup_loc: 0,
+                            drop_loc: 0,
+                            drop_flag: false,
+                          )));
             }
           },
           heroTag: 'Add Address',
