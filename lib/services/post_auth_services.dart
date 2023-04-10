@@ -1,5 +1,24 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'network_services.dart';
+import 'package:http/http.dart' as http;
+
+Future<http.Response> getLocationData(String text) async {
+  http.Response response;
+
+  response = await http.get(
+    Uri.parse(dotenv.env['API_URL']! +
+        "/CommonController/testLocationList?search_text=$text"),
+    headers: {"Content-Type": "application/json"},
+  );
+  return response;
+}
+
+// Future getLocationData(String text) async {
+//   return handleResponse(
+//       await securedPostRequest("CommonController/testLocationList", text));
+// }
 
 Future getStateList(Map req) async {
   return handleResponse(
