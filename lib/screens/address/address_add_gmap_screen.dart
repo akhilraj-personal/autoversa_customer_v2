@@ -17,12 +17,27 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../services/location_controller.dart';
 import '../../utils/common_utils.dart';
-import 'location_search_dialogue.dart';
 import 'package:google_maps_webservice/places.dart';
 
 class AddAddressViaGmap extends StatefulWidget {
-  const AddAddressViaGmap({super.key});
-
+  final int click_id;
+  final Map<String, dynamic> package_id;
+  final List<dynamic> custvehlist;
+  final int selectedveh;
+  String currency;
+  final int pickup_loc;
+  final int drop_loc;
+  final bool drop_flag;
+  AddAddressViaGmap(
+      {required this.package_id,
+      required this.custvehlist,
+      required this.selectedveh,
+      required this.currency,
+      required this.pickup_loc,
+      required this.drop_loc,
+      required this.click_id,
+      required this.drop_flag,
+      super.key});
   @override
   State<AddAddressViaGmap> createState() => AddAddressViaGmapState();
 }
@@ -141,10 +156,7 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
                         strictbounds: false,
                         components: [Component(Component.country, 'ae')],
                         //google_map_webservice package
-                        onError: (err) {
-                          print("----kk--" + err.toString());
-                        });
-                    print(place!.description.toString());
+                        onError: (err) {});
                     if (place != null) {
                       // setState(() {
                       //   location = place.description.toString();
@@ -267,14 +279,20 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => AddressAddFinalScreen(
-                            selected_street: street,
-                            selected_locality: locality,
-                            selected_sublocality: subLocality,
-                            selected_administrativeArea: administrativeArea,
-                            selected_country: country,
-                            selected_latitude: selectedlatitude,
-                            selected_longitude: selectedlongitude,
-                            selected_address: _draggedAddress)));
+                              click_id: widget.click_id,
+                              package_id: widget.package_id,
+                              custvehlist: widget.custvehlist,
+                              currency: widget.currency,
+                              selectedveh: widget.selectedveh,
+                              pickup_loc: widget.pickup_loc,
+                              drop_loc: widget.drop_loc,
+                              drop_flag: widget.drop_flag,
+                              selected_street: street,
+                              selected_sublocality: subLocality,
+                              selected_administrativeArea: administrativeArea,
+                              selected_latitude: selectedlatitude,
+                              selected_longitude: selectedlongitude,
+                            )));
               },
               child: Stack(
                 alignment: Alignment.bottomCenter,
@@ -294,7 +312,7 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
                         ]),
                   ),
                   Container(
-                    height: height * 0.075,
+                    height: height * 0.065,
                     width: height * 0.4,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
@@ -387,41 +405,7 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
     String addressStr =
         "${address.street}, ${address.locality}, '${address.subLocality}' ${address.administrativeArea}, ${address.country},";
     setState(() {
-      print("____________________");
-      print('${address.street}');
-      print('${address.locality}');
-      print('${address.subLocality}');
-      print('${address.administrativeArea}');
-      print('${address.country}');
-      print(_draggedAddress);
       _draggedAddress = addressStr;
     });
   }
-
-  Future _gotoSpecificPosition(LatLng position) async {
-    GoogleMapController mapController = await _googleMapController.future;
-    mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: position, zoom: 17.5)));
-    await _getAddress(position);
-  }
-
-  // Future _determineUserCurrentPosition() async {
-  //   LocationPermission locationPermission;
-  //   bool islocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
-  //   if (!islocationServiceEnabled) {
-  //     print("User dont enable location permission");
-  //   }
-  //   locationPermission = await Geolocator.checkPermission();
-
-  //   if (locationPermission == LocationPermission.denied) {
-  //     locationPermission = await Geolocator.requestPermission();
-  //     if (locationPermission == LocationPermission.denied) {
-  //       print("User denied location permission");
-  //     }
-  //   }
-
-  //   if (locationPermission == LocationPermission.deniedForever) {
-  //     print("User denied permission forever");
-  //   }
-  // }
 }

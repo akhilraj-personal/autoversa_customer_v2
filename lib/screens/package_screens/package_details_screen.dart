@@ -96,7 +96,9 @@ class PackageDetailsState extends State<PackageDetails> {
                 package_id: widget.package_id,
                 custvehlist: widget.custvehlist,
                 currency: widget.currency,
-                selectedveh: currentveh)));
+                selectedveh: currentveh,
+                pickup_loc: 0,
+                drop_loc: 0)));
   }
 
   _getpackageinfo() async {
