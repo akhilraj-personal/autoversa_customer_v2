@@ -9,6 +9,7 @@ import 'package:flutter_stripe/flutter_stripe.dart' hide Card;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+
 import '../../constant/image_const.dart';
 import '../../constant/text_style.dart';
 import '../../generated/l10n.dart';
@@ -74,6 +75,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   var trnxId;
   var gs_vat = 0;
   var gs_isvat = 0;
+  var paid_amount = 0.0;
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<FormFieldState> drop_city = GlobalKey<FormFieldState>();
@@ -122,46 +124,85 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
           int.parse(custAddressList[drop_address - 1]['cad_id']);
       var serviceDistance =
           int.parse(custAddressList[drop_address - 1]['cad_distance']);
-      var new_distance = serviceDistance - int.parse(selected_distance);
+      var new_distance = serviceDistance - double.parse(selected_distance);
       if (new_distance < 0) {
         new_distance = 0;
       }
       pickup_options = [];
       for (var ptype in temppickup_options) {
         var tempCost = '0';
+        var min_cost = ptype['pk_min_cost'];
+        var tempCostVat = 0.0;
+        var min_cost_vat = 0.0;
+        selected_drop = "";
+        setState(() {});
         ptype['pk_id'] == currentDropType['pk_id'] && new_distance == 0
             ? tempCost = "0"
             : ptype['pk_freeFlag'] != "1"
                 ? tempCost =
-                    (double.parse(ptype['pk_cost']) * (new_distance)).toString()
+                    (double.parse(ptype['pk_cost']) * new_distance).toString()
                 : tempCost = "0";
-        if (ptype['pk_id'] == currentDropType['pk_id']) {
-          pending_payment = double.parse(tempCost);
+        if (gs_isvat == 1 && double.parse(tempCost) > 0) {
+          tempCostVat = (double.parse(tempCost) * (gs_vat / 100));
+          min_cost_vat = (double.parse(min_cost) * (gs_vat / 100));
+          tempCost = ((double.parse(tempCost) +
+                      (double.parse(tempCost) * (gs_vat / 100)))
+                  .round())
+              .toString();
+          min_cost = ((double.parse(min_cost) +
+                      (double.parse(min_cost) * (gs_vat / 100)))
+                  .round())
+              .toString();
+          ;
         }
+        // if (ptype['pk_id'] == currentDropType['pk_id']) {
+        //   selected_drop = ptype['pk_id'];
+        // }
+        double.parse(tempCost) - paid_amount > 0
+            ? tempCost = (double.parse(tempCost) - paid_amount).toString()
+            : tempCost = "0";
+
+        print(tempCost + "#####" + new_distance.toString());
+        // ptype['pk_id'] == currentDropType['pk_id'] && new_distance == 0
+        //     ? tempCost = "0"
+        //     : ptype['pk_freeFlag'] != "1"
+        //         ? tempCost =
+        //             (double.parse(ptype['pk_cost']) * (new_distance)).toString()
+        //         : tempCost = "0";
+        // if (ptype['pk_id'] == currentDropType['pk_id']) {
+        //   pending_payment = double.parse(tempCost);
+        // }
         var temp = {
           "pk_id": ptype['pk_freeFlag'] == "1" &&
-                  serviceDistance > freeservicedistance
+                  double.parse(selected_distance) > freeservicedistance
               ? "0"
               : ptype['pk_id'],
           "pk_name": ptype['pk_name'],
-          "pk_cost":
-              ptype['pk_id'] == currentDropType['pk_id'] && new_distance == 0
-                  ? "PAID"
-                  : ptype['pk_freeFlag'] == "1" &&
-                          serviceDistance > freeservicedistance
-                      ? "Not Available"
-                      : (double.parse(tempCost) <
-                                  double.parse(ptype['pk_min_cost']) &&
-                              ptype['pk_freeFlag'] != "1")
-                          ? ("AED" + " " + ptype['pk_min_cost'])
-                          : ("AED" + " " + tempCost),
-          "pk_cost_value": ptype['pk_id'] == currentDropType['pk_id']
+          "pk_cost": ptype['pk_id'] == currentDropType['pk_id'] &&
+                  double.parse(tempCost) == 0
+              ? "PAID"
+              : ptype['pk_freeFlag'] == "1" &&
+                      double.parse(selected_distance) > freeservicedistance
+                  ? "Not Available"
+                  : (double.parse(tempCost) <
+                              double.parse(ptype['pk_min_cost']) &&
+                          ptype['pk_freeFlag'] != "1" &&
+                          double.parse(tempCost) > 0)
+                      ? ("AED" + " " + min_cost)
+                      : ("AED" + " " + tempCost),
+          "pk_cost_value": ptype['pk_id'] == currentDropType['pk_id'] &&
+                  double.parse(tempCost) == 0
               ? "0"
               : double.parse(tempCost) < double.parse(ptype['pk_min_cost'])
                   ? ptype['pk_freeFlag'] == "1"
                       ? '0'
-                      : (ptype['pk_min_cost'])
-                  : tempCost
+                      : min_cost
+                  : tempCost,
+          "pk_vat_value": double.parse(tempCost) < double.parse(min_cost)
+              ? ptype['pk_freeFlag'] == "1"
+                  ? 0.0
+                  : min_cost_vat
+              : tempCostVat
         };
         pickup_options.add(temp);
         setState(() {});
@@ -305,6 +346,18 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
         freeservicedistance =
             int.parse(value['settings']['gs_freeservicearea']);
         servicedistance = int.parse(value['settings']['gs_service_area']);
+        if (currentDropDetails['cad_distance'] != "") {
+          if (int.parse(currentDropDetails['cad_distance']) >
+              freeservicedistance) {
+            paid_amount = double.parse(currentDropDetails['cad_distance']) *
+                double.parse(currentDropType['pk_cost']);
+          } else {
+            paid_amount = double.parse(currentDropType['pk_min_cost']);
+          }
+        }
+        if (gs_isvat == 1) {
+          paid_amount = paid_amount + (paid_amount * (gs_vat / 100));
+        }
         max_days = int.parse(value['settings']['gs_nofdays']);
         if (value['ret_data'] == "success") {
           temppickup_options = value['active_pickuptype_list'];
@@ -313,13 +366,33 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
               selected_drop = ptype['pk_id'];
             }
             var tempCost = '0';
+            var min_cost = ptype['pk_min_cost'];
+            var tempCostVat = 0.0;
+            var min_cost_vat = 0.0;
+            ptype['pk_freeFlag'] != "1"
+                ? tempCost = (double.parse(ptype['pk_cost']) *
+                        double.parse(selected_distance))
+                    .toString()
+                : tempCost = "0";
+            if (gs_isvat == 1 && double.parse(tempCost) > 0) {
+              tempCostVat = (double.parse(tempCost) * (gs_vat / 100));
+              min_cost_vat = (double.parse(min_cost) * (gs_vat / 100));
+              tempCost = ((double.parse(tempCost) +
+                          (double.parse(tempCost) * (gs_vat / 100)))
+                      .round())
+                  .toString();
+              min_cost = ((double.parse(min_cost) +
+                          (double.parse(min_cost) * (gs_vat / 100)))
+                      .round())
+                  .toString();
+              ;
+            }
             ptype['pk_id'] == currentDropType['pk_id']
                 ? tempCost = "0"
-                : ptype['pk_freeFlag'] != "1"
-                    ? tempCost = (double.parse(ptype['pk_cost']) *
-                            (double.parse(selected_distance)))
-                        .toString()
-                    : tempCost = "0";
+                : tempCost = tempCost;
+            double.parse(tempCost) - paid_amount > 0
+                ? tempCost = (double.parse(tempCost) - paid_amount).toString()
+                : tempCost = "0";
             var temp = {
               "pk_id": ptype['pk_freeFlag'] == "1" &&
                       double.parse(selected_distance) > freeservicedistance
@@ -333,16 +406,25 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                       ? "Not Available"
                       : (double.parse(tempCost) <
                                   double.parse(ptype['pk_min_cost']) &&
-                              ptype['pk_freeFlag'] != "1")
-                          ? ("AED" + " " + ptype['pk_min_cost'])
+                              ptype['pk_freeFlag'] != "1" &&
+                              double.parse(tempCost) > 0)
+                          ? ("AED" + " " + min_cost)
                           : ("AED" + " " + tempCost),
               "pk_cost_value": ptype['pk_id'] == currentDropType['pk_id']
                   ? "0"
-                  : double.parse(tempCost) < double.parse(ptype['pk_min_cost'])
+                  : double.parse(tempCost) <
+                              double.parse(ptype['pk_min_cost']) &&
+                          paid_amount < double.parse(min_cost)
                       ? ptype['pk_freeFlag'] == "1"
                           ? '0'
-                          : (ptype['pk_min_cost'])
-                      : tempCost
+                          : min_cost
+                      : tempCost,
+              "pk_vat_value": double.parse(tempCost) < double.parse(min_cost) &&
+                      paid_amount > double.parse(min_cost)
+                  ? ptype['pk_freeFlag'] == "1"
+                      ? 0.0
+                      : min_cost_vat
+                  : tempCostVat
             };
             pickup_options.add(temp);
           }
