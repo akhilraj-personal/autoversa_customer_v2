@@ -458,101 +458,99 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           (bookingList[index]
                                                                   ['st_code'] !=
                                                               "CANC")
-                                                      ? Container(
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  top: height *
-                                                                      0.02),
-                                                          decoration: BoxDecoration(
-                                                              color: white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10)),
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            left: width * 0.04,
-                                                            right: width * 0.03,
-                                                            top: height * 0.012,
-                                                            bottom:
-                                                                height * 0.012,
-                                                          ),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  ///--------- first text -------------
-                                                                  Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Text(
-                                                                        bookingList[index]['pkg_name'] !=
-                                                                                null
-                                                                            ? bookingList[index]['pkg_name'] +
-                                                                                " (" +
-                                                                                bookingList[index]['bk_number'] +
-                                                                                ")"
-                                                                            : "",
-                                                                        style: montserratSemiBold.copyWith(
-                                                                            color:
-                                                                                black,
-                                                                            fontSize:
-                                                                                width * 0.034),
-                                                                      ),
-                                                                      Text(
-                                                                        bookingList[index]['custstatus'] !=
-                                                                                null
-                                                                            ? bookingList[index]['custstatus']
-                                                                            : "",
-                                                                        style: montserratBold.copyWith(
-                                                                            color:
-                                                                                syanColor,
-                                                                            fontSize:
-                                                                                width * 0.031),
-                                                                      ),
-                                                                      Container(
-                                                                        child:
-                                                                            Text(
-                                                                          bookingList[index]['cv_make'] +
-                                                                              " " +
-                                                                              bookingList[index]['cv_model'],
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                          style: montserratRegular.copyWith(
+                                                      ? GestureDetector(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              isExpanded =
+                                                                  !isExpanded;
+                                                              if (bookingList[
+                                                                          index]
+                                                                      [
+                                                                      'detail_flag'] ==
+                                                                  true) {
+                                                                bookingList[index]
+                                                                        [
+                                                                        'detail_flag'] =
+                                                                    false;
+                                                              } else {
+                                                                bookingList[index]
+                                                                        [
+                                                                        'detail_flag'] =
+                                                                    true;
+                                                              }
+                                                            });
+                                                          },
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    top: height *
+                                                                        0.02),
+                                                            decoration: BoxDecoration(
+                                                                color: white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                              left:
+                                                                  width * 0.04,
+                                                              right:
+                                                                  width * 0.03,
+                                                              top: height *
+                                                                  0.012,
+                                                              bottom: height *
+                                                                  0.012,
+                                                            ),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    ///--------- first text -------------
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Text(
+                                                                          bookingList[index]['pkg_name'] != null
+                                                                              ? bookingList[index]['pkg_name'] + " (" + bookingList[index]['bk_number'] + ")"
+                                                                              : "",
+                                                                          style: montserratSemiBold.copyWith(
                                                                               color: black,
-                                                                              fontSize: width * 0.029),
+                                                                              fontSize: width * 0.034),
                                                                         ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
+                                                                        Text(
+                                                                          bookingList[index]['custstatus'] != null
+                                                                              ? bookingList[index]['custstatus']
+                                                                              : "",
+                                                                          style: montserratBold.copyWith(
+                                                                              color: syanColor,
+                                                                              fontSize: width * 0.031),
+                                                                        ),
+                                                                        Container(
+                                                                          child:
+                                                                              Text(
+                                                                            bookingList[index]['cv_make'] +
+                                                                                " " +
+                                                                                bookingList[index]['cv_model'],
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                            style:
+                                                                                montserratRegular.copyWith(color: black, fontSize: width * 0.029),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
 
-                                                                  ///--------- up down arrow -------------
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      setState(
-                                                                          () {
-                                                                        isExpanded =
-                                                                            !isExpanded;
-                                                                        if (bookingList[index]['detail_flag'] ==
-                                                                            true) {
-                                                                          bookingList[index]['detail_flag'] =
-                                                                              false;
-                                                                        } else {
-                                                                          bookingList[index]['detail_flag'] =
-                                                                              true;
-                                                                        }
-                                                                      });
-                                                                    },
-                                                                    child: Image
-                                                                        .asset(
+                                                                    ///--------- up down arrow -------------
+                                                                    Image.asset(
                                                                       bookingList[index]['detail_flag'] !=
                                                                               null
                                                                           ? bookingList[index]['detail_flag'] == true
@@ -561,215 +559,214 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           : ImageConst.downarrow,
                                                                       scale: 4,
                                                                     ),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                              isExpanded == true
-                                                                  ? bookingList[index]
-                                                                              [
-                                                                              'detail_flag'] ==
-                                                                          true
-                                                                      ? Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            ///--------- Package -------------
-                                                                            Container(
-                                                                              margin: EdgeInsets.only(top: height * 0.03),
-                                                                              child: Text(
-                                                                                bookingList[index]['cv_variant'] != null ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " (" + bookingList[index]['cv_year'] + ")" : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")",
-                                                                                style: montserratRegular.copyWith(color: black, fontSize: width * 0.037),
-                                                                              ),
-                                                                            ),
-
-                                                                            ///--------- Date -------------
-                                                                            Container(
-                                                                                margin: EdgeInsets.only(top: height * 0.007, bottom: height * 0.007),
-                                                                                child: RichText(
-                                                                                  text: TextSpan(
-                                                                                    text: "Date: ",
-                                                                                    style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
-                                                                                    children: <TextSpan>[
-                                                                                      TextSpan(text: bookingList[index]['bk_booking_date'] != null ? DateFormat('dd-MM-yyyy').format(DateTime.tryParse(bookingList[index]['bk_booking_date'])!) : "", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034)),
-                                                                                    ],
-                                                                                  ),
-                                                                                )),
-
-                                                                            ///--------- time -------------
-                                                                            RichText(
-                                                                              text: TextSpan(
-                                                                                text: "Time: ",
-                                                                                style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
-                                                                                children: <TextSpan>[
-                                                                                  TextSpan(text: bookingList[index]['tm_start_time'] != null ? timeFormatter(bookingList[index]['tm_start_time']) + " - " + timeFormatter(bookingList[index]['tm_end_time']) : "", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034)),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-
-                                                                            ///--------- divider -------------
-                                                                            Container(
-                                                                              margin: EdgeInsets.only(top: height * 0.02, bottom: height * 0.02, left: width * 0.01, right: width * 0.01),
-                                                                              height: 1,
-                                                                              width: width,
-                                                                              color: greyColor,
-                                                                            ),
-
-                                                                            ///--------- currentOrder status -------------
-                                                                            Container(
-                                                                              margin: EdgeInsets.only(bottom: height * 0.008),
-                                                                              child: Text(
-                                                                                TextConst.currentOrder,
-                                                                                style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
-                                                                              ),
-                                                                            ),
-
-                                                                            ///--------- car image -------------
-
-                                                                            Row(
-                                                                              children: [
-                                                                                if (bookingList[index]['st_code'] == "BKCC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.booking_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "DRPC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.driver_enroute_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "PIPC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.pickup_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "PIWC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.pickup_enroute_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "VAWC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.vehicle_wrkshp_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "WIPC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.work_in_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "CDLC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.confirm_drop_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "RFDC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.ready_delivery_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "DEDC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.drop_enrouted,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "DLCC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.delivery_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "HOLDC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.hold_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "BAPC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.awaiting_payment_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ],
-
-                                                                                ///--------- booking status -------------
-
-                                                                                Container(
-                                                                                  margin: EdgeInsets.only(left: width * 0.02),
-                                                                                  child: Text(
-                                                                                    bookingList[index]['custstatus'] != null ? bookingList[index]['custstatus'] : "",
-                                                                                    style: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
-                                                                                  ),
-                                                                                )
-                                                                              ],
-                                                                            ),
-
-                                                                            ///--------- view details -------------
-
-                                                                            GestureDetector(
-                                                                              onTap: () {
-                                                                                if (bookingList[index]['st_code'] == "BAPC") {
-                                                                                  if (DateTime.now().isBefore(DateTime.tryParse(bookingList[index]['bk_booking_date'])!)) {
-                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh)));
-                                                                                  } else {
-                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh)));
-                                                                                  }
-                                                                                } else {
-                                                                                  Navigator.push(
-                                                                                      context,
-                                                                                      MaterialPageRoute(
-                                                                                          builder: (context) => BookingStatusFlow(
-                                                                                                bk_id: bookingList[index]['bk_id'],
-                                                                                                vehname: bookingList[index]['cv_make'] != null
-                                                                                                    ? bookingList[index]['cv_variant'] != null
-                                                                                                        ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
-                                                                                                        : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
-                                                                                                    : "",
-                                                                                                make: bookingList[index]['cv_make'],
-                                                                                              )));
-                                                                                }
-                                                                                // Navigator.push(
-                                                                                //     context,
-                                                                                //     MaterialPageRoute(
-                                                                                //         builder: (context) => BookingStatusFlow(
-                                                                                //               bk_id: bookingList[index]['bk_id'],
-                                                                                //               vehname: bookingList[index]['cv_make'] != null
-                                                                                //                   ? bookingList[index]['cv_variant'] != null
-                                                                                //                       ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
-                                                                                //                       : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
-                                                                                //                   : "",
-                                                                                //               make: bookingList[index]['cv_make'],
-                                                                                //             )));
-                                                                              },
-                                                                              child: Container(
-                                                                                margin: EdgeInsets.only(top: height * 0.02, bottom: height * 0.01),
-                                                                                width: width / 3,
-                                                                                padding: EdgeInsets.all(height * 0.014),
-                                                                                decoration: BoxDecoration(
-                                                                                  color: lightGreyColor,
-                                                                                  border: Border.all(color: greyColor),
-                                                                                  borderRadius: BorderRadius.circular(
-                                                                                    height * 0.1,
-                                                                                  ),
+                                                                  ],
+                                                                ),
+                                                                isExpanded ==
+                                                                        true
+                                                                    ? bookingList[index]['detail_flag'] ==
+                                                                            true
+                                                                        ? Column(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              ///--------- Package -------------
+                                                                              Container(
+                                                                                margin: EdgeInsets.only(top: height * 0.03),
+                                                                                child: Text(
+                                                                                  bookingList[index]['cv_variant'] != null ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " (" + bookingList[index]['cv_year'] + ")" : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")",
+                                                                                  style: montserratRegular.copyWith(color: black, fontSize: width * 0.037),
                                                                                 ),
-                                                                                child: Row(
-                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                  children: [
-                                                                                    Text(
-                                                                                      TextConst.view,
+                                                                              ),
+
+                                                                              ///--------- Date -------------
+                                                                              Container(
+                                                                                  margin: EdgeInsets.only(top: height * 0.007, bottom: height * 0.007),
+                                                                                  child: RichText(
+                                                                                    text: TextSpan(
+                                                                                      text: "Date: ",
                                                                                       style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
+                                                                                      children: <TextSpan>[
+                                                                                        TextSpan(text: bookingList[index]['bk_booking_date'] != null ? DateFormat('dd-MM-yyyy').format(DateTime.tryParse(bookingList[index]['bk_booking_date'])!) : "", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034)),
+                                                                                      ],
                                                                                     ),
-                                                                                    Image.asset(
-                                                                                      ImageConst.right_arrow,
-                                                                                      color: greyColor,
-                                                                                      scale: 4,
-                                                                                    )
+                                                                                  )),
+
+                                                                              ///--------- time -------------
+                                                                              RichText(
+                                                                                text: TextSpan(
+                                                                                  text: "Time: ",
+                                                                                  style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
+                                                                                  children: <TextSpan>[
+                                                                                    TextSpan(text: bookingList[index]['tm_start_time'] != null ? timeFormatter(bookingList[index]['tm_start_time']) + " - " + timeFormatter(bookingList[index]['tm_end_time']) : "", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034)),
                                                                                   ],
                                                                                 ),
                                                                               ),
-                                                                            )
-                                                                          ],
-                                                                        )
-                                                                      : Container()
-                                                                  : Container(),
-                                                            ],
+
+                                                                              ///--------- divider -------------
+                                                                              Container(
+                                                                                margin: EdgeInsets.only(top: height * 0.02, bottom: height * 0.02, left: width * 0.01, right: width * 0.01),
+                                                                                height: 1,
+                                                                                width: width,
+                                                                                color: greyColor,
+                                                                              ),
+
+                                                                              ///--------- currentOrder status -------------
+                                                                              Container(
+                                                                                margin: EdgeInsets.only(bottom: height * 0.008),
+                                                                                child: Text(
+                                                                                  TextConst.currentOrder,
+                                                                                  style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
+                                                                                ),
+                                                                              ),
+
+                                                                              ///--------- car image -------------
+
+                                                                              Row(
+                                                                                children: [
+                                                                                  if (bookingList[index]['st_code'] == "BKCC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.booking_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "DRPC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.driver_enroute_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "PIPC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.pickup_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "PIWC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.pickup_enroute_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "VAWC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.vehicle_wrkshp_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "WIPC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.work_in_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "CDLC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.confirm_drop_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "RFDC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.ready_delivery_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "DEDC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.drop_enrouted,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "DLCC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.delivery_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "HOLDC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.hold_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "BAPC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.awaiting_payment_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ],
+
+                                                                                  ///--------- booking status -------------
+
+                                                                                  Container(
+                                                                                    margin: EdgeInsets.only(left: width * 0.02),
+                                                                                    child: Text(
+                                                                                      bookingList[index]['custstatus'] != null ? bookingList[index]['custstatus'] : "",
+                                                                                      style: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
+                                                                                    ),
+                                                                                  )
+                                                                                ],
+                                                                              ),
+
+                                                                              ///--------- view details -------------
+
+                                                                              GestureDetector(
+                                                                                onTap: () {
+                                                                                  if (bookingList[index]['st_code'] == "BAPC") {
+                                                                                    if (DateTime.now().isBefore(DateTime.tryParse(bookingList[index]['bk_booking_date'])!)) {
+                                                                                      Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh)));
+                                                                                    } else {
+                                                                                      Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh)));
+                                                                                    }
+                                                                                  } else {
+                                                                                    Navigator.push(
+                                                                                        context,
+                                                                                        MaterialPageRoute(
+                                                                                            builder: (context) => BookingStatusFlow(
+                                                                                                  bk_id: bookingList[index]['bk_id'],
+                                                                                                  vehname: bookingList[index]['cv_make'] != null
+                                                                                                      ? bookingList[index]['cv_variant'] != null
+                                                                                                          ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
+                                                                                                          : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
+                                                                                                      : "",
+                                                                                                  make: bookingList[index]['cv_make'],
+                                                                                                )));
+                                                                                  }
+                                                                                  // Navigator.push(
+                                                                                  //     context,
+                                                                                  //     MaterialPageRoute(
+                                                                                  //         builder: (context) => BookingStatusFlow(
+                                                                                  //               bk_id: bookingList[index]['bk_id'],
+                                                                                  //               vehname: bookingList[index]['cv_make'] != null
+                                                                                  //                   ? bookingList[index]['cv_variant'] != null
+                                                                                  //                       ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
+                                                                                  //                       : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
+                                                                                  //                   : "",
+                                                                                  //               make: bookingList[index]['cv_make'],
+                                                                                  //             )));
+                                                                                },
+                                                                                child: Container(
+                                                                                  margin: EdgeInsets.only(top: height * 0.02, bottom: height * 0.01),
+                                                                                  width: width / 3,
+                                                                                  padding: EdgeInsets.all(height * 0.014),
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: lightGreyColor,
+                                                                                    border: Border.all(color: greyColor),
+                                                                                    borderRadius: BorderRadius.circular(
+                                                                                      height * 0.1,
+                                                                                    ),
+                                                                                  ),
+                                                                                  child: Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                    children: [
+                                                                                      Text(
+                                                                                        TextConst.view,
+                                                                                        style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
+                                                                                      ),
+                                                                                      Image.asset(
+                                                                                        ImageConst.right_arrow,
+                                                                                        color: greyColor,
+                                                                                        scale: 4,
+                                                                                      )
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              )
+                                                                            ],
+                                                                          )
+                                                                        : Container()
+                                                                    : Container(),
+                                                              ],
+                                                            ),
                                                           ),
                                                         )
                                                       : Container();
