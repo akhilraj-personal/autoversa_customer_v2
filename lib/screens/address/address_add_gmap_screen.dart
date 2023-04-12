@@ -69,12 +69,40 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
   void initState() {
     _init();
     super.initState();
+    getLocation();
+  }
+
+  void getLocation() async {
+    getUserCurrentLocation().then((value) async {
+      setState(() {
+        selectedlatitude = value.latitude.toString();
+        selectedlongitude = value.longitude.toString();
+      });
+      // marker added for current users location
+      _markers.add(Marker(
+        markerId: MarkerId("2"),
+        position: LatLng(value.latitude, value.longitude),
+        infoWindow: InfoWindow(
+          title: 'My Current Location',
+        ),
+      ));
+
+      // specified current users location
+      CameraPosition cameraPosition = new CameraPosition(
+        target: LatLng(value.latitude, value.longitude),
+        zoom: 16,
+      );
+
+      final GoogleMapController controller = await _googleMapController.future;
+      controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+      setState(() {});
+    });
   }
 
   _init() {
     _defaultLatLng = LatLng(24.466667, 54.366669);
     _draggedLatLng = _defaultLatLng;
-    _cameraPosition = CameraPosition(target: _defaultLatLng, zoom: 17.5);
+    _cameraPosition = CameraPosition(target: _defaultLatLng, zoom: 16);
   }
 
   late GoogleMapController _mapController;
@@ -226,32 +254,33 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
                         LinearGradient(colors: [lightblueColor, syanColor])),
               ),
               onPressed: () async {
-                getUserCurrentLocation().then((value) async {
-                  setState(() {
-                    selectedlatitude = value.latitude.toString();
-                    selectedlongitude = value.longitude.toString();
-                  });
-                  // marker added for current users location
-                  _markers.add(Marker(
-                    markerId: MarkerId("2"),
-                    position: LatLng(value.latitude, value.longitude),
-                    infoWindow: InfoWindow(
-                      title: 'My Current Location',
-                    ),
-                  ));
+                getLocation();
+                // getUserCurrentLocation().then((value) async {
+                //   setState(() {
+                //     selectedlatitude = value.latitude.toString();
+                //     selectedlongitude = value.longitude.toString();
+                //   });
+                //   // marker added for current users location
+                //   _markers.add(Marker(
+                //     markerId: MarkerId("2"),
+                //     position: LatLng(value.latitude, value.longitude),
+                //     infoWindow: InfoWindow(
+                //       title: 'My Current Location',
+                //     ),
+                //   ));
 
-                  // specified current users location
-                  CameraPosition cameraPosition = new CameraPosition(
-                    target: LatLng(value.latitude, value.longitude),
-                    zoom: 14,
-                  );
+                //   // specified current users location
+                //   CameraPosition cameraPosition = new CameraPosition(
+                //     target: LatLng(value.latitude, value.longitude),
+                //     zoom: 14,
+                //   );
 
-                  final GoogleMapController controller =
-                      await _googleMapController.future;
-                  controller.animateCamera(
-                      CameraUpdate.newCameraPosition(cameraPosition));
-                  setState(() {});
-                });
+                //   final GoogleMapController controller =
+                //       await _googleMapController.future;
+                //   controller.animateCamera(
+                //       CameraUpdate.newCameraPosition(cameraPosition));
+                //   setState(() {});
+                // });
               },
             ),
           );

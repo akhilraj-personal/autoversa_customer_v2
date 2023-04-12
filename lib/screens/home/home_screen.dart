@@ -44,8 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String currency = "";
   int selectedVeh = 0;
   bool noofvehicle = false;
-  StreamSubscription? internetconnection;
-  bool isoffline = false;
   bool isActive = true;
 
   bool isBookingLoaded = false,
@@ -65,27 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //       Navigator.pushReplacementNamed(context, Routes.bottombar);
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //       Navigator.pushReplacementNamed(context, Routes.bottombar);
-    //     });
-    //   }
-    // });
     Future.delayed(Duration.zero, () {
       _getCustomerVehicles();
       _getPackages();
@@ -107,7 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    // internetconnection!.cancel();
     super.dispose();
   }
 
