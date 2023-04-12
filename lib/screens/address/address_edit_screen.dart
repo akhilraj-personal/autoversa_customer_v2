@@ -630,7 +630,9 @@ class AddressEditState extends State<AddressEdit> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) {
-                                              return AddressList();
+                                              return AddressList(
+                                                click_id: 1,
+                                              );
                                             },
                                           ),
                                         );
