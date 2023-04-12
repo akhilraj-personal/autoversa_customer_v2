@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/address/address_add_gmap_screen.dart';
 import 'package:autoversa/screens/address/address_edit_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
@@ -19,7 +20,8 @@ import 'package:shimmer/shimmer.dart';
 import '../../services/location_controller.dart';
 
 class AddressList extends StatefulWidget {
-  const AddressList({super.key});
+  final int click_id;
+  const AddressList({required this.click_id, super.key});
 
   @override
   State<AddressList> createState() => AddressListState();
@@ -141,6 +143,15 @@ class AddressListState extends State<AddressList> {
               fontSize: 18,
               color: Colors.white,
             ),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              widget.click_id == 1
+                  ? Navigator.pop(context)
+                  : Navigator.pushReplacementNamed(context, Routes.bottombar);
+            },
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            iconSize: 18,
           ),
         ),
         body: Container(
