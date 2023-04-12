@@ -73,9 +73,6 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
     super.initState();
     pickup_loc_map = widget.pickup_loc;
     drop_loc_map = widget.drop_loc;
-    print(widget.pickup_loc.toString() +
-        "-----address page----" +
-        widget.drop_loc.toString());
     drop_flag_map = widget.drop_flag;
     new_map_location();
   }
@@ -632,11 +629,6 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                     "longitude": widget.selected_longitude,
                                     "cust_id": prefs.getString("cust_id")
                                   };
-                                  print("SEND REQ ========>");
-                                  print(req);
-                                  print(pickup_loc_map.toString() +
-                                      "-----address page before----" +
-                                      drop_loc_map.toString());
                                   await saveCustomerAddress(req).then((value) {
                                     if (value['ret_data'] == "success") {
                                       // int count = 0;
@@ -647,15 +639,14 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                         pickup_loc_map = widget.pickup_loc;
                                         drop_loc_map = -1;
                                       }
-                                      print(pickup_loc_map.toString() +
-                                          "-----address page save after----" +
-                                          drop_loc_map.toString());
                                       widget.click_id == 1
                                           ? Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) {
-                                                  return AddressList();
+                                                  return AddressList(
+                                                    click_id: 2,
+                                                  );
                                                 },
                                               ),
                                             )

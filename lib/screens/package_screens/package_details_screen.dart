@@ -87,7 +87,6 @@ class PackageDetailsState extends State<PackageDetails> {
       "pack_vat": packVat
     };
     prefs.setString("booking_data", json.encode(packdata));
-    print(json.encode(packdata));
     setState(() => isbooked = false);
     Navigator.push(
         context,
@@ -223,7 +222,6 @@ class PackageDetailsState extends State<PackageDetails> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
     recorder.dispose();
     player.dispose();
     optionList = [];
