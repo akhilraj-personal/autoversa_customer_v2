@@ -695,9 +695,9 @@ class _DashScreenState extends State<DashScreen> {
                                                                               onTap: () {
                                                                                 if (bookingList[index]['st_code'] == "BAPC") {
                                                                                   if (DateTime.now().isBefore(DateTime.tryParse(bookingList[index]['bk_booking_date'])!)) {
-                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh)));
+                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh, pickup_loc: 0, drop_loc: 0)));
                                                                                   } else {
-                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh)));
+                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh, pickup_loc: 0, drop_loc: 0)));
                                                                                   }
                                                                                 } else {
                                                                                   Navigator.push(

@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
+import 'package:autoversa/screens/package_screens/package_details_screen.dart';
 import 'package:autoversa/screens/package_screens/summery_screen.dart';
 import 'package:autoversa/services/location_controller.dart';
 import 'package:autoversa/services/post_auth_services.dart';
@@ -28,6 +30,9 @@ class ScheduleScreen extends StatefulWidget {
   String currency;
   int pickup_loc;
   int drop_loc;
+  final int click_id;
+  final int pack_type;
+  final List<dynamic> booking_list;
   ScheduleScreen(
       {required this.package_id,
       required this.custvehlist,
@@ -35,6 +40,9 @@ class ScheduleScreen extends StatefulWidget {
       required this.currency,
       required this.pickup_loc,
       required this.drop_loc,
+      required this.click_id,
+      required this.pack_type,
+      required this.booking_list,
       super.key});
 
   @override
@@ -627,7 +635,49 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).pop();
+                              if (widget.click_id == 1 &&
+                                  widget.pack_type == 1) {
+                                Navigator.of(context).pop();
+                              } else if (widget.click_id == 2 &&
+                                  widget.pack_type == 1) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PackageDetails(
+                                              package_id: widget.package_id,
+                                              custvehlist: widget.custvehlist,
+                                              currency: widget.currency,
+                                              selectedVeh: widget.selectedveh,
+                                              booking_list: widget.booking_list,
+                                              pack_type: 1,
+                                            )));
+                              } else if (widget.click_id == 1 &&
+                                  widget.pack_type == 2) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CarRepair(
+                                              package_id: widget.package_id,
+                                              custvehlist: widget.custvehlist,
+                                              currency: widget.currency,
+                                              selectedVeh: widget.selectedveh,
+                                              booking_list: widget.booking_list,
+                                              pack_type: 2,
+                                            )));
+                              } else if (widget.click_id == 2 &&
+                                  widget.pack_type == 2) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CarRepair(
+                                              package_id: widget.package_id,
+                                              custvehlist: widget.custvehlist,
+                                              currency: widget.currency,
+                                              selectedVeh: widget.selectedveh,
+                                              booking_list: widget.booking_list,
+                                              pack_type: 2,
+                                            )));
+                              }
                             },
                             child: Icon(
                               Icons.arrow_back,
@@ -852,6 +902,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                     drop_loc:
                                                         selected_drop_address,
                                                     drop_flag: isLocationCheck,
+                                                    bk_id: "",
+                                                    vehname: "",
+                                                    make: "",
                                                   )));
                                     }
                                   },
@@ -1047,6 +1100,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                               pickup_loc: selected_address,
                                               drop_loc: selected_drop_address,
                                               drop_flag: isLocationCheck,
+                                              bk_id: "",
+                                              vehname: "",
+                                              make: "",
                                             )));
                               }
                             },
