@@ -41,6 +41,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   late Map<String, dynamic> vehicle = {};
   late Map<String, dynamic> audio = {};
   var totalamount = 0.0;
+  var packagecost = 0.0;
   bool isoffline = false;
   StreamSubscription? internetconnection;
   bool isproceeding = false;
@@ -66,8 +67,12 @@ class ResummeryScreenState extends State<ResummeryScreen> {
       packdata = json.decode(prefs.get("booking_data").toString());
       selectedTime = packdata['selected_timeslot'].split('- ')[1];
       if (packdata['package_cost'] != null) {
-        totalamount = double.parse(packdata['package_cost'].toString()) +
-            double.parse(packdata['pick_up_price'].toString());
+        totalamount =
+            double.parse((packdata['package_cost']).toString()).round() +
+                double.parse(packdata['pack_vat'].toString()).round() +
+                double.parse(packdata['pick_up_price'].toString());
+        packagecost = double.parse(packdata['package_cost'].toString()) +
+            double.parse(packdata['pack_vat'].toString());
       } else {
         totalamount = double.parse(packdata['pick_up_price'].toString());
       }
@@ -140,14 +145,17 @@ class ResummeryScreenState extends State<ResummeryScreen> {
           "slot": packdata['selected_timeid'],
           "pickupaddress": packdata['pick_up_location_id'],
           "dropaddress": packdata['drop_location_id'],
+          "pickup_vat": packdata['pickup_vat'],
           "pickuptype": packdata['pick_type_id'],
-          "pickupcost": packdata['pick_up_price'],
-          "pack_vat": packdata['pack_vat'].toStringAsFixed(2),
-          "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
+          "pickupcost": (double.parse(packdata['pick_up_price']) -
+                  double.parse(packdata['pickup_vat']))
+              .toStringAsFixed(2),
+          "pack_vat": packdata['pack_vat'],
           'complaint': additionalcommentsController.text.toString(),
+          "sourcetype": "MOB",
           "advance": "0",
           "discount": "0",
-          "total_amount": totalamount,
+          "total_amount": totalamount.round(),
         };
         print(booking);
         await createRescheduleBooking(booking).then((value) {
@@ -191,7 +199,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
           colors: PaymentSheetAppearanceColors(
               background: Colors.white,
               primary: Color(0xff31BBAC),
-              componentBorder: Colors.red,
+              componentBorder: Color(0xff3186AC),
               primaryText: Colors.black,
               secondaryText: Colors.black,
               componentBackground: Colors.white,
@@ -201,7 +209,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
           shapes: PaymentSheetShape(
             borderWidth: 4,
             borderRadius: 10.00,
-            shadow: PaymentSheetShadowParams(color: Colors.red),
+            shadow: PaymentSheetShadowParams(color: Color(0xff31BBAC)),
           ),
           primaryButton: PaymentSheetPrimaryButtonAppearance(
             shapes: PaymentSheetPrimaryButtonShape(blurRadius: 8),
@@ -209,7 +217,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
               light: PaymentSheetPrimaryButtonThemeColors(
                 background: Color(0xff31BBAC),
                 text: Colors.white,
-                border: Color.fromARGB(255, 235, 92, 30),
+                border: Color(0xff31BBAC),
               ),
             ),
           ),
@@ -224,7 +232,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
       Map<String, dynamic> booking = {
         'custId': prefs.getString('cust_id'),
         'book_id': bookingdetails['bk_id'],
-        'tot_amount': totalamount,
+        'tot_amount': totalamount.round(),
         'trxn_id': trnxId,
         'complaint': additionalcommentsController.text.toString(),
         'slot': packdata['selected_timeid'],
@@ -446,7 +454,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                         packdata['package_cost'] != null
                                             ? packdata['package_cost'] != 0
                                                 ? "AED " +
-                                                    packdata['package_cost']
+                                                    (packagecost.round())
                                                         .toString()
                                                 : "Based on Quotation"
                                             : "",
@@ -535,7 +543,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 packdata['pick_up_location'] ?? "",
                                 overflow: TextOverflow.clip,
                                 style: montserratMedium.copyWith(
-                                    color: black, fontSize: width * 0.034),
+                                    color: black, fontSize: width * 0.04),
                               ),
                             ),
                           ),
@@ -602,7 +610,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 packdata['drop_location'] ?? "",
                                 overflow: TextOverflow.clip,
                                 style: montserratMedium.copyWith(
-                                    color: black, fontSize: width * 0.034),
+                                    color: black, fontSize: width * 0.04),
                               ),
                             ),
                           ),
@@ -668,8 +676,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 ? DateFormat('LLLL').format(
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
-                            style: montserratMedium.copyWith(
-                                color: black, fontSize: width * 0.034),
+                            style: montserratSemiBold.copyWith(
+                                color: warningcolor, fontSize: width * 0.04),
                           ),
                           SizedBox(
                             width: 8,
@@ -679,8 +687,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 ? DateFormat('d').format(
                                     DateTime.parse(packdata['selected_date']))
                                 : "",
-                            style: montserratMedium.copyWith(
-                                color: black, fontSize: width * 0.034),
+                            style: montserratSemiBold.copyWith(
+                                color: warningcolor, fontSize: width * 0.04),
                           ),
                         ],
                       ),
@@ -720,16 +728,16 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 ? packdata['selected_timeslot'].split('- ')[0] +
                                     "-"
                                 : "",
-                            style: montserratMedium.copyWith(
-                                color: black, fontSize: width * 0.034),
+                            style: montserratSemiBold.copyWith(
+                                color: warningcolor, fontSize: width * 0.04),
                           ),
                           Text(
                             packdata['selected_timeslot'] != null
                                 ? " " +
                                     packdata['selected_timeslot'].split('- ')[1]
                                 : "",
-                            style: montserratMedium.copyWith(
-                                color: black, fontSize: width * 0.034),
+                            style: montserratSemiBold.copyWith(
+                                color: warningcolor, fontSize: width * 0.04),
                           ),
                         ],
                       ),
@@ -814,7 +822,9 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                 color: black, fontSize: width * 0.034),
                           ),
                           Text(
-                            widget.currency + " " + (totalamount).toString(),
+                            widget.currency +
+                                " " +
+                                (totalamount.round()).toString(),
                             style: montserratSemiBold.copyWith(
                                 color: warningcolor, fontSize: width * 0.034),
                           ),
@@ -1171,10 +1181,13 @@ class ReScheduleTimeAndDate extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => RescheduleScreen(
-                            bk_data: bk_data,
-                            custvehlist: custvehlist,
-                            currency: currency,
-                            selectedVeh: selectedVeh)));
+                              bk_data: bk_data,
+                              custvehlist: custvehlist,
+                              currency: currency,
+                              selectedVeh: selectedVeh,
+                              pickup_loc: 0,
+                              drop_loc: 0,
+                            )));
               },
               child: Container(
                 decoration: BoxDecoration(

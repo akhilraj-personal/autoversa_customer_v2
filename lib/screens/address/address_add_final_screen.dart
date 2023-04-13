@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/screens/address/address_list_screen.dart';
+import 'package:autoversa/screens/booking/reschedule_screen.dart';
+import 'package:autoversa/screens/booking/schedule_drop_screen.dart';
 import 'package:autoversa/screens/package_screens/schedule_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
@@ -30,6 +32,9 @@ class AddressAddFinalScreen extends StatefulWidget {
   final String selected_administrativeArea;
   final String selected_latitude;
   final String selected_longitude;
+  final String bk_id;
+  final String vehname;
+  final String make;
   AddressAddFinalScreen(
       {required this.package_id,
       required this.custvehlist,
@@ -39,6 +44,9 @@ class AddressAddFinalScreen extends StatefulWidget {
       required this.drop_loc,
       required this.click_id,
       required this.drop_flag,
+      required this.bk_id,
+      required this.vehname,
+      required this.make,
       required this.selected_street,
       required this.selected_sublocality,
       required this.selected_administrativeArea,
@@ -639,38 +647,67 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                         pickup_loc_map = widget.pickup_loc;
                                         drop_loc_map = -1;
                                       }
-                                      widget.click_id == 1
-                                          ? Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) {
-                                                  return AddressList(
-                                                    click_id: 2,
-                                                  );
-                                                },
-                                              ),
-                                            )
-
-                                          // : Navigator.of(context)
-                                          //     .popUntil((_) => count++ >= 2);
-                                          : Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) {
-                                                  return ScheduleScreen(
-                                                      package_id:
-                                                          widget.package_id,
-                                                      custvehlist:
-                                                          widget.custvehlist,
-                                                      currency: widget.currency,
-                                                      selectedveh:
-                                                          widget.selectedveh,
-                                                      pickup_loc:
-                                                          pickup_loc_map,
-                                                      drop_loc: drop_loc_map);
-                                                },
-                                              ),
-                                            );
+                                      if (widget.click_id == 1) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return AddressList(
+                                                click_id: 2,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      } else if (widget.click_id == 2) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return ScheduleScreen(
+                                                package_id: widget.package_id,
+                                                custvehlist: widget.custvehlist,
+                                                currency: widget.currency,
+                                                selectedveh: widget.selectedveh,
+                                                pickup_loc: pickup_loc_map,
+                                                drop_loc: drop_loc_map,
+                                                click_id: 2,
+                                                pack_type: 2,
+                                                booking_list: [],
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      } else if (widget.click_id == 3) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return RescheduleScreen(
+                                                  bk_data: widget.package_id,
+                                                  custvehlist:
+                                                      widget.custvehlist,
+                                                  currency: widget.currency,
+                                                  selectedVeh:
+                                                      widget.selectedveh,
+                                                  pickup_loc: pickup_loc_map,
+                                                  drop_loc: drop_loc_map);
+                                            },
+                                          ),
+                                        );
+                                      } else if (widget.click_id == 4) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return ScheduleDropScreen(
+                                                  click_id: 2,
+                                                  bk_id: widget.bk_id,
+                                                  vehname: widget.vehname,
+                                                  make: widget.make);
+                                            },
+                                          ),
+                                        );
+                                      }
                                       setState(() => isgooglemap = false);
                                       setState(() => isproceeding = false);
                                     } else {

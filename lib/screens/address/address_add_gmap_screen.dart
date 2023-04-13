@@ -28,6 +28,9 @@ class AddAddressViaGmap extends StatefulWidget {
   final int pickup_loc;
   final int drop_loc;
   final bool drop_flag;
+  final String bk_id;
+  final String vehname;
+  final String make;
   AddAddressViaGmap(
       {required this.package_id,
       required this.custvehlist,
@@ -37,6 +40,9 @@ class AddAddressViaGmap extends StatefulWidget {
       required this.drop_loc,
       required this.click_id,
       required this.drop_flag,
+      required this.bk_id,
+      required this.vehname,
+      required this.make,
       super.key});
   @override
   State<AddAddressViaGmap> createState() => AddAddressViaGmapState();
@@ -316,6 +322,9 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
                               pickup_loc: widget.pickup_loc,
                               drop_loc: widget.drop_loc,
                               drop_flag: widget.drop_flag,
+                              bk_id: widget.bk_id,
+                              vehname: widget.vehname,
+                              make: widget.make,
                               selected_street: street,
                               selected_sublocality: subLocality,
                               selected_administrativeArea: administrativeArea,

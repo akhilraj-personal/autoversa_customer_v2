@@ -2699,7 +2699,13 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                             0
                                                                         ? Navigator.push(
                                                                             context,
-                                                                            MaterialPageRoute(builder: (context) => ScheduleDropScreen(bk_id: widget.bk_id, vehname: widget.vehname, make: widget.make)))
+                                                                            MaterialPageRoute(
+                                                                                builder: (context) => ScheduleDropScreen(
+                                                                                      bk_id: widget.bk_id,
+                                                                                      vehname: widget.vehname,
+                                                                                      make: widget.make,
+                                                                                      click_id: 1,
+                                                                                    )))
                                                                         : Navigator.push(context, MaterialPageRoute(builder: (context) => Workcard(click_id: 2, booking_id: widget.bk_id, vehname: widget.vehname, vehmake: vehicle['cv_make'])));
                                                                   },
                                                                   child: Stack(
@@ -3070,7 +3076,11 @@ class ScheduleDelivery extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ScheduleDropScreen(
-                                  bk_id: bk_id, vehname: vehname, make: make)));
+                                    bk_id: bk_id,
+                                    vehname: vehname,
+                                    make: make,
+                                    click_id: 1,
+                                  )));
                     },
                     child: Stack(
                       alignment: Alignment.bottomCenter,

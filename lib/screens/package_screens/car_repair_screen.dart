@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/main.dart';
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/package_screens/schedule_screen.dart';
 import 'package:autoversa/screens/package_screens/sound_player_screen.dart';
@@ -271,35 +272,44 @@ class CarRepairState extends State<CarRepair> {
         }
       }
     }
-
-    final prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> packdata = {
-      "packtype": widget.pack_type,
-      "package_id": widget.package_id['pkg_id'],
-      "vehicle_id": widget.custvehlist[currentveh]['cv_id'],
-      "complaint": complaint.text.toString(),
-      "audio_location": prefs.containsKey('comp_audio')
-          ? prefs.containsKey('comp_audio')
-          : "",
-      "package_cost": totalCost,
-      "services": select_services,
-      "sub_packages": select_packages,
-      "pack_vat": totalVat,
-      "veh_groupid": veh_groupid,
-      "gs_vat": gs_vat
-    };
-    prefs.setString("booking_data", json.encode(packdata));
-    setState(() => isbooked = false);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ScheduleScreen(
-                package_id: widget.package_id,
-                custvehlist: widget.custvehlist,
-                currency: widget.currency,
-                selectedveh: currentveh,
-                pickup_loc: 0,
-                drop_loc: 0)));
+    if (select_services.length == 0 || select_packages.length == 0) {
+      setState(() => isbooked = false);
+      showCustomToast(context, "Choose atleast one service or package",
+          bgColor: warningcolor, textColor: Colors.white);
+    } else {
+      final prefs = await SharedPreferences.getInstance();
+      Map<String, dynamic> packdata = {
+        "packtype": widget.pack_type,
+        "package_id": widget.package_id['pkg_id'],
+        "vehicle_id": widget.custvehlist[currentveh]['cv_id'],
+        "complaint": complaint.text.toString(),
+        "audio_location": prefs.containsKey('comp_audio')
+            ? prefs.containsKey('comp_audio')
+            : "",
+        "package_cost": totalCost,
+        "services": select_services,
+        "sub_packages": select_packages,
+        "pack_vat": totalVat,
+        "veh_groupid": veh_groupid,
+        "gs_vat": gs_vat
+      };
+      prefs.setString("booking_data", json.encode(packdata));
+      setState(() => isbooked = false);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ScheduleScreen(
+                    package_id: widget.package_id,
+                    custvehlist: widget.custvehlist,
+                    currency: widget.currency,
+                    selectedveh: currentveh,
+                    pickup_loc: 0,
+                    drop_loc: 0,
+                    click_id: 1,
+                    pack_type: 1,
+                    booking_list: widget.booking_list,
+                  )));
+    }
   }
 
   Future<void> init() async {
@@ -393,7 +403,8 @@ class CarRepairState extends State<CarRepair> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).pop();
+                              Navigator.pushReplacementNamed(
+                                  context, Routes.bottombar);
                             },
                             child: Icon(
                               Icons.arrow_back,

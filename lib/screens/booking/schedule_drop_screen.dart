@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:autoversa/services/location_controller.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart' hide Card;
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../constant/image_const.dart';
 import '../../constant/text_style.dart';
@@ -17,16 +20,19 @@ import '../../services/post_auth_services.dart';
 import '../../utils/AppWidgets.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/common_utils.dart';
+import '../address/address_add_gmap_screen.dart';
 import 'booking_status_flow_page.dart';
 
 class ScheduleDropScreen extends StatefulWidget {
   final String bk_id;
   final String vehname;
   final String make;
+  final int click_id;
   const ScheduleDropScreen(
       {required this.bk_id,
       required this.vehname,
       required this.make,
+      required this.click_id,
       super.key});
 
   @override
@@ -40,19 +46,13 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   bool isLoaded = false,
       isSubmitted = false,
       isExpanded = false,
-      isProceeding = false,
-      isgooglemap = false;
+      isProceeding = false;
 
   List custAddressList = [];
   List timeslots = [];
   List pickup_options = [];
   List<String?> SelectAddressList = <String?>["Select Address"];
-  List<String?> SelectCityList = <String?>["Select City"];
-  List<String?> SelectAreaList = <String?>["Select Area"];
-  List citylist = [];
-  List areaList = [];
   List temppickup_options = [];
-
   var freeservicedistance = 0;
   var servicedistance = 0;
   var max_days = 0;
@@ -64,18 +64,10 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   var isTimeCheck;
   var pending_payment = 0.00;
   var new_selected_drop = 0;
-  var emirates = 0, city = 0;
-  var Statelat = "24.3547";
-  var Statelong = "54.5020";
-  var address = "";
-  var landmark = "";
-  var AddressType = "Home";
   var trnxId;
   var gs_vat = 0;
   var gs_isvat = 0;
-  var paid_amount = 0.0;
-
-  final _formKey = GlobalKey<FormState>();
+  double paid_amount = 0.0;
   final GlobalKey<FormFieldState> drop_city = GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> drop_area = GlobalKey<FormFieldState>();
   final TextEditingController textEditingController = TextEditingController();
@@ -90,7 +82,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     super.initState();
     Future.delayed(Duration.zero, () {
       getBookingDetailsByID();
-      // _fetchdatas(0, 'd');
     });
   }
 
@@ -113,7 +104,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
 
   dropAddressChange(drop_address) {
     if (drop_address - 1 == -1) {
-      // dropCostCalculation(0, false, "Select Drop", false, false);
       new_selected_drop = 0;
       showCustomToast(context, "Please select drop location",
           bgColor: errorcolor, textColor: white);
@@ -222,28 +212,18 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
           custAddressList = value['cust_addressList'];
           var ind = 1;
           for (var add in value['cust_addressList']) {
-            SelectAddressList.add("#" +
-                ind.toString() +
-                ". " +
-                add['cad_address'] +
-                ", " +
-                add['cad_city'] +
-                ", " +
-                add['country_code']);
+            SelectAddressList.add(
+                "#" + ind.toString() + ". " + add['cad_address']);
             ind++;
           }
           setState(() {});
         }
       });
-      // for (var state in citylist) {
-      //   SelectCityList.add(state['state_name']);
-      // }
       selected_address = SelectAddressList.length - 1;
       new_selected_drop =
           int.parse(custAddressList[SelectAddressList.length - 2]['cad_id']);
       var serviceDistance = int.parse(
           custAddressList[SelectAddressList.length - 2]['cad_distance']);
-      // print(custAddressList[SelectAddressList.length - 2]['cad_address']);
       var new_distance = serviceDistance - int.parse(selected_distance);
       if (new_distance < 0) {
         new_distance = 0;
@@ -289,7 +269,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
       }
     } catch (e) {
       setState(() => isSubmitted = false);
-      // print(e.toString());
+      print("11111111111111111");
+      print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     }
@@ -308,14 +289,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
           custAddressList = value['cust_addressList'];
           var ind = 1;
           for (var add in value['cust_addressList']) {
-            SelectAddressList.add("#" +
-                ind.toString() +
-                ". " +
-                add['cad_address'] +
-                ", " +
-                add['cad_city'] +
-                ", " +
-                add['country_code']);
+            SelectAddressList.add(
+                "#" + ind.toString() + ". " + add['cad_address']);
             if (currentDropDetails['cad_id'] == add['cad_id']) {
               selected_address = ind;
               selected_distance = add['cad_distance'];
@@ -324,17 +299,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
           }
         }
       });
-      // Map country = {
-      //   "countryId": 1,
-      // };
-      // await getStateList(country).then((value) {
-      //   if (value['ret_data'] == "success") {
-      //     citylist = value['statelist'];
-      //     for (var state in value['statelist']) {
-      //       SelectCityList.add(state['state_name']);
-      //     }
-      //   }
-      // });
       await getPickupOptions().then((value) {
         gs_vat = int.parse(value['settings']['gs_vat']);
         gs_isvat = int.parse(value['settings']['gs_isvat']);
@@ -350,7 +314,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
             paid_amount = double.parse(currentDropType['pk_min_cost']);
           }
         }
-        if (gs_isvat == 1) {
+        if (gs_isvat == "1") {
           paid_amount = paid_amount + (paid_amount * (gs_vat / 100));
         }
         max_days = int.parse(value['settings']['gs_nofdays']);
@@ -425,22 +389,12 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
           }
         }
       });
-      // if (address_index == 0) {
-      //   selected_address = address_index;
-      //   selected_drop_address = 0;
-      // } else {
-      //   if (type == 'd') {
-      //     selected_address = temp_address;
-      //     selected_drop_address = SelectAddressList.length - 1;
-      //     dropaddresschange(SelectAddressList.length - 1);
-      //   }
-      // }
-      // setState(() {});
       getTimeSlots(new DateTime.now());
       isLoaded = true;
       setState(() {});
     } catch (e) {
       setState(() => isSubmitted = false);
+      print("2222222222222222222");
       print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
@@ -601,6 +555,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
             createPaymentIntent(widget.bk_id, value['payment_details']);
           }
         }).catchError((e) {
+          print("33333333333333333333");
+          print(e.toString());
           showCustomToast(context, ST.of(context).toast_application_error,
               bgColor: errorcolor, textColor: Colors.white);
         });
@@ -691,7 +647,16 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
           ),
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              widget.click_id == 1
+                  ? Navigator.pop(context)
+                  : Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BookingStatusFlow(
+                                bk_id: widget.bk_id,
+                                vehname: widget.vehname,
+                                make: widget.make,
+                              )));
             },
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             iconSize: 18,
@@ -899,894 +864,39 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                               ),
                             ),
                             GestureDetector(
-                              onTap: () {
-                                // Completer<GoogleMapController> _controller =
-                                //     Completer();
-                                // showModalBottomSheet(
-                                //   enableDrag: true,
-                                //   isDismissible: true,
-                                //   isScrollControlled: true,
-                                //   context: context,
-                                //   backgroundColor: Colors.transparent,
-                                //   builder: (builder) {
-                                //     return StatefulBuilder(builder: (BuildContext
-                                //             context,
-                                //         StateSetter
-                                //             setBottomState /*You can rename this!*/) {
-                                //       CameraPosition _initialPosition =
-                                //           CameraPosition(
-                                //               target: LatLng(24.3547, 54.5020),
-                                //               zoom: 13);
-                                //       getcitylist(data) async {
-                                //         if (SelectCityList.indexOf(data) > 0) {
-                                //           var temp = citylist[
-                                //               SelectCityList.indexOf(data) - 1];
-                                //           emirates =
-                                //               int.parse(temp['state_id']);
-                                //           Map state = {
-                                //             "stateId": temp['state_id'],
-                                //           };
-                                //           CameraPosition _kLake =
-                                //               CameraPosition(
-                                //             target: LatLng(
-                                //                 double.parse(
-                                //                     temp['state_lattitude']),
-                                //                 double.parse(
-                                //                     temp['state_longitude'])),
-                                //             zoom: 13.4746,
-                                //           );
-                                //           final GoogleMapController controller =
-                                //               await _controller.future;
-                                //           controller.moveCamera(
-                                //               CameraUpdate.newCameraPosition(
-                                //                   _kLake));
-                                //           setBottomState(() {
-                                //             Statelat = temp['state_lattitude'];
-                                //             Statelong = temp['state_longitude'];
-                                //             SelectAreaList = <String?>[
-                                //               "Select Area"
-                                //             ];
-                                //             drop_area.currentState?.reset();
-                                //           });
-                                //           SelectAreaList.length = 1;
-                                //           await getCityList(state)
-                                //               .then((value) {
-                                //             if (value['ret_data'] ==
-                                //                 "success") {
-                                //               setBottomState(() {
-                                //                 areaList = [];
-                                //                 SelectAreaList = <String?>[
-                                //                   "Select Area"
-                                //                 ];
-                                //               });
-                                //               areaList = value['citylist'];
-                                //               for (var city
-                                //                   in value['citylist']) {
-                                //                 SelectAreaList.add(
-                                //                     city['city_name']);
-                                //               }
-                                //             }
-                                //           });
-                                //           setBottomState(() {});
-                                //         }
-                                //       }
-
-                                //       getarealist(data) async {
-                                //         // areaKey.currentState!.reset();
-                                //         if (SelectAreaList.indexOf(
-                                //                 data.toString()) >
-                                //             0) {
-                                //           setState(() {});
-                                //           var temp = areaList[
-                                //               SelectAreaList.indexOf(
-                                //                       data.toString()) -
-                                //                   1];
-                                //           CameraPosition _kLake =
-                                //               CameraPosition(
-                                //             target: LatLng(
-                                //                 double.parse(
-                                //                     temp['city_lattitude']),
-                                //                 double.parse(
-                                //                     temp['city_longitude'])),
-                                //             zoom: 15.4746,
-                                //           );
-                                //           final GoogleMapController controller =
-                                //               await _controller.future;
-                                //           controller.moveCamera(
-                                //               CameraUpdate.newCameraPosition(
-                                //                   _kLake));
-                                //           setState(() {
-                                //             city = int.parse(temp['city_id']);
-                                //             Statelat = temp['city_lattitude'];
-                                //             Statelong = temp['city_longitude'];
-                                //           });
-                                //         }
-                                //       }
-
-                                //       return DraggableScrollableSheet(
-                                //         initialChildSize: 0.6,
-                                //         minChildSize: 0.2,
-                                //         maxChildSize: 1,
-                                //         builder: (context, scrollController) {
-                                //           return Container(
-                                //             padding: EdgeInsets.symmetric(
-                                //                 vertical: 0),
-                                //             decoration: BoxDecoration(
-                                //               color: context.cardColor,
-                                //               borderRadius:
-                                //                   BorderRadius.circular(16),
-                                //               boxShadow: defaultBoxShadow(),
-                                //             ),
-                                //             child: SingleChildScrollView(
-                                //               controller: scrollController,
-                                //               child: Form(
-                                //                 key: _formKey,
-                                //                 child: Column(
-                                //                   mainAxisSize:
-                                //                       MainAxisSize.min,
-                                //                   children: [
-                                //                     AnimatedContainer(
-                                //                       padding:
-                                //                           EdgeInsets.fromLTRB(
-                                //                               8, 8, 8, 8),
-                                //                       width: width * 1.85,
-                                //                       decoration: BoxDecoration(
-                                //                         color:
-                                //                             context.cardColor,
-                                //                         borderRadius:
-                                //                             BorderRadius
-                                //                                 .circular(16),
-                                //                         boxShadow:
-                                //                             defaultBoxShadow(),
-                                //                       ),
-                                //                       duration:
-                                //                           1000.milliseconds,
-                                //                       curve: Curves
-                                //                           .linearToEaseOut,
-                                //                       child: Column(
-                                //                         crossAxisAlignment:
-                                //                             CrossAxisAlignment
-                                //                                 .start,
-                                //                         mainAxisAlignment:
-                                //                             MainAxisAlignment
-                                //                                 .spaceEvenly,
-                                //                         children: <Widget>[
-                                //                           Container(
-                                //                             child: Stack(
-                                //                               children: [
-                                //                                 Container(
-                                //                                   margin:
-                                //                                       EdgeInsets
-                                //                                           .all(
-                                //                                               8),
-                                //                                   decoration: BoxDecoration(
-                                //                                       color: context
-                                //                                           .cardColor,
-                                //                                       borderRadius:
-                                //                                           BorderRadius.all(
-                                //                                               Radius.circular(8))),
-                                //                                   child: Column(
-                                //                                     children: [
-                                //                                       Column(
-                                //                                         children: <
-                                //                                             Widget>[
-                                //                                           SizedBox(
-                                //                                             width:
-                                //                                                 double.infinity,
-                                //                                             child:
-                                //                                                 Container(
-                                //                                               child: Text(
-                                //                                                 "Select City" + "*",
-                                //                                                 textAlign: TextAlign.left,
-                                //                                                 style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
-                                //                                               ),
-                                //                                             ),
-                                //                                           ),
-                                //                                         ],
-                                //                                       ),
-                                //                                       8.height,
-                                //                                       DropdownButtonFormField2(
-                                //                                         key:
-                                //                                             drop_city,
-                                //                                         value:
-                                //                                             SelectCityList[0],
-                                //                                         autovalidateMode:
-                                //                                             AutovalidateMode.onUserInteraction,
-                                //                                         decoration:
-                                //                                             InputDecoration(
-                                //                                           //Add isDense true and zero Padding.
-                                //                                           //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                                //                                           isDense:
-                                //                                               true,
-                                //                                           contentPadding:
-                                //                                               EdgeInsets.zero,
-                                //                                           focusedBorder:
-                                //                                               OutlineInputBorder(
-                                //                                             // width: 0.0 produces a thin "hairline" border
-                                //                                             borderSide:
-                                //                                                 const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
-                                //                                             borderRadius:
-                                //                                                 BorderRadius.circular(12),
-                                //                                           ),
-                                //                                           focusedErrorBorder:
-                                //                                               OutlineInputBorder(
-                                //                                             // width: 0.0 produces a thin "hairline" border
-                                //                                             borderSide:
-                                //                                                 const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
-                                //                                             borderRadius:
-                                //                                                 BorderRadius.circular(12),
-                                //                                           ),
-                                //                                           enabledBorder:
-                                //                                               OutlineInputBorder(
-                                //                                             // width: 0.0 produces a thin "hairline" border
-                                //                                             borderSide:
-                                //                                                 const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
-                                //                                             borderRadius:
-                                //                                                 BorderRadius.circular(12),
-                                //                                           ),
-                                //                                           errorBorder:
-                                //                                               OutlineInputBorder(
-                                //                                             // width: 0.0 produces a thin "hairline" border
-                                //                                             borderSide:
-                                //                                                 const BorderSide(color: const Color(0xfffff), width: 0.0),
-                                //                                             borderRadius:
-                                //                                                 BorderRadius.circular(12),
-                                //                                           ),
-                                //                                           errorStyle:
-                                //                                               TextStyle(
-                                //                                             fontSize:
-                                //                                                 12,
-                                //                                             color:
-                                //                                                 warningcolor,
-                                //                                           ),
-                                //                                           //Add more decoration as you want here
-                                //                                           //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
-                                //                                         ),
-                                //                                         isExpanded:
-                                //                                             true,
-                                //                                         hint:
-                                //                                             Text(
-                                //                                           "Select City" +
-                                //                                               "*",
-                                //                                           style: montserratMedium.copyWith(
-                                //                                               color: Colors.black,
-                                //                                               fontSize: width * 0.04),
-                                //                                         ),
-                                //                                         alignment:
-                                //                                             Alignment.center,
-                                //                                         buttonHeight:
-                                //                                             height *
-                                //                                                 0.075,
-                                //                                         buttonPadding: const EdgeInsets.only(
-                                //                                             left:
-                                //                                                 20,
-                                //                                             right:
-                                //                                                 10),
-                                //                                         dropdownDecoration:
-                                //                                             BoxDecoration(
-                                //                                           borderRadius:
-                                //                                               BorderRadius.circular(15),
-                                //                                         ),
-                                //                                         items: SelectCityList.map((String?
-                                //                                             value) {
-                                //                                           return DropdownMenuItem<
-                                //                                               String>(
-                                //                                             value:
-                                //                                                 value,
-                                //                                             child:
-                                //                                                 Text(
-                                //                                               value!,
-                                //                                               style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
-                                //                                             ),
-                                //                                           );
-                                //                                         }).toList(),
-                                //                                         onChanged:
-                                //                                             (value) {
-                                //                                           setBottomState(
-                                //                                               () {
-                                //                                             isgooglemap =
-                                //                                                 true;
-                                //                                           });
-                                //                                           getcitylist(
-                                //                                               value);
-                                //                                         },
-                                //                                       ),
-                                //                                       8.height,
-                                //                                       Column(
-                                //                                         children: <
-                                //                                             Widget>[
-                                //                                           SizedBox(
-                                //                                             width:
-                                //                                                 double.infinity,
-                                //                                             child:
-                                //                                                 Container(
-                                //                                               child: Text(
-                                //                                                 "Select Area" + "*",
-                                //                                                 textAlign: TextAlign.left,
-                                //                                                 style: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
-                                //                                               ),
-                                //                                             ),
-                                //                                           ),
-                                //                                         ],
-                                //                                       ),
-                                //                                       8.height,
-                                //                                       DropdownButtonFormField2(
-                                //                                         key:
-                                //                                             drop_area,
-                                //                                         value:
-                                //                                             SelectAreaList[0],
-                                //                                         autovalidateMode:
-                                //                                             AutovalidateMode.onUserInteraction,
-                                //                                         decoration:
-                                //                                             InputDecoration(
-                                //                                           //Add isDense true and zero Padding.
-                                //                                           //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                                //                                           isDense:
-                                //                                               true,
-                                //                                           contentPadding:
-                                //                                               EdgeInsets.zero,
-                                //                                           focusedBorder:
-                                //                                               OutlineInputBorder(
-                                //                                             // width: 0.0 produces a thin "hairline" border
-                                //                                             borderSide:
-                                //                                                 const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
-                                //                                             borderRadius:
-                                //                                                 BorderRadius.circular(12),
-                                //                                           ),
-                                //                                           focusedErrorBorder:
-                                //                                               OutlineInputBorder(
-                                //                                             // width: 0.0 produces a thin "hairline" border
-                                //                                             borderSide:
-                                //                                                 const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
-                                //                                             borderRadius:
-                                //                                                 BorderRadius.circular(12),
-                                //                                           ),
-                                //                                           enabledBorder:
-                                //                                               OutlineInputBorder(
-                                //                                             // width: 0.0 produces a thin "hairline" border
-                                //                                             borderSide:
-                                //                                                 const BorderSide(color: const Color(0xffCCCCCC), width: 0.0),
-                                //                                             borderRadius:
-                                //                                                 BorderRadius.circular(12),
-                                //                                           ),
-                                //                                           errorBorder:
-                                //                                               OutlineInputBorder(
-                                //                                             // width: 0.0 produces a thin "hairline" border
-                                //                                             borderSide:
-                                //                                                 const BorderSide(color: const Color(0xfffff), width: 0.0),
-                                //                                             borderRadius:
-                                //                                                 BorderRadius.circular(12),
-                                //                                           ),
-                                //                                           errorStyle:
-                                //                                               TextStyle(
-                                //                                             fontSize:
-                                //                                                 12,
-                                //                                             color:
-                                //                                                 warningcolor,
-                                //                                           ),
-                                //                                           //Add more decoration as you want here
-                                //                                           //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
-                                //                                         ),
-                                //                                         isExpanded:
-                                //                                             true,
-                                //                                         hint:
-                                //                                             Text(
-                                //                                           "Select Area" +
-                                //                                               "*",
-                                //                                           style: montserratMedium.copyWith(
-                                //                                               color: Colors.black,
-                                //                                               fontSize: width * 0.04),
-                                //                                         ),
-                                //                                         alignment:
-                                //                                             Alignment.center,
-                                //                                         buttonHeight:
-                                //                                             height *
-                                //                                                 0.075,
-                                //                                         buttonPadding: const EdgeInsets.only(
-                                //                                             left:
-                                //                                                 20,
-                                //                                             right:
-                                //                                                 10),
-                                //                                         dropdownDecoration:
-                                //                                             BoxDecoration(
-                                //                                           borderRadius:
-                                //                                               BorderRadius.circular(15),
-                                //                                         ),
-                                //                                         items: SelectAreaList.map((String?
-                                //                                             value) {
-                                //                                           return DropdownMenuItem<
-                                //                                               String>(
-                                //                                             value:
-                                //                                                 value,
-                                //                                             child:
-                                //                                                 Text(value!, style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04)),
-                                //                                           );
-                                //                                         }).toList(),
-                                //                                         onChanged:
-                                //                                             (value) {
-                                //                                           getarealist(
-                                //                                               value);
-                                //                                         },
-                                //                                         searchController:
-                                //                                             textEditingController,
-                                //                                         searchInnerWidgetHeight:
-                                //                                             height *
-                                //                                                 0.07,
-                                //                                         searchInnerWidget:
-                                //                                             Container(
-                                //                                           height:
-                                //                                               height * 0.07,
-                                //                                           padding:
-                                //                                               const EdgeInsets.only(
-                                //                                             top:
-                                //                                                 8,
-                                //                                             bottom:
-                                //                                                 4,
-                                //                                             right:
-                                //                                                 8,
-                                //                                             left:
-                                //                                                 8,
-                                //                                           ),
-                                //                                           child:
-                                //                                               TextFormField(
-                                //                                             expands:
-                                //                                                 true,
-                                //                                             maxLines:
-                                //                                                 null,
-                                //                                             controller:
-                                //                                                 textEditingController,
-                                //                                             decoration:
-                                //                                                 InputDecoration(
-                                //                                               isDense: true,
-                                //                                               contentPadding: const EdgeInsets.symmetric(
-                                //                                                 horizontal: 10,
-                                //                                                 vertical: 8,
-                                //                                               ),
-                                //                                               hintText: 'Search area...',
-                                //                                               hintStyle: const TextStyle(fontSize: 12),
-                                //                                               border: OutlineInputBorder(
-                                //                                                 borderRadius: BorderRadius.circular(12),
-                                //                                                 borderSide: BorderSide(color: syanColor, width: 0.0),
-                                //                                               ),
-                                //                                             ),
-                                //                                           ),
-                                //                                         ),
-                                //                                         searchMatchFn:
-                                //                                             (item,
-                                //                                                 searchValue) {
-                                //                                           return (item
-                                //                                               .value
-                                //                                               .toString()
-                                //                                               .toLowerCase()
-                                //                                               .contains(searchValue.toLowerCase()));
-                                //                                         },
-                                //                                         //This to clear the search value when you close the menu
-                                //                                         onMenuStateChange:
-                                //                                             (isOpen) {
-                                //                                           if (!isOpen) {
-                                //                                             textEditingController.clear();
-                                //                                           }
-                                //                                         },
-                                //                                       ),
-                                //                                       8.height,
-                                //                                       Column(
-                                //                                         children: <
-                                //                                             Widget>[
-                                //                                           SizedBox(
-                                //                                             width:
-                                //                                                 double.infinity,
-                                //                                             child:
-                                //                                                 Container(
-                                //                                               child: Text(
-                                //                                                 "Address",
-                                //                                                 textAlign: TextAlign.left,
-                                //                                                 style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
-                                //                                               ),
-                                //                                             ),
-                                //                                           ),
-                                //                                         ],
-                                //                                       ),
-                                //                                       8.height,
-                                //                                       Padding(
-                                //                                         padding:
-                                //                                             EdgeInsets.all(2),
-                                //                                         child:
-                                //                                             Container(
-                                //                                           decoration: const BoxDecoration(
-                                //                                               borderRadius: BorderRadius.all(Radius.circular(16)),
-                                //                                               color: white),
-                                //                                           child:
-                                //                                               TextFormField(
-                                //                                             keyboardType:
-                                //                                                 TextInputType.text,
-                                //                                             minLines:
-                                //                                                 1,
-                                //                                             maxLines:
-                                //                                                 2,
-                                //                                             maxLength:
-                                //                                                 80,
-                                //                                             autovalidateMode:
-                                //                                                 AutovalidateMode.onUserInteraction,
-                                //                                             style:
-                                //                                                 montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
-                                //                                             onChanged:
-                                //                                                 (value) {
-                                //                                               setState(() {
-                                //                                                 address = value;
-                                //                                               });
-                                //                                             },
-                                //                                             validator:
-                                //                                                 (value) {
-                                //                                               return addressValidation(value, context);
-                                //                                             },
-                                //                                             onFieldSubmitted:
-                                //                                                 (value) {
-                                //                                               FocusScope.of(context).requestFocus(landmarkFocusNode);
-                                //                                             },
-                                //                                             focusNode:
-                                //                                                 addressFocus,
-                                //                                             textCapitalization:
-                                //                                                 TextCapitalization.sentences,
-                                //                                             decoration: InputDecoration(
-                                //                                                 counterText: "",
-                                //                                                 hintText: "Address",
-                                //                                                 hintStyle: montserratMedium.copyWith(color: greyColor, fontSize: width * 0.04),
-                                //                                                 focusedBorder: OutlineInputBorder(
-                                //                                                   borderSide: const BorderSide(color: black, width: 0.5),
-                                //                                                   borderRadius: BorderRadius.circular(10),
-                                //                                                 ),
-                                //                                                 enabledBorder: OutlineInputBorder(
-                                //                                                   borderSide: const BorderSide(color: black, width: 0.5),
-                                //                                                   borderRadius: BorderRadius.circular(10),
-                                //                                                 )),
-                                //                                           ),
-                                //                                           alignment:
-                                //                                               Alignment.center,
-                                //                                         ),
-                                //                                       ),
-                                //                                       12.height,
-                                //                                       Column(
-                                //                                         children: <
-                                //                                             Widget>[
-                                //                                           SizedBox(
-                                //                                             width:
-                                //                                                 double.infinity,
-                                //                                             child:
-                                //                                                 Container(
-                                //                                               child: Text(
-                                //                                                 "Building Name/Flat No",
-                                //                                                 textAlign: TextAlign.left,
-                                //                                                 style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
-                                //                                               ),
-                                //                                             ),
-                                //                                           ),
-                                //                                         ],
-                                //                                       ),
-                                //                                       8.height,
-                                //                                       Padding(
-                                //                                         padding:
-                                //                                             EdgeInsets.all(0),
-                                //                                         child:
-                                //                                             Container(
-                                //                                           decoration: const BoxDecoration(
-                                //                                               borderRadius: BorderRadius.all(Radius.circular(16)),
-                                //                                               color: white),
-                                //                                           child: TextFormField(
-                                //                                               keyboardType: TextInputType.multiline,
-                                //                                               minLines: 1,
-                                //                                               maxLength: 50,
-                                //                                               autovalidateMode: AutovalidateMode.onUserInteraction,
-                                //                                               style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
-                                //                                               onChanged: (value) {
-                                //                                                 if (value != "") {
-                                //                                                   var ret = buildingValidation(value);
-                                //                                                   if (ret == null) {
-                                //                                                     setState(() {
-                                //                                                       landmark = value;
-                                //                                                     });
-                                //                                                   } else {
-                                //                                                     showCustomToast(context, "Enter valid details", bgColor: errorcolor, textColor: white);
-                                //                                                   }
-                                //                                                 }
-                                //                                               },
-                                //                                               textCapitalization: TextCapitalization.sentences,
-                                //                                               decoration: InputDecoration(
-                                //                                                   counterText: "",
-                                //                                                   hintText: "Building Name/Flat No",
-                                //                                                   hintStyle: montserratMedium.copyWith(color: greyColor, fontSize: width * 0.04),
-                                //                                                   focusedBorder: OutlineInputBorder(
-                                //                                                     borderSide: const BorderSide(color: black, width: 0.5),
-                                //                                                     borderRadius: BorderRadius.circular(10),
-                                //                                                   ),
-                                //                                                   enabledBorder: OutlineInputBorder(
-                                //                                                     borderSide: const BorderSide(color: black, width: 0.5),
-                                //                                                     borderRadius: BorderRadius.circular(10),
-                                //                                                   ))),
-                                //                                           alignment:
-                                //                                               Alignment.center,
-                                //                                         ),
-                                //                                       ),
-                                //                                       8.height,
-                                //                                       Wrap(
-                                //                                           crossAxisAlignment: WrapCrossAlignment
-                                //                                               .center,
-                                //                                           alignment: WrapAlignment
-                                //                                               .start,
-                                //                                           direction:
-                                //                                               Axis.horizontal,
-                                //                                           children: [
-                                //                                             Theme(
-                                //                                               data: Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
-                                //                                               child: Radio(
-                                //                                                 value: 'Home',
-                                //                                                 groupValue: AddressType,
-                                //                                                 fillColor: MaterialStateColor.resolveWith((states) => syanColor),
-                                //                                                 onChanged: (dynamic value) {
-                                //                                                   setBottomState(() {
-                                //                                                     AddressType = value;
-                                //                                                   });
-                                //                                                 },
-                                //                                               ),
-                                //                                             ),
-                                //                                             Text("Home",
-                                //                                                 style: montserratMedium.copyWith(fontSize: width * 0.034, color: black)),
-                                //                                             Theme(
-                                //                                               data: Theme.of(context).copyWith(
-                                //                                                 unselectedWidgetColor: syanColor,
-                                //                                               ),
-                                //                                               child: Radio(
-                                //                                                 value: 'Office',
-                                //                                                 groupValue: AddressType,
-                                //                                                 fillColor: MaterialStateColor.resolveWith((states) => syanColor),
-                                //                                                 onChanged: (dynamic value) {
-                                //                                                   setBottomState(() {
-                                //                                                     AddressType = value;
-                                //                                                   });
-                                //                                                 },
-                                //                                               ),
-                                //                                             ),
-                                //                                             Text("Office",
-                                //                                                 style: montserratMedium.copyWith(fontSize: width * 0.034, color: black)),
-                                //                                             Theme(
-                                //                                               data: Theme.of(context).copyWith(unselectedWidgetColor: syanColor),
-                                //                                               child: Radio(
-                                //                                                 value: 'Other',
-                                //                                                 groupValue: AddressType,
-                                //                                                 fillColor: MaterialStateColor.resolveWith((states) => syanColor),
-                                //                                                 onChanged: (dynamic value) {
-                                //                                                   setBottomState(() {
-                                //                                                     AddressType = value;
-                                //                                                   });
-                                //                                                 },
-                                //                                               ),
-                                //                                             ),
-                                //                                             Text("Other",
-                                //                                                 style: montserratMedium.copyWith(fontSize: width * 0.034, color: black)),
-                                //                                           ]),
-                                //                                       8.height,
-                                //                                       isgooglemap
-                                //                                           ? Column(
-                                //                                               children: <Widget>[
-                                //                                                 SizedBox(
-                                //                                                   width: double.infinity,
-                                //                                                   child: Container(
-                                //                                                     child: Text(
-                                //                                                       "Tap to mark",
-                                //                                                       textAlign: TextAlign.left,
-                                //                                                       style: montserratMedium.copyWith(fontSize: width * 0.034, color: black),
-                                //                                                     ),
-                                //                                                   ),
-                                //                                                 ),
-                                //                                               ],
-                                //                                             )
-                                //                                           : Row(),
-                                //                                       8.height,
-                                //                                       isgooglemap
-                                //                                           ? isMobile
-                                //                                               ? Container(
-                                //                                                   height: 130,
-                                //                                                   width: width,
-                                //                                                   color: white,
-                                //                                                   child: GoogleMap(
-                                //                                                     initialCameraPosition: _initialPosition,
-                                //                                                     myLocationButtonEnabled: true,
-                                //                                                     onMapCreated: (GoogleMapController controller) {
-                                //                                                       _controller.complete(controller);
-                                //                                                     },
-                                //                                                   ),
-                                //                                                 )
-                                //                                               : Container(
-                                //                                                   color: Colors.transparent,
-                                //                                                   height: context.height(),
-                                //                                                   alignment: Alignment.center,
-                                //                                                   width: width,
-                                //                                                   child: Text("Google Map", style: montserratRegular.copyWith(fontSize: width * 0.034)),
-                                //                                                 )
-                                //                                           : Row(),
-                                //                                       8.height,
-                                //                                       Row(
-                                //                                         children: <
-                                //                                             Widget>[
-                                //                                           Checkbox(
-                                //                                             value:
-                                //                                                 isDefaultAddressChecked,
-                                //                                             fillColor:
-                                //                                                 MaterialStateProperty.all(syanColor),
-                                //                                             onChanged:
-                                //                                                 (value) {
-                                //                                               setBottomState(
-                                //                                                 () {
-                                //                                                   isDefaultAddressChecked = value!;
-                                //                                                 },
-                                //                                               );
-                                //                                             },
-                                //                                           ),
-                                //                                           Text(
-                                //                                             "Set as default address",
-                                //                                             textAlign:
-                                //                                                 TextAlign.start,
-                                //                                             overflow:
-                                //                                                 TextOverflow.clip,
-                                //                                             style:
-                                //                                                 montserratMedium.copyWith(
-                                //                                               fontSize: 12,
-                                //                                               color: black,
-                                //                                             ),
-                                //                                           ),
-                                //                                         ],
-                                //                                       ),
-                                //                                       26.height,
-                                //                                       GestureDetector(
-                                //                                         onTap:
-                                //                                             () async {
-                                //                                           if (emirates ==
-                                //                                               0) {
-                                //                                             setState(() =>
-                                //                                                 isSubmitted = false);
-                                //                                             showCustomToast(context,
-                                //                                                 "Select City",
-                                //                                                 bgColor: errorcolor,
-                                //                                                 textColor: white);
-                                //                                           } else if (city ==
-                                //                                               0) {
-                                //                                             setState(() =>
-                                //                                                 isSubmitted = false);
-                                //                                             showCustomToast(context,
-                                //                                                 "Select Area",
-                                //                                                 bgColor: errorcolor,
-                                //                                                 textColor: white);
-                                //                                           } else if (address ==
-                                //                                               "") {
-                                //                                             setState(() =>
-                                //                                                 isSubmitted = false);
-                                //                                             showCustomToast(context,
-                                //                                                 "Enter Address",
-                                //                                                 bgColor: errorcolor,
-                                //                                                 textColor: white);
-                                //                                           } else {
-                                //                                             final prefs =
-                                //                                                 await SharedPreferences.getInstance();
-                                //                                             try {
-                                //                                               setState(() => isSubmitted = true);
-                                //                                               await Future.delayed(Duration(milliseconds: 1000));
-                                //                                               Map req = {
-                                //                                                 "countryId": 1,
-                                //                                                 "stateId": emirates,
-                                //                                                 "cityId": city,
-                                //                                                 "address": address,
-                                //                                                 "landmark": landmark,
-                                //                                                 "add_type": AddressType,
-                                //                                                 "lattitude": Statelat,
-                                //                                                 "longitude": Statelong,
-                                //                                                 "cust_id": prefs.getString("cust_id")
-                                //                                               };
-                                //                                               await saveCustomerAddress(req).then((value) {
-                                //                                                 if (value['ret_data'] == "success") {
-                                //                                                   emirates = 0;
-                                //                                                   city = 0;
-                                //                                                   address = "";
-                                //                                                   landmark = "";
-                                //                                                   isSubmitted = false;
-                                //                                                   AddressType = "Home";
-                                //                                                   setBottomState(() {
-                                //                                                     drop_city.currentState?.reset();
-                                //                                                     drop_area.currentState?.reset();
-                                //                                                     SelectCityList = <String?>[
-                                //                                                       "Select City"
-                                //                                                     ];
-                                //                                                     SelectAreaList = <String?>[
-                                //                                                       "Select Area"
-                                //                                                     ];
-                                //                                                   });
-                                //                                                   setState(() {});
-                                //                                                   newDropAddress();
-                                //                                                   setState(() => isgooglemap = false);
-                                //                                                   setState(() => isSubmitted = false);
-                                //                                                 } else {
-                                //                                                   setState(() => isSubmitted = false);
-                                //                                                 }
-                                //                                               });
-                                //                                             } catch (e) {
-                                //                                               setState(() => isSubmitted = false);
-                                //                                               print(e.toString());
-                                //                                             }
-                                //                                             finish(context);
-                                //                                           }
-                                //                                         },
-                                //                                         child:
-                                //                                             Stack(
-                                //                                           alignment:
-                                //                                               Alignment.bottomCenter,
-                                //                                           children: [
-                                //                                             Container(
-                                //                                               height: height * 0.045,
-                                //                                               width: height * 0.37,
-                                //                                               decoration: BoxDecoration(borderRadius: BorderRadius.circular(14), boxShadow: [
-                                //                                                 BoxShadow(blurRadius: 16, color: syanColor.withOpacity(.6), spreadRadius: 0, blurStyle: BlurStyle.outer, offset: Offset(0, 0)),
-                                //                                               ]),
-                                //                                             ),
-                                //                                             Container(
-                                //                                               height: height * 0.075,
-                                //                                               width: height * 0.45,
-                                //                                               alignment: Alignment.center,
-                                //                                               decoration: BoxDecoration(
-                                //                                                 shape: BoxShape.rectangle,
-                                //                                                 borderRadius: BorderRadius.all(Radius.circular(14)),
-                                //                                                 gradient: LinearGradient(
-                                //                                                   begin: Alignment.topLeft,
-                                //                                                   end: Alignment.bottomRight,
-                                //                                                   colors: [
-                                //                                                     syanColor,
-                                //                                                     lightblueColor,
-                                //                                                   ],
-                                //                                                 ),
-                                //                                               ),
-                                //                                               child: !isSubmitted
-                                //                                                   ? Text(
-                                //                                                       ST.of(context).save,
-                                //                                                       style: montserratSemiBold.copyWith(color: Colors.white),
-                                //                                                     )
-                                //                                                   : Row(
-                                //                                                       mainAxisAlignment: MainAxisAlignment.center,
-                                //                                                       children: [
-                                //                                                         Transform.scale(
-                                //                                                           scale: 0.7,
-                                //                                                           child: CircularProgressIndicator(
-                                //                                                             color: white,
-                                //                                                           ),
-                                //                                                         ),
-                                //                                                       ],
-                                //                                                     ),
-                                //                                             ),
-                                //                                           ],
-                                //                                         ),
-                                //                                       ),
-                                //                                     ],
-                                //                                   ),
-                                //                                 ),
-                                //                               ],
-                                //                             ),
-                                //                           ),
-                                //                           Padding(
-                                //                             padding:
-                                //                                 EdgeInsets.all(
-                                //                                     8),
-                                //                           ),
-                                //                         ],
-                                //                       ),
-                                //                     ),
-                                //                   ],
-                                //                 ),
-                                //               ),
-                                //             ),
-                                //           );
-                                //         },
-                                //       );
-                                //     });
-                                //   },
-                                // ).whenComplete(() {
-                                //   setState(() => isgooglemap = false);
-                                // });
+                              onTap: () async {
+                                PermissionStatus locationStatus =
+                                    await Permission.location.request();
+                                if (locationStatus == PermissionStatus.denied) {
+                                  showCustomToast(context,
+                                      "This Permission is recommended for location access.",
+                                      bgColor: errorcolor, textColor: white);
+                                }
+                                if (locationStatus ==
+                                    PermissionStatus.permanentlyDenied) {
+                                  openAppSettings();
+                                }
+                                if (locationStatus ==
+                                    PermissionStatus.granted) {
+                                  Get.put(LocationController());
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AddAddressViaGmap(
+                                                click_id: 4,
+                                                package_id: {},
+                                                custvehlist: [],
+                                                currency: "",
+                                                selectedveh: 0,
+                                                pickup_loc: 0,
+                                                drop_loc: selected_address,
+                                                drop_flag: true,
+                                                bk_id: widget.bk_id,
+                                                vehname: widget.vehname,
+                                                make: widget.make,
+                                              )));
+                                }
                               },
                               child: Row(
                                 mainAxisAlignment:
@@ -1893,8 +1003,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                             color: Colors.black,
                                             fontSize: width * 0.04),
                                       ),
-                                      buttonHeight: height * 0.075,
-                                      buttonPadding: const EdgeInsets.all(12),
+                                      buttonHeight: height * 0.09,
+                                      buttonPadding: const EdgeInsets.all(4),
                                       dropdownDecoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
                                       ),
@@ -1902,11 +1012,14 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                           (String? value) {
                                         return DropdownMenuItem<String>(
                                           value: value,
-                                          child: Text(
-                                            value!,
-                                            style: montserratMedium.copyWith(
-                                                color: Colors.black,
-                                                fontSize: width * 0.04),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8),
+                                            child: Text(
+                                              value!,
+                                              style: montserratMedium.copyWith(
+                                                  color: Colors.black,
+                                                  fontSize: width * 0.04),
+                                            ),
                                           ),
                                         );
                                       }).toList(),

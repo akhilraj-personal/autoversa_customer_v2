@@ -191,8 +191,7 @@ Future saveCustomerAddress(Map req) async {
 }
 
 Future createRescheduleBooking(Map req) async {
-  return handleResponse(await securedPostRequest(
-      'Booking/BookingController/createawaitingbooking', req));
+  return handleResponse(await securedPostRequest('createawaitingbooking', req));
 }
 
 Future submitdeliverydrop(Map req) async {

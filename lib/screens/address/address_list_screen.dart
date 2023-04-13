@@ -684,6 +684,9 @@ class AddressListState extends State<AddressList> {
                             pickup_loc: 0,
                             drop_loc: 0,
                             drop_flag: false,
+                            bk_id: "",
+                            vehname: "",
+                            make: "",
                           )));
             }
           },

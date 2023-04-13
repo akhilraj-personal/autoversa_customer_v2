@@ -37,8 +37,6 @@ class SummeryPage extends StatefulWidget {
 class SummeryPageState extends State<SummeryPage> {
   late Map<String, dynamic> packdata = {};
   late double totalamount = 0.0;
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
   bool isproceeding = false;
   bool isLoading = false;
   int bookId = 0;
@@ -54,25 +52,6 @@ class SummeryPageState extends State<SummeryPage> {
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     init();
     Future.delayed(Duration.zero, () {
       _setdatas();
