@@ -272,7 +272,11 @@ class CarRepairState extends State<CarRepair> {
         }
       }
     }
-    if (select_services.length == 0 || select_packages.length == 0) {
+    print("@@@@@@@@@222");
+    print(optionList.length);
+    print(select_services.length);
+    print(select_packages.length);
+    if (optionList.length == 0) {
       setState(() => isbooked = false);
       showCustomToast(context, "Choose atleast one service or package",
           bgColor: warningcolor, textColor: Colors.white);
