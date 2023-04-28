@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
@@ -20,7 +19,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import '../address/address_add_gmap_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -55,7 +53,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   late List pickup_options = [];
   late List temppickup_options = [];
   late List timeslots = [];
-  final _formKey = GlobalKey<FormState>();
   List<String?> SelectAddressList = <String?>["Select Address"];
   var selected_address = 0;
   var selected_drop_address = 0;
@@ -80,14 +77,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   var max_days = 0;
   DateTime selectedDate = DateTime.now();
   bool isExpanded = false;
-  bool issubmitted = false;
   bool isproceeding = false;
-  FocusNode addressFocus = FocusNode();
-  FocusNode landmarkFocusNode = FocusNode();
-  final GlobalKey<FormFieldState> pick_city = GlobalKey<FormFieldState>();
-  final GlobalKey<FormFieldState> pick_area = GlobalKey<FormFieldState>();
-  final GlobalKey<FormFieldState> drop_city = GlobalKey<FormFieldState>();
-  final GlobalKey<FormFieldState> drop_area = GlobalKey<FormFieldState>();
 
   _setdatas() async {
     final prefs = await SharedPreferences.getInstance();
@@ -335,7 +325,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       setState(() {});
       getTimeSlots(new DateTime.now());
     } catch (e) {
-      setState(() => issubmitted = false);
       print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
@@ -428,7 +417,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    var last_date = DateTime.now().add(Duration(days: 5));
     final DateTime? picked = await showDatePicker(
         helpText: "Select Booking Date",
         cancelText: 'Not Now',
@@ -1033,11 +1021,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 style:
                                                     montserratMedium.copyWith(
                                                         color: Colors.black,
-                                                        fontSize: width * 0.04),
+                                                        fontSize: width * 0.08),
                                               ),
                                               buttonHeight: height * 0.09,
-                                              buttonPadding:
-                                                  const EdgeInsets.all(4),
+                                              buttonPadding: EdgeInsets.all(4),
                                               dropdownDecoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(15),
@@ -1088,6 +1075,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                 openAppSettings();
                               }
                               if (locationStatus == PermissionStatus.granted) {
+                                Get.put(LocationController());
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -1529,25 +1517,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             ],
                           );
                         }),
-                    4.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Flexible(
-                          child: Container(
-                              child: Padding(
-                            padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
-                            child: Text(
-                              "Drop location and type can be changed during drop schedule after work completion",
-                              overflow: TextOverflow.clip,
-                              style: montserratMedium.copyWith(
-                                  color: black.withOpacity(0.5),
-                                  fontSize: width * 0.0275),
-                            ),
-                          )),
-                        ),
-                      ],
-                    ),
+
                     8.height,
                     // : Row(),
                     // isserviceble
@@ -1838,6 +1808,25 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                               ],
                             ),
                           ),
+                        ),
+                      ],
+                    ),
+                    4.height,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Flexible(
+                          child: Container(
+                              child: Padding(
+                            padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
+                            child: Text(
+                              "Drop location and type can be changed during drop schedule after work completion",
+                              overflow: TextOverflow.clip,
+                              style: montserratMedium.copyWith(
+                                  color: black.withOpacity(0.5),
+                                  fontSize: width * 0.0275),
+                            ),
+                          )),
                         ),
                       ],
                     ),
