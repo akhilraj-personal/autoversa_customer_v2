@@ -166,7 +166,6 @@ class SummeryPageState extends State<SummeryPage> {
             (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
                 .toStringAsFixed(2),
       };
-      print(req);
       String? token = prefs.getString('token');
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';
@@ -181,7 +180,6 @@ class SummeryPageState extends State<SummeryPage> {
         ),
       );
       var retdata = jsonDecode(response.toString());
-      print(retdata);
       if (retdata['ret_data'] == "success") {
         createPayment(retdata['booking_id'], retdata['payment_details']);
         bookId = retdata['booking_id'];
@@ -192,14 +190,10 @@ class SummeryPageState extends State<SummeryPage> {
         bookingdate = packdata['selected_date'];
         await prefs.remove("booking_data");
       } else {
-        print("else error====>");
-        print(retdata);
         showCustomToast(context, "Couldn't complete booking",
             bgColor: errorcolor, textColor: whiteColor);
       }
     } catch (e) {
-      print("object ===>");
-      print(e.toString());
       setState(() {
         isproceeding = false;
       });
