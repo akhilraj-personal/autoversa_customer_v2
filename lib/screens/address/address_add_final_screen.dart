@@ -305,8 +305,11 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                     Expanded(
                                       child: Container(
                                         decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
                                             color: lightGreyColor),
                                         padding: EdgeInsets.only(
+                                            left: width * 0.025,
                                             right: width * 0.025),
                                         child: TextField(
                                           controller: cityController,
@@ -383,8 +386,11 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                     Expanded(
                                       child: Container(
                                         decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
                                             color: lightGreyColor),
                                         padding: EdgeInsets.only(
+                                            left: width * 0.025,
                                             right: width * 0.025),
                                         child: TextField(
                                           controller: areaController,
