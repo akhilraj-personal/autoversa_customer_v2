@@ -60,6 +60,7 @@ class PackageDetailsState extends State<PackageDetails> {
   TextEditingController complaint = new TextEditingController();
   var gs_vat;
   var veh_groupid;
+  bool _isButtonDisabled = false;
 
   @override
   void initState() {
@@ -1149,13 +1150,15 @@ class PackageDetailsState extends State<PackageDetails> {
                               SizedBox(height: height * 0.04),
                               isServicing && recordPending == false
                                   ? GestureDetector(
-                                      onTap: () async {
-                                        if (isbooked) return;
-                                        setState(() => isbooked = true);
-                                        await Future.delayed(
-                                            Duration(milliseconds: 1000));
-                                        proceedbooking();
-                                      },
+                                      onTap: _isButtonDisabled
+                                          ? null
+                                          : () async {
+                                              if (isbooked) return;
+                                              setState(() => isbooked = true);
+                                              await Future.delayed(
+                                                  Duration(milliseconds: 1000));
+                                              proceedbooking();
+                                            },
                                       child: Stack(
                                         alignment: Alignment.bottomCenter,
                                         children: [
