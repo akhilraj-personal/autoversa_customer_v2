@@ -601,7 +601,7 @@ class SummeryPageState extends State<SummeryPage> {
                       height: 8,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 30.0),
+                      margin: EdgeInsets.only(left: 30.0, right: 16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -628,15 +628,41 @@ class SummeryPageState extends State<SummeryPage> {
                             width: 8,
                           ),
                           Flexible(
-                            child: Container(
-                              child: Text(
-                                packdata['pick_up_location'] ?? "",
-                                overflow: TextOverflow.clip,
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                packdata['pick_up_location']['cad_landmark']
+                                        .toUpperCase() +
+                                    " (" +
+                                    packdata['pick_up_location']['cad_city'] +
+                                    ")",
                                 style: montserratMedium.copyWith(
-                                    color: blackColor, fontSize: width * 0.04),
+                                    color: Colors.black,
+                                    fontSize: width * 0.04),
                               ),
-                            ),
-                          ),
+                              Text(
+                                packdata['pick_up_location']['cad_address'],
+                                maxLines: 2,
+                                textAlign: TextAlign.justify,
+                                overflow: TextOverflow.ellipsis,
+                                style: montserratMedium.copyWith(
+                                    color: toastgrey, fontSize: width * 0.03),
+                              ),
+                            ],
+                          ))
+                          // Flexible(
+                          //   child: Container(
+                          //     child: Text(
+                          //       packdata['pick_up_location']['cad_address'] ??
+                          //           "",
+                          //       overflow: TextOverflow.clip,
+                          //       style: montserratMedium.copyWith(
+                          //           color: blackColor, fontSize: width * 0.04),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -668,7 +694,7 @@ class SummeryPageState extends State<SummeryPage> {
                       height: 8,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 30.0),
+                      margin: EdgeInsets.only(left: 30.0, right: 16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -695,17 +721,42 @@ class SummeryPageState extends State<SummeryPage> {
                             width: 8,
                           ),
                           Flexible(
-                            child: Container(
-                              child: Text(
-                                packdata['drop_location'] ?? "",
-                                overflow: TextOverflow.clip,
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                packdata['drop_location']['cad_landmark']
+                                        .toUpperCase() +
+                                    " (" +
+                                    packdata['drop_location']['cad_city'] +
+                                    ")",
                                 style: montserratMedium.copyWith(
-                                  color: blackColor,
-                                  fontSize: width * 0.04,
-                                ),
+                                    color: Colors.black,
+                                    fontSize: width * 0.04),
                               ),
-                            ),
-                          ),
+                              Text(
+                                packdata['drop_location']['cad_address'],
+                                maxLines: 2,
+                                textAlign: TextAlign.justify,
+                                overflow: TextOverflow.ellipsis,
+                                style: montserratMedium.copyWith(
+                                    color: toastgrey, fontSize: width * 0.03),
+                              ),
+                            ],
+                          ))
+                          // Flexible(
+                          //   child: Container(
+                          //     child: Text(
+                          //       packdata['drop_location']['cad_address'] ?? "",
+                          //       overflow: TextOverflow.clip,
+                          //       style: montserratMedium.copyWith(
+                          //         color: blackColor,
+                          //         fontSize: width * 0.04,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
