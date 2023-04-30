@@ -204,6 +204,10 @@ class CarRepairState extends State<CarRepair> {
               sertemp.packVat = packVat.round();
               serviceList.add(sertemp);
             }
+            totalCost = totalCost *
+                double.parse(value['pack_factor']['pvg_factor']).round();
+
+            setState(() {});
             if (nonMapCount == 0) {
               isPriceShow = true;
               setState(() {});

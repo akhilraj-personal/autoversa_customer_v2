@@ -260,6 +260,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       custAddressList = [];
       pickup_options = [];
       var temp_address = selected_address;
+      print("first data------->" + selected_address.toString());
       var temp_drop_address = selected_drop_address;
       selected_address = 0;
       selected_drop_address = 0;

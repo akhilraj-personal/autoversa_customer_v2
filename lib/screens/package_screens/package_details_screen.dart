@@ -172,6 +172,10 @@ class PackageDetailsState extends State<PackageDetails> {
                 nonMapCount++;
               }
             }
+            totalCost = totalCost *
+                double.parse(value['pack_factor']['pvg_factor']).round();
+
+            setState(() {});
             if (value['settings']['gs_isvat'] == "1") {
               packVat = totalCost * (gs_vat / 100);
               totalCost = totalCost + (totalCost * (gs_vat / 100));
