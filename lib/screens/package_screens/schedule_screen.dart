@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
@@ -19,6 +20,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 import '../address/address_add_gmap_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -53,7 +55,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   late List pickup_options = [];
   late List temppickup_options = [];
   late List timeslots = [];
-  List<String?> SelectAddressList = <String?>["Select Address"];
+  List<Map<String, dynamic>> SelectAddressList = [];
   var selected_address = 0;
   var selected_drop_address = 0;
   var plocdistance = 0;
@@ -155,101 +157,87 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   pickupaddresschange(pick_address) {
-    if ((pick_address - 1) == -1) {
-      dropCostCalculation(0, false, "Select Pickup", false, false);
-      showCustomToast(context, "Please select a pickup location",
-          bgColor: errorcolor, textColor: white);
-    } else {
-      setState(() {
-        pickupoption = "";
-        isTimeCheck = "";
-        ptemp = custAddressList[pick_address - 1]['cad_id'];
-        selected_address = pick_address;
-        plocdistance =
-            int.parse(custAddressList[pick_address - 1]['cad_distance']);
-      });
+    setState(() {
+      pickupoption = "";
+      isTimeCheck = "";
+      ptemp = custAddressList[pick_address]['cad_id'];
+      selected_address = pick_address;
+      plocdistance = int.parse(custAddressList[pick_address]['cad_distance']);
+    });
 
-      if (isLocationCheck) {
-        dlocdistance = plocdistance;
-        dtemp = ptemp;
-        selected_drop_address = pick_address;
-        if (servicedistance > plocdistance) {
-          if (freeservicedistance > plocdistance) {
-            dropCostCalculation(plocdistance * 2, true, "", true, false);
-          } else {
-            dropCostCalculation(plocdistance * 2, true, "", false, false);
-          }
+    if (isLocationCheck) {
+      dlocdistance = plocdistance;
+      dtemp = ptemp;
+      selected_drop_address = pick_address;
+      if (servicedistance > plocdistance) {
+        if (freeservicedistance > plocdistance) {
+          dropCostCalculation(plocdistance * 2, true, "", true, false);
         } else {
-          dropCostCalculation(plocdistance * 2, true, "", false, true);
-          // dropCostCalculation(0, false, "No Service", false);
-          // toast("Service not available in this location");
-        }
-      } else if (dtemp != "") {
-        if (servicedistance > plocdistance && servicedistance > dlocdistance) {
-          if (freeservicedistance > plocdistance &&
-              freeservicedistance > dlocdistance) {
-            pickup_options = [];
-            dropCostCalculation(
-                (plocdistance + dlocdistance), true, "", true, false);
-          } else {
-            dropCostCalculation(
-                (plocdistance + dlocdistance), true, "", false, false);
-          }
-        } else {
-          pickup_options = [];
-          dropCostCalculation(
-              (plocdistance + dlocdistance), true, "", false, true);
-          // dropCostCalculation((plocdistance + dlocdistance), true, "", true);
-          // dropCostCalculation(0, false, "No Service", false);
-          // toast("Service not available in this location");
+          dropCostCalculation(plocdistance * 2, true, "", false, false);
         }
       } else {
-        dropCostCalculation(0, false, "Select Drop", false, false);
-        showCustomToast(context, "Please select drop location",
-            bgColor: errorcolor, textColor: white);
+        dropCostCalculation(plocdistance * 2, true, "", false, true);
+        // dropCostCalculation(0, false, "No Service", false);
+        // toast("Service not available in this location");
       }
+    } else if (dtemp != "") {
+      if (servicedistance > plocdistance && servicedistance > dlocdistance) {
+        if (freeservicedistance > plocdistance &&
+            freeservicedistance > dlocdistance) {
+          pickup_options = [];
+          dropCostCalculation(
+              (plocdistance + dlocdistance), true, "", true, false);
+        } else {
+          dropCostCalculation(
+              (plocdistance + dlocdistance), true, "", false, false);
+        }
+      } else {
+        pickup_options = [];
+        dropCostCalculation(
+            (plocdistance + dlocdistance), true, "", false, true);
+        // dropCostCalculation((plocdistance + dlocdistance), true, "", true);
+        // dropCostCalculation(0, false, "No Service", false);
+        // toast("Service not available in this location");
+      }
+    } else {
+      dropCostCalculation(0, false, "Select Drop", false, false);
+      showCustomToast(context, "Please select drop location",
+          bgColor: errorcolor, textColor: white);
     }
   }
 
   dropaddresschange(drop_address) {
-    if (drop_address - 1 == -1) {
-      dropCostCalculation(0, false, "Select Drop", false, false);
-      showCustomToast(context, "Please select drop location",
-          bgColor: errorcolor, textColor: white);
-    } else {
-      setState(() {
-        pickupoption = "";
-        isTimeCheck = "";
-        dtemp = custAddressList[drop_address - 1]['cad_id'];
-        selected_drop_address = drop_address;
-        dlocdistance =
-            int.parse(custAddressList[drop_address - 1]['cad_distance']);
-      });
-      var tdistance = 0;
-      if (plocdistance != "") {
-        if (servicedistance > dlocdistance && servicedistance > plocdistance) {
-          if (freeservicedistance > dlocdistance &&
-              freeservicedistance > plocdistance) {
-            pickup_options = [];
-            tdistance = plocdistance + dlocdistance;
-            dropCostCalculation(tdistance, true, "", true, false);
-          } else {
-            pickup_options = [];
-            tdistance = plocdistance + dlocdistance;
-            dropCostCalculation(tdistance, true, "", false, false);
-          }
-        } else {
-          // toast("Service not available in this location");
-          // dropCostCalculation(0, false, "No Service", false);
+    setState(() {
+      pickupoption = "";
+      isTimeCheck = "";
+      dtemp = custAddressList[drop_address]['cad_id'];
+      selected_drop_address = drop_address;
+      dlocdistance = int.parse(custAddressList[drop_address]['cad_distance']);
+    });
+    var tdistance = 0;
+    if (plocdistance != "") {
+      if (servicedistance > dlocdistance && servicedistance > plocdistance) {
+        if (freeservicedistance > dlocdistance &&
+            freeservicedistance > plocdistance) {
           pickup_options = [];
           tdistance = plocdistance + dlocdistance;
-          dropCostCalculation(tdistance, true, "", false, true);
+          dropCostCalculation(tdistance, true, "", true, false);
+        } else {
+          pickup_options = [];
+          tdistance = plocdistance + dlocdistance;
+          dropCostCalculation(tdistance, true, "", false, false);
         }
       } else {
-        dropCostCalculation(0, false, "Select Pickup", false, false);
-        showCustomToast(context, "Please select pickup location",
-            bgColor: errorcolor, textColor: white);
+        // toast("Service not available in this location");
+        // dropCostCalculation(0, false, "No Service", false);
+        pickup_options = [];
+        tdistance = plocdistance + dlocdistance;
+        dropCostCalculation(tdistance, true, "", false, true);
       }
+    } else {
+      dropCostCalculation(0, false, "Select Pickup", false, false);
+      showCustomToast(context, "Please select pickup location",
+          bgColor: errorcolor, textColor: white);
     }
   }
 
@@ -264,14 +252,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       var temp_drop_address = selected_drop_address;
       selected_address = 0;
       selected_drop_address = 0;
-      SelectAddressList = <String?>["Select Address"];
+      SelectAddressList = [];
       await getCustomerAddresses(req).then((value) {
         if (value['ret_data'] == "success") {
           custAddressList = value['cust_addressList'];
           var ind = 1;
           for (var add in value['cust_addressList']) {
-            SelectAddressList.add(
-                "#" + ind.toString() + ". " + add['cad_address']);
+            SelectAddressList.add(add);
             ind++;
           }
           setState(() {});
@@ -322,6 +309,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           selected_address = temp_address;
           selected_drop_address = temp_drop_address;
         }
+      }
+      if (widget.pickup_loc == -1 || widget.drop_loc == -1) {
+        pickupaddresschange(selected_address);
       }
       setState(() {});
       getTimeSlots(new DateTime.now());
@@ -921,12 +911,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       ),
                     ),
                     custAddressList.length != 0
-                        ? SizedBox(height: width * 0.035)
+                        ? SizedBox(height: width * 0.025)
                         : SizedBox(height: 0),
                     custAddressList.length != 0
                         ? Stack(alignment: Alignment.bottomCenter, children: [
                             Container(
-                              margin: EdgeInsets.all(16),
+                              margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
                               height: height * 0.045,
                               width: height * 0.37,
                               decoration: BoxDecoration(
@@ -943,7 +933,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             Padding(
                                 padding: EdgeInsets.all(16),
                                 child: Container(
-                                    height: height * 0.09,
+                                    height: height * 0.095,
                                     width: height * 0.46,
                                     decoration: BoxDecoration(
                                       color: white,
@@ -960,8 +950,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                         Expanded(
                                           child: Container(
                                             child: DropdownButtonFormField2(
-                                              value: SelectAddressList[
-                                                  selected_address],
+                                              value: selected_address > 0
+                                                  ? SelectAddressList[
+                                                      selected_address]
+                                                  : null,
                                               autovalidateMode: AutovalidateMode
                                                   .onUserInteraction,
                                               decoration: InputDecoration(
@@ -1022,38 +1014,91 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 style:
                                                     montserratMedium.copyWith(
                                                         color: Colors.black,
-                                                        fontSize: width * 0.08),
+                                                        fontSize: width * 0.04),
                                               ),
-                                              buttonHeight: height * 0.09,
+                                              buttonHeight: height * 0.095,
                                               buttonPadding: EdgeInsets.all(4),
                                               dropdownDecoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(15),
                                               ),
+                                              itemHeight: height * 0.08,
                                               items: SelectAddressList.map(
-                                                  (String? value) {
-                                                return DropdownMenuItem<String>(
+                                                  (value) {
+                                                return DropdownMenuItem<
+                                                        Map<String, dynamic>>(
                                                     value: value,
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsets.all(8),
-                                                      child: Text(
-                                                        value!,
-                                                        style: montserratMedium
-                                                            .copyWith(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize:
-                                                                    width *
-                                                                        0.04),
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 8.0),
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .location_on_outlined,
+                                                            color: syanColor,
+                                                            size: width * 0.08,
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Flexible(
+                                                              child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                value['cad_landmark']
+                                                                        .toUpperCase() +
+                                                                    " (" +
+                                                                    value[
+                                                                        'cad_city'] +
+                                                                    ")",
+                                                                style: montserratMedium.copyWith(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.04),
+                                                              ),
+                                                              Text(
+                                                                value[
+                                                                    'cad_address'],
+                                                                maxLines: 2,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .justify,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style: montserratMedium.copyWith(
+                                                                    color:
+                                                                        toastgrey,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.03),
+                                                              ),
+                                                            ],
+                                                          ))
+                                                        ],
                                                       ),
                                                     ));
                                               }).toList(),
-                                              onChanged: (value) {
+                                              onChanged: (selected) {
+                                                print(selected);
                                                 setState(() {
                                                   pickupaddresschange(
-                                                      SelectAddressList.indexOf(
-                                                          value.toString()));
+                                                      SelectAddressList
+                                                          .indexWhere((element) =>
+                                                              element[
+                                                                  'cad_id'] ==
+                                                              selected![
+                                                                  'cad_id']));
                                                 });
                                               },
                                             ),
@@ -1224,7 +1269,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                     Padding(
                                       padding: EdgeInsets.all(16),
                                       child: Container(
-                                          height: height * 0.09,
+                                          height: height * 0.095,
                                           width: height * 0.46,
                                           decoration: BoxDecoration(
                                             color: white,
@@ -1239,8 +1284,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 child: Container(
                                                   child:
                                                       DropdownButtonFormField2(
-                                                    value: SelectAddressList[
-                                                        selected_drop_address],
+                                                    value: selected_drop_address >
+                                                            0
+                                                        ? SelectAddressList[
+                                                            selected_drop_address]
+                                                        : null,
                                                     autovalidateMode:
                                                         AutovalidateMode
                                                             .onUserInteraction,
@@ -1318,9 +1366,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                               fontSize:
                                                                   width * 0.04),
                                                     ),
-                                                    buttonHeight: height * 0.09,
+                                                    buttonHeight:
+                                                        height * 0.095,
                                                     buttonPadding:
                                                         const EdgeInsets.all(4),
+                                                    itemHeight: height * 0.08,
                                                     dropdownDecoration:
                                                         BoxDecoration(
                                                       borderRadius:
@@ -1329,32 +1379,84 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                     ),
                                                     items:
                                                         SelectAddressList.map(
-                                                            (String? value) {
+                                                            (value) {
                                                       return DropdownMenuItem<
-                                                              String>(
+                                                              Map<String,
+                                                                  dynamic>>(
                                                           value: value,
                                                           child: Padding(
                                                             padding:
-                                                                EdgeInsets.all(
-                                                                    8),
-                                                            child: Text(
-                                                              value!,
-                                                              style: montserratMedium
-                                                                  .copyWith(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.04),
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        8.0),
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(
+                                                                  Icons
+                                                                      .location_on_outlined,
+                                                                  color:
+                                                                      syanColor,
+                                                                  size: width *
+                                                                      0.08,
+                                                                ),
+                                                                const SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Flexible(
+                                                                    child:
+                                                                        Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      value['cad_landmark']
+                                                                              .toUpperCase() +
+                                                                          " (" +
+                                                                          value[
+                                                                              'cad_city'] +
+                                                                          ")",
+                                                                      style: montserratMedium.copyWith(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              width * 0.04),
+                                                                    ),
+                                                                    Text(
+                                                                      value[
+                                                                          'cad_address'],
+                                                                      maxLines:
+                                                                          2,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .justify,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: montserratMedium.copyWith(
+                                                                          color:
+                                                                              toastgrey,
+                                                                          fontSize:
+                                                                              width * 0.03),
+                                                                    ),
+                                                                  ],
+                                                                ))
+                                                              ],
                                                             ),
                                                           ));
                                                     }).toList(),
-                                                    onChanged: (value) {
+                                                    onChanged: (selected) {
                                                       setState(() {
-                                                        dropaddresschange(
-                                                            SelectAddressList
-                                                                .indexOf(value
-                                                                    .toString()));
+                                                        dropaddresschange(SelectAddressList
+                                                            .indexWhere((element) =>
+                                                                element[
+                                                                    'cad_id'] ==
+                                                                selected![
+                                                                    'cad_id']));
                                                       });
                                                     },
                                                   ),
