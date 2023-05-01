@@ -62,8 +62,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   var dlocdistance = 0;
   var selected_timeslot = "";
   var selected_timeid = 0;
-  var ptemp = "";
-  var dtemp = "";
+  var ptempdata = "";
+  var dtempdata = "";
   var isTimeCheck;
   var freeservicedistance = 0;
   var servicedistance = 0;
@@ -160,14 +160,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     setState(() {
       pickupoption = "";
       isTimeCheck = "";
-      ptemp = custAddressList[pick_address]['cad_id'];
+      ptempdata = custAddressList[pick_address]['cad_id'];
       selected_address = pick_address;
       plocdistance = int.parse(custAddressList[pick_address]['cad_distance']);
     });
 
     if (isLocationCheck) {
       dlocdistance = plocdistance;
-      dtemp = ptemp;
+      dtempdata = ptempdata;
       selected_drop_address = pick_address;
       if (servicedistance > plocdistance) {
         if (freeservicedistance > plocdistance) {
@@ -180,7 +180,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         // dropCostCalculation(0, false, "No Service", false);
         // toast("Service not available in this location");
       }
-    } else if (dtemp != "") {
+    } else if (dtempdata != "") {
       if (servicedistance > plocdistance && servicedistance > dlocdistance) {
         if (freeservicedistance > plocdistance &&
             freeservicedistance > dlocdistance) {
@@ -210,7 +210,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     setState(() {
       pickupoption = "";
       isTimeCheck = "";
-      dtemp = custAddressList[drop_address]['cad_id'];
+      dtempdata = custAddressList[drop_address]['cad_id'];
       selected_drop_address = drop_address;
       dlocdistance = int.parse(custAddressList[drop_address]['cad_distance']);
     });
@@ -262,11 +262,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           }
           setState(() {});
           if (widget.pickup_loc == -1) {
-            selected_address = SelectAddressList.length - 1;
+            selected_address = SelectAddressList.length;
             selected_drop_address = 0;
           } else if (widget.drop_loc == -1) {
             selected_address = widget.pickup_loc;
-            selected_drop_address = SelectAddressList.length - 1;
+            selected_drop_address = SelectAddressList.length;
           }
           setState(() {});
         }
@@ -297,13 +297,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         // selected_drop_address = 0;
       } else {
         if (type == 'p' && isLocationCheck) {
-          selected_address = SelectAddressList.length - 1;
+          selected_address = SelectAddressList.length;
           selected_drop_address = temp_drop_address;
-          pickupaddresschange(SelectAddressList.length - 1);
+          pickupaddresschange(SelectAddressList.length);
         } else if (type == 'd') {
           selected_address = temp_address;
-          selected_drop_address = SelectAddressList.length - 1;
-          dropaddresschange(SelectAddressList.length - 1);
+          selected_drop_address = SelectAddressList.length;
+          dropaddresschange(SelectAddressList.length);
         } else {
           selected_address = temp_address;
           selected_drop_address = temp_drop_address;
@@ -446,7 +446,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     Map<String, dynamic> packdata =
         json.decode(prefs.get("booking_data").toString());
     if (isLocationCheck) {
-      if (ptemp == "" && dtemp == "") {
+      print(ptempdata + "<--->" + dtempdata);
+      if (ptempdata == "" && dtempdata == "") {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a location",
             bgColor: errorcolor, textColor: white);
@@ -465,8 +466,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             bgColor: errorcolor, textColor: white);
       } else {
         packdata['pick_up_location'] = SelectAddressList[selected_address];
-        packdata['pick_up_location_id'] = ptemp;
-        packdata['drop_location_id'] = dtemp;
+        packdata['pick_up_location_id'] = ptempdata;
+        packdata['drop_location_id'] = dtempdata;
         !isLocationCheck
             ? packdata['drop_location'] =
                 SelectAddressList[selected_drop_address]
@@ -492,7 +493,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     currency: widget.currency)));
       }
     } else {
-      if (ptemp == "" && dtemp == "") {
+      if (ptempdata == "" || dtempdata == "") {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a location",
             bgColor: errorcolor, textColor: white);
@@ -511,8 +512,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             bgColor: errorcolor, textColor: white);
       } else {
         packdata['pick_up_location'] = SelectAddressList[selected_address];
-        packdata['pick_up_location_id'] = ptemp;
-        packdata['drop_location_id'] = dtemp;
+        packdata['pick_up_location_id'] = ptempdata;
+        packdata['drop_location_id'] = dtempdata;
         packdata['drop_location'] = SelectAddressList[selected_drop_address];
         packdata['pick_up_price'] = pickup_cost;
         packdata['pickup_vat'] = pickup_vat;
@@ -1022,6 +1023,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                     BorderRadius.circular(15),
                                               ),
                                               itemHeight: height * 0.08,
+                                              icon: RadiantGradientMask(
+                                                child: Icon(
+                                                    Icons.keyboard_arrow_down,
+                                                    color: white,
+                                                    size: 30),
+                                              ),
                                               items: SelectAddressList.map(
                                                   (value) {
                                                 return DropdownMenuItem<
@@ -1030,8 +1037,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                     child: Padding(
                                                       padding: const EdgeInsets
                                                               .symmetric(
-                                                          horizontal: 8.0),
+                                                          horizontal: 0),
                                                       child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
                                                         children: [
                                                           Icon(
                                                             Icons
@@ -1058,6 +1068,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                     value[
                                                                         'cad_city'] +
                                                                     ")",
+                                                                maxLines: 1,
                                                                 style: montserratMedium.copyWith(
                                                                     color: Colors
                                                                         .black,
@@ -1376,6 +1387,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                           BorderRadius.circular(
                                                               15),
                                                     ),
+                                                    icon: RadiantGradientMask(
+                                                      child: Icon(
+                                                          Icons
+                                                              .keyboard_arrow_down,
+                                                          color: white,
+                                                          size: 30),
+                                                    ),
                                                     items:
                                                         SelectAddressList.map(
                                                             (value) {
@@ -1419,6 +1437,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                           value[
                                                                               'cad_city'] +
                                                                           ")",
+                                                                      maxLines:
+                                                                          1,
                                                                       style: montserratMedium.copyWith(
                                                                           color: Colors
                                                                               .black,
@@ -1541,8 +1561,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                       ['pk_id'],
                                                   groupValue: pickupoption,
                                                   onChanged: (dynamic value) {
-                                                    if (ptemp == "" &&
-                                                        dtemp == "") {
+                                                    if (ptempdata == "" &&
+                                                        dtempdata == "") {
                                                       showCustomToast(context,
                                                           "Choose a location",
                                                           bgColor: errorcolor,
