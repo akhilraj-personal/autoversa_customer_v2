@@ -263,11 +263,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           }
           setState(() {});
           if (widget.pickup_loc == -1) {
-            selected_address = SelectAddressList.length;
+            selected_address = SelectAddressList.length - 1;
             selected_drop_address = 0;
           } else if (widget.drop_loc == -1) {
             selected_address = widget.pickup_loc;
-            selected_drop_address = SelectAddressList.length;
+            selected_drop_address = SelectAddressList.length - 1;
           }
           setState(() {});
         }
@@ -298,13 +298,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         // selected_drop_address = 0;
       } else {
         if (type == 'p' && isLocationCheck) {
-          selected_address = SelectAddressList.length;
+          selected_address = SelectAddressList.length - 1;
           selected_drop_address = temp_drop_address;
-          pickupaddresschange(SelectAddressList.length);
+          pickupaddresschange(SelectAddressList.length - 1);
         } else if (type == 'd') {
           selected_address = temp_address;
-          selected_drop_address = SelectAddressList.length;
-          dropaddresschange(SelectAddressList.length);
+          selected_drop_address = SelectAddressList.length - 1;
+          dropaddresschange(SelectAddressList.length - 1);
         } else {
           selected_address = temp_address;
           selected_drop_address = temp_drop_address;

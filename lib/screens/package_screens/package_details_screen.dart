@@ -137,9 +137,9 @@ class PackageDetailsState extends State<PackageDetails> {
             for (var sup_packs in value['sub_packages']) {
               optionList.add(sup_packs['sp_name']);
               for (var operations in sup_packs['operations']) {
-                if (operations['opvm_timeunit'] != null) {
+                if (operations['opvm_pack_timeunit'] != null) {
                   totalCost = totalCost +
-                      (double.parse(operations['opvm_timeunit']) *
+                      (double.parse(operations['opvm_pack_timeunit']) *
                               double.parse(value['labourrate']['lr_rate']))
                           .round();
                 } else {

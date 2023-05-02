@@ -186,6 +186,7 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
                         context: context,
                         apiKey: dotenv.env['g_map_api']!,
                         mode: Mode.overlay,
+                        language: 'es',
                         types: [],
                         strictbounds: false,
                         components: [Component(Component.country, 'ae')],
