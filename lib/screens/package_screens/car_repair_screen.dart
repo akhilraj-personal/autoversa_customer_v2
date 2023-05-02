@@ -316,7 +316,7 @@ class CarRepairState extends State<CarRepair> {
                   pickup_loc: 0,
                   drop_loc: 0,
                   click_id: 1,
-                  pack_type: 1,
+                  pack_type: widget.pack_type,
                   booking_list: widget.booking_list,
                 )));
     // }

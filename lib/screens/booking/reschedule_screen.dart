@@ -1123,6 +1123,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => AddAddressViaGmap(
+                                              pack_type: 0,
                                               click_id: 3,
                                               package_id: widget.bk_data,
                                               custvehlist: widget.custvehlist,

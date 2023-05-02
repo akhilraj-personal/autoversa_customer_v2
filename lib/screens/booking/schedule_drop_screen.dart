@@ -884,6 +884,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               AddAddressViaGmap(
+                                                pack_type: 0,
                                                 click_id: 4,
                                                 package_id: {},
                                                 custvehlist: [],

@@ -20,6 +20,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 class AddressAddFinalScreen extends StatefulWidget {
   final int click_id;
+  final int pack_type;
   final Map<String, dynamic> package_id;
   final List<dynamic> custvehlist;
   final int selectedveh;
@@ -37,6 +38,7 @@ class AddressAddFinalScreen extends StatefulWidget {
   final String make;
   AddressAddFinalScreen(
       {required this.package_id,
+      required this.pack_type,
       required this.custvehlist,
       required this.selectedveh,
       required this.currency,
@@ -677,7 +679,7 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                                 pickup_loc: pickup_loc_map,
                                                 drop_loc: drop_loc_map,
                                                 click_id: 2,
-                                                pack_type: 2,
+                                                pack_type: widget.pack_type,
                                                 booking_list: [],
                                               );
                                             },

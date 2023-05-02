@@ -677,6 +677,7 @@ class AddressListState extends State<AddressList> {
                   MaterialPageRoute(
                       builder: (context) => AddAddressViaGmap(
                             click_id: 1,
+                            pack_type: 0,
                             package_id: {},
                             custvehlist: [],
                             currency: "",

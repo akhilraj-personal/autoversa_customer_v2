@@ -21,6 +21,7 @@ import 'package:google_maps_webservice/places.dart';
 
 class AddAddressViaGmap extends StatefulWidget {
   final int click_id;
+  final int pack_type;
   final Map<String, dynamic> package_id;
   final List<dynamic> custvehlist;
   final int selectedveh;
@@ -43,6 +44,7 @@ class AddAddressViaGmap extends StatefulWidget {
       required this.bk_id,
       required this.vehname,
       required this.make,
+      required this.pack_type,
       super.key});
   @override
   State<AddAddressViaGmap> createState() => AddAddressViaGmapState();
@@ -61,6 +63,7 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
   String country = "";
   String selectedlatitude = "";
   String selectedlongitude = "";
+  bool isLoading = true;
   final List<Marker> _markers = <Marker>[
     Marker(
         markerId: MarkerId('1'),
@@ -98,9 +101,10 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
         target: LatLng(value.latitude, value.longitude),
         zoom: 16,
       );
-
+      isLoading = false;
       final GoogleMapController controller = await _googleMapController.future;
       controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
       setState(() {});
     });
   }
@@ -175,78 +179,99 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
               ),
             ),
             body: Stack(children: <Widget>[
-              _buildBody(),
-              Positioned(
-                top: 20,
-                left: 10,
-                right: 20,
-                child: GestureDetector(
-                  onTap: () async {
-                    var place = await PlacesAutocomplete.show(
-                        context: context,
-                        apiKey: dotenv.env['g_map_api']!,
-                        mode: Mode.overlay,
-                        language: 'es',
-                        types: [],
-                        strictbounds: false,
-                        components: [Component(Component.country, 'ae')],
-                        //google_map_webservice package
-                        onError: (err) {});
-                    if (place != null) {
-                      // setState(() {
-                      //   location = place.description.toString();
-                      // });
-
-                      String placeid = place.placeId ?? "0";
-                      PlacesDetailsResponse detail =
-                          await _places.getDetailsByPlaceId(placeid);
-                      final geometry = detail.result.geometry!;
-                      //move map camera to selected place with animation
-                      CameraPosition cameraPosition = new CameraPosition(
-                        target: LatLng(
-                            geometry.location.lat, geometry.location.lng),
-                        zoom: 16,
-                      );
-
-                      final GoogleMapController controller =
-                          await _googleMapController.future;
-                      controller.animateCamera(
-                          CameraUpdate.newCameraPosition(cameraPosition));
-                      setState(() {});
-                    }
-                  },
-                  // onTap: () => Get.dialog(
-                  //     LocationSearchDialog(mapController: _mapController)),
-                  child: Container(
-                    height: 50,
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    decoration: BoxDecoration(
-                        color: greyColor.withOpacity(0.65),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Row(children: [
-                      RadiantGradientMask(
-                        child: Icon(Icons.location_on,
-                            size: 25, color: Theme.of(context).primaryColor),
+              isLoading
+                  ? Padding(
+                      padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          CircularProgressIndicator(
+                            color: white,
+                            backgroundColor: warningcolor,
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 5),
-                      //here we show the address on the top
-                      Expanded(
-                        child: Text(
-                          '${locationController.pickPlaceMark.name ?? ''} ${locationController.pickPlaceMark.locality ?? ''} '
-                          '${locationController.pickPlaceMark.postalCode ?? ''} ${locationController.pickPlaceMark.country ?? ''}',
-                          style: montserratMedium.copyWith(fontSize: 18),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                    )
+                  : SizedBox(),
+              !isLoading ? _buildBody() : SizedBox(),
+              !isLoading
+                  ? Positioned(
+                      top: 20,
+                      left: 10,
+                      right: 20,
+                      child: GestureDetector(
+                        onTap: () async {
+                          var place = await PlacesAutocomplete.show(
+                              context: context,
+                              apiKey: dotenv.env['g_map_api']!,
+                              mode: Mode.overlay,
+                              language: 'en',
+                              types: [],
+                              strictbounds: false,
+                              components: [Component(Component.country, 'ae')],
+                              //google_map_webservice package
+                              onError: (err) {});
+                          if (place != null) {
+                            // setState(() {
+                            //   location = place.description.toString();
+                            // });
+
+                            String placeid = place.placeId ?? "0";
+                            PlacesDetailsResponse detail =
+                                await _places.getDetailsByPlaceId(placeid);
+                            final geometry = detail.result.geometry!;
+                            //move map camera to selected place with animation
+                            CameraPosition cameraPosition = new CameraPosition(
+                              target: LatLng(
+                                  geometry.location.lat, geometry.location.lng),
+                              zoom: 16,
+                            );
+
+                            final GoogleMapController controller =
+                                await _googleMapController.future;
+                            controller.animateCamera(
+                                CameraUpdate.newCameraPosition(cameraPosition));
+                            setState(() {});
+                          }
+                        },
+                        // onTap: () => Get.dialog(
+                        //     LocationSearchDialog(mapController: _mapController)),
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                              color: greyColor.withOpacity(0.65),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Row(children: [
+                            RadiantGradientMask(
+                              child: Icon(Icons.location_on,
+                                  size: 25,
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            SizedBox(width: 5),
+                            //here we show the address on the top
+                            Expanded(
+                              child: Text(
+                                '${locationController.pickPlaceMark.name ?? ''} ${locationController.pickPlaceMark.locality ?? ''} '
+                                '${locationController.pickPlaceMark.postalCode ?? ''} ${locationController.pickPlaceMark.country ?? ''}',
+                                style: montserratMedium.copyWith(fontSize: 18),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Icon(Icons.search,
+                                size: 25,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1!
+                                    .color),
+                          ]),
                         ),
                       ),
-                      SizedBox(width: 10),
-                      Icon(Icons.search,
-                          size: 25,
-                          color: Theme.of(context).textTheme.bodyText1!.color),
-                    ]),
-                  ),
-                ),
-              ),
+                    )
+                  : SizedBox(),
             ]),
             floatingActionButton: FloatingActionButton(
               child: Container(
@@ -315,6 +340,7 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => AddressAddFinalScreen(
+                              pack_type: widget.pack_type,
                               click_id: widget.click_id,
                               package_id: widget.package_id,
                               custvehlist: widget.custvehlist,

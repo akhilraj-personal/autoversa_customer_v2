@@ -883,6 +883,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   AddAddressViaGmap(
+                                                    pack_type: widget.pack_type,
                                                     click_id: 2,
                                                     package_id:
                                                         widget.package_id,
@@ -1156,6 +1157,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => AddAddressViaGmap(
+                                              pack_type: widget.pack_type,
                                               click_id: 2,
                                               package_id: widget.package_id,
                                               custvehlist: widget.custvehlist,

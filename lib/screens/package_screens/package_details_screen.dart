@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/package_screens/schedule_screen.dart';
 import 'package:autoversa/screens/package_screens/sound_player_screen.dart';
 import 'package:autoversa/screens/package_screens/sound_recorder_screen.dart';
@@ -307,7 +308,8 @@ class PackageDetailsState extends State<PackageDetails> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).pop();
+                              Navigator.pushReplacementNamed(
+                                  context, Routes.bottombar);
                             },
                             child: Icon(
                               Icons.arrow_back,
