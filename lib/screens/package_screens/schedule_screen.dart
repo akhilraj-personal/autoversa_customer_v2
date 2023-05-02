@@ -56,8 +56,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   late List temppickup_options = [];
   late List timeslots = [];
   List<Map<String, dynamic>> SelectAddressList = [];
-  var selected_address = 0;
-  var selected_drop_address = 0;
+  var selected_address = null;
+  var selected_drop_address = null;
   var plocdistance = 0;
   var dlocdistance = 0;
   var selected_timeslot = "";
@@ -247,27 +247,20 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       Map req = {"customerId": prefs.getString('cust_id')};
       custAddressList = [];
       pickup_options = [];
-      var temp_address = selected_address;
-      var temp_drop_address = selected_drop_address;
-      selected_address = 0;
-      selected_drop_address = 0;
       SelectAddressList = [];
       await getCustomerAddresses(req).then((value) {
         if (value['ret_data'] == "success") {
           custAddressList = value['cust_addressList'];
-          var ind = 1;
           for (var add in value['cust_addressList']) {
             SelectAddressList.add(add);
-            ind++;
           }
-          setState(() {});
-          if (widget.pickup_loc == -1) {
-            selected_address = SelectAddressList.length;
-            selected_drop_address = 0;
-          } else if (widget.drop_loc == -1) {
-            selected_address = widget.pickup_loc;
-            selected_drop_address = SelectAddressList.length;
-          }
+          // if (widget.pickup_loc == -1) {
+          //   selected_address = SelectAddressList.length - 1;
+          //   selected_drop_address = 0;
+          // } else if (widget.drop_loc == -1) {
+          //   selected_address = widget.pickup_loc;
+          //   selected_drop_address = SelectAddressList.length - 1;
+          // }
           setState(() {});
         }
       });
@@ -291,28 +284,50 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           }
         }
       });
-      setState(() {});
-      if (address_index == 0) {
-        // selected_address = selected_address;
-        // selected_drop_address = 0;
-      } else {
-        if (type == 'p' && isLocationCheck) {
-          selected_address = SelectAddressList.length;
-          selected_drop_address = temp_drop_address;
-          pickupaddresschange(SelectAddressList.length);
-        } else if (type == 'd') {
-          selected_address = temp_address;
-          selected_drop_address = SelectAddressList.length;
-          dropaddresschange(SelectAddressList.length);
-        } else {
-          selected_address = temp_address;
-          selected_drop_address = temp_drop_address;
-        }
-      }
-      if (widget.pickup_loc == -1 || widget.drop_loc == -1) {
+      print(widget.pickup_loc.toString() +
+          "<------>" +
+          widget.drop_loc.toString());
+      if (widget.pickup_loc == -1 && isLocationCheck) {
+        selected_address = SelectAddressList.length - 1;
+        selected_drop_address = SelectAddressList.length - 1;
+        setState(() {});
+        pickupaddresschange(selected_address);
+      } else if (widget.drop_loc == -1) {
+        selected_address = widget.pickup_loc;
+        selected_drop_address = SelectAddressList.length - 1;
+        setState(() {});
         pickupaddresschange(selected_address);
       }
-      setState(() {});
+      print(selected_address.toString() +
+          "<---++--->" +
+          selected_drop_address.toString());
+      // var temp_address = selected_address;
+      // var temp_drop_address = selected_drop_address;
+      // selected_address = 0;
+      // selected_drop_address = 0;
+      //
+      //
+      // setState(() {});
+      // if (address_index == 0) {
+      //   // selected_address = selected_address;
+      //   // selected_drop_address = 0;
+      // } else {
+      //   if (type == 'p' && isLocationCheck) {
+      //     selected_address = SelectAddressList.length - 1;
+      //     selected_drop_address = temp_drop_address;
+      //     pickupaddresschange(SelectAddressList.length - 1);
+      //   } else if (type == 'd') {
+      //     selected_address = temp_address;
+      //     selected_drop_address = SelectAddressList.length - 1;
+      //     dropaddresschange(SelectAddressList.length - 1);
+      //   } else {
+      //     selected_address = temp_address;
+      //     selected_drop_address = temp_drop_address;
+      //   }
+      // }
+      // if (widget.pickup_loc == -1 || widget.drop_loc == -1) {
+      //   pickupaddresschange(selected_address);
+      // }
       getTimeSlots(new DateTime.now());
     } catch (e) {
       print(e.toString());
@@ -877,9 +892,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                     selectedveh:
                                                         widget.selectedveh,
                                                     pickup_loc:
-                                                        selected_address,
+                                                        selected_address != null
+                                                            ? selected_address
+                                                            : 0,
                                                     drop_loc:
-                                                        selected_drop_address,
+                                                        selected_drop_address !=
+                                                                null
+                                                            ? selected_drop_address
+                                                            : 0,
                                                     drop_flag: isLocationCheck,
                                                     bk_id: "",
                                                     vehname: "",
@@ -950,7 +970,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                         Expanded(
                                           child: Container(
                                             child: DropdownButtonFormField2(
-                                              value: selected_address > 0
+                                              value: selected_address != null
                                                   ? SelectAddressList[
                                                       selected_address]
                                                   : null,
@@ -1022,7 +1042,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(15),
                                               ),
-                                              itemHeight: height * 0.08,
+                                              itemHeight: height * 0.1,
                                               icon: RadiantGradientMask(
                                                 child: Icon(
                                                     Icons.keyboard_arrow_down,
@@ -1141,8 +1161,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                               custvehlist: widget.custvehlist,
                                               currency: widget.currency,
                                               selectedveh: widget.selectedveh,
-                                              pickup_loc: selected_address,
-                                              drop_loc: selected_drop_address,
+                                              pickup_loc:
+                                                  selected_address != null
+                                                      ? selected_address
+                                                      : 0,
+                                              drop_loc:
+                                                  selected_drop_address != null
+                                                      ? selected_drop_address
+                                                      : 0,
                                               drop_flag: isLocationCheck,
                                               bk_id: "",
                                               vehname: "",
@@ -1294,8 +1320,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 child: Container(
                                                   child:
                                                       DropdownButtonFormField2(
-                                                    value: selected_drop_address >
-                                                            0
+                                                    value: selected_drop_address !=
+                                                            null
                                                         ? SelectAddressList[
                                                             selected_drop_address]
                                                         : null,
