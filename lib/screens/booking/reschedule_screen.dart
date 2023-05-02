@@ -16,7 +16,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -50,10 +49,9 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   late List pickup_options = [];
   late List temppickup_options = [];
   late List timeslots = [];
-  List<Marker> myMarker = [];
   final _formKey = GlobalKey<FormState>();
 
-  List<String?> SelectAddressList = <String?>["Select Address"];
+  List<Map<String, dynamic>> SelectAddressList = [];
   final TextEditingController textEditingController = TextEditingController();
   var selected_address = 0;
   var selected_drop_address = 0;
@@ -81,18 +79,11 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   var gs_isvat = 0;
   DateTime selectedDate = DateTime.now();
   bool isExpanded = false;
-  bool issubmitted = false;
   bool isproceeding = false;
   bool isserviceble = false;
   late Map<String, dynamic> bookingdetails = {};
   late Map<String, dynamic> booking_package = {};
   late Map<String, dynamic> vehicle = {};
-  FocusNode addressFocus = FocusNode();
-  FocusNode landmarkFocusNode = FocusNode();
-  final GlobalKey<FormFieldState> pick_city = GlobalKey<FormFieldState>();
-  final GlobalKey<FormFieldState> pick_area = GlobalKey<FormFieldState>();
-  final GlobalKey<FormFieldState> drop_city = GlobalKey<FormFieldState>();
-  final GlobalKey<FormFieldState> drop_area = GlobalKey<FormFieldState>();
   bool isActive = true;
 
   @override
@@ -192,103 +183,87 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   }
 
   pickupaddresschange(pick_address) {
-    if ((pick_address - 1) == -1) {
-      dropCostCalculation(0, false, "Select Pickup", false, false);
-      showCustomToast(context, "Please select a pickup location",
-          bgColor: errorcolor, textColor: white);
-    } else {
-      setState(() {
-        pickupoption = "";
-        isTimeCheck = "";
-        ptemp = custAddressList[pick_address - 1]['cad_id'];
-        selected_address = pick_address;
-        plocdistance =
-            int.parse(custAddressList[pick_address - 1]['cad_distance']);
-      });
+    setState(() {
+      pickupoption = "";
+      isTimeCheck = "";
+      ptemp = custAddressList[pick_address]['cad_id'];
+      selected_address = pick_address;
+      plocdistance = int.parse(custAddressList[pick_address]['cad_distance']);
+    });
 
-      if (isLocationCheck) {
-        dlocdistance = plocdistance;
-        dtemp = ptemp;
-        selected_drop_address = pick_address;
-        if (servicedistance > plocdistance) {
-          if (freeservicedistance > plocdistance) {
-            dropCostCalculation(plocdistance * 2, true, "", true, false);
-          } else {
-            dropCostCalculation(plocdistance * 2, true, "", false, false);
-          }
+    if (isLocationCheck) {
+      dlocdistance = plocdistance;
+      dtemp = ptemp;
+      selected_drop_address = pick_address;
+      if (servicedistance > plocdistance) {
+        if (freeservicedistance > plocdistance) {
+          dropCostCalculation(plocdistance * 2, true, "", true, false);
         } else {
-          dropCostCalculation(plocdistance * 2, true, "", false, true);
-          // dropCostCalculation(0, false, "No Service", false);
-          // showCustomToast(context, "Service not available in this location",
-          //     bgColor: errorcolor, textColor: white);
-        }
-      } else if (dtemp != "") {
-        if (servicedistance > plocdistance && servicedistance > dlocdistance) {
-          if (freeservicedistance > plocdistance &&
-              freeservicedistance > dlocdistance) {
-            pickup_options = [];
-            dropCostCalculation(
-                (plocdistance + dlocdistance), true, "", true, false);
-          } else {
-            dropCostCalculation(
-                (plocdistance + dlocdistance), true, "", false, false);
-          }
-        } else {
-          pickup_options = [];
-          dropCostCalculation(
-              (plocdistance + dlocdistance), true, "", false, true);
-          // dropCostCalculation(0, false, "No Service", false);
-          // showCustomToast(context, "Service not available in this location",
-          //     bgColor: errorcolor, textColor: white);
+          dropCostCalculation(plocdistance * 2, true, "", false, false);
         }
       } else {
-        dropCostCalculation(0, false, "Select Drop", false, false);
-        showCustomToast(context, "Please select a drop location",
-            bgColor: errorcolor, textColor: white);
+        dropCostCalculation(plocdistance * 2, true, "", false, true);
+        // dropCostCalculation(0, false, "No Service", false);
+        // toast("Service not available in this location");
       }
+    } else if (dtemp != "") {
+      if (servicedistance > plocdistance && servicedistance > dlocdistance) {
+        if (freeservicedistance > plocdistance &&
+            freeservicedistance > dlocdistance) {
+          pickup_options = [];
+          dropCostCalculation(
+              (plocdistance + dlocdistance), true, "", true, false);
+        } else {
+          dropCostCalculation(
+              (plocdistance + dlocdistance), true, "", false, false);
+        }
+      } else {
+        pickup_options = [];
+        dropCostCalculation(
+            (plocdistance + dlocdistance), true, "", false, true);
+        // dropCostCalculation((plocdistance + dlocdistance), true, "", true);
+        // dropCostCalculation(0, false, "No Service", false);
+        // toast("Service not available in this location");
+      }
+    } else {
+      dropCostCalculation(0, false, "Select Drop", false, false);
+      showCustomToast(context, "Please select drop location",
+          bgColor: errorcolor, textColor: white);
     }
   }
 
   dropaddresschange(drop_address) {
-    if (drop_address - 1 == -1) {
-      dropCostCalculation(0, false, "Select Drop", false, false);
-      showCustomToast(context, "Please select a drop location",
-          bgColor: errorcolor, textColor: white);
-    } else {
-      setState(() {
-        pickupoption = "";
-        isTimeCheck = "";
-        dtemp = custAddressList[drop_address - 1]['cad_id'];
-        selected_drop_address = drop_address;
-        dlocdistance =
-            int.parse(custAddressList[drop_address - 1]['cad_distance']);
-      });
-      var tdistance = 0;
-      if (plocdistance != "") {
-        if (servicedistance > dlocdistance && servicedistance > plocdistance) {
-          if (freeservicedistance > dlocdistance &&
-              freeservicedistance > plocdistance) {
-            pickup_options = [];
-            tdistance = plocdistance + dlocdistance;
-            dropCostCalculation(tdistance, true, "", true, false);
-          } else {
-            pickup_options = [];
-            tdistance = plocdistance + dlocdistance;
-            dropCostCalculation(tdistance, true, "", false, false);
-          }
-        } else {
-          // dropCostCalculation(0, false, "No Service", false);
-          // showCustomToast(context, "Service not available in this location",
-          //     bgColor: errorcolor, textColor: white);
+    setState(() {
+      pickupoption = "";
+      isTimeCheck = "";
+      dtemp = custAddressList[drop_address]['cad_id'];
+      selected_drop_address = drop_address;
+      dlocdistance = int.parse(custAddressList[drop_address]['cad_distance']);
+    });
+    var tdistance = 0;
+    if (plocdistance != "") {
+      if (servicedistance > dlocdistance && servicedistance > plocdistance) {
+        if (freeservicedistance > dlocdistance &&
+            freeservicedistance > plocdistance) {
           pickup_options = [];
           tdistance = plocdistance + dlocdistance;
-          dropCostCalculation(tdistance, true, "", false, true);
+          dropCostCalculation(tdistance, true, "", true, false);
+        } else {
+          pickup_options = [];
+          tdistance = plocdistance + dlocdistance;
+          dropCostCalculation(tdistance, true, "", false, false);
         }
       } else {
-        dropCostCalculation(0, false, "Select Pickup", false, false);
-        showCustomToast(context, "Please select Pick up location",
-            bgColor: errorcolor, textColor: white);
+        // toast("Service not available in this location");
+        // dropCostCalculation(0, false, "No Service", false);
+        pickup_options = [];
+        tdistance = plocdistance + dlocdistance;
+        dropCostCalculation(tdistance, true, "", false, true);
       }
+    } else {
+      dropCostCalculation(0, false, "Select Pickup", false, false);
+      showCustomToast(context, "Please select pickup location",
+          bgColor: errorcolor, textColor: white);
     }
   }
 
@@ -302,14 +277,13 @@ class RescheduleScreenState extends State<RescheduleScreen> {
       var temp_drop_address = selected_drop_address;
       selected_address = 0;
       selected_drop_address = 0;
-      SelectAddressList = <String?>["Select Address"];
+      SelectAddressList = [];
       await getCustomerAddresses(req).then((value) {
         if (value['ret_data'] == "success") {
           custAddressList = value['cust_addressList'];
           var ind = 1;
           for (var add in value['cust_addressList']) {
-            SelectAddressList.add(
-                "#" + ind.toString() + ". " + add['cad_address']);
+            SelectAddressList.add(add);
             ind++;
           }
           setState(() {});
@@ -345,8 +319,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
       });
       setState(() {});
       if (address_index == 0) {
-        selected_address = address_index;
-        selected_drop_address = 0;
+        // selected_address = selected_address;
+        // selected_drop_address = 0;
       } else {
         if (type == 'p' && isLocationCheck) {
           selected_address = SelectAddressList.length - 1;
@@ -361,10 +335,13 @@ class RescheduleScreenState extends State<RescheduleScreen> {
           selected_drop_address = temp_drop_address;
         }
       }
+      if (widget.pickup_loc == -1 || widget.drop_loc == -1) {
+        pickupaddresschange(selected_address);
+      }
       setState(() {});
       getTimeSlots(new DateTime.now());
     } catch (e) {
-      setState(() => issubmitted = false);
+      print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     }
@@ -1183,144 +1160,186 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     SizedBox(
                       height: 4,
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Stack(alignment: Alignment.bottomCenter, children: [
-                          Container(
-                            margin: EdgeInsets.all(16),
-                            height: height * 0.045,
-                            width: height * 0.37,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                boxShadow: [
-                                  BoxShadow(
-                                      blurRadius: 16,
-                                      color: syanColor.withOpacity(.5),
-                                      spreadRadius: 0,
-                                      blurStyle: BlurStyle.outer,
-                                      offset: Offset(0, 0)),
-                                ]),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Container(
-                                height: height * 0.09,
-                                width: height * 0.46,
-                                decoration: BoxDecoration(
-                                  color: white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: borderGreyColor),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Container(
-                                        child: DropdownButtonFormField2(
-                                          value: SelectAddressList[
-                                              selected_address],
-                                          autovalidateMode: AutovalidateMode
-                                              .onUserInteraction,
-                                          decoration: InputDecoration(
-                                            //Add isDense true and zero Padding.
-                                            //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                                            isDense: true,
-                                            contentPadding: EdgeInsets.zero,
-                                            focusedBorder: OutlineInputBorder(
-                                              // width: 0.0 produces a thin "hairline" border
-                                              borderSide: const BorderSide(
-                                                  color:
-                                                      const Color(0xffCCCCCC),
-                                                  width: 0.0),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            focusedErrorBorder:
-                                                OutlineInputBorder(
-                                              // width: 0.0 produces a thin "hairline" border
-                                              borderSide: const BorderSide(
-                                                  color:
-                                                      const Color(0xffCCCCCC),
-                                                  width: 0.0),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              // width: 0.0 produces a thin "hairline" border
-                                              borderSide: const BorderSide(
-                                                  color:
-                                                      const Color(0xffCCCCCC),
-                                                  width: 0.0),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            errorBorder: OutlineInputBorder(
-                                              // width: 0.0 produces a thin "hairline" border
-                                              borderSide: const BorderSide(
-                                                  color: const Color(0xfffff),
-                                                  width: 0.0),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            errorStyle:
-                                                montserratRegular.copyWith(
-                                              fontSize: 12,
-                                              color: warningcolor,
-                                            ),
-                                            //Add more decoration as you want here
-                                            //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
-                                          ),
-                                          isExpanded: true,
-                                          hint: Text(
-                                            "Select Address" + "*",
-                                            style: montserratMedium.copyWith(
-                                                color: Colors.black,
-                                                fontSize: width * 0.04),
-                                          ),
-                                          buttonHeight: height * 0.09,
-                                          buttonPadding:
-                                              const EdgeInsets.all(4),
-                                          dropdownDecoration: BoxDecoration(
+                    Stack(alignment: Alignment.bottomCenter, children: [
+                      Container(
+                        margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
+                        height: height * 0.045,
+                        width: height * 0.37,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 16,
+                                  color: syanColor.withOpacity(.5),
+                                  spreadRadius: 0,
+                                  blurStyle: BlurStyle.outer,
+                                  offset: Offset(0, 0)),
+                            ]),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Container(
+                              height: height * 0.095,
+                              width: height * 0.46,
+                              decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: borderGreyColor),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      child: DropdownButtonFormField2(
+                                        value: selected_address > 0
+                                            ? SelectAddressList[
+                                                selected_address]
+                                            : null,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        decoration: InputDecoration(
+                                          //Add isDense true and zero Padding.
+                                          //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                          focusedBorder: OutlineInputBorder(
+                                            // width: 0.0 produces a thin "hairline" border
+                                            borderSide: const BorderSide(
+                                                color: const Color(0xffCCCCCC),
+                                                width: 0.0),
                                             borderRadius:
-                                                BorderRadius.circular(15),
+                                                BorderRadius.circular(12),
                                           ),
-                                          items: SelectAddressList.map(
-                                              (String? value) {
-                                            return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(8),
-                                                  child: Text(
-                                                    value!,
-                                                    style: montserratMedium
-                                                        .copyWith(
-                                                            color: Colors.black,
-                                                            fontSize:
-                                                                width * 0.04),
-                                                  ),
-                                                ));
-                                          }).toList(),
-                                          validator: (value) {},
-                                          onChanged: (value) {
-                                            setState(() {
-                                              pickupaddresschange(
-                                                  SelectAddressList.indexOf(
-                                                      value.toString()));
-                                            });
-                                          },
+                                          focusedErrorBorder:
+                                              OutlineInputBorder(
+                                            // width: 0.0 produces a thin "hairline" border
+                                            borderSide: const BorderSide(
+                                                color: const Color(0xffCCCCCC),
+                                                width: 0.0),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            // width: 0.0 produces a thin "hairline" border
+                                            borderSide: const BorderSide(
+                                                color: const Color(0xffCCCCCC),
+                                                width: 0.0),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          errorBorder: OutlineInputBorder(
+                                            // width: 0.0 produces a thin "hairline" border
+                                            borderSide: const BorderSide(
+                                                color: const Color(0xfffff),
+                                                width: 0.0),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          errorStyle:
+                                              montserratRegular.copyWith(
+                                            fontSize: 12,
+                                            color: warningcolor,
+                                          ),
+                                          //Add more decoration as you want here
+                                          //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                                         ),
+                                        isExpanded: true,
+                                        hint: Text(
+                                          "Select Address" + "*",
+                                          style: montserratMedium.copyWith(
+                                              color: Colors.black,
+                                              fontSize: width * 0.04),
+                                        ),
+                                        buttonHeight: height * 0.095,
+                                        buttonPadding: EdgeInsets.all(4),
+                                        dropdownDecoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        itemHeight: height * 0.08,
+                                        items: SelectAddressList.map((value) {
+                                          return DropdownMenuItem<
+                                                  Map<String, dynamic>>(
+                                              value: value,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons
+                                                          .location_on_outlined,
+                                                      color: syanColor,
+                                                      size: width * 0.08,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Flexible(
+                                                        child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          value['cad_landmark']
+                                                                  .toUpperCase() +
+                                                              " (" +
+                                                              value[
+                                                                  'cad_city'] +
+                                                              ")",
+                                                          style: montserratMedium
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.04),
+                                                        ),
+                                                        Text(
+                                                          value['cad_address'],
+                                                          maxLines: 2,
+                                                          textAlign:
+                                                              TextAlign.justify,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: montserratMedium
+                                                              .copyWith(
+                                                                  color:
+                                                                      toastgrey,
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.03),
+                                                        ),
+                                                      ],
+                                                    ))
+                                                  ],
+                                                ),
+                                              ));
+                                        }).toList(),
+                                        onChanged: (selected) {
+                                          print(selected);
+                                          setState(() {
+                                            pickupaddresschange(
+                                                SelectAddressList.indexWhere(
+                                                    (element) =>
+                                                        element['cad_id'] ==
+                                                        selected!['cad_id']));
+                                          });
+                                        },
                                       ),
                                     ),
-                                  ],
-                                )),
-                          )
-                        ]),
-                      ],
-                    ),
+                                  ),
+                                ],
+                              ))),
+                    ]),
                     SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -1416,7 +1435,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                     Padding(
                                       padding: EdgeInsets.all(16),
                                       child: Container(
-                                          height: height * 0.09,
+                                          height: height * 0.095,
                                           width: height * 0.46,
                                           decoration: BoxDecoration(
                                             color: white,
@@ -1431,8 +1450,11 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                 child: Container(
                                                   child:
                                                       DropdownButtonFormField2(
-                                                    value: SelectAddressList[
-                                                        selected_drop_address],
+                                                    value: selected_drop_address >
+                                                            0
+                                                        ? SelectAddressList[
+                                                            selected_drop_address]
+                                                        : null,
                                                     autovalidateMode:
                                                         AutovalidateMode
                                                             .onUserInteraction,
@@ -1510,9 +1532,11 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                               fontSize:
                                                                   width * 0.04),
                                                     ),
-                                                    buttonHeight: height * 0.09,
+                                                    buttonHeight:
+                                                        height * 0.095,
                                                     buttonPadding:
                                                         const EdgeInsets.all(4),
+                                                    itemHeight: height * 0.08,
                                                     dropdownDecoration:
                                                         BoxDecoration(
                                                       borderRadius:
@@ -1521,32 +1545,84 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                     ),
                                                     items:
                                                         SelectAddressList.map(
-                                                            (String? value) {
+                                                            (value) {
                                                       return DropdownMenuItem<
-                                                              String>(
+                                                              Map<String,
+                                                                  dynamic>>(
                                                           value: value,
                                                           child: Padding(
                                                             padding:
-                                                                EdgeInsets.all(
-                                                                    8),
-                                                            child: Text(
-                                                              value!,
-                                                              style: montserratMedium
-                                                                  .copyWith(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.04),
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        8.0),
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(
+                                                                  Icons
+                                                                      .location_on_outlined,
+                                                                  color:
+                                                                      syanColor,
+                                                                  size: width *
+                                                                      0.08,
+                                                                ),
+                                                                const SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Flexible(
+                                                                    child:
+                                                                        Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      value['cad_landmark']
+                                                                              .toUpperCase() +
+                                                                          " (" +
+                                                                          value[
+                                                                              'cad_city'] +
+                                                                          ")",
+                                                                      style: montserratMedium.copyWith(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              width * 0.04),
+                                                                    ),
+                                                                    Text(
+                                                                      value[
+                                                                          'cad_address'],
+                                                                      maxLines:
+                                                                          2,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .justify,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: montserratMedium.copyWith(
+                                                                          color:
+                                                                              toastgrey,
+                                                                          fontSize:
+                                                                              width * 0.03),
+                                                                    ),
+                                                                  ],
+                                                                ))
+                                                              ],
                                                             ),
                                                           ));
                                                     }).toList(),
-                                                    onChanged: (value) {
+                                                    onChanged: (selected) {
                                                       setState(() {
-                                                        dropaddresschange(
-                                                            SelectAddressList
-                                                                .indexOf(value
-                                                                    .toString()));
+                                                        dropaddresschange(SelectAddressList
+                                                            .indexWhere((element) =>
+                                                                element[
+                                                                    'cad_id'] ==
+                                                                selected![
+                                                                    'cad_id']));
                                                       });
                                                     },
                                                   ),
@@ -1705,25 +1781,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                             ],
                           );
                         }),
-                    4.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Flexible(
-                          child: Container(
-                              child: Padding(
-                            padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
-                            child: Text(
-                              "Drop location and type can be changed during drop schedule after work completion",
-                              overflow: TextOverflow.clip,
-                              style: montserratMedium.copyWith(
-                                  color: black.withOpacity(0.5),
-                                  fontSize: width * 0.0275),
-                            ),
-                          )),
-                        ),
-                      ],
-                    ),
+
                     8.height,
                     Row(
                       children: [
@@ -2011,6 +2069,25 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                               ],
                             ),
                           ),
+                        ),
+                      ],
+                    ),
+                    4.height,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Flexible(
+                          child: Container(
+                              child: Padding(
+                            padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
+                            child: Text(
+                              "Drop location and type can be changed during drop schedule after work completion",
+                              overflow: TextOverflow.clip,
+                              style: montserratMedium.copyWith(
+                                  color: black.withOpacity(0.5),
+                                  fontSize: width * 0.0275),
+                            ),
+                          )),
                         ),
                       ],
                     ),

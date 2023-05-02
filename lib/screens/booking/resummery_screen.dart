@@ -33,8 +33,6 @@ class ResummeryScreen extends StatefulWidget {
 }
 
 class ResummeryScreenState extends State<ResummeryScreen> {
-  TextEditingController couponController = TextEditingController();
-  TextEditingController applyController = TextEditingController();
   late Map<String, dynamic> packdata = {};
   late Map<String, dynamic> bookingdetails = {};
   late Map<String, dynamic> booking_package = {};
@@ -42,8 +40,6 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   late Map<String, dynamic> audio = {};
   var totalamount = 0.0;
   var packagecost = 0.0;
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
   bool isproceeding = false;
   int bookId = 0;
   var trnxId;
@@ -511,7 +507,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                       height: 8,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 16.0),
+                      margin: EdgeInsets.only(left: 30.0, right: 16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -538,15 +534,30 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                             width: 8,
                           ),
                           Flexible(
-                            child: Container(
-                              child: Text(
-                                packdata['pick_up_location'] ?? "",
-                                overflow: TextOverflow.clip,
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                packdata['pick_up_location']['cad_landmark']
+                                        .toUpperCase() +
+                                    " (" +
+                                    packdata['pick_up_location']['cad_city'] +
+                                    ")",
                                 style: montserratMedium.copyWith(
-                                    color: black, fontSize: width * 0.04),
+                                    color: Colors.black,
+                                    fontSize: width * 0.04),
                               ),
-                            ),
-                          ),
+                              Text(
+                                packdata['pick_up_location']['cad_address'],
+                                maxLines: 2,
+                                textAlign: TextAlign.justify,
+                                overflow: TextOverflow.ellipsis,
+                                style: montserratMedium.copyWith(
+                                    color: toastgrey, fontSize: width * 0.03),
+                              ),
+                            ],
+                          ))
                         ],
                       ),
                     ),
@@ -578,7 +589,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                       height: 8,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 16.0),
+                      margin: EdgeInsets.only(left: 30.0, right: 16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -605,15 +616,30 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                             width: 8,
                           ),
                           Flexible(
-                            child: Container(
-                              child: Text(
-                                packdata['drop_location'] ?? "",
-                                overflow: TextOverflow.clip,
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                packdata['drop_location']['cad_landmark']
+                                        .toUpperCase() +
+                                    " (" +
+                                    packdata['drop_location']['cad_city'] +
+                                    ")",
                                 style: montserratMedium.copyWith(
-                                    color: black, fontSize: width * 0.04),
+                                    color: Colors.black,
+                                    fontSize: width * 0.04),
                               ),
-                            ),
-                          ),
+                              Text(
+                                packdata['drop_location']['cad_address'],
+                                maxLines: 2,
+                                textAlign: TextAlign.justify,
+                                overflow: TextOverflow.ellipsis,
+                                style: montserratMedium.copyWith(
+                                    color: toastgrey, fontSize: width * 0.03),
+                              ),
+                            ],
+                          ))
                         ],
                       ),
                     ),
@@ -645,7 +671,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                       height: 8,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 16.0),
+                      margin: EdgeInsets.only(left: 30.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -697,7 +723,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                       height: 8,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 16.0),
+                      margin: EdgeInsets.only(left: 30.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [

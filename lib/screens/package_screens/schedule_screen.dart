@@ -254,6 +254,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           for (var add in value['cust_addressList']) {
             SelectAddressList.add(add);
           }
+          setState(() {});
           // if (widget.pickup_loc == -1) {
           //   selected_address = SelectAddressList.length - 1;
           //   selected_drop_address = 0;
@@ -296,7 +297,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         selected_address = widget.pickup_loc;
         selected_drop_address = SelectAddressList.length - 1;
         setState(() {});
-        pickupaddresschange(selected_address);
       }
       print(selected_address.toString() +
           "<---++--->" +

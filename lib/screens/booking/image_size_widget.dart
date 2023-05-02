@@ -10,13 +10,13 @@ class ImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width / 2 - 24,
+      width: width / 3 - 12,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 170.0,
+            height: 200.0,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.2),
             ),
