@@ -948,8 +948,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                 Expanded(
                                   child: Container(
                                     child: DropdownButtonFormField2(
-                                      value:
-                                          SelectAddressList[selected_address],
+                                      value: selected_address > 0
+                                          ? SelectAddressList[selected_address]
+                                          : null,
                                       autovalidateMode:
                                           AutovalidateMode.onUserInteraction,
                                       decoration: InputDecoration(
