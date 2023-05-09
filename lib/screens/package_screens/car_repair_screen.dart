@@ -112,7 +112,7 @@ class CarRepairState extends State<CarRepair> {
             packageinfo = value;
             setState(() {});
             for (var getservice in value['services']) {
-              if (getservice['sevm_timeunit'] != null) {
+              if (getservice['sevm_pack_timeunit'] != null) {
                 AMSeviceModel sertemp = new AMSeviceModel();
                 sertemp.serid = getservice['ser_id'];
                 sertemp.sername = getservice['ser_name'];
@@ -121,7 +121,7 @@ class CarRepairState extends State<CarRepair> {
                 sertemp.isServiceCheck = false;
                 if (value['settings']['gs_isvat'] == "1") {
                   var servCostNoTax =
-                      double.parse(getservice['sevm_timeunit']) *
+                      double.parse(getservice['sevm_pack_timeunit']) *
                           double.parse(value['labourrate']['lr_rate']);
                   sertemp.serVat = servCostNoTax * (gs_vat / 100);
                   sertemp.sercost =
@@ -129,8 +129,9 @@ class CarRepairState extends State<CarRepair> {
                           .round();
                 } else {
                   sertemp.serVat = 0;
-                  sertemp.sercost = (double.parse(getservice['sevm_timeunit']) *
-                      double.parse(value['labourrate']['lr_rate']));
+                  sertemp.sercost =
+                      (double.parse(getservice['sevm_pack_timeunit']) *
+                          double.parse(value['labourrate']['lr_rate']));
                 }
 
                 for (var descriptions in getservice['descriptions']) {

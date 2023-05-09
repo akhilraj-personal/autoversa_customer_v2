@@ -273,27 +273,21 @@ class RescheduleScreenState extends State<RescheduleScreen> {
       Map req = {"customerId": prefs.getString('cust_id')};
       custAddressList = [];
       pickup_options = [];
-      var temp_address = selected_address;
-      var temp_drop_address = selected_drop_address;
-      selected_address = 0;
-      selected_drop_address = 0;
       SelectAddressList = [];
       await getCustomerAddresses(req).then((value) {
         if (value['ret_data'] == "success") {
           custAddressList = value['cust_addressList'];
-          var ind = 1;
           for (var add in value['cust_addressList']) {
             SelectAddressList.add(add);
-            ind++;
           }
-          setState(() {});
-          if (widget.pickup_loc == -1) {
-            selected_address = SelectAddressList.length - 1;
-            selected_drop_address = 0;
-          } else if (widget.drop_loc == -1) {
-            selected_address = widget.pickup_loc;
-            selected_drop_address = SelectAddressList.length - 1;
-          }
+          // setState(() {});
+          // if (widget.pickup_loc == -1) {
+          //   selected_address = SelectAddressList.length - 1;
+          //   selected_drop_address = 0;
+          // } else if (widget.drop_loc == -1) {
+          //   selected_address = widget.pickup_loc;
+          //   selected_drop_address = SelectAddressList.length - 1;
+          // }
           setState(() {});
         }
       });
@@ -317,28 +311,38 @@ class RescheduleScreenState extends State<RescheduleScreen> {
           }
         }
       });
-      setState(() {});
-      if (address_index == 0) {
-        // selected_address = selected_address;
-        // selected_drop_address = 0;
-      } else {
-        if (type == 'p' && isLocationCheck) {
-          selected_address = SelectAddressList.length - 1;
-          selected_drop_address = temp_drop_address;
-          pickupaddresschange(SelectAddressList.length - 1);
-        } else if (type == 'd') {
-          selected_address = temp_address;
-          selected_drop_address = SelectAddressList.length - 1;
-          dropaddresschange(SelectAddressList.length - 1);
-        } else {
-          selected_address = temp_address;
-          selected_drop_address = temp_drop_address;
-        }
-      }
-      if (widget.pickup_loc == -1 || widget.drop_loc == -1) {
+      if (widget.pickup_loc == -1 && isLocationCheck) {
+        selected_address = SelectAddressList.length - 1;
+        selected_drop_address = SelectAddressList.length - 1;
+        setState(() {});
         pickupaddresschange(selected_address);
+      } else if (widget.drop_loc == -1) {
+        selected_address = widget.pickup_loc;
+        selected_drop_address = SelectAddressList.length - 1;
+        setState(() {});
       }
       setState(() {});
+      // if (address_index == 0) {
+      //   // selected_address = selected_address;
+      //   // selected_drop_address = 0;
+      // } else {
+      //   if (type == 'p' && isLocationCheck) {
+      //     selected_address = SelectAddressList.length - 1;
+      //     selected_drop_address = temp_drop_address;
+      //     pickupaddresschange(SelectAddressList.length - 1);
+      //   } else if (type == 'd') {
+      //     selected_address = temp_address;
+      //     selected_drop_address = SelectAddressList.length - 1;
+      //     dropaddresschange(SelectAddressList.length - 1);
+      //   } else {
+      //     selected_address = temp_address;
+      //     selected_drop_address = temp_drop_address;
+      //   }
+      // }
+      // if (widget.pickup_loc == -1 || widget.drop_loc == -1) {
+      //   pickupaddresschange(selected_address);
+      // }
+      // setState(() {});
       getTimeSlots(new DateTime.now());
     } catch (e) {
       print(e.toString());
@@ -1195,7 +1199,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                   Expanded(
                                     child: Container(
                                       child: DropdownButtonFormField2(
-                                        value: selected_address > 0
+                                        value: selected_address != null
                                             ? SelectAddressList[
                                                 selected_address]
                                             : null,
@@ -1260,7 +1264,11 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                           borderRadius:
                                               BorderRadius.circular(15),
                                         ),
-                                        itemHeight: height * 0.08,
+                                        itemHeight: height * 0.1,
+                                        icon: RadiantGradientMask(
+                                          child: Icon(Icons.keyboard_arrow_down,
+                                              color: white, size: 30),
+                                        ),
                                         items: SelectAddressList.map((value) {
                                           return DropdownMenuItem<
                                                   Map<String, dynamic>>(
@@ -1268,8 +1276,10 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
+                                                        horizontal: 0),
                                                 child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
                                                   children: [
                                                     Icon(
                                                       Icons
@@ -1296,6 +1306,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                               value[
                                                                   'cad_city'] +
                                                               ")",
+                                                          maxLines: 1,
                                                           style: montserratMedium
                                                               .copyWith(
                                                                   color: Colors
@@ -1451,8 +1462,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                 child: Container(
                                                   child:
                                                       DropdownButtonFormField2(
-                                                    value: selected_drop_address >
-                                                            0
+                                                    value: selected_drop_address !=
+                                                            null
                                                         ? SelectAddressList[
                                                             selected_drop_address]
                                                         : null,
@@ -1544,6 +1555,13 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                           BorderRadius.circular(
                                                               15),
                                                     ),
+                                                    icon: RadiantGradientMask(
+                                                      child: Icon(
+                                                          Icons
+                                                              .keyboard_arrow_down,
+                                                          color: white,
+                                                          size: 30),
+                                                    ),
                                                     items:
                                                         SelectAddressList.map(
                                                             (value) {
@@ -1587,6 +1605,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                           value[
                                                                               'cad_city'] +
                                                                           ")",
+                                                                      maxLines:
+                                                                          1,
                                                                       style: montserratMedium.copyWith(
                                                                           color: Colors
                                                                               .black,

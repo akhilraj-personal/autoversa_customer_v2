@@ -285,9 +285,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           }
         }
       });
-      print(widget.pickup_loc.toString() +
-          "<------>" +
-          widget.drop_loc.toString());
       if (widget.pickup_loc == -1 && isLocationCheck) {
         selected_address = SelectAddressList.length - 1;
         selected_drop_address = SelectAddressList.length - 1;
@@ -298,9 +295,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         selected_drop_address = SelectAddressList.length - 1;
         setState(() {});
       }
-      print(selected_address.toString() +
-          "<---++--->" +
-          selected_drop_address.toString());
       // var temp_address = selected_address;
       // var temp_drop_address = selected_drop_address;
       // selected_address = 0;

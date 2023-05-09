@@ -164,17 +164,24 @@ class PackageDetailsState extends State<PackageDetails> {
             }
             for (var serv in value['services']) {
               optionList.add(serv['ser_name']);
-              if (serv['sevm_timeunit'] != null) {
+              if (serv['sevm_pack_timeunit'] != null) {
                 totalCost = totalCost +
-                    (double.parse(serv['sevm_timeunit']) *
+                    (double.parse(serv['sevm_pack_timeunit']) *
                             double.parse(value['labourrate']['lr_rate']))
                         .round();
               } else {
                 nonMapCount++;
               }
             }
-            totalCost = totalCost *
-                double.parse(value['pack_factor']['pvg_factor']).round();
+            if (value['pack_factor'] == null) {
+              totalCost = totalCost * 1.round();
+            } else if (value['pack_factor'] != null &&
+                value['pack_factor']['pvg_factor'] == null) {
+              totalCost = totalCost * 1.round();
+            } else {
+              totalCost = totalCost *
+                  double.parse(value['pack_factor']['pvg_factor']).round();
+            }
 
             setState(() {});
             if (value['settings']['gs_isvat'] == "1") {

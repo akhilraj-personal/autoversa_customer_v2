@@ -190,10 +190,14 @@ class SummeryPageState extends State<SummeryPage> {
         bookingdate = packdata['selected_date'];
         await prefs.remove("booking_data");
       } else {
+        print("error===>1");
+        print(retdata);
         showCustomToast(context, "Couldn't complete booking",
             bgColor: errorcolor, textColor: whiteColor);
       }
     } catch (e) {
+      print("error===>2");
+      print(e.toString());
       setState(() {
         isproceeding = false;
       });
