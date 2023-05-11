@@ -1005,22 +1005,56 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                             color: Colors.black,
                                             fontSize: width * 0.04),
                                       ),
-                                      buttonHeight: height * 0.09,
+                                      buttonHeight: height * 0.095,
                                       buttonPadding: const EdgeInsets.all(4),
+                                      itemHeight: height * 0.08,
                                       dropdownDecoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      icon: RadiantGradientMask(
+                                        child: Icon(Icons.keyboard_arrow_down,
+                                            color: white, size: 30),
                                       ),
                                       items: SelectAddressList.map(
                                           (String? value) {
                                         return DropdownMenuItem<String>(
                                           value: value,
                                           child: Padding(
-                                            padding: EdgeInsets.all(8),
-                                            child: Text(
-                                              value!,
-                                              style: montserratMedium.copyWith(
-                                                  color: Colors.black,
-                                                  fontSize: width * 0.04),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.location_on_outlined,
+                                                  color: syanColor,
+                                                  size: width * 0.08,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Flexible(
+                                                    child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      value!,
+                                                      maxLines: 2,
+                                                      textAlign:
+                                                          TextAlign.justify,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color: toastgrey,
+                                                              fontSize:
+                                                                  width * 0.03),
+                                                    ),
+                                                  ],
+                                                ))
+                                              ],
                                             ),
                                           ),
                                         );

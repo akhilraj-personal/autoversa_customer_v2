@@ -6,6 +6,7 @@ import 'package:autoversa/screens/booking/reschedule_screen.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
 import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
+import 'package:autoversa/screens/vehicle/home_vehicle_list_click.dart';
 import 'package:autoversa/screens/vehicle/vehicle_update_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
@@ -1110,7 +1111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  VehicleUpdate(
+                                                                  HomeVehicleListClick(
                                                                       vehicle_id:
                                                                           customerVehList[0]
                                                                               [
@@ -1287,7 +1288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    VehicleUpdate(
+                                                    HomeVehicleListClick(
                                                         vehicle_id:
                                                             customerVehList[
                                                                     index]

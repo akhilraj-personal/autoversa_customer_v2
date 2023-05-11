@@ -136,7 +136,17 @@ class PackageDetailsState extends State<PackageDetails> {
             isServicing = true;
             packageinfo = value;
             for (var sup_packs in value['sub_packages']) {
-              optionList.add(sup_packs['sp_name']);
+              if (sup_packs['operations'].length == 0) {
+                print("==> No operations defined");
+                optionList.add(sup_packs['sp_name']);
+              } else if (sup_packs['operations'].length != 0) {
+                for (var operations in sup_packs['operations']) {
+                  if (operations['spo_visibility'] == "1") {
+                    optionList.add(operations['op_display_name']);
+                  }
+                }
+                print("==> Operation included");
+              }
               for (var operations in sup_packs['operations']) {
                 if (operations['opvm_pack_timeunit'] != null) {
                   totalCost = totalCost +
@@ -174,7 +184,7 @@ class PackageDetailsState extends State<PackageDetails> {
               }
             }
             if (value['pack_factor'] == null) {
-              totalCost = totalCost * 1.round();
+              totalCost = totalCost * (1).round();
             } else if (value['pack_factor'] != null &&
                 value['pack_factor']['pvg_factor'] == null) {
               totalCost = totalCost * 1.round();
