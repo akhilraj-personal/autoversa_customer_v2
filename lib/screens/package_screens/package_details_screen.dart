@@ -137,15 +137,18 @@ class PackageDetailsState extends State<PackageDetails> {
             packageinfo = value;
             for (var sup_packs in value['sub_packages']) {
               if (sup_packs['operations'].length == 0) {
-                print("==> No operations defined");
                 optionList.add(sup_packs['sp_name']);
               } else if (sup_packs['operations'].length != 0) {
                 for (var operations in sup_packs['operations']) {
-                  if (operations['spo_visibility'] == "1") {
+                  if (operations['spo_visibility'] == "0") {
                     optionList.add(operations['op_display_name']);
                   }
                 }
-                print("==> Operation included");
+                for (var spares in sup_packs['spares']) {
+                  if (spares['spp_visibility'] == "0") {
+                    optionList.add(spares['spc_displayname']);
+                  }
+                }
               }
               for (var operations in sup_packs['operations']) {
                 if (operations['opvm_pack_timeunit'] != null) {
