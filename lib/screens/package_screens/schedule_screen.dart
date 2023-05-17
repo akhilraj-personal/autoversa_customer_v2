@@ -450,6 +450,34 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     });
   }
 
+  // Future<void> _showMyDialog() async {
+  //   return showDialog<void>(
+  //     context: context,
+  //     barrierDismissible: false, // user must tap button!
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: const Text('AlertDialog Title'),
+  //         content: SingleChildScrollView(
+  //           child: ListBody(
+  //             children: <Widget>[
+  //               Text('This is a demo alert dialog.'),
+  //               Text('Would you like to approve of this message?'),
+  //             ],
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: const Text('Approve'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   proceedToSummaryClick() async {
     final prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> packdata =
@@ -1590,21 +1618,57 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                           bgColor: errorcolor,
                                                           textColor: white);
                                                     } else {
-                                                      setState(() {
-                                                        pickupoption = value;
-                                                        pickup_name =
-                                                            pickup_options[
-                                                                    index]
-                                                                ['pk_name'];
-                                                        pickup_cost =
-                                                            pickup_options[
-                                                                    index][
-                                                                'pk_cost_value'];
-                                                        pickup_vat =
-                                                            pickup_options[
-                                                                    index][
-                                                                'pk_vat_value'];
-                                                      });
+                                                      if (pickup_options[index]
+                                                              ['pk_name'] ==
+                                                          "Driver Pickup") {
+                                                        // _showMyDialog();
+                                                        setState(() {
+                                                          pickupoption = value;
+                                                          pickup_name =
+                                                              pickup_options[
+                                                                      index]
+                                                                  ['pk_name'];
+                                                          pickup_cost =
+                                                              pickup_options[
+                                                                      index][
+                                                                  'pk_cost_value'];
+                                                          pickup_vat =
+                                                              pickup_options[
+                                                                      index][
+                                                                  'pk_vat_value'];
+                                                        });
+                                                      } else {
+                                                        setState(() {
+                                                          pickupoption = value;
+                                                          pickup_name =
+                                                              pickup_options[
+                                                                      index]
+                                                                  ['pk_name'];
+                                                          pickup_cost =
+                                                              pickup_options[
+                                                                      index][
+                                                                  'pk_cost_value'];
+                                                          pickup_vat =
+                                                              pickup_options[
+                                                                      index][
+                                                                  'pk_vat_value'];
+                                                        });
+                                                      }
+                                                      // setState(() {
+                                                      //   pickupoption = value;
+                                                      //   pickup_name =
+                                                      //       pickup_options[
+                                                      //               index]
+                                                      //           ['pk_name'];
+                                                      //   pickup_cost =
+                                                      //       pickup_options[
+                                                      //               index][
+                                                      //           'pk_cost_value'];
+                                                      //   pickup_vat =
+                                                      //       pickup_options[
+                                                      //               index][
+                                                      //           'pk_vat_value'];
+                                                      // });
                                                     }
                                                   },
                                                 ),

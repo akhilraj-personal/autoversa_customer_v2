@@ -10,9 +10,11 @@ import 'package:autoversa/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
 
 import '../../services/pre_auth_services.dart';
@@ -46,18 +48,16 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
   bool _isLoadingButton = false;
   bool _enableButton = false;
   String _otpCode = "";
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final intRegex = RegExp(r'\d+', multiLine: true);
-  TextEditingController textEditingController =
-      new TextEditingController(text: "");
+  TextEditingController textEditingController = TextEditingController();
+  var messageOtpCode = ''.obs;
 
   @override
   void initState() {
     OTPtimer = int.parse(widget.timer['gs_reotp_time']);
     super.initState();
     startTimer();
-    _getSignatureCode();
-    _startListeningSms();
+    print("HI.... ====>");
+    print(SmsAutoFill().getAppSignature);
   }
 
   void startTimer() {
@@ -83,36 +83,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
     );
   }
 
-  /// get signature code
-  _getSignatureCode() async {
-    String? signature = await SmsVerification.getAppSignature();
-    print("signature $signature");
-  }
-
-  /// listen sms
-  _startListeningSms() {
-    SmsVerification.startListeningSms().then((message) {
-      setState(() {
-        _otpCode = SmsVerification.getCode(message, intRegex);
-        print("================");
-        print(_otpCode);
-        textEditingController.text = _otpCode;
-        _onOtpCallBack(_otpCode, true);
-      });
-    });
-  }
-
-  // _onSubmitOtp() {
-  //   setState(() {
-  //     _isLoadingButton = !_isLoadingButton;
-  //     _verifyOtpCode();
-  //   });
-  // }
-
-  // _onClickRetry() {
-  //   _startListeningSms();
-  // }
-
   _onOtpCallBack(String otpCode, bool isAutofill) {
     setState(() {
       this._otpCode = otpCode;
@@ -129,21 +99,12 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
     });
   }
 
-  // _verifyOtpCode() {
-  //   FocusScope.of(context).requestFocus(new FocusNode());
-  //   Timer(Duration(milliseconds: 4000), () {
-  //     setState(() {
-  //       _isLoadingButton = false;
-  //       _enableButton = false;
-  //     });
-  //   });
-  // }
-
   @override
   void dispose() {
     _timer.cancel();
     super.dispose();
-    SmsVerification.stopListening();
+    textEditingController.dispose();
+    SmsAutoFill().unregisterListener();
   }
 
   reSendOTP() async {
@@ -154,7 +115,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
     };
     await customerLoginService(req).then((value) {
       if (value['ret_data'] == "success") {
-        _startListeningSms();
         isResend = false;
         OTPtimer = int.parse(value['timer']['gs_reotp_time']);
         click_count++;
@@ -410,6 +370,23 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: height * 0.02),
+                        // PinFieldAutoFill(
+                        //   textInputAction: TextInputAction.done,
+                        //   decoration: UnderlineDecoration(
+                        //       textStyle: montserratMedium.copyWith(
+                        //           fontSize: 16, color: blackColor),
+                        //       colorBuilder: FixedColorBuilder(
+                        //         Colors.transparent,
+                        //       ),
+                        //       bgColorBuilder: FixedColorBuilder(
+                        //           Colors.grey.withOpacity(0.3))),
+                        //   onCodeSubmitted: (code) {},
+                        //   controller: controller.textEditingController,
+                        //   currentCode: controller.messageOtpCode.value,
+                        //   onCodeChanged: (code) {
+                        //     controller.messageOtpCode.value = code!;
+                        //   },
+                        // ),
                         // OtpTextField(
                         //   numberOfFields: 4,
                         //   fieldWidth: width * 0.14,

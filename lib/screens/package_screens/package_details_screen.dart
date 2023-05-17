@@ -46,6 +46,7 @@ class PackageDetailsState extends State<PackageDetails> {
   final timeController = TimerController();
   final recorder = SoundRecorder();
   final player = SoundPlayer();
+  int? _selectedIndex;
 
   bool recordLocation = false;
   var optionList = [];
@@ -53,6 +54,7 @@ class PackageDetailsState extends State<PackageDetails> {
   bool isPriceShow = false;
   late Map<String, dynamic> packageinfo;
   double totalCost = 0.0;
+  double totalExclusiveCost = 0.0;
   double packVat = 0.0;
   bool isbooked = false;
   bool isServicing = true;
@@ -61,6 +63,7 @@ class PackageDetailsState extends State<PackageDetails> {
   TextEditingController complaint = new TextEditingController();
   var gs_vat;
   var veh_groupid;
+  bool isofferprice = false;
 
   @override
   void initState() {
@@ -87,6 +90,7 @@ class PackageDetailsState extends State<PackageDetails> {
       "veh_groupid": veh_groupid,
       "pack_vat": packVat
     };
+    print(packdata);
     prefs.setString("booking_data", json.encode(packdata));
     setState(() => isbooked = false);
     Navigator.push(
@@ -126,6 +130,7 @@ class PackageDetailsState extends State<PackageDetails> {
           "year": widget.custvehlist[currentveh]['cv_year'],
         };
         totalCost = 0.0;
+        totalExclusiveCost = 0.0;
         var nonMapCount = 0;
         await getPackageDetails(req).then((value) {
           if (value['ret_data'] == "success") {
@@ -151,27 +156,57 @@ class PackageDetailsState extends State<PackageDetails> {
                 }
               }
               for (var operations in sup_packs['operations']) {
-                if (operations['opvm_pack_timeunit'] != null) {
-                  totalCost = totalCost +
-                      (double.parse(operations['opvm_pack_timeunit']) *
-                              double.parse(value['labourrate']['lr_rate']))
-                          .round();
-                } else {
-                  nonMapCount++;
+                if (operations['opvm_billexclusion'] == "0") {
+                  if (operations['spo_billexclusion'] == "0") {
+                    if (operations['opvm_pack_timeunit'] != null) {
+                      totalCost = totalCost +
+                          (double.parse(operations['opvm_pack_timeunit']) *
+                              double.parse(value['labourrate']['lr_rate']));
+                      totalExclusiveCost = totalExclusiveCost +
+                          (double.parse(operations['opvm_pack_timeunit']) *
+                              double.parse(value['labourrate']['lr_rate']));
+                    } else {
+                      nonMapCount++;
+                    }
+                  } else if (operations['spo_billexclusion'] == "1") {
+                    isofferprice = true;
+                    setState(() {});
+                    if (operations['opvm_pack_timeunit'] != null) {
+                      totalExclusiveCost = totalExclusiveCost +
+                          (double.parse(operations['opvm_pack_timeunit']) *
+                              double.parse(value['labourrate']['lr_rate']));
+                    }
+                  }
                 }
               }
               for (var spares in sup_packs['spares']) {
-                if (spares['spares_used'].length > 0) {
-                  for (var spareused in spares['spares_used']) {
-                    if (spareused['scvm_price'] != null) {
-                      totalCost = totalCost +
-                          (double.parse(spareused['scvm_price']) *
-                                  double.parse(spareused['scvm_quantity']))
-                              .round();
+                if (spares['spp_billexclusion'] == "0") {
+                  if (spares['spares_used'].length > 0) {
+                    for (var spareused in spares['spares_used']) {
+                      if (spareused['scvm_price'] != null) {
+                        totalCost = totalCost +
+                            (double.parse(spareused['scvm_price']) *
+                                double.parse(spareused['scvm_quantity']));
+                        totalExclusiveCost = totalExclusiveCost +
+                            (double.parse(spareused['scvm_price']) *
+                                double.parse(spareused['scvm_quantity']));
+                      }
+                    }
+                  } else {
+                    nonMapCount++;
+                  }
+                } else if (spares['spp_billexclusion'] == "1") {
+                  isofferprice = true;
+                  setState(() {});
+                  if (spares['spares_used'].length > 0) {
+                    for (var spareused in spares['spares_used']) {
+                      if (spareused['scvm_price'] != null) {
+                        totalExclusiveCost = totalExclusiveCost +
+                            (double.parse(spareused['scvm_price']) *
+                                double.parse(spareused['scvm_quantity']));
+                      }
                     }
                   }
-                } else {
-                  nonMapCount++;
                 }
               }
             }
@@ -180,32 +215,42 @@ class PackageDetailsState extends State<PackageDetails> {
               if (serv['sevm_pack_timeunit'] != null) {
                 totalCost = totalCost +
                     (double.parse(serv['sevm_pack_timeunit']) *
-                            double.parse(value['labourrate']['lr_rate']))
-                        .round();
+                        double.parse(value['labourrate']['lr_rate']));
+                totalExclusiveCost = totalExclusiveCost +
+                    (double.parse(serv['sevm_pack_timeunit']) *
+                        double.parse(value['labourrate']['lr_rate']));
               } else {
                 nonMapCount++;
               }
             }
             if (value['pack_factor'] == null) {
               totalCost = totalCost * (1).round();
+              totalExclusiveCost = totalExclusiveCost * (1).round();
             } else if (value['pack_factor'] != null &&
                 value['pack_factor']['pvg_factor'] == null) {
               totalCost = totalCost * 1.round();
+              totalExclusiveCost = totalExclusiveCost * (1).round();
             } else {
               totalCost = totalCost *
+                  double.parse(value['pack_factor']['pvg_factor']).round();
+              totalExclusiveCost = totalExclusiveCost *
                   double.parse(value['pack_factor']['pvg_factor']).round();
             }
 
             setState(() {});
             if (value['settings']['gs_isvat'] == "1") {
               packVat = totalCost * (gs_vat / 100);
+              packVat = totalExclusiveCost * (gs_vat / 100);
               totalCost = totalCost + (totalCost * (gs_vat / 100));
+              totalExclusiveCost =
+                  totalExclusiveCost + (totalExclusiveCost * (gs_vat / 100));
             }
             if (nonMapCount == 0) {
               isPriceShow = true;
               setState(() {});
             } else {
               totalCost = 0.0;
+              totalExclusiveCost = 0.0;
               isServicing = false;
               isPriceShow = true;
               serviceMsg = "Sorry currently we couldn't service selected model";
@@ -214,6 +259,7 @@ class PackageDetailsState extends State<PackageDetails> {
           } else {
             // optionList.add("Sorry currently we don't service your vehicle");
             totalCost = 0.0;
+            totalExclusiveCost = 0.0;
             isServicing = false;
             isPriceShow = true;
             serviceMsg = "Sorry currently we couldn't service selected model";
@@ -225,6 +271,7 @@ class PackageDetailsState extends State<PackageDetails> {
       }
     } else {
       totalCost = 0.0;
+      totalExclusiveCost = 0.0;
       serviceMsg =
           "Selected vehicle have an active booking. Please contact your Service Advisor";
       isServicing = false;
@@ -254,6 +301,7 @@ class PackageDetailsState extends State<PackageDetails> {
     player.dispose();
     optionList = [];
     totalCost = 0.0;
+    totalExclusiveCost = 0.0;
   }
 
   @override
@@ -474,10 +522,29 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                                   children: <Widget>[
                                                                                     item['cv_plate_number'] != "" && item['cv_plate_number'] != null ? Text(item['cv_plate_number'], style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.04), maxLines: 2) : SizedBox(),
                                                                                     item['cv_variant'] != "" && item['cv_variant'] != null ? Text(item['cv_make'] + " " + item['cv_model'] + " " + item['cv_variant'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034), maxLines: 5) : Text(item['cv_make'] + item['cv_model'] + " (" + item['cv_year'] + ")", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034), maxLines: 5),
-                                                                                    Text(
-                                                                                      isPriceShow ? widget.currency + " " + (totalCost.round()).toString() : "Loading",
-                                                                                      style: montserratSemiBold.copyWith(color: warningcolor, fontSize: width * 0.04),
-                                                                                    ),
+                                                                                    isofferprice
+                                                                                        ? RichText(
+                                                                                            text: TextSpan(
+                                                                                              children: <TextSpan>[
+                                                                                                TextSpan(
+                                                                                                  text: isPriceShow ? widget.currency + " " + (totalExclusiveCost.round()).toString() : "Loading",
+                                                                                                  style: montserratSemiBold.copyWith(
+                                                                                                    color: Colors.grey,
+                                                                                                    fontSize: width * 0.0275,
+                                                                                                    decoration: TextDecoration.lineThrough,
+                                                                                                  ),
+                                                                                                ),
+                                                                                                TextSpan(
+                                                                                                  text: isPriceShow ? " " + widget.currency + " " + (totalCost.round()).toString() : "Loading",
+                                                                                                  style: montserratSemiBold.copyWith(color: warningcolor, fontSize: width * 0.0355),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          )
+                                                                                        : Text(
+                                                                                            isPriceShow ? widget.currency + " " + (totalCost.round()).toString() : "Loading",
+                                                                                            style: montserratSemiBold.copyWith(color: warningcolor, fontSize: width * 0.04),
+                                                                                          ),
                                                                                   ],
                                                                                 ),
                                                                               ),
@@ -683,21 +750,58 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                       fontSize: width *
                                                                           0.028),
                                                               maxLines: 2),
-                                                          Text(
-                                                            isPriceShow
-                                                                ? widget.currency +
-                                                                    " " +
-                                                                    (totalCost
-                                                                            .round())
-                                                                        .toString()
-                                                                : "Loading",
-                                                            style: montserratSemiBold
-                                                                .copyWith(
-                                                                    color:
-                                                                        warningcolor,
-                                                                    fontSize:
-                                                                        17),
-                                                          ),
+                                                          isofferprice
+                                                              ? RichText(
+                                                                  text:
+                                                                      TextSpan(
+                                                                    children: <
+                                                                        TextSpan>[
+                                                                      TextSpan(
+                                                                        text: isPriceShow
+                                                                            ? widget.currency +
+                                                                                " " +
+                                                                                (totalExclusiveCost.round()).toString()
+                                                                            : "Loading",
+                                                                        style: montserratSemiBold
+                                                                            .copyWith(
+                                                                          color:
+                                                                              Colors.grey,
+                                                                          fontSize:
+                                                                              width * 0.03,
+                                                                          decoration:
+                                                                              TextDecoration.lineThrough,
+                                                                        ),
+                                                                      ),
+                                                                      TextSpan(
+                                                                        text: isPriceShow
+                                                                            ? " " +
+                                                                                widget.currency +
+                                                                                " " +
+                                                                                (totalCost.round()).toString()
+                                                                            : "Loading",
+                                                                        style: montserratSemiBold.copyWith(
+                                                                            color:
+                                                                                warningcolor,
+                                                                            fontSize:
+                                                                                width * 0.0375),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                )
+                                                              : Text(
+                                                                  isPriceShow
+                                                                      ? widget.currency +
+                                                                          " " +
+                                                                          (totalCost.round())
+                                                                              .toString()
+                                                                      : "Loading",
+                                                                  style: montserratSemiBold.copyWith(
+                                                                      color:
+                                                                          warningcolor,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.04),
+                                                                ),
                                                         ],
                                                       )),
                                                   const SizedBox(width: 5),
