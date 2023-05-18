@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:otp_autofill/otp_autofill.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -39,25 +40,22 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
   int OTPtimer = 0, click_count = 0, verify_count = 0;
   bool isResend = false;
   bool isOtpVerifying = false;
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
   String otppin = '';
-  String codeValue = "";
 
   int _otpCodeLength = 4;
   bool _isLoadingButton = false;
   bool _enableButton = false;
   String _otpCode = "";
+  late OTPTextEditController controller;
+  final scaffoldKey = GlobalKey();
   TextEditingController textEditingController = TextEditingController();
-  var messageOtpCode = ''.obs;
 
   @override
   void initState() {
     OTPtimer = int.parse(widget.timer['gs_reotp_time']);
     super.initState();
     startTimer();
-    print("HI.... ====>");
-    print(SmsAutoFill().getAppSignature);
+    _listenOtp();
   }
 
   void startTimer() {
@@ -160,6 +158,11 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
+  }
+
+  void _listenOtp() async {
+    await SmsAutoFill().listenForCode();
+    print("OTP Listen is called");
   }
 
   submit_otp(otpval) async {
@@ -370,22 +373,28 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: height * 0.02),
-                        // PinFieldAutoFill(
-                        //   textInputAction: TextInputAction.done,
-                        //   decoration: UnderlineDecoration(
-                        //       textStyle: montserratMedium.copyWith(
-                        //           fontSize: 16, color: blackColor),
-                        //       colorBuilder: FixedColorBuilder(
-                        //         Colors.transparent,
-                        //       ),
-                        //       bgColorBuilder: FixedColorBuilder(
-                        //           Colors.grey.withOpacity(0.3))),
-                        //   onCodeSubmitted: (code) {},
-                        //   controller: controller.textEditingController,
-                        //   currentCode: controller.messageOtpCode.value,
-                        //   onCodeChanged: (code) {
-                        //     controller.messageOtpCode.value = code!;
-                        //   },
+                        // Container(
+                        //   height: 70,
+                        //   width: height * 0.3,
+                        //   child: Column(
+                        //     children: [
+                        //       PinFieldAutoFill(
+                        //         currentCode: otpCode,
+                        //         decoration: const BoxLooseDecoration(
+                        //             radius: Radius.circular(12),
+                        //             strokeColorBuilder:
+                        //                 FixedColorBuilder(Color(0xFF8C4A52))),
+                        //         codeLength: 4,
+                        //         onCodeChanged: (code) {
+                        //           print("OnCodeChanged : $code");
+                        //           otpCode = code.toString();
+                        //         },
+                        //         onCodeSubmitted: (val) {
+                        //           print("OnCodeSubmitted : $val");
+                        //         },
+                        //       )
+                        //     ],
+                        //   ),
                         // ),
                         // OtpTextField(
                         //   numberOfFields: 4,

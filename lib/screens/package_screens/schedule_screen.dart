@@ -131,6 +131,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         "pk_id":
             ptemp['pk_freeFlag'] == "1" && rangestatus ? "0" : ptemp['pk_id'],
         "pk_name": ptemp['pk_name'],
+        "pk_mulkiyaflag": ptemp['pk_mulkiyaflag'],
         "pk_cost": ptemp['pk_freeFlag'] == "1" && rangestatus
             ? "Not Available"
             : serviceAvailability
@@ -278,6 +279,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             var temp = {
               "pk_id": ptype['pk_id'],
               "pk_name": ptype['pk_name'],
+              "pk_mulkiyaflag": ptype['pk_mulkiyaflag'],
               "pk_cost": 'Select Address',
               "pk_cost_value": '0'
             };
@@ -450,33 +452,34 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     });
   }
 
-  // Future<void> _showMyDialog() async {
-  //   return showDialog<void>(
-  //     context: context,
-  //     barrierDismissible: false, // user must tap button!
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('AlertDialog Title'),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: <Widget>[
-  //               Text('This is a demo alert dialog.'),
-  //               Text('Would you like to approve of this message?'),
-  //             ],
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: const Text('Approve'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Alert'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Please read before proceeding.\n'),
+                Text('● Mulkya should not be expired'),
+                Text('● Do not included in any illegal things'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   proceedToSummaryClick() async {
     final prefs = await SharedPreferences.getInstance();
@@ -1618,10 +1621,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                           bgColor: errorcolor,
                                                           textColor: white);
                                                     } else {
-                                                      if (pickup_options[index]
-                                                              ['pk_name'] ==
-                                                          "Driver Pickup") {
-                                                        // _showMyDialog();
+                                                      if (pickup_options[index][
+                                                              'pk_mulkiyaflag'] !=
+                                                          "0") {
+                                                        _showMyDialog();
                                                         setState(() {
                                                           pickupoption = value;
                                                           pickup_name =

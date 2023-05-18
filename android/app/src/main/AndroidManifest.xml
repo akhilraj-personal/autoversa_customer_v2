@@ -10,8 +10,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
-    <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
    <application
         android:label="Autoversa"
         android:name="${applicationName}"
@@ -35,6 +35,9 @@
             <meta-data
                 android:name="com.onesignal.messaging.default_notification_icon"
                 android:resource="@drawable/ic_stat_onesignal_default" />
+            <meta-data
+                android:name="io.flutter.embedding.android.SmsRetrieverApi"
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
