@@ -136,6 +136,7 @@ class AMSeviceModel {
   var ser_desc = [];
   var ser_pack_desc = [];
   var sercost;
+  var serexclusioncost;
   var packcost;
   var packVat;
   var serVat;
@@ -148,6 +149,7 @@ class AMSeviceModel {
       this.ser_type,
       this.serdesctypeid,
       this.sercost,
+      this.serexclusioncost,
       this.packcost,
       this.isServiceCheck = false,
       this.isPackageCheck = false});

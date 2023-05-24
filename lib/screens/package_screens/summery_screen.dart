@@ -122,6 +122,7 @@ class SummeryPageState extends State<SummeryPage> {
         "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
         "gs_vat": packdata['gs_vat'].toStringAsFixed(2),
         "veh_groupid": packdata['veh_groupid'],
+        "ser_veh_groupid": packdata['ser_veh_groupid'],
         "total_amount": totalamount.round(),
         "advance": "0",
         "discount": "0",
@@ -154,6 +155,7 @@ class SummeryPageState extends State<SummeryPage> {
         "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
         "gs_vat": packdata['gs_vat'].toStringAsFixed(2),
         "veh_groupid": packdata['veh_groupid'],
+        "ser_veh_groupid": packdata['ser_veh_groupid'],
         "total_amount": totalamount.round(),
         "advance": "0",
         "discount": "0",
@@ -180,8 +182,6 @@ class SummeryPageState extends State<SummeryPage> {
         ),
       );
       var retdata = jsonDecode(response.toString());
-      print("lol===>0000");
-      print(retdata);
       if (retdata['ret_data'] == "success") {
         createPayment(retdata['booking_id'], retdata['payment_details']);
         bookId = retdata['booking_id'];
@@ -192,14 +192,10 @@ class SummeryPageState extends State<SummeryPage> {
         bookingdate = packdata['selected_date'];
         await prefs.remove("booking_data");
       } else {
-        print("error===>1");
-        print(retdata);
         showCustomToast(context, "Couldn't complete booking",
             bgColor: errorcolor, textColor: whiteColor);
       }
     } catch (e) {
-      print("error===>2");
-      print(e.toString());
       setState(() {
         isproceeding = false;
       });

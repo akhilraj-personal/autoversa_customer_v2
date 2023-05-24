@@ -63,6 +63,7 @@ class PackageDetailsState extends State<PackageDetails> {
   TextEditingController complaint = new TextEditingController();
   var gs_vat;
   var veh_groupid;
+  var ser_veh_groupid;
   bool isofferprice = false;
 
   @override
@@ -88,9 +89,9 @@ class PackageDetailsState extends State<PackageDetails> {
       "package_cost": totalCost,
       "gs_vat": gs_vat,
       "veh_groupid": veh_groupid,
+      "ser_veh_groupid": ser_veh_groupid,
       "pack_vat": packVat
     };
-    print(packdata);
     prefs.setString("booking_data", json.encode(packdata));
     setState(() => isbooked = false);
     Navigator.push(
@@ -136,23 +137,21 @@ class PackageDetailsState extends State<PackageDetails> {
           if (value['ret_data'] == "success") {
             gs_vat = int.parse(value['settings']['gs_vat']);
             veh_groupid = int.parse(value['veh_group']['vgroup_id']);
+            ser_veh_groupid =
+                int.parse(value['service_veh_group']['vgroup_id']);
             optionList = [];
             setState(() {});
             isServicing = true;
             packageinfo = value;
             for (var sup_packs in value['sub_packages']) {
-              if (sup_packs['operations'].length == 0) {
-                optionList.add(sup_packs['sp_name']);
-              } else if (sup_packs['operations'].length != 0) {
-                for (var operations in sup_packs['operations']) {
-                  if (operations['spo_visibility'] == "0") {
-                    optionList.add(operations['op_display_name']);
-                  }
+              for (var operations in sup_packs['operations']) {
+                if (operations['spo_visibility'] == "0") {
+                  optionList.add(operations['op_display_name']);
                 }
-                for (var spares in sup_packs['spares']) {
-                  if (spares['spp_visibility'] == "0") {
-                    optionList.add(spares['spc_displayname']);
-                  }
+              }
+              for (var spares in sup_packs['spares']) {
+                if (spares['spp_visibility'] == "0") {
+                  optionList.add(spares['spc_displayname']);
                 }
               }
               for (var operations in sup_packs['operations']) {
@@ -211,16 +210,41 @@ class PackageDetailsState extends State<PackageDetails> {
               }
             }
             for (var serv in value['services']) {
-              optionList.add(serv['ser_name']);
-              if (serv['sevm_pack_timeunit'] != null) {
-                totalCost = totalCost +
-                    (double.parse(serv['sevm_pack_timeunit']) *
-                        double.parse(value['labourrate']['lr_rate']));
-                totalExclusiveCost = totalExclusiveCost +
-                    (double.parse(serv['sevm_pack_timeunit']) *
-                        double.parse(value['labourrate']['lr_rate']));
-              } else {
-                nonMapCount++;
+              if (serv['pse_visibility'] == "0") {
+                optionList.add(serv['ser_display_name']);
+              }
+              if (serv['pse_billexclusion'] == "0") {
+                if (serv['sevm_billexclusion'] == "0") {
+                  if (serv['sevm_pack_timeunit'] != null) {
+                    totalCost = totalCost +
+                        (double.parse(serv['sevm_pack_timeunit']) *
+                            double.parse(
+                                value['service_labourrate']['lr_rate']));
+                    totalExclusiveCost = totalExclusiveCost +
+                        (double.parse(serv['sevm_pack_timeunit']) *
+                            double.parse(
+                                value['service_labourrate']['lr_rate']));
+                  } else {
+                    nonMapCount++;
+                  }
+                } else if (serv['sevm_billexclusion'] == "1") {
+                  isofferprice = true;
+                  setState(() {});
+                  if (serv['sevm_pack_timeunit'] != null) {
+                    totalExclusiveCost = totalExclusiveCost +
+                        (double.parse(serv['sevm_pack_timeunit']) *
+                            double.parse(
+                                value['service_labourrate']['lr_rate']));
+                  }
+                }
+              } else if (serv['pse_billexclusion'] == "1") {
+                isofferprice = true;
+                setState(() {});
+                if (serv['sevm_pack_timeunit'] != null) {
+                  totalExclusiveCost = totalExclusiveCost +
+                      (double.parse(serv['sevm_pack_timeunit']) *
+                          double.parse(value['service_labourrate']['lr_rate']));
+                }
               }
             }
             if (value['pack_factor'] == null) {

@@ -42,7 +42,6 @@ class _LoginPageState extends State<LoginPage> {
     //   "phone": in_mobile,
     //   "country_code": country_code,
     // };
-    print(req);
     await customerLoginService(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() => isLoading = false);

@@ -46,8 +46,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
   bool _isLoadingButton = false;
   bool _enableButton = false;
   String _otpCode = "";
-  late OTPTextEditController controller;
-  final scaffoldKey = GlobalKey();
   TextEditingController textEditingController = TextEditingController();
 
   @override
@@ -55,7 +53,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
     OTPtimer = int.parse(widget.timer['gs_reotp_time']);
     super.initState();
     startTimer();
-    _listenOtp();
   }
 
   void startTimer() {
@@ -102,7 +99,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
     _timer.cancel();
     super.dispose();
     textEditingController.dispose();
-    SmsAutoFill().unregisterListener();
   }
 
   reSendOTP() async {
@@ -149,7 +145,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
             bgColor: toastgrey, textColor: whiteColor);
       } else {
         setState(() => isResend = false);
-        print(value);
         showCustomToast(context, ST.of(context).try_another_method,
             bgColor: warningcolor, textColor: whiteColor);
       }
@@ -158,11 +153,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
-  }
-
-  void _listenOtp() async {
-    await SmsAutoFill().listenForCode();
-    print("OTP Listen is called");
   }
 
   submit_otp(otpval) async {

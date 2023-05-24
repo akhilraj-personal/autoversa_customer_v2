@@ -46,7 +46,7 @@ addressValidation(value, context) {
 }
 
 buildingValidation(value) {
-  String pattern = r'(^[a-zA-Z0-9!@#$%^&*()_+={}[\]\\|:;<>,.?/~`-]*$)';
+  String pattern = r'(^[a-zA-Z0-9 !@#$%^&*()_+={}[\]\\|:;<>,.?/~`-]*$)';
   RegExp regExp = new RegExp(pattern);
   if (!regExp.hasMatch(value)) {
     return "Enter valid data";

@@ -26,7 +26,6 @@ class ReschedulefromBooking extends StatefulWidget {
 }
 
 class ReschedulefromBookingState extends State<ReschedulefromBooking> {
-  late Map<String, dynamic> bookingdetails = {};
   late Map<String, dynamic> dropdetails = {};
   DateTime selectedDate = DateTime.now();
   var selected_timeslot = "";
@@ -53,7 +52,6 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
     await getbookingdetails(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() {
-          bookingdetails = value['booking'];
           dropdetails = value['booking']['drop_address'];
         });
       }
@@ -306,29 +304,31 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                   )),
                               Expanded(
                                 flex: 3,
-                                child: Text(
-                                  dropdetails['cad_address'] != null
-                                      ? dropdetails['cad_landmark'] != null
-                                          ? ": " +
-                                              dropdetails['cad_address'] +
-                                              " " +
-                                              dropdetails['city_name'] +
-                                              " " +
-                                              dropdetails['state_name'] +
-                                              " " +
-                                              dropdetails['cad_landmark']
-                                          : ": " +
-                                              dropdetails['cad_address'] +
-                                              " " +
-                                              dropdetails['city_name'] +
-                                              " " +
-                                              dropdetails['state_name']
-                                      : "",
-                                  textAlign: TextAlign.start,
-                                  style: montserratMedium.copyWith(
-                                    fontSize: width * 0.035,
-                                    color: black,
-                                  ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      dropdetails['cad_city'] != null
+                                          ? dropdetails['cad_city']
+                                          : "",
+                                      maxLines: 1,
+                                      style: montserratMedium.copyWith(
+                                          color: Colors.black,
+                                          fontSize: width * 0.04),
+                                    ),
+                                    Text(
+                                      dropdetails['cad_address'] != null
+                                          ? dropdetails['cad_address']
+                                          : "",
+                                      maxLines: 2,
+                                      textAlign: TextAlign.justify,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: montserratMedium.copyWith(
+                                          color: toastgrey,
+                                          fontSize: width * 0.03),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],

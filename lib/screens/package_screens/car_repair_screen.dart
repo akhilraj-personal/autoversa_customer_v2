@@ -59,6 +59,7 @@ class CarRepairState extends State<CarRepair> {
   double totalServiceCost = 0;
   bool recordLocation = false;
   double totalCost = 0, totalVat = 0;
+  double totalExclusiveCost = 0.0;
   TextEditingController complaint = new TextEditingController();
   bool isServicing = true;
   String serviceMsg = '';
@@ -67,6 +68,7 @@ class CarRepairState extends State<CarRepair> {
   double packVat = 0.0;
   var gs_vat, gs_isVat;
   var veh_groupid;
+  bool isofferprice = false;
 
   late Map<String, dynamic> packageinfo;
 
@@ -115,23 +117,32 @@ class CarRepairState extends State<CarRepair> {
               if (getservice['sevm_pack_timeunit'] != null) {
                 AMSeviceModel sertemp = new AMSeviceModel();
                 sertemp.serid = getservice['ser_id'];
-                sertemp.sername = getservice['ser_name'];
+                sertemp.sername = getservice['ser_display_name'];
                 sertemp.serdesctypeid = getservice['ser_desc_type_id'];
                 sertemp.ser_type = "givenservice";
                 sertemp.isServiceCheck = false;
                 if (value['settings']['gs_isvat'] == "1") {
                   var servCostNoTax =
                       double.parse(getservice['sevm_pack_timeunit']) *
-                          double.parse(value['labourrate']['lr_rate']);
+                          double.parse(value['service_labourrate']['lr_rate']);
                   sertemp.serVat = servCostNoTax * (gs_vat / 100);
                   sertemp.sercost =
-                      (servCostNoTax + (servCostNoTax * ((gs_vat / 100))))
-                          .round();
+                      (servCostNoTax + (servCostNoTax * ((gs_vat / 100))));
+                  if (value['pack_factor'] == null) {
+                    sertemp.sercost = sertemp.sercost * (1).round();
+                  } else if (value['pack_factor'] != null &&
+                      value['pack_factor']['pvg_factor'] == null) {
+                    sertemp.sercost = sertemp.sercost * 1.round();
+                  } else {
+                    sertemp.sercost = sertemp.sercost *
+                        double.parse(value['pack_factor']['pvg_factor'])
+                            .round();
+                  }
                 } else {
                   sertemp.serVat = 0;
                   sertemp.sercost =
                       (double.parse(getservice['sevm_pack_timeunit']) *
-                          double.parse(value['labourrate']['lr_rate']));
+                          double.parse(value['service_labourrate']['lr_rate']));
                 }
 
                 for (var descriptions in getservice['descriptions']) {
@@ -154,61 +165,133 @@ class CarRepairState extends State<CarRepair> {
               sertemp.ser_type = "subpackage";
               sertemp.isPackageCheck = false;
               var pack_cost = 0.0;
+              var pack_exclusion_cost = 0.0;
               var pack_vat = 0.0;
               for (var operations in sup_packs['operations']) {
-                if (operations['opvm_timeunit'] != null) {
-                  sertemp.ser_pack_desc.add(operations['op_name']);
-                  optionList.add(operations['op_name']);
-                  if (value['settings']['gs_isvat'] == "1") {
-                    var opCostNoTax =
-                        (double.parse(operations['opvm_timeunit']) *
-                            double.parse(value['labourrate']['lr_rate']));
-                    pack_vat = pack_vat + (opCostNoTax * (gs_vat / 100));
-                    pack_cost = pack_cost +
-                        (opCostNoTax + (opCostNoTax * ((gs_vat / 100))));
+                sertemp.ser_pack_desc.add(operations['op_display_name']);
+                optionList.add(operations['op_display_name']);
+                if (operations['spo_billexclusion'] == "0") {
+                  if (operations['opvm_timeunit'] != null) {
+                    if (value['settings']['gs_isvat'] == "1") {
+                      var opCostNoTax =
+                          (double.parse(operations['opvm_timeunit']) *
+                              double.parse(value['labourrate']['lr_rate']));
+                      pack_vat = pack_vat + (opCostNoTax * (gs_vat / 100));
+                      pack_cost = pack_cost +
+                          (opCostNoTax + (opCostNoTax * ((gs_vat / 100))));
+                      pack_exclusion_cost = pack_exclusion_cost +
+                          (opCostNoTax + (opCostNoTax * ((gs_vat / 100))));
+                    } else {
+                      pack_vat = 0.0;
+                      pack_cost = pack_cost +
+                          (double.parse(operations['opvm_timeunit']) *
+                              double.parse(value['labourrate']['lr_rate']));
+                      pack_exclusion_cost = pack_exclusion_cost +
+                          (double.parse(operations['opvm_timeunit']) *
+                              double.parse(value['labourrate']['lr_rate']));
+                    }
                   } else {
-                    pack_vat = 0.0;
-                    pack_cost = pack_cost +
-                        (double.parse(operations['opvm_timeunit']) *
-                            double.parse(value['labourrate']['lr_rate']));
+                    nonMapCount++;
                   }
-                } else {
-                  nonMapCount++;
+                } else if (operations['spo_billexclusion'] == "1") {
+                  isofferprice = true;
+                  setState(() {});
+                  if (operations['opvm_timeunit'] != null) {
+                    if (value['settings']['gs_isvat'] == "1") {
+                      var opCostNoTax =
+                          (double.parse(operations['opvm_timeunit']) *
+                              double.parse(value['labourrate']['lr_rate']));
+                      pack_vat = pack_vat + (opCostNoTax * (gs_vat / 100));
+                      pack_exclusion_cost = pack_exclusion_cost +
+                          (double.parse(operations['opvm_timeunit']) *
+                              double.parse(value['labourrate']['lr_rate']));
+                    } else {
+                      pack_vat = 0.0;
+                      pack_exclusion_cost = pack_exclusion_cost +
+                          (double.parse(operations['opvm_timeunit']) *
+                              double.parse(value['labourrate']['lr_rate']));
+                    }
+                  } else {
+                    nonMapCount++;
+                  }
                 }
               }
               for (var spares in sup_packs['spares']) {
-                if (spares['spares_used'].length > 0) {
-                  for (var spareused in spares['spares_used']) {
-                    if (spareused['scvm_price'] != null) {
-                      sertemp.ser_pack_desc.add(spares['spc_name']);
-                      optionList.add(spares['spc_name']);
-                      if (value['settings']['gs_isvat'] == "1") {
-                        var spCostNoTax =
-                            (double.parse(spareused['scvm_price']) *
-                                double.parse(spareused['scvm_quantity']));
-                        pack_vat = pack_vat + (spCostNoTax * (gs_vat / 100));
-                        pack_cost = pack_cost +
-                            (spCostNoTax + (spCostNoTax * ((gs_vat / 100))));
-                      } else {
-                        pack_vat = 0.0;
-                        pack_cost = pack_cost +
-                            (double.parse(spareused['scvm_price']) *
-                                double.parse(spareused['scvm_quantity']));
+                optionList.add(spares['spc_displayname']);
+                if (spares['spp_billexclusion'] == "0") {
+                  if (spares['spares_used'].length > 0) {
+                    for (var spareused in spares['spares_used']) {
+                      if (spareused['scvm_price'] != null) {
+                        sertemp.ser_pack_desc.add(spares['spc_displayname']);
+
+                        if (value['settings']['gs_isvat'] == "1") {
+                          var spCostNoTax =
+                              (double.parse(spareused['scvm_price']) *
+                                  double.parse(spareused['scvm_quantity']));
+                          pack_vat = pack_vat + (spCostNoTax * (gs_vat / 100));
+                          pack_cost = pack_cost +
+                              (spCostNoTax + (spCostNoTax * ((gs_vat / 100))));
+                          pack_exclusion_cost = pack_exclusion_cost +
+                              (spCostNoTax + (spCostNoTax * ((gs_vat / 100))));
+                        } else {
+                          pack_vat = 0.0;
+                          pack_cost = pack_cost +
+                              (double.parse(spareused['scvm_price']) *
+                                  double.parse(spareused['scvm_quantity']));
+                          pack_exclusion_cost = pack_exclusion_cost +
+                              (double.parse(spareused['scvm_price']) *
+                                  double.parse(spareused['scvm_quantity']));
+                        }
                       }
                     }
+                  } else {
+                    nonMapCount++;
                   }
-                } else {
-                  nonMapCount++;
+                } else if (spares['spp_billexclusion'] == "1") {
+                  isofferprice = true;
+                  setState(() {});
+                  if (spares['spares_used'].length > 0) {
+                    for (var spareused in spares['spares_used']) {
+                      if (spareused['scvm_price'] != null) {
+                        sertemp.ser_pack_desc.add(spares['spc_displayname']);
+
+                        if (value['settings']['gs_isvat'] == "1") {
+                          var spCostNoTax =
+                              (double.parse(spareused['scvm_price']) *
+                                  double.parse(spareused['scvm_quantity']));
+                          pack_vat = pack_vat + (spCostNoTax * (gs_vat / 100));
+                          pack_exclusion_cost = pack_exclusion_cost +
+                              (double.parse(spareused['scvm_price']) *
+                                  double.parse(spareused['scvm_quantity']));
+                        } else {
+                          pack_vat = 0.0;
+                          pack_exclusion_cost = pack_exclusion_cost +
+                              (double.parse(spareused['scvm_price']) *
+                                  double.parse(spareused['scvm_quantity']));
+                        }
+                      }
+                    }
+                  } else {
+                    nonMapCount++;
+                  }
                 }
               }
-              sertemp.packcost = pack_cost.round();
-              sertemp.packVat = packVat.round();
-              serviceList.add(sertemp);
+              if (value['pack_factor'] == null) {
+                sertemp.packcost = pack_cost * (1).round();
+                sertemp.packVat = packVat.round();
+                serviceList.add(sertemp);
+              } else if (value['pack_factor'] != null &&
+                  value['pack_factor']['pvg_factor'] == null) {
+                sertemp.packcost = pack_cost * (1).round();
+                sertemp.packVat = packVat.round();
+                serviceList.add(sertemp);
+              } else {
+                sertemp.packcost = pack_cost *
+                    double.parse(value['pack_factor']['pvg_factor']).round();
+                sertemp.packVat = packVat.round();
+                serviceList.add(sertemp);
+              }
             }
-            totalCost = totalCost *
-                double.parse(value['pack_factor']['pvg_factor']).round();
-
-            setState(() {});
             if (nonMapCount == 0) {
               isPriceShow = true;
               setState(() {});
@@ -230,6 +313,7 @@ class CarRepairState extends State<CarRepair> {
       }
     } else {
       totalCost = 0;
+      totalExclusiveCost = 0;
       serviceMsg =
           "Selected vehicle have an active booking. Please contact your Service Advisor";
       isServicing = false;
@@ -240,6 +324,7 @@ class CarRepairState extends State<CarRepair> {
 
   updatePackCost() {
     totalCost = 0;
+    totalExclusiveCost = 0;
     totalVat = 0;
     for (var items in serviceList) {
       AMSeviceModel sertemp = items;
@@ -247,9 +332,13 @@ class CarRepairState extends State<CarRepair> {
         if (sertemp.ser_type == "subpackage") {
           totalVat = totalVat + sertemp.packVat;
           totalCost = totalCost + sertemp.packcost;
+          totalExclusiveCost = totalExclusiveCost + sertemp.packcost;
+          setState(() {});
         } else {
           totalVat = totalVat + sertemp.serVat;
           totalCost = totalCost + sertemp.sercost;
+          totalExclusiveCost = totalExclusiveCost + sertemp.sercost;
+          setState(() {});
         }
       }
     }
@@ -279,9 +368,6 @@ class CarRepairState extends State<CarRepair> {
         }
       }
     }
-    print("@@@@@@@@@222");
-    print(select_services.length);
-    print(select_packages.length);
     // if ((select_packages.length == 0) || (select_services.length == 0)) {
     //   setState(() => isbooked = false);
     //   showCustomToast(context, "Choose atleast one service or package",
@@ -340,6 +426,7 @@ class CarRepairState extends State<CarRepair> {
     recorder.dispose();
     player.dispose();
     totalCost = 0;
+    totalExclusiveCost = 0;
   }
 
   @override
@@ -1088,7 +1175,7 @@ class CarRepairState extends State<CarRepair> {
                                                                                       maxLines: 10,
                                                                                       style: montserratRegular.copyWith(
                                                                                         fontSize: 11,
-                                                                                        color: greyColor,
+                                                                                        color: black,
                                                                                       ),
                                                                                     ),
                                                                                   )

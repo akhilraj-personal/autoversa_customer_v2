@@ -486,7 +486,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     Map<String, dynamic> packdata =
         json.decode(prefs.get("booking_data").toString());
     if (isLocationCheck) {
-      print(ptempdata + "<--->" + dtempdata);
       if (ptempdata == "" && dtempdata == "") {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a location",
@@ -498,11 +497,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       } else if (selected_timeid == 0) {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a time slot",
-            bgColor: errorcolor, textColor: white);
-      } else if (isserviceble == false) {
-        setState(() => isproceeding = false);
-        showCustomToast(context,
-            "Selected location not in our service area. Please choose another location",
             bgColor: errorcolor, textColor: white);
       } else {
         packdata['pick_up_location'] = SelectAddressList[selected_address];
@@ -544,11 +538,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       } else if (selected_timeid == 0) {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a time slot",
-            bgColor: errorcolor, textColor: white);
-      } else if (isserviceble == false) {
-        setState(() => isproceeding = false);
-        showCustomToast(context,
-            "Selected location not in our service area. Please choose another location",
             bgColor: errorcolor, textColor: white);
       } else {
         packdata['pick_up_location'] = SelectAddressList[selected_address];
@@ -1146,7 +1135,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                     ));
                                               }).toList(),
                                               onChanged: (selected) {
-                                                print(selected);
                                                 setState(() {
                                                   pickupaddresschange(
                                                       SelectAddressList
