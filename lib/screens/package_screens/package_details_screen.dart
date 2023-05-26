@@ -46,8 +46,7 @@ class PackageDetailsState extends State<PackageDetails> {
   final timeController = TimerController();
   final recorder = SoundRecorder();
   final player = SoundPlayer();
-  int? _selectedIndex;
-
+  late List pack_extra_details = [];
   bool recordLocation = false;
   var optionList = [];
   int currentveh = 0;
@@ -90,9 +89,12 @@ class PackageDetailsState extends State<PackageDetails> {
       "gs_vat": gs_vat,
       "veh_groupid": veh_groupid,
       "ser_veh_groupid": ser_veh_groupid,
-      "pack_vat": packVat
+      "pack_vat": packVat,
+      "pack_extra_details": pack_extra_details
     };
     prefs.setString("booking_data", json.encode(packdata));
+    print("++++++>>>>>>");
+    print(json.encode(packdata));
     setState(() => isbooked = false);
     Navigator.push(
         context,
@@ -140,6 +142,7 @@ class PackageDetailsState extends State<PackageDetails> {
             ser_veh_groupid =
                 int.parse(value['service_veh_group']['vgroup_id']);
             optionList = [];
+            pack_extra_details = value['pack_extra_details'];
             setState(() {});
             isServicing = true;
             packageinfo = value;
@@ -175,6 +178,14 @@ class PackageDetailsState extends State<PackageDetails> {
                           (double.parse(operations['opvm_pack_timeunit']) *
                               double.parse(value['labourrate']['lr_rate']));
                     }
+                  }
+                } else if (operations['opvm_billexclusion'] == "1") {
+                  isofferprice = true;
+                  setState(() {});
+                  if (operations['opvm_pack_timeunit'] != null) {
+                    totalExclusiveCost = totalExclusiveCost +
+                        (double.parse(operations['opvm_pack_timeunit']) *
+                            double.parse(value['labourrate']['lr_rate']));
                   }
                 }
               }
@@ -247,18 +258,13 @@ class PackageDetailsState extends State<PackageDetails> {
                 }
               }
             }
-            if (value['pack_factor'] == null) {
+            if (value['pack_extra'] == null) {
               totalCost = totalCost * (1).round();
               totalExclusiveCost = totalExclusiveCost * (1).round();
-            } else if (value['pack_factor'] != null &&
-                value['pack_factor']['pvg_factor'] == null) {
-              totalCost = totalCost * 1.round();
-              totalExclusiveCost = totalExclusiveCost * (1).round();
             } else {
-              totalCost = totalCost *
-                  double.parse(value['pack_factor']['pvg_factor']).round();
-              totalExclusiveCost = totalExclusiveCost *
-                  double.parse(value['pack_factor']['pvg_factor']).round();
+              totalCost = totalCost + double.parse(value['pack_extra']).round();
+              totalExclusiveCost = totalExclusiveCost +
+                  double.parse(value['pack_extra']).round();
             }
 
             setState(() {});

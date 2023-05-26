@@ -131,6 +131,7 @@ class SummeryPageState extends State<SummeryPage> {
         "slot": packdata['selected_timeid'],
         "pickuptype": packdata['pick_type_id'],
         "sourcetype": "MOB",
+        "pack_extra_details": packdata['pack_extra_details'],
         "bk_pickup_cost":
             (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
                 .toStringAsFixed(2),
@@ -164,10 +165,13 @@ class SummeryPageState extends State<SummeryPage> {
         "slot": packdata['selected_timeid'],
         "pickuptype": packdata['pick_type_id'],
         "sourcetype": "MOB",
+        "pack_extra_details": packdata['pack_extra_details'],
         "bk_pickup_cost":
             (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
                 .toStringAsFixed(2),
       };
+      print("send items ==>");
+      print(req);
       String? token = prefs.getString('token');
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';
@@ -182,6 +186,8 @@ class SummeryPageState extends State<SummeryPage> {
         ),
       );
       var retdata = jsonDecode(response.toString());
+      print("retdata1 ==>");
+      print(retdata);
       if (retdata['ret_data'] == "success") {
         createPayment(retdata['booking_id'], retdata['payment_details']);
         bookId = retdata['booking_id'];
@@ -192,10 +198,14 @@ class SummeryPageState extends State<SummeryPage> {
         bookingdate = packdata['selected_date'];
         await prefs.remove("booking_data");
       } else {
+        print("retdata2 ==>");
+        print(retdata['ret_data']);
         showCustomToast(context, "Couldn't complete booking",
             bgColor: errorcolor, textColor: whiteColor);
       }
     } catch (e) {
+      print("retdata3 ==>");
+      print(e.toString());
       setState(() {
         isproceeding = false;
       });

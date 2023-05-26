@@ -123,6 +123,8 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
             bgColor: warningcolor, textColor: whiteColor);
       }
     }).catchError((e) {
+      print("1111111111111");
+      print(e.toString());
       setState(() => isResend = false);
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
@@ -149,6 +151,8 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
             bgColor: warningcolor, textColor: whiteColor);
       }
     }).catchError((e) {
+      print("2222222222");
+      print(e.toString());
       setState(() => isResend = false);
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
@@ -239,6 +243,8 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
               bgColor: warningcolor, textColor: whiteColor);
         }
       }).catchError((e) {
+        print("333333333333");
+        print(e.toString());
         setState(() => isOtpVerifying = false);
         print(e.toString());
         showCustomToast(context, ST.of(context).toast_application_error,

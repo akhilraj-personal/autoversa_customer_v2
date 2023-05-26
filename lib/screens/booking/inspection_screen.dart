@@ -43,20 +43,14 @@ class InspectionScreenState extends State<InspectionScreen>
     with WidgetsBindingObserver {
   var isloaded = false;
   bool isBuffering = false;
-  int _currentPosition = 0;
-  int _duration = 0;
-  late int _playBackTime;
   bool showOverLay = false;
   bool isFullScreen = false;
   late Map<String, dynamic> getinspection = {};
-  TextEditingController commentsController = TextEditingController();
   late VideoPlayerController _controller;
   late String vehicle_video;
   var vehicleimages = [];
   var vehiclevideourl;
   var carcontentlist = [];
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
 
   @override
   void initState() {
@@ -110,9 +104,6 @@ class InspectionScreenState extends State<InspectionScreen>
           for (var getcontent in value['contents']) {
             carcontentlist.add(getcontent);
           }
-          commentsController.text = getinspection['bki_comments'] != null
-              ? getinspection['bki_comments']
-              : "";
         });
       } else {
         setState(() {});
@@ -121,15 +112,6 @@ class InspectionScreenState extends State<InspectionScreen>
       setState(() {});
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
-    });
-  }
-
-  Future<void> _initializePlay(String vehicle_video) async {
-    _controller = VideoPlayerController.network(vehicle_video);
-    _controller.addListener(() {
-      setState(() {
-        _playBackTime = _controller.value.position.inSeconds;
-      });
     });
   }
 
@@ -992,6 +974,43 @@ class InspectionScreenState extends State<InspectionScreen>
                                     ],
                                   ),
                                 ),
+                          8.height,
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Text("Comments Recorded",
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.clip,
+                                    style: montserratSemiBold.copyWith(
+                                        fontSize: width * 0.034)),
+                              ],
+                            ),
+                          ),
+                          8.height,
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Text(
+                                    getinspection['bki_comments'] != null
+                                        ? getinspection['bki_comments']
+                                        : "No Comments Recorded",
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.clip,
+                                    style: montserratMedium.copyWith(
+                                        fontSize: width * 0.034)),
+                              ],
+                            ),
+                          ),
                           16.height,
                           GestureDetector(
                             onTap: () async {

@@ -563,6 +563,11 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                           setState(() {
                                             landmark = value;
                                           });
+                                        } else {
+                                          showCustomToast(
+                                              context, "Enter valid details",
+                                              bgColor: errorcolor,
+                                              textColor: white);
                                         }
                                       }
                                     },

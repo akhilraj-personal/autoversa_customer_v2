@@ -67,6 +67,8 @@ class _LoginPageState extends State<LoginPage> {
             bgColor: errorcolor, textColor: whiteColor);
       }
     }).catchError((e) {
+      print("1111111111111");
+      print(e.toString());
       setState(() => isLoading = false);
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);

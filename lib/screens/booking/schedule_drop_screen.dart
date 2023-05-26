@@ -149,8 +149,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
         double.parse(tempCost) - paid_amount > 0
             ? tempCost = (double.parse(tempCost) - paid_amount).toString()
             : tempCost = "0";
-
-        print(tempCost + "#####" + new_distance.toString());
         // ptype['pk_id'] == currentDropType['pk_id'] && new_distance == 0
         //     ? tempCost = "0"
         //     : ptype['pk_freeFlag'] != "1"
@@ -269,7 +267,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
       }
     } catch (e) {
       setState(() => isSubmitted = false);
-      print("11111111111111111");
       print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
@@ -280,7 +277,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     try {
       final prefs = await SharedPreferences.getInstance();
       Map req = {"customerId": prefs.getString('cust_id')};
-      print(req);
       custAddressList = [];
       pickup_options = [];
       SelectAddressList = <String?>["Select Address"];
@@ -394,7 +390,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
       setState(() {});
     } catch (e) {
       setState(() => isSubmitted = false);
-      print("2222222222222222222");
       print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
@@ -555,7 +550,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
             createPaymentIntent(widget.bk_id, value['payment_details']);
           }
         }).catchError((e) {
-          print("33333333333333333333");
           print(e.toString());
           showCustomToast(context, ST.of(context).toast_application_error,
               bgColor: errorcolor, textColor: Colors.white);

@@ -138,6 +138,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
           "custId": prefs.getString('cust_id'),
           "vehId": packdata['vehicle_id'],
           "bookingdate": packdata['selected_date'],
+          "expenses": [],
           "slot": packdata['selected_timeid'],
           "pickupaddress": packdata['pick_up_location_id'],
           "dropaddress": packdata['drop_location_id'],

@@ -128,16 +128,16 @@ class CarRepairState extends State<CarRepair> {
                   sertemp.serVat = servCostNoTax * (gs_vat / 100);
                   sertemp.sercost =
                       (servCostNoTax + (servCostNoTax * ((gs_vat / 100))));
-                  if (value['pack_factor'] == null) {
-                    sertemp.sercost = sertemp.sercost * (1).round();
-                  } else if (value['pack_factor'] != null &&
-                      value['pack_factor']['pvg_factor'] == null) {
-                    sertemp.sercost = sertemp.sercost * 1.round();
-                  } else {
-                    sertemp.sercost = sertemp.sercost *
-                        double.parse(value['pack_factor']['pvg_factor'])
-                            .round();
-                  }
+                  // if (value['pack_factor'] == null) {
+                  //   sertemp.sercost = sertemp.sercost * (1).round();
+                  // } else if (value['pack_factor'] != null &&
+                  //     value['pack_factor']['pvg_factor'] == null) {
+                  //   sertemp.sercost = sertemp.sercost * 1.round();
+                  // } else {
+                  //   sertemp.sercost = sertemp.sercost *
+                  //       double.parse(value['pack_factor']['pvg_factor'])
+                  //           .round();
+                  // }
                 } else {
                   sertemp.serVat = 0;
                   sertemp.sercost =
@@ -276,21 +276,21 @@ class CarRepairState extends State<CarRepair> {
                   }
                 }
               }
-              if (value['pack_factor'] == null) {
-                sertemp.packcost = pack_cost * (1).round();
-                sertemp.packVat = packVat.round();
-                serviceList.add(sertemp);
-              } else if (value['pack_factor'] != null &&
-                  value['pack_factor']['pvg_factor'] == null) {
-                sertemp.packcost = pack_cost * (1).round();
-                sertemp.packVat = packVat.round();
-                serviceList.add(sertemp);
-              } else {
-                sertemp.packcost = pack_cost *
-                    double.parse(value['pack_factor']['pvg_factor']).round();
-                sertemp.packVat = packVat.round();
-                serviceList.add(sertemp);
-              }
+              // if (value['pack_factor'] == null) {
+              //   sertemp.packcost = pack_cost * (1).round();
+              //   sertemp.packVat = packVat.round();
+              //   serviceList.add(sertemp);
+              // } else if (value['pack_factor'] != null &&
+              //     value['pack_factor']['pvg_factor'] == null) {
+              //   sertemp.packcost = pack_cost * (1).round();
+              //   sertemp.packVat = packVat.round();
+              //   serviceList.add(sertemp);
+              // } else {
+              //   sertemp.packcost = pack_cost *
+              //       double.parse(value['pack_factor']['pvg_factor']).round();
+              //   sertemp.packVat = packVat.round();
+              //   serviceList.add(sertemp);
+              // }
             }
             if (nonMapCount == 0) {
               isPriceShow = true;
