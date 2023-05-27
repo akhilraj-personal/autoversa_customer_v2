@@ -1,15 +1,21 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/support/chat_screen.dart';
+import 'package:autoversa/screens/tryout_page.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../utils/common_utils.dart';
 
 class Support extends StatefulWidget {
   final int click_id;
@@ -20,30 +26,9 @@ class Support extends StatefulWidget {
 }
 
 class SupportState extends State<Support> {
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     Future.delayed(Duration.zero, () {});
     init();
   }
@@ -56,7 +41,6 @@ class SupportState extends State<Support> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   Future<bool> _onWillPop() async {
@@ -78,6 +62,27 @@ class SupportState extends State<Support> {
         false;
   }
 
+  void launchWhatsApp({
+    required int phone,
+    required String message,
+  }) async {
+    String url() {
+      if (Platform.isAndroid) {
+        // add the [https]
+        return "https://wa.me/$phone/?text=${Uri.parse(message)}"; // new line
+      } else {
+        // add the [https]
+        return "https://api.whatsapp.com/send?phone=$phone=${Uri.parse(message)}"; // new line
+      }
+    }
+
+    if (await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
@@ -97,7 +102,6 @@ class SupportState extends State<Support> {
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
-            centerTitle: true,
             flexibleSpace: Container(
               alignment: Alignment.bottomCenter,
               width: width,
@@ -132,8 +136,8 @@ class SupportState extends State<Support> {
             ),
             title: Text(
               "Support - Chat",
-              style: montserratSemiBold.copyWith(
-                fontSize: 18,
+              style: montserratRegular.copyWith(
+                fontSize: width * 0.044,
                 color: Colors.white,
               ),
             ),
@@ -175,7 +179,7 @@ class SupportState extends State<Support> {
                         Text(
                           "Our advisor will be more than happy to help you. We are eager to discuss inquires. You may call us on number mentioned below during office hours for bookings and concern. Your happiness and saftey is our main priority. ",
                           style: montserratRegular.copyWith(
-                              fontSize: 12, color: black),
+                              fontSize: width * 0.038, color: black),
                         ).expand(),
                         16.width,
                       ],
@@ -195,8 +199,9 @@ class SupportState extends State<Support> {
                                     Padding(padding: EdgeInsets.all(8)),
                                     Text(
                                       "Office Time",
-                                      style: montserratRegular.copyWith(
-                                          fontSize: 12, color: black),
+                                      style: montserratMedium.copyWith(
+                                          fontSize: width * 0.038,
+                                          color: black),
                                     ),
                                   ],
                                 ),
@@ -208,7 +213,8 @@ class SupportState extends State<Support> {
                                     Text(
                                       ": 9:00AM - 6:00PM",
                                       style: montserratRegular.copyWith(
-                                          fontSize: 12, color: black),
+                                          fontSize: width * 0.038,
+                                          color: black),
                                     ),
                                   ],
                                 ),
@@ -225,8 +231,9 @@ class SupportState extends State<Support> {
                                     Padding(padding: EdgeInsets.all(8)),
                                     Text(
                                       "Working Days",
-                                      style: montserratRegular.copyWith(
-                                          fontSize: 12, color: black),
+                                      style: montserratMedium.copyWith(
+                                          fontSize: width * 0.038,
+                                          color: black),
                                     ),
                                   ],
                                 ),
@@ -238,7 +245,8 @@ class SupportState extends State<Support> {
                                     Text(
                                       ": Sunday - Thursday",
                                       style: montserratRegular.copyWith(
-                                          fontSize: 12, color: black),
+                                          fontSize: width * 0.038,
+                                          color: black),
                                     ),
                                   ],
                                 ),
@@ -273,13 +281,26 @@ class SupportState extends State<Support> {
                             text: 'CALL',
                             height: 55,
                             textStyle: montserratSemiBold.copyWith(
-                                color: Colors.white, fontSize: 14),
+                                color: Colors.white, fontSize: width * 0.04),
                             onTap: () async {
-                              const number =
-                                  '+971509766075'; //set the number here
-                              bool? res =
-                                  await FlutterPhoneDirectCaller.callNumber(
-                                      number);
+                              PermissionStatus phoneStatus =
+                                  await Permission.phone.request();
+                              if (phoneStatus == PermissionStatus.denied) {
+                                showCustomToast(context,
+                                    "This Permission is recommended for calling.",
+                                    bgColor: errorcolor, textColor: white);
+                              }
+                              if (phoneStatus ==
+                                  PermissionStatus.permanentlyDenied) {
+                                openAppSettings();
+                              }
+                              if (phoneStatus == PermissionStatus.granted) {
+                                const number =
+                                    '+971509766075'; //set the number here
+                                bool? res =
+                                    await FlutterPhoneDirectCaller.callNumber(
+                                        number);
+                              }
                             }).expand()
                       ],
                     )).paddingAll(16),
@@ -295,7 +316,7 @@ class SupportState extends State<Support> {
                                   borderRadius: BorderRadius.circular(10)),
                               backgroundColor: Colors.white,
                               child: Icon(
-                                Icons.chat_bubble,
+                                Icons.whatsapp,
                                 color: Colors.black,
                               ),
                               onPressed: () {}),
@@ -307,16 +328,18 @@ class SupportState extends State<Support> {
                             text: 'CHAT',
                             height: 55,
                             textStyle: montserratSemiBold.copyWith(
-                                color: Colors.white, fontSize: 14),
+                                color: Colors.white, fontSize: width * 0.04),
                             onTap: () {
                               // AMChatListScreen().launch(context,
                               //     pageRouteAnimation: PageRouteAnimation.Scale);
-                              Chat(
-                                      img: "assets/icons/support_icon.png",
-                                      name: "Support Agent")
-                                  .launch(context,
-                                      pageRouteAnimation:
-                                          PageRouteAnimation.Scale);
+                              // Chat(
+                              //         img: "assets/icons/support_icon.png",
+                              //         name: "Support Agent")
+                              //     .launch(context,
+                              //         pageRouteAnimation:
+                              //             PageRouteAnimation.Scale);
+                              launchWhatsApp(
+                                  phone: 918330070416, message: 'Hello');
                             }).expand()
                       ],
                     )).paddingAll(16),
