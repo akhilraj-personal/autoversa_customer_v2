@@ -93,8 +93,6 @@ class PackageDetailsState extends State<PackageDetails> {
       "pack_extra_details": pack_extra_details
     };
     prefs.setString("booking_data", json.encode(packdata));
-    print("++++++>>>>>>");
-    print(json.encode(packdata));
     setState(() => isbooked = false);
     Navigator.push(
         context,

@@ -458,24 +458,72 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Alert'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Please read before proceeding.\n'),
-                Text('● Mulkya should not be expired'),
-                Text('● Do not included in any illegal things'),
-              ],
-            ),
+          backgroundColor: context.cardColor,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Hold On",
+                style: montserratSemiBold.copyWith(
+                    fontSize: width * 0.04, color: black),
+              ),
+              16.height,
+              Text(
+                'Please read before proceeding.\n',
+                style: montserratMedium.copyWith(
+                    fontSize: width * 0.035, color: black),
+              ),
+              8.height,
+              Text(
+                '● Mulkya should not be expired',
+                style: montserratMedium.copyWith(
+                    fontSize: width * 0.035, color: black),
+              ),
+              4.height,
+              Text(
+                '● Be careful not to keep anything illicit inside the car',
+                style: montserratMedium.copyWith(
+                    fontSize: width * 0.035, color: black),
+              ),
+              16.height,
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          syanColor,
+                          lightblueColor,
+                        ],
+                      ),
+                    ),
+                    padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    child: Text(
+                      "OK",
+                      style: montserratSemiBold.copyWith(
+                          fontSize: width * 0.035, color: white),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+          contentPadding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12))),
         );
       },
     );
