@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -43,7 +42,7 @@ class ST {
   static ST of(BuildContext context) {
     final instance = ST.maybeOf(context);
     assert(instance != null,
-        'No instance of ST present in the widget tree. Did you add ST.delegate in localizationsDelegates?');
+        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
     return instance!;
   }
 
@@ -101,10 +100,10 @@ class ST {
     );
   }
 
-  /// `OTP Send Successfully`
+  /// `OTP Sent Successfully`
   String get otp_send_text {
     return Intl.message(
-      'OTP Send Successfully',
+      'OTP Sent Successfully',
       name: 'otp_send_text',
       desc: '',
       args: [],

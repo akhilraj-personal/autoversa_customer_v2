@@ -61,7 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "otp_resend_try":
             MessageLookupByLibrary.simpleMessage("OTP Send. Try again in"),
         "otp_send_text":
-            MessageLookupByLibrary.simpleMessage("OTP Send Successfully"),
+            MessageLookupByLibrary.simpleMessage("OTP Sent Successfully"),
         "pickup_options":
             MessageLookupByLibrary.simpleMessage("Pickup options"),
         "plate_number": MessageLookupByLibrary.simpleMessage("Plate Number"),

@@ -114,7 +114,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         click_count++;
         setState(() {});
         startTimer();
-        showCustomToast(context, "OTP Send Successfully",
+        showCustomToast(context, "OTP Sent Successfully",
             bgColor: toastgrey, textColor: whiteColor);
       } else {
         prefs.setBool('islogged', false);

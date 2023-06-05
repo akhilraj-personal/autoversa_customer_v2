@@ -4,7 +4,7 @@
   "valid_mobile": "أدخل رقم صحيح",
   "data_verify_text": "التحقق من البيانات",
   "no_network_text": "الاتصال بالإنترنت غير متوفر",
-  "otp_send_text": "أدخل OTP صالح",
+  "otp_send_text": "تم إرسال OTP بنجاح",
   "verify_me": "تحقق عني",
   "seconds_text": "ثانيا",
   "otp_resend_try":"إرسال OTP. حاول مرة أخرى في",

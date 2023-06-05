@@ -4,7 +4,7 @@
   "valid_mobile": "Enter Valid Number",
   "data_verify_text": "Verifying Data",
   "no_network_text": "Internet Connection Not Available",
-  "otp_send_text": "OTP Send Successfully",
+  "otp_send_text": "OTP Sent Successfully",
   "verify_me": "Verify Me",
   "seconds_text": "Second",
   "otp_resend_try":"OTP Send. Try again in",

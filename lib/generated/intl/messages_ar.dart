@@ -61,7 +61,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("الرجاء إدخال OTP صالح"),
         "otp_resend_try":
             MessageLookupByLibrary.simpleMessage("إرسال OTP. حاول مرة أخرى في"),
-        "otp_send_text": MessageLookupByLibrary.simpleMessage("أدخل OTP صالح"),
+        "otp_send_text":
+            MessageLookupByLibrary.simpleMessage("تم إرسال OTP بنجاح"),
         "pickup_options":
             MessageLookupByLibrary.simpleMessage("خيارات الالتقاط"),
         "plate_number": MessageLookupByLibrary.simpleMessage("رقم لوحة"),

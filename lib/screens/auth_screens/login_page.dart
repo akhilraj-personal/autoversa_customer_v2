@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController mobileNumber = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
+  bool signincolor = true;
 
   customerLogin() async {
     setState(() {
@@ -121,6 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       LanguageChangeProvider>()
                                                   .changeLocale("en");
                                               setState(() {});
+                                              print("english");
                                             },
                                             child: Text(
                                               'English',
@@ -142,6 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       LanguageChangeProvider>()
                                                   .changeLocale("ar");
                                               setState(() {});
+                                              print("arab");
                                             },
                                             child: Text(
                                               'عربي',
@@ -280,6 +283,9 @@ class _LoginPageState extends State<LoginPage> {
                                                                       whiteColor),
                                                               validator:
                                                                   (value) {
+                                                                print(value);
+                                                                signincolor =
+                                                                    false;
                                                                 return mobileNumberValidation(
                                                                     value,
                                                                     context);
@@ -300,8 +306,11 @@ class _LoginPageState extends State<LoginPage> {
                                                 if (_formKey.currentState!
                                                     .validate()) {
                                                   customerLogin();
+                                                  signincolor = true;
+                                                  setState(() {});
                                                 } else {
                                                   setState(() {
+                                                    signincolor = false;
                                                     isLoading = false;
                                                   });
                                                 }
@@ -311,24 +320,29 @@ class _LoginPageState extends State<LoginPage> {
                                           child: Stack(
                                             alignment: Alignment.bottomCenter,
                                             children: [
-                                              Container(
-                                                height: height * 0.045,
-                                                width: height * 0.37,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            14),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                          blurRadius: 16,
-                                                          color: syanColor
-                                                              .withOpacity(.6),
-                                                          spreadRadius: 0,
-                                                          blurStyle:
-                                                              BlurStyle.outer,
-                                                          offset: Offset(0, 0)),
-                                                    ]),
-                                              ),
+                                              signincolor
+                                                  ? Container(
+                                                      height: height * 0.045,
+                                                      width: height * 0.37,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(14),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                blurRadius: 16,
+                                                                color: syanColor
+                                                                    .withOpacity(
+                                                                        .6),
+                                                                spreadRadius: 0,
+                                                                blurStyle:
+                                                                    BlurStyle
+                                                                        .outer,
+                                                                offset: Offset(
+                                                                    0, 0)),
+                                                          ]),
+                                                    )
+                                                  : Container(),
                                               Container(
                                                 height: height * 0.075,
                                                 width: height * 0.4,
