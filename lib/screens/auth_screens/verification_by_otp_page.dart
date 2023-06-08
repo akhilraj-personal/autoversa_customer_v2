@@ -9,14 +9,11 @@ import 'package:autoversa/screens/auth_screens/signup_page.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:otp_autofill/otp_autofill.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sms_autofill/sms_autofill.dart';
-import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
+import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 
 import '../../services/pre_auth_services.dart';
 import '../../utils/common_utils.dart';
@@ -42,17 +39,27 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
   bool isOtpVerifying = false;
   String otppin = '';
 
-  int _otpCodeLength = 4;
-  bool _isLoadingButton = false;
-  bool _enableButton = false;
-  String _otpCode = "";
-  TextEditingController textEditingController = TextEditingController();
+  late OTPTextEditController controller;
+  late OTPInteractor _otpInteractor;
 
   @override
   void initState() {
-    OTPtimer = int.parse(widget.timer['gs_reotp_time']);
     super.initState();
     startTimer();
+    _otpInteractor = OTPInteractor();
+    _otpInteractor
+        .getAppSignature()
+        .then((value) => print('signature - $value'));
+    controller = OTPTextEditController(
+      codeLength: 4,
+      onCodeReceive: (code) => print('Your Application receive code - $code'),
+    )..startListenUserConsent(
+        (code) {
+          final exp = RegExp(r'(\d{4})');
+          return exp.stringMatch(code ?? '') ?? '';
+        },
+        strategies: [],
+      );
   }
 
   void startTimer() {
@@ -71,34 +78,11 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
     );
   }
 
-  BoxDecoration get _pinPutDecoration {
-    return BoxDecoration(
-      border: Border.all(color: greyColor),
-      borderRadius: BorderRadius.circular(12.0),
-    );
-  }
-
-  _onOtpCallBack(String otpCode, bool isAutofill) {
-    setState(() {
-      this._otpCode = otpCode;
-      if (otpCode.length == _otpCodeLength && isAutofill) {
-        _enableButton = false;
-        _isLoadingButton = true;
-        // submit_otp(otpCode);
-      } else if (otpCode.length == _otpCodeLength && !isAutofill) {
-        _enableButton = true;
-        _isLoadingButton = false;
-      } else {
-        _enableButton = false;
-      }
-    });
-  }
-
   @override
   void dispose() {
     _timer.cancel();
+    controller.stopListen();
     super.dispose();
-    textEditingController.dispose();
   }
 
   reSendOTP() async {
@@ -246,7 +230,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         print("333333333333");
         print(e.toString());
         setState(() => isOtpVerifying = false);
-        print(e.toString());
         showCustomToast(context, ST.of(context).toast_application_error,
             bgColor: errorcolor, textColor: whiteColor);
       });
@@ -413,27 +396,66 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         //   }, // end onSubmit
                         // ),
 
-                        TextFieldPin(
-                            textController: textEditingController,
-                            autoFocus: true,
-                            codeLength: _otpCodeLength,
-                            alignment: MainAxisAlignment.center,
-                            defaultBoxSize: width * 0.135,
-                            margin: 5,
-                            selectedBoxSize: width * 0.135,
-                            textStyle:
-                                montserratSemiBold.copyWith(fontSize: 16),
-                            defaultDecoration: _pinPutDecoration.copyWith(
-                                border: Border.all(
-                                    color: greyColor.withOpacity(0.6))),
-                            selectedDecoration: _pinPutDecoration,
-                            onChange: (verificationCode) {
-                              setState(() {
-                                otppin = verificationCode;
-                                print(otppin);
-                              });
-                              _onOtpCallBack(verificationCode, false);
-                            }),
+                        // TextFieldPin(
+                        //     textController: textEditingController,
+                        //     autoFocus: true,
+                        //     codeLength: _otpCodeLength,
+                        //     alignment: MainAxisAlignment.center,
+                        //     defaultBoxSize: width * 0.135,
+                        //     margin: 5,
+                        //     selectedBoxSize: width * 0.135,
+                        //     textStyle:
+                        //         montserratSemiBold.copyWith(fontSize: 16),
+                        //     defaultDecoration: _pinPutDecoration.copyWith(
+                        //         border: Border.all(
+                        //             color: greyColor.withOpacity(0.6))),
+                        //     selectedDecoration: _pinPutDecoration,
+                        //     onChange: (verificationCode) {
+                        //       setState(() {
+                        //         otppin = verificationCode;
+                        //         print(otppin);
+                        //       });
+                        //     }),
+
+                        // PinFieldAutoFill(
+                        //   codeLength: 4,
+                        //   decoration: const BoxLooseDecoration(
+                        //       radius: Radius.circular(12),
+                        //       strokeColorBuilder:
+                        //           FixedColorBuilder(Color(0xFF8C4A52))),
+                        //   currentCode: _code,
+                        //   onCodeSubmitted: (code) {},
+                        //   onCodeChanged: (code) {
+                        //     if (code!.length == 4) {
+                        //       FocusScope.of(context).requestFocus(FocusNode());
+                        //     }
+                        //   },
+                        // ),
+                        Center(
+                          child: PinCodeFields(
+                            controller: controller,
+                            length: 4,
+                            fieldBorderStyle: FieldBorderStyle.square,
+                            responsive: false,
+                            fieldHeight: 53.0,
+                            fieldWidth: 48.0,
+                            borderWidth: 1.0,
+                            activeBorderColor: syanColor,
+                            activeBackgroundColor: syanColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10.0),
+                            keyboardType: TextInputType.number,
+                            autoHideKeyboard: true,
+                            fieldBackgroundColor:
+                                Colors.black12.withOpacity(0.01),
+                            borderColor: Colors.black38,
+                            textStyle: montserratMedium.copyWith(
+                                fontSize: 20.0, color: blackColor),
+                            onComplete: (output) {
+                              otppin = output;
+                              print(otppin);
+                            },
+                          ),
+                        ),
                         SizedBox(height: 16),
                         Container(
                           child: isResend

@@ -551,7 +551,7 @@ class SummeryPageState extends State<SummeryPage> {
                                               color: blackColor,
                                               fontSize: width * 0.04)),
                                       Text(
-                                        packdata['package_cost'] != 0
+                                        packdata['package_cost'] != null
                                             ? widget.currency +
                                                 " " +
                                                 (packdata['package_cost']

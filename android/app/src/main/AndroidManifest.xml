@@ -51,10 +51,5 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCMBcZcBYFb0iCEKh4ntoRFF4LtVnnAMYo" />
-        <receiver android:name="com.khuttun.sms_otp_auto_verify.SmsBroadcastReceiver" android:exported="true">
-            <intent-filter>
-                <action android:name="com.khuttun.sms_otp_auto_verify.SMS_RECEIVED_ACTION" />
-            </intent-filter>
-        </receiver>
     </application>
 </manifest>

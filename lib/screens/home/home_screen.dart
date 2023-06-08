@@ -6,9 +6,7 @@ import 'package:autoversa/screens/booking/reschedule_screen.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
 import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
-import 'package:autoversa/screens/tryout_page.dart';
 import 'package:autoversa/screens/vehicle/home_vehicle_list_click.dart';
-import 'package:autoversa/screens/vehicle/vehicle_update_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +24,6 @@ import '../../services/post_auth_services.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/common_utils.dart';
 import '../../utils/text_utils.dart';
-// import '../NextScreen.dart';
 import '../settings/edit_profile.dart';
 import '../vehicle/vehicle_add_page.dart';
 
@@ -1550,7 +1547,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     //     context,
                                     //     MaterialPageRoute(
                                     //         builder: (context) =>
-                                    //             TryoutPage(title: "Test")));
+                                    //             TryOutPage()));
                                   },
                                   child: Stack(
                                     alignment: Alignment.topRight,

@@ -342,6 +342,9 @@ class PackageDetailsState extends State<PackageDetails> {
         ? Icons.stop_circle_outlined
         : Icons.play_circle_outline_sharp;
     final playrecordtext = isPlaying ? "Stop Playing" : "Play Recording";
+    final beforerecordtext = isRecording
+        ? "Press ⏹️ to stop audio recording"
+        : "Press 🎙️ to start audio recording";
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
@@ -1053,137 +1056,143 @@ class PackageDetailsState extends State<PackageDetails> {
                                     )
                                   : SizedBox(),
                               isServicing
-                                  ? Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          flex: 3,
-                                          child: Container(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      14, 0, 14, 14),
-                                              child: Text(
-                                                  ST
-                                                      .of(context)
-                                                      .press_record_dialogue,
-                                                  style: montserratRegular
-                                                      .copyWith(
-                                                          color: black,
-                                                          fontSize:
-                                                              width * 0.034)),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: <Widget>[
-                                                  AvatarGlow(
-                                                    endRadius: 60,
-                                                    glowColor: Colors.green,
-                                                    animate: animate,
-                                                    repeatPauseDuration:
-                                                        Duration(
-                                                            milliseconds: 100),
-                                                    child: CircleAvatar(
-                                                      radius: 22,
-                                                      backgroundColor:
-                                                          isRecording
-                                                              ? Colors.red
-                                                              : black,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          CircleAvatar(
-                                                            radius: 20,
-                                                            backgroundColor:
-                                                                isRecording
-                                                                    ? Colors.red
-                                                                    : white,
-                                                            child:
-                                                                RadiantGradientMask(
-                                                              child: IconButton(
-                                                                icon: Icon(icon,
-                                                                    color:
-                                                                        white,
-                                                                    size: 25),
-                                                                onPressed:
-                                                                    () async {
-                                                                  PermissionStatus
-                                                                      microphoneStatus =
-                                                                      await Permission
-                                                                          .microphone
-                                                                          .request();
-
-                                                                  if (microphoneStatus ==
-                                                                      PermissionStatus
-                                                                          .granted) {
-                                                                    await recorder
-                                                                        .toggleRecording();
-
-                                                                    final isRecording =
-                                                                        recorder
-                                                                            .isRecording;
-                                                                    recordPending =
-                                                                        recorder
-                                                                            .isRecording;
-                                                                    setState(
-                                                                        () {});
-
-                                                                    if (isRecording) {
-                                                                      timeController
-                                                                          .startTimer();
-                                                                    } else {
-                                                                      timeController
-                                                                          .stopTimer();
-                                                                      setState(
-                                                                          () {
-                                                                        recordLocation =
-                                                                            true;
-                                                                      });
-                                                                    }
-                                                                  }
-                                                                  if (microphoneStatus ==
-                                                                      PermissionStatus
-                                                                          .denied) {
-                                                                    showCustomToast(
-                                                                        context,
-                                                                        "This Permission is recommended for audio recording.",
-                                                                        bgColor:
-                                                                            errorcolor,
-                                                                        textColor:
-                                                                            white);
-                                                                  }
-                                                                  if (microphoneStatus ==
-                                                                      PermissionStatus
-                                                                          .permanentlyDenied) {
-                                                                    openAppSettings();
-                                                                  }
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          AMTimerWidget(
-                                                              controller:
-                                                                  timeController),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                  ? recordLocation == false
+                                      ? Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 3,
+                                              child: Container(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          14, 0, 14, 14),
+                                                  child: Text(beforerecordtext,
+                                                      style: montserratRegular
+                                                          .copyWith(
+                                                              color: black,
+                                                              fontSize: width *
+                                                                  0.034)),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: <Widget>[
+                                                      AvatarGlow(
+                                                        endRadius: 60,
+                                                        glowColor: Colors.green,
+                                                        animate: animate,
+                                                        repeatPauseDuration:
+                                                            Duration(
+                                                                milliseconds:
+                                                                    100),
+                                                        child: CircleAvatar(
+                                                          radius: 22,
+                                                          backgroundColor:
+                                                              isRecording
+                                                                  ? Colors.red
+                                                                  : black,
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              CircleAvatar(
+                                                                radius: 20,
+                                                                backgroundColor:
+                                                                    isRecording
+                                                                        ? Colors
+                                                                            .red
+                                                                        : white,
+                                                                child:
+                                                                    RadiantGradientMask(
+                                                                  child:
+                                                                      IconButton(
+                                                                    icon: Icon(
+                                                                        icon,
+                                                                        color:
+                                                                            white,
+                                                                        size:
+                                                                            25),
+                                                                    onPressed:
+                                                                        () async {
+                                                                      PermissionStatus
+                                                                          microphoneStatus =
+                                                                          await Permission
+                                                                              .microphone
+                                                                              .request();
+
+                                                                      if (microphoneStatus ==
+                                                                          PermissionStatus
+                                                                              .granted) {
+                                                                        await recorder
+                                                                            .toggleRecording();
+
+                                                                        final isRecording =
+                                                                            recorder.isRecording;
+                                                                        recordPending =
+                                                                            recorder.isRecording;
+                                                                        setState(
+                                                                            () {});
+
+                                                                        if (isRecording) {
+                                                                          timeController
+                                                                              .startTimer();
+                                                                        } else {
+                                                                          timeController
+                                                                              .stopTimer();
+                                                                          setState(
+                                                                              () {
+                                                                            recordLocation =
+                                                                                true;
+                                                                          });
+                                                                        }
+                                                                      }
+                                                                      if (microphoneStatus ==
+                                                                          PermissionStatus
+                                                                              .denied) {
+                                                                        showCustomToast(
+                                                                            context,
+                                                                            "This Permission is recommended for audio recording.",
+                                                                            bgColor:
+                                                                                errorcolor,
+                                                                            textColor:
+                                                                                white);
+                                                                      }
+                                                                      if (microphoneStatus ==
+                                                                          PermissionStatus
+                                                                              .permanentlyDenied) {
+                                                                        openAppSettings();
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              // AMTimerWidget(
+                                                              //     controller:
+                                                              //         timeController),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox(
+                                          height: 12,
+                                        )
                                   : SizedBox(),
                               recordLocation == true
                                   ? Row(

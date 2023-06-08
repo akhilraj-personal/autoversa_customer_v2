@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:autoversa/constant/image_const.dart';
+import 'package:autoversa/constant/text_style.dart';
 import 'package:flutter/material.dart';
 
 class TimerController extends ValueNotifier<bool> {
@@ -69,7 +71,9 @@ class AMTimerWidgetState extends State<AMTimerWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
+  Widget build(BuildContext context) => Center(
+        child: buildTime(),
+      );
+
+  buildTime() {}
 }
