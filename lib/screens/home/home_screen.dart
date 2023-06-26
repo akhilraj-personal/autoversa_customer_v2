@@ -164,7 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _getNotificationList() async {
-    Map req = {};
+    final prefs = await SharedPreferences.getInstance();
+    Map req = {"custId": prefs.getString('cust_id')};
+    print(req);
     await getCustomerNotificationList(req).then((value) {
       if (value['ret_data'] == "success") {
         for (var notify in value['notification_list']) {

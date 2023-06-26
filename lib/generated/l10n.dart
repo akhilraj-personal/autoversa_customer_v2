@@ -10,7 +10,7 @@ import 'intl/messages_all.dart';
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
 // ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
-// ignore_for_file: avoid_redundant_argument_values, avoid_escaping_inner_quotes
+// ignore_for_file: avoid_redundant_argument_values, avoid_eSTcaping_inner_quoteST
 
 class ST {
   ST();
@@ -19,7 +19,7 @@ class ST {
 
   static ST get current {
     assert(_current != null,
-        'No instance of ST was loaded. Try to initialize the ST delegate before accessing ST.current.');
+        'No instance of ST was loaded. Try to initialize the S delegate before accessing ST.current.');
     return _current!;
   }
 

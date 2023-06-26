@@ -5,6 +5,7 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart';
 import 'package:autoversa/main.dart';
+import 'package:autoversa/screens/package_screens/coupon_list_screen.dart';
 import 'package:autoversa/screens/package_screens/sound_player_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:intl/intl.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SummeryPage extends StatefulWidget {
@@ -23,11 +25,25 @@ class SummeryPage extends StatefulWidget {
   final List<dynamic> custvehlist;
   final int selectedveh;
   String currency;
+  var couponid;
+  var coupondiscounttype;
+  var coupondiscount;
+  var couponcode;
+  var discountamount;
+  var netpayableamount;
+  late bool couponapplied;
   SummeryPage(
       {required this.package_id,
       required this.custvehlist,
       required this.selectedveh,
       required this.currency,
+      required this.couponid,
+      required this.coupondiscounttype,
+      required this.coupondiscount,
+      required this.couponcode,
+      required this.discountamount,
+      required this.netpayableamount,
+      required this.couponapplied,
       super.key});
 
   @override
@@ -48,6 +64,19 @@ class SummeryPageState extends State<SummeryPage> {
   final player = SoundPlayer();
   TextEditingController additionalcommentsController = TextEditingController();
   var packdataaudio;
+  var couponcodeselected;
+  var coupondiscountreceived;
+  var coupondiscounttypereceived;
+  var couponnetpayable;
+  var couponapplieddiscount;
+  var packagetotalamount;
+  var coupon_id;
+  var discount;
+  late double netpayable = 0.0;
+  bool couponapplied = false;
+  late double highestDiscountAmount = 0.0;
+  List<dynamic> highestDiscountCoupons = [];
+  late List couponList = [];
 
   @override
   void initState() {
@@ -55,6 +84,8 @@ class SummeryPageState extends State<SummeryPage> {
     init();
     Future.delayed(Duration.zero, () {
       _setdatas();
+      getCouponList();
+      appliedcoupon(0, 0, 0, 0);
     });
   }
 
@@ -70,10 +101,145 @@ class SummeryPageState extends State<SummeryPage> {
       if (packdata['package_cost'] != null) {
         totalamount = double.parse(packdata['package_cost'].toString()) +
             double.parse(packdata['pick_up_price'].toString());
+        netpayable = double.parse(packdata['package_cost'].toString()) +
+            double.parse(packdata['pick_up_price'].toString());
+        setState(() {});
       } else {
         totalamount = double.parse(packdata['pick_up_price'].toString());
+        netpayable = double.parse(packdata['pick_up_price'].toString());
+        setState(() {});
       }
     });
+  }
+
+  getCouponList() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map req = {
+      "cust_id": prefs.getString("cust_id"),
+      "pack_id": packdata['package_id'],
+      "vgroup_id": packdata['veh_groupid'],
+      "totalamount": totalamount.toString(),
+    };
+    couponList = [];
+    await getCouponsListForCustomer(req).then((value) {
+      if (value['ret_data'] == "success") {
+        couponList = value['coupons'];
+        for (int i = 0; i < couponList.length; i++) {
+          if (double.parse(couponList[i]['discountamount'].toString()) >
+              highestDiscountAmount) {
+            highestDiscountAmount =
+                double.parse(couponList[i]['discountamount'].toString());
+            highestDiscountCoupons = [couponList[i]];
+          } else if (couponList[i]['discountamount'] == highestDiscountAmount) {
+            highestDiscountCoupons.add(couponList[i]);
+          }
+        }
+        setState(() {
+          couponList = highestDiscountCoupons;
+        });
+      }
+    }).catchError((e) {
+      print(e.toString());
+      showCustomToast(context, ST.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: Colors.white);
+    });
+  }
+
+  appliedcoupon(couponid, coupondiscounttype, coupondiscount, couponcode) {
+    if (widget.couponid == null) {
+      netpayable = 0.0;
+      coupon_id = couponid;
+      couponcodeselected = couponcode.toUpperCase();
+      coupondiscountreceived = coupondiscount;
+      coupondiscounttypereceived = coupondiscounttype;
+      setState(() {});
+      if (coupondiscounttype == "1") {
+        couponapplied = true;
+        netpayable =
+            totalamount - (totalamount * (double.parse(coupondiscount) / 100));
+        discount = (double.parse(totalamount.toString()) -
+                double.parse(netpayable.toString()))
+            .round();
+        setState(() {});
+        showCustomToast(
+            context,
+            "Coupon applied successfully. You saved up to AED " +
+                discount.toString() +
+                " for this booking",
+            bgColor: black,
+            textColor: white);
+      } else if (coupondiscounttype == "0") {
+        couponapplied = true;
+        netpayable = totalamount - (double.parse(coupondiscount));
+        discount = (double.parse(totalamount.toString()) -
+                double.parse(netpayable.toString()))
+            .round();
+        showCustomToast(
+            context,
+            "Coupon applied successfully. You saved up to AED " +
+                discount.toString() +
+                " for this booking",
+            bgColor: black,
+            textColor: white);
+        setState(() {});
+      }
+    } else if (widget.couponid != null) {
+      netpayable = 0.0;
+      coupon_id = widget.couponid;
+      couponcodeselected = widget.couponcode.toUpperCase();
+      coupondiscountreceived = widget.coupondiscount;
+      coupondiscounttypereceived = widget.coupondiscounttype;
+      couponnetpayable = widget.netpayableamount;
+      couponapplieddiscount = widget.discountamount;
+      setState(() {});
+      if (coupondiscounttypereceived == "1") {
+        couponapplied = true;
+        netpayable = couponnetpayable;
+        discount = couponapplieddiscount.round();
+        showCustomToast(
+            context,
+            "Coupon applied successfully. You saved up to AED " +
+                discount.toString() +
+                " for this booking",
+            bgColor: black,
+            textColor: white);
+        setState(() {});
+      } else if (coupondiscounttypereceived == "0") {
+        couponapplied = true;
+        netpayable = couponnetpayable;
+        discount = couponapplieddiscount;
+        showCustomToast(
+            context,
+            "Coupon applied successfully. You saved up to AED " +
+                discount.toString() +
+                " for this booking",
+            bgColor: black,
+            textColor: white);
+        setState(() {});
+      }
+    }
+  }
+
+  Removedappliedcoupon(coupontype, coupondiscount) {
+    if (coupontype == "1") {
+      couponapplied = false;
+      netpayable = totalamount;
+      discount = (double.parse(totalamount.toString()) +
+              double.parse(netpayable.toString()))
+          .round();
+      showCustomToast(context, "Coupon removed",
+          bgColor: black, textColor: white);
+      setState(() {});
+    } else if (coupontype == "0") {
+      couponapplied = false;
+      netpayable = totalamount + (double.parse(coupondiscount));
+      discount = (double.parse(totalamount.toString()) -
+              double.parse(netpayable.toString()))
+          .round();
+      showCustomToast(context, "Coupon removed",
+          bgColor: black, textColor: white);
+      setState(() {});
+    }
   }
 
   Future<void> init() async {
@@ -123,9 +289,11 @@ class SummeryPageState extends State<SummeryPage> {
         "gs_vat": packdata['gs_vat'].toStringAsFixed(2),
         "veh_groupid": packdata['veh_groupid'],
         "ser_veh_groupid": packdata['ser_veh_groupid'],
-        "total_amount": totalamount.round(),
+        "total_amount": widget.netpayableamount != null && couponapplied == true
+            ? widget.netpayableamount.round()
+            : netpayable.round(),
         "advance": "0",
-        "discount": "0",
+        "discount": discount != null ? discount : "0",
         "bk_branchid": 1,
         'complaint': additionalcommentsController.text.toString(),
         "slot": packdata['selected_timeid'],
@@ -135,6 +303,7 @@ class SummeryPageState extends State<SummeryPage> {
         "bk_pickup_cost":
             (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
                 .toStringAsFixed(2),
+        "coupon_id": coupon_id != null ? coupon_id : null,
       });
       Map req = {
         'bookingattachment': audio,
@@ -157,9 +326,11 @@ class SummeryPageState extends State<SummeryPage> {
         "gs_vat": packdata['gs_vat'].toStringAsFixed(2),
         "veh_groupid": packdata['veh_groupid'],
         "ser_veh_groupid": packdata['ser_veh_groupid'],
-        "total_amount": totalamount.round(),
+        "total_amount": widget.netpayableamount != null && couponapplied == true
+            ? widget.netpayableamount.round()
+            : netpayable.round(),
         "advance": "0",
-        "discount": "0",
+        "discount": discount != null ? discount : "0",
         "bk_branchid": 1,
         'complaint': additionalcommentsController.text.toString(),
         "slot": packdata['selected_timeid'],
@@ -169,6 +340,7 @@ class SummeryPageState extends State<SummeryPage> {
         "bk_pickup_cost":
             (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
                 .toStringAsFixed(2),
+        "coupon_id": coupon_id != 0 ? coupon_id : null,
       };
       print("send items ==>");
       print(req);
@@ -186,8 +358,6 @@ class SummeryPageState extends State<SummeryPage> {
         ),
       );
       var retdata = jsonDecode(response.toString());
-      print("retdata1 ==>");
-      print(retdata);
       if (retdata['ret_data'] == "success") {
         createPayment(retdata['booking_id'], retdata['payment_details']);
         bookId = retdata['booking_id'];
@@ -198,19 +368,15 @@ class SummeryPageState extends State<SummeryPage> {
         bookingdate = packdata['selected_date'];
         await prefs.remove("booking_data");
       } else {
-        print("retdata2 ==>");
-        print(retdata['ret_data']);
         showCustomToast(context, "Couldn't complete booking",
-            bgColor: errorcolor, textColor: whiteColor);
+            bgColor: errorcolor, textColor: white);
       }
     } catch (e) {
-      print("retdata3 ==>");
-      print(e.toString());
       setState(() {
         isproceeding = false;
       });
       showCustomToast(context, ST.of(context).toast_application_error,
-          bgColor: errorcolor, textColor: whiteColor);
+          bgColor: errorcolor, textColor: white);
     }
   }
 
@@ -275,7 +441,9 @@ class SummeryPageState extends State<SummeryPage> {
       Map<String, dynamic> booking = {
         'custId': prefs.getString('cust_id'),
         'book_id': bookId,
-        'tot_amount': totalamount.round(),
+        'tot_amount': widget.netpayableamount != null && couponapplied == true
+            ? widget.netpayableamount.round()
+            : netpayable.round(),
         'trxn_id': trnxId,
         'audiofile': audiofile,
         'slot': slot,
@@ -287,7 +455,7 @@ class SummeryPageState extends State<SummeryPage> {
         } else {
           setState(() => isproceeding = false);
           showCustomToast(context, value['ret_data'],
-              bgColor: errorcolor, textColor: whiteColor);
+              bgColor: errorcolor, textColor: white);
         }
       });
 
@@ -510,7 +678,7 @@ class SummeryPageState extends State<SummeryPage> {
                                                   .toUpperCase(),
                                               style:
                                                   montserratSemiBold.copyWith(
-                                                      color: blackColor,
+                                                      color: black,
                                                       fontSize: width * 0.04),
                                               maxLines: 2)
                                           : SizedBox(),
@@ -528,7 +696,7 @@ class SummeryPageState extends State<SummeryPage> {
                                                       ['cv_year'] +
                                                   " )",
                                               style: montserratMedium.copyWith(
-                                                  color: blackColor,
+                                                  color: black,
                                                   fontSize: width * 0.034),
                                               overflow: TextOverflow.clip,
                                               maxLines: 5)
@@ -541,14 +709,14 @@ class SummeryPageState extends State<SummeryPage> {
                                                   widget.custvehlist[widget.selectedveh]
                                                       ['cv_year'] +
                                                   " )",
-                                              style: montserratMedium.copyWith(color: blackColor, fontSize: width * 0.034),
+                                              style: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
                                               overflow: TextOverflow.clip,
                                               maxLines: 5),
                                       Divider(),
                                       Text(widget.package_id['pkg_name'],
                                           overflow: TextOverflow.ellipsis,
                                           style: montserratSemiBold.copyWith(
-                                              color: blackColor,
+                                              color: black,
                                               fontSize: width * 0.04)),
                                       Text(
                                         packdata['package_cost'] != null
@@ -566,7 +734,7 @@ class SummeryPageState extends State<SummeryPage> {
                                       Text(
                                         packdata['pick_type_name'] ?? "",
                                         style: montserratSemiBold.copyWith(
-                                            color: blackColor,
+                                            color: black,
                                             fontSize: width * 0.04),
                                       ),
                                       Text(
@@ -604,7 +772,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Pickup Location",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: width * 0.034),
+                                color: black, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -671,7 +839,7 @@ class SummeryPageState extends State<SummeryPage> {
                           //           "",
                           //       overflow: TextOverflow.clip,
                           //       style: montserratMedium.copyWith(
-                          //           color: blackColor, fontSize: width * 0.04),
+                          //           color: black, fontSize: width * 0.04),
                           //     ),
                           //   ),
                           // ),
@@ -697,7 +865,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Drop Location",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: width * 0.034),
+                                color: black, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -763,7 +931,7 @@ class SummeryPageState extends State<SummeryPage> {
                           //       packdata['drop_location']['cad_address'] ?? "",
                           //       overflow: TextOverflow.clip,
                           //       style: montserratMedium.copyWith(
-                          //         color: blackColor,
+                          //         color: black,
                           //         fontSize: width * 0.04,
                           //       ),
                           //     ),
@@ -791,7 +959,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Selected Date & Time",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: width * 0.034),
+                                color: black, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -914,9 +1082,389 @@ class SummeryPageState extends State<SummeryPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
+                            "Savings",
+                            style: montserratSemiBold.copyWith(
+                              color: black,
+                              fontSize: width * 0.034,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    couponapplied
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: couponList.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.only(
+                                  left: 15.0,
+                                  right: 15.0,
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: Colors.grey.shade300,
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.only(top: 15.0),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                height: 35,
+                                                width: 35,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      lightblueColor,
+                                                      syanColor,
+                                                    ],
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Image.asset(
+                                                      ImageConst.coupon_icon,
+                                                      width: 25,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              8.width,
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Flexible(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Flexible(
+                                                              child: couponList[
+                                                                              index]
+                                                                          [
+                                                                          'coupon_discount_type'] ==
+                                                                      "1"
+                                                                  ? Text(
+                                                                      "You Saved " +
+                                                                          coupondiscountreceived +
+                                                                          "% with this code",
+                                                                      style: montserratSemiBold.copyWith(
+                                                                          fontSize:
+                                                                              width * 0.04),
+                                                                    )
+                                                                  : Text(
+                                                                      "You Saved " +
+                                                                          coupondiscountreceived +
+                                                                          " AED with this code",
+                                                                      style: montserratSemiBold.copyWith(
+                                                                          fontSize:
+                                                                              width * 0.04),
+                                                                    ),
+                                                            ),
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Removedappliedcoupon(
+                                                                    coupondiscounttypereceived,
+                                                                    coupondiscountreceived);
+                                                              },
+                                                              child: Text(
+                                                                "Remove",
+                                                                style:
+                                                                    montserratMedium
+                                                                        .copyWith(
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.04,
+                                                                  color:
+                                                                      warningcolor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Text(
+                                                          'Code Applied',
+                                                          style:
+                                                              montserratRegular
+                                                                  .copyWith(
+                                                            fontSize:
+                                                                width * 0.04,
+                                                            color: greyColor,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ).expand(),
+                                            ],
+                                          ).paddingOnly(
+                                              right: 16.0,
+                                              left: 16.0,
+                                              bottom: 16.0),
+                                        ],
+                                      ),
+                                    ).paddingBottom(16.0),
+                                  ],
+                                ),
+                              );
+                            },
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: couponList.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.only(
+                                  left: 15.0,
+                                  right: 15.0,
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: Colors.grey.shade300,
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.only(top: 15.0),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                height: 35,
+                                                width: 35,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      lightblueColor,
+                                                      syanColor,
+                                                    ],
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Image.asset(
+                                                      ImageConst.coupon_icon,
+                                                      width: 25,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              8.width,
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Flexible(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Flexible(
+                                                              child: couponList[
+                                                                              index]
+                                                                          [
+                                                                          'coupon_discount_type'] ==
+                                                                      "1"
+                                                                  ? Text(
+                                                                      "Save " +
+                                                                          couponList[index]
+                                                                              [
+                                                                              'coupon_discount'] +
+                                                                          " % more on this booking",
+                                                                      style: montserratSemiBold.copyWith(
+                                                                          fontSize:
+                                                                              width * 0.0425),
+                                                                    )
+                                                                  : Text(
+                                                                      "Save AED " +
+                                                                          couponList[index]
+                                                                              [
+                                                                              'coupon_discount'] +
+                                                                          " more on this booking",
+                                                                      style: montserratSemiBold.copyWith(
+                                                                          fontSize:
+                                                                              width * 0.0425),
+                                                                    ),
+                                                            ),
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                appliedcoupon(
+                                                                    couponList[
+                                                                            index]
+                                                                        [
+                                                                        'coupon_id'],
+                                                                    couponList[
+                                                                            index]
+                                                                        [
+                                                                        'coupon_discount_type'],
+                                                                    couponList[
+                                                                            index]
+                                                                        [
+                                                                        'coupon_discount'],
+                                                                    couponList[
+                                                                            index]
+                                                                        [
+                                                                        'coupon_code']);
+                                                              },
+                                                              child: Text(
+                                                                "Apply",
+                                                                style:
+                                                                    montserratMedium
+                                                                        .copyWith(
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.04,
+                                                                  color:
+                                                                      warningcolor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Text(
+                                                          'Code: ' +
+                                                              couponList[index][
+                                                                      'coupon_code']
+                                                                  .toUpperCase(),
+                                                          style:
+                                                              montserratRegular
+                                                                  .copyWith(
+                                                            fontSize:
+                                                                width * 0.04,
+                                                            color: greyColor,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ).expand(),
+                                            ],
+                                          ).paddingOnly(
+                                              right: 16.0, left: 16.0),
+                                          8.height,
+                                          Divider(
+                                              color: divider_grey_color,
+                                              thickness: 1.5,
+                                              indent: 20,
+                                              endIndent: 20),
+                                          8.height,
+                                          Row(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text("View all Coupons",
+                                                      style: montserratSemiBold
+                                                          .copyWith(
+                                                              color: syanColor,
+                                                              fontSize: width *
+                                                                  0.04)),
+                                                  4.width,
+                                                  Icon(Icons.arrow_forward,
+                                                      color: syanColor,
+                                                      size: 22),
+                                                ],
+                                              ).onTap(
+                                                () async {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) {
+                                                        return CouponListScreen(
+                                                          clickid: "direct",
+                                                          packageid: packdata[
+                                                                  'package_id']
+                                                              .toString(),
+                                                          vehiclegroupid: packdata[
+                                                                  'veh_groupid']
+                                                              .toString(),
+                                                          totalamount:
+                                                              totalamount
+                                                                  .toString(),
+                                                          package_id:
+                                                              widget.package_id,
+                                                          custvehlist: widget
+                                                              .custvehlist,
+                                                          selectedveh: widget
+                                                              .selectedveh,
+                                                          currency:
+                                                              widget.currency,
+                                                          bk_data: {},
+                                                          packid: null,
+                                                          vehiclegroup: null,
+                                                        );
+                                                      },
+                                                    ),
+                                                  );
+                                                },
+                                              ).expand()
+                                            ],
+                                          ).paddingOnly(
+                                              right: 16.0, left: 16.0),
+                                          16.height,
+                                        ],
+                                      ),
+                                    ).paddingBottom(16.0),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                    Divider(
+                        color: divider_grey_color,
+                        thickness: 1.5,
+                        indent: 20,
+                        endIndent: 20),
+                    Container(
+                      margin: EdgeInsets.only(left: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
                             "Additional Comments",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: width * 0.034),
+                                color: black, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -929,7 +1477,7 @@ class SummeryPageState extends State<SummeryPage> {
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(16)),
-                            color: whiteColor),
+                            color: white),
                         child: TextField(
                             keyboardType: TextInputType.multiline,
                             minLines: 1,
@@ -941,7 +1489,7 @@ class SummeryPageState extends State<SummeryPage> {
                                 counterText: "",
                                 hintText: ST.of(context).your_message_here,
                                 hintStyle: montserratMedium.copyWith(
-                                    color: blackColor, fontSize: width * 0.04),
+                                    color: black, fontSize: width * 0.04),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide:
                                       BorderSide(color: greyColor, width: 0.5),
@@ -974,7 +1522,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             "Recordings",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: width * 0.034),
+                                color: black, fontSize: width * 0.034),
                           ),
                         ],
                       ),
@@ -1079,7 +1627,7 @@ class SummeryPageState extends State<SummeryPage> {
                                 Text("No Recordings",
                                     style: montserratRegular.copyWith(
                                       fontSize: width * 0.04,
-                                      color: blackColor,
+                                      color: black,
                                     )),
                               ],
                             ),
@@ -1096,14 +1644,14 @@ class SummeryPageState extends State<SummeryPage> {
                       height: 16,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 30.0),
+                      margin: EdgeInsets.only(left: 30.0, right: 20.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             "Grand Total: ",
                             style: montserratSemiBold.copyWith(
-                                color: blackColor, fontSize: width * 0.034),
+                                color: black, fontSize: width * 0.034),
                           ),
                           Text(
                             widget.currency +
@@ -1112,6 +1660,78 @@ class SummeryPageState extends State<SummeryPage> {
                             style: montserratSemiBold.copyWith(
                                 color: warningcolor, fontSize: width * 0.04),
                           ),
+                        ],
+                      ),
+                    ),
+                    4.height,
+                    couponapplied
+                        ? Container(
+                            margin: EdgeInsets.only(left: 30.0, right: 20.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                couponcodeselected != null
+                                    ? Text(
+                                        "Coupon - " + (couponcodeselected),
+                                        style: montserratSemiBold.copyWith(
+                                            color: blueColor,
+                                            fontSize: width * 0.034),
+                                      )
+                                    : Text(
+                                        "Coupon",
+                                        style: montserratSemiBold.copyWith(
+                                            color: blueColor,
+                                            fontSize: width * 0.034),
+                                      ),
+                                discount != null
+                                    ? Text(
+                                        widget.currency +
+                                            " " +
+                                            (discount.round()).toString(),
+                                        style: montserratSemiBold.copyWith(
+                                            color: warningcolor,
+                                            fontSize: width * 0.04),
+                                      )
+                                    : Text(
+                                        widget.currency + " " + "0",
+                                        style: montserratSemiBold.copyWith(
+                                            color: warningcolor,
+                                            fontSize: width * 0.04),
+                                      ),
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
+                    4.height,
+                    Container(
+                      margin: EdgeInsets.only(left: 30.0, right: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Net Payable: ",
+                            style: montserratSemiBold.copyWith(
+                                color: black, fontSize: width * 0.034),
+                          ),
+                          widget.netpayableamount != null &&
+                                  couponapplied == true
+                              ? Text(
+                                  widget.currency +
+                                      " " +
+                                      (widget.netpayableamount.round())
+                                          .toString(),
+                                  style: montserratSemiBold.copyWith(
+                                      color: warningcolor,
+                                      fontSize: width * 0.04),
+                                )
+                              : Text(
+                                  widget.currency +
+                                      " " +
+                                      (netpayable.round()).toString(),
+                                  style: montserratSemiBold.copyWith(
+                                      color: warningcolor,
+                                      fontSize: width * 0.04),
+                                ),
                         ],
                       ),
                     ),
@@ -1171,7 +1791,7 @@ class SummeryPageState extends State<SummeryPage> {
                                       Transform.scale(
                                         scale: 0.7,
                                         child: CircularProgressIndicator(
-                                          color: whiteColor,
+                                          color: white,
                                         ),
                                       ),
                                     ],
@@ -1200,7 +1820,7 @@ class CustomWarning extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: new BoxDecoration(
-          color: whiteColor,
+          color: white,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(0),
           boxShadow: [
@@ -1243,7 +1863,7 @@ class CustomWarning extends StatelessWidget {
                     Text("Awaiting Payment",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
-                            fontSize: width * 0.034, color: whiteColor)),
+                            fontSize: width * 0.034, color: white)),
                   ],
                 )
               ],
@@ -1257,7 +1877,7 @@ class CustomWarning extends StatelessWidget {
                     "Please check dashboard to complete payment for further proceedings.",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
-                        fontSize: width * 0.034, color: blackColor))),
+                        fontSize: width * 0.034, color: black))),
             SizedBox(
               height: 16,
             ),
@@ -1279,7 +1899,7 @@ class CustomWarning extends StatelessWidget {
                     )),
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Text('OK',
-                    style: montserratSemiBold.copyWith(color: whiteColor)),
+                    style: montserratSemiBold.copyWith(color: white)),
               ),
             ),
             SizedBox(
@@ -1300,7 +1920,7 @@ class CustomSuccess extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: new BoxDecoration(
-          color: whiteColor,
+          color: white,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(0),
           boxShadow: [
@@ -1329,7 +1949,7 @@ class CustomSuccess extends StatelessWidget {
                     ],
                   )),
                 ),
-                // Container(height: 130, color: blackColor),
+                // Container(height: 130, color: black),
                 Column(
                   children: [
                     Image.asset(
@@ -1343,7 +1963,7 @@ class CustomSuccess extends StatelessWidget {
                     Text("Booking Successfull",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
-                            fontSize: width * 0.034, color: whiteColor)),
+                            fontSize: width * 0.034, color: white)),
                   ],
                 )
               ],
@@ -1356,7 +1976,7 @@ class CustomSuccess extends StatelessWidget {
                 child: Text("Please check dashboard for booking status",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
-                        fontSize: width * 0.034, color: blackColor))),
+                        fontSize: width * 0.034, color: black))),
             SizedBox(
               height: 16,
             ),
@@ -1379,7 +1999,7 @@ class CustomSuccess extends StatelessWidget {
                     )),
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Text('OK',
-                    style: montserratSemiBold.copyWith(color: whiteColor)),
+                    style: montserratSemiBold.copyWith(color: white)),
               ),
             ),
             SizedBox(

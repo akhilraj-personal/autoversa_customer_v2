@@ -572,7 +572,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     package_id: widget.package_id,
                     custvehlist: widget.custvehlist,
                     selectedveh: widget.selectedveh,
-                    currency: widget.currency)));
+                    currency: widget.currency,
+                    couponid: null,
+                    coupondiscounttype: null,
+                    coupondiscount: null,
+                    couponcode: null,
+                    discountamount: null,
+                    netpayableamount: null,
+                    couponapplied: false)));
       }
     } else {
       if (ptempdata == "" || dtempdata == "") {
@@ -612,11 +619,17 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => SummeryPage(
-                          package_id: widget.package_id,
-                          custvehlist: widget.custvehlist,
-                          selectedveh: widget.selectedveh,
-                          currency: widget.currency,
-                        )));
+                        package_id: widget.package_id,
+                        custvehlist: widget.custvehlist,
+                        selectedveh: widget.selectedveh,
+                        currency: widget.currency,
+                        couponid: null,
+                        coupondiscounttype: null,
+                        coupondiscount: null,
+                        couponcode: null,
+                        discountamount: null,
+                        netpayableamount: null,
+                        couponapplied: false)));
             setState(() => isproceeding = false);
           } else {
             setState(() => isproceeding = false);

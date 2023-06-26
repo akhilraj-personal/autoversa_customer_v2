@@ -233,3 +233,12 @@ Future updateCustomerVehicle(Map req) async {
   return handleResponse(await securedPostRequest(
       'Customer/CustomerVehicleController/update', req));
 }
+
+Future getCouponsListForCustomer(Map req) async {
+  return handleResponse(
+      await securedPostRequest('get_couponsforcustomer', req));
+}
+
+Future CheckAppliedCoupon(Map req) async {
+  return handleResponse(await securedPostRequest('check_appliedcoupon', req));
+}

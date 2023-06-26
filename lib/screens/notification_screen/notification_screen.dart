@@ -26,32 +26,11 @@ class NotificationPage extends StatefulWidget {
 
 class NotificationPageState extends State<NotificationPage> {
   late List<NotificationModel> notificationList = [];
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
   bool isActive = true;
 
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     init();
     Future.delayed(Duration.zero, () {
       _getNotificationList();
@@ -67,7 +46,8 @@ class NotificationPageState extends State<NotificationPage> {
 
   _getNotificationList() async {
     notificationList = [];
-    Map req = {};
+    final prefs = await SharedPreferences.getInstance();
+    Map req = {"custId": prefs.getString('cust_id')};
     await getCustomerNotificationList(req).then((value) {
       if (value['ret_data'] == "success") {
         for (var notify in value['notification_list']) {
@@ -94,7 +74,6 @@ class NotificationPageState extends State<NotificationPage> {
         setState(() {});
       }
     }).catchError((e) {
-      print(e.toString());
       setState(() {
         isActive = false;
       });
@@ -112,19 +91,12 @@ class NotificationPageState extends State<NotificationPage> {
   clearNotification() async {
     Map req = {};
     await clear_notification(req).then((value) {
-      print("value====>");
-      print(value);
       if (value['ret_data'] == "success") {
         showCustomToast(context, "Notification Cleared",
             bgColor: black, textColor: white);
         Navigator.pushReplacementNamed(context, Routes.bottombar);
-      } else {
-        print("else====>");
-        print(value['ret_data']);
       }
     }).catchError((e) {
-      print("e to string====>");
-      print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
       setState(() {
@@ -545,11 +517,8 @@ class Notification extends StatelessWidget {
                                 : "",
                             make: model.cv_make,
                           )));
-            } else {
-              print(value['ret_data']);
             }
           }).catchError((e) {
-            print(e.toString());
             showCustomToast(context, ST.of(context).toast_application_error,
                 bgColor: errorcolor, textColor: white);
           });

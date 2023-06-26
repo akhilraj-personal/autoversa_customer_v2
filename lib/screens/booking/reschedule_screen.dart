@@ -81,6 +81,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   late Map<String, dynamic> bookingdetails = {};
   late Map<String, dynamic> booking_package = {};
   late Map<String, dynamic> vehicle = {};
+  var vehiclgroup;
+  var pack_id;
 
   @override
   void initState() {
@@ -97,6 +99,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
     Map req = {"book_id": base64.encode(utf8.encode(widget.bk_data['bk_id']))};
     await getbookingdetails(req).then((value) {
       if (value['ret_data'] == "success") {
+        pack_id = value['booking']['booking_package']['bkp_pkg_id'];
+        vehiclgroup = value['booking']['vgroup'];
         setState(() {
           bookingdetails = value['booking'];
           vehicle = value['booking']['vehicle'];
@@ -809,11 +813,19 @@ class RescheduleScreenState extends State<RescheduleScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) => ResummeryScreen(
-                      bk_data: widget.bk_data,
-                      custvehlist: widget.custvehlist,
-                      selectedveh: widget.selectedVeh,
-                      currency: widget.currency,
-                    )));
+                    bk_data: widget.bk_data,
+                    custvehlist: widget.custvehlist,
+                    selectedveh: widget.selectedVeh,
+                    currency: widget.currency,
+                    packid: pack_id,
+                    vehiclegroup: vehiclgroup,
+                    couponid: null,
+                    coupondiscounttype: null,
+                    coupondiscount: null,
+                    couponcode: null,
+                    discountamount: null,
+                    netpayableamount: null,
+                    couponapplied: false)));
       }
     } else {
       if (ptemp == "" && dtemp == "") {
@@ -865,7 +877,16 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                         bk_data: widget.bk_data,
                         custvehlist: widget.custvehlist,
                         selectedveh: widget.selectedVeh,
-                        currency: widget.currency)));
+                        currency: widget.currency,
+                        packid: pack_id,
+                        vehiclegroup: vehiclgroup,
+                        couponid: null,
+                        coupondiscounttype: null,
+                        coupondiscount: null,
+                        couponcode: null,
+                        discountamount: null,
+                        netpayableamount: null,
+                        couponapplied: false)));
             setState(() => isproceeding = false);
           } else {
             setState(() => isproceeding = false);
@@ -1746,7 +1767,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                           overflow: TextOverflow.clip,
                                           style: montserratMedium.copyWith(
                                               color: black,
-                                              fontSize: width * 0.034),
+                                              fontSize: width * 0.04),
                                         )
                                       : Text(
                                           pickup_options[index]['pk_cost'] ==
@@ -1758,7 +1779,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                           overflow: TextOverflow.clip,
                                           style: montserratMedium.copyWith(
                                               color: warningcolor,
-                                              fontSize: width * 0.034),
+                                              fontSize: width * 0.04),
                                         ),
                                 ],
                               ),
@@ -1819,16 +1840,16 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                 },
                                 title: Text(
                                     ST.of(context).select_booking_date + " ",
-                                    style: montserratSemiBold.copyWith(
-                                        color: black, fontSize: width * 0.032),
+                                    style: montserratMedium.copyWith(
+                                        color: black, fontSize: width * 0.04),
                                     maxLines: 3),
                                 subtitle: Text(
                                   selectedDate == " "
                                       ? " "
                                       : DateFormat('dd-MM-yyyy')
                                           .format(selectedDate),
-                                  style: montserratMedium.copyWith(
-                                      color: black, fontSize: width * 0.032),
+                                  style: montserratSemiBold.copyWith(
+                                      color: black, fontSize: width * 0.04),
                                 ),
                               )),
                         ),
@@ -1887,13 +1908,13 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                               title: Text(ST.of(context).select_a_time_slot,
                                   overflow: TextOverflow.ellipsis,
                                   style: montserratMedium.copyWith(
-                                      color: black, fontSize: width * 0.034),
+                                      color: black, fontSize: width * 0.04),
                                   maxLines: 3),
                               subtitle: Text(
                                   selected_timeslot == ""
                                       ? "Choose time slot"
                                       : selected_timeslot,
-                                  style: montserratMedium.copyWith(
+                                  style: montserratSemiBold.copyWith(
                                       color: black,
                                       fontSize: selected_timeslot == ""
                                           ? width * 0.034

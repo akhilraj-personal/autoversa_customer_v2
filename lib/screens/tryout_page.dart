@@ -674,14 +674,14 @@ class TryOutScreenState extends State<TryOutScreen> {
         prefs.setString("booking_data", json.encode(packdata));
         pickupoption = "";
         setState(() => isproceeding = false);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SummeryPage(
-                    package_id: widget.package_id,
-                    custvehlist: widget.custvehlist,
-                    selectedveh: widget.selectedveh,
-                    currency: widget.currency)));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => SummeryPage(
+        //             package_id: widget.package_id,
+        //             custvehlist: widget.custvehlist,
+        //             selectedveh: widget.selectedveh,
+        //             currency: widget.currency)));
       }
     } else {
       if (ptempdata == "" || dtempdata == "") {
@@ -717,15 +717,15 @@ class TryOutScreenState extends State<TryOutScreen> {
             prefs.setString("booking_data", json.encode(packdata));
             pickupoption = "";
             setState(() => isproceeding = false);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SummeryPage(
-                          package_id: widget.package_id,
-                          custvehlist: widget.custvehlist,
-                          selectedveh: widget.selectedveh,
-                          currency: widget.currency,
-                        )));
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => SummeryPage(
+            //               package_id: widget.package_id,
+            //               custvehlist: widget.custvehlist,
+            //               selectedveh: widget.selectedveh,
+            //               currency: widget.currency,
+            //             )));
             setState(() => isproceeding = false);
           } else {
             setState(() => isproceeding = false);

@@ -521,16 +521,32 @@ class VehiclelistState extends State<Vehiclelist> {
                                                             );
                                                           },
                                                           child: Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .only(
-                                                                right: 8,
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    right: 8,
+                                                                    left: 8),
+                                                            child: Container(
+                                                              width: 40,
+                                                              height: 40,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.3),
                                                               ),
-                                                              child: Icon(
-                                                                Icons.delete,
-                                                                color: black,
-                                                                size: 22,
-                                                              )),
+                                                              child: Center(
+                                                                child: Icon(
+                                                                  Icons.delete,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  size: 18,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
                                                         )),
                                                   ],
                                                 ).onTap(() {
