@@ -97,6 +97,7 @@ class NotificationPageState extends State<NotificationPage> {
         Navigator.pushReplacementNamed(context, Routes.bottombar);
       }
     }).catchError((e) {
+      print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
       setState(() {
@@ -164,20 +165,23 @@ class NotificationPageState extends State<NotificationPage> {
             iconSize: 18,
           ),
           actions: [
-            IconButton(
-              icon: Icon(Icons.delete, color: white),
-              onPressed: () {
-                showConfirmDialogCustom(
-                  context,
-                  title: 'Are you sure you want to clear all notifications.?',
-                  primaryColor: syanColor,
-                  onAccept: (v) async {
-                    clearNotification();
-                    setState(() {});
-                  },
-                );
-              },
-            )
+            notificationList.length > 0
+                ? IconButton(
+                    icon: Icon(Icons.delete, color: white),
+                    onPressed: () {
+                      showConfirmDialogCustom(
+                        context,
+                        title:
+                            'Are you sure you want to clear all notifications.?',
+                        primaryColor: syanColor,
+                        onAccept: (v) async {
+                          clearNotification();
+                          setState(() {});
+                        },
+                      );
+                    },
+                  )
+                : SizedBox()
           ],
         ),
         body: SafeArea(
@@ -347,7 +351,7 @@ class NotificationPageState extends State<NotificationPage> {
                                                       .spaceBetween,
                                               children: <Widget>[
                                                 Container(
-                                                  child: Text("NO Notification",
+                                                  child: Text("No Notification",
                                                       style: montserratSemiBold
                                                           .copyWith(
                                                               fontSize: width *
