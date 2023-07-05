@@ -380,8 +380,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           Container(
-                                              margin: EdgeInsets.only(
-                                                  left: width * 0.03),
+                                            margin: EdgeInsets.only(
+                                                left: width * 0.03),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return Editprofie();
+                                                    },
+                                                  ),
+                                                );
+                                              },
                                               child: RichText(
                                                 text: TextSpan(
                                                   text: ST
@@ -395,16 +406,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               width * 0.034),
                                                   children: <TextSpan>[
                                                     TextSpan(
-                                                        text: cut_name,
-                                                        style: montserratBold
-                                                            .copyWith(
-                                                                color: white,
-                                                                fontSize:
-                                                                    width *
-                                                                        0.034)),
+                                                      text: cut_name,
+                                                      style: montserratBold
+                                                          .copyWith(
+                                                              color: white,
+                                                              fontSize: width *
+                                                                  0.034),
+                                                    ),
                                                   ],
                                                 ),
-                                              )),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
 

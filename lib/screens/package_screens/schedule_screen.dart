@@ -80,6 +80,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   DateTime selectedDate = DateTime.now();
   bool isExpanded = false;
   bool isproceeding = false;
+  var buffertime = "0";
 
   _setdatas() async {
     final prefs = await SharedPreferences.getInstance();
@@ -133,7 +134,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         "pk_name": ptemp['pk_name'],
         "pk_mulkiyaflag": ptemp['pk_mulkiyaflag'],
         "pk_cost": ptemp['pk_freeFlag'] == "1" && rangestatus
-            ? "Not Available"
+            ? "Location not\nserviceable"
             : serviceAvailability
                 ? (int.parse(tempCost) < int.parse(min_cost) &&
                         ptemp['pk_freeFlag'] != "1")
@@ -371,6 +372,19 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     super.dispose();
   }
 
+  int calculateDifference(DateTime selectedDate) {
+    DateTime now = DateTime.now();
+    return DateTime(selectedDate.year, selectedDate.month, selectedDate.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
+  }
+
+  String getCurrentTime() {
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('h:mm a');
+    return formatter.format(now);
+  }
+
   getTimeSlots(pickdate) async {
     selected_timeslot = "";
     selected_timeid = 0;
@@ -383,30 +397,65 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     };
     try {
       await getTimeSlotsForBooking(req).then((value) {
+        buffertime = value['settings']['gs_bookingbuffer_time'];
         timeslots = [];
         if (value['ret_data'] == "success") {
-          for (var bslots in value['time_slots']) {
-            var count = value['assigned_emp']
-                .where((c) => c['tem_slotid'] == bslots['tm_id'])
-                .toList()
-                .length;
+          if (calculateDifference(selectedDate) == 0) {
+            final DateTime now = DateTime.now();
+            DateTime newTime =
+                now.add(Duration(minutes: int.parse(buffertime)));
+            DateFormat formatter = DateFormat('HH:mm');
+            String formattedTime = formatter.format(newTime);
+            for (var bslots in value['time_slots']) {
+              String startTime = bslots['tm_start_time'];
+              if (startTime.compareTo(formattedTime) >= 0) {
+                var count = value['assigned_emp']
+                    .where((c) => c['tem_slotid'] == bslots['tm_id'])
+                    .toList()
+                    .length;
+                if (count == value['driver_count']) {
+                  var slotemp = {
+                    "tm_id": bslots['tm_id'],
+                    "tm_start_time": bslots['tm_start_time'],
+                    "tm_end_time": bslots['tm_end_time'],
+                    "active_flag": 1
+                  };
+                  timeslots.add(slotemp);
+                } else {
+                  var slotemp = {
+                    "tm_id": bslots['tm_id'],
+                    "tm_start_time": bslots['tm_start_time'],
+                    "tm_end_time": bslots['tm_end_time'],
+                    "active_flag": 0
+                  };
+                  timeslots.add(slotemp);
+                }
+              }
+            }
+          } else if (calculateDifference(selectedDate) > 0) {
+            for (var bslots in value['time_slots']) {
+              var count = value['assigned_emp']
+                  .where((c) => c['tem_slotid'] == bslots['tm_id'])
+                  .toList()
+                  .length;
 
-            if (count == value['driver_count']) {
-              var slotemp = {
-                "tm_id": bslots['tm_id'],
-                "tm_start_time": bslots['tm_start_time'],
-                "tm_end_time": bslots['tm_end_time'],
-                "active_flag": 1
-              };
-              timeslots.add(slotemp);
-            } else {
-              var slotemp = {
-                "tm_id": bslots['tm_id'],
-                "tm_start_time": bslots['tm_start_time'],
-                "tm_end_time": bslots['tm_end_time'],
-                "active_flag": 0
-              };
-              timeslots.add(slotemp);
+              if (count == value['driver_count']) {
+                var slotemp = {
+                  "tm_id": bslots['tm_id'],
+                  "tm_start_time": bslots['tm_start_time'],
+                  "tm_end_time": bslots['tm_end_time'],
+                  "active_flag": 1
+                };
+                timeslots.add(slotemp);
+              } else {
+                var slotemp = {
+                  "tm_id": bslots['tm_id'],
+                  "tm_start_time": bslots['tm_start_time'],
+                  "tm_end_time": bslots['tm_end_time'],
+                  "active_flag": 0
+                };
+                timeslots.add(slotemp);
+              }
             }
           }
         }

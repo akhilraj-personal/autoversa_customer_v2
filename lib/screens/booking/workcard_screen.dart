@@ -42,6 +42,8 @@ class WorkcardState extends State<Workcard> {
   var pendingjobid = {};
   List<Map<String, dynamic>> temppendingjobs = [];
   var totalamount = 0.0;
+  var withoutcoupontotal = 0.0;
+  var coupondiscount = 0.0;
   var amounttopay = 0.0;
   var pickupcost = 0.0;
   var selected_package_cost = 0.0;
@@ -51,8 +53,6 @@ class WorkcardState extends State<Workcard> {
   var grandpaidamount = 0.0;
   var pickuppackagecost = 0.0;
   var trnxId;
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
   bool isproceeding = false;
 
   @override
@@ -102,6 +102,7 @@ class WorkcardState extends State<Workcard> {
                     temppendingjobs = [];
                     packagebooking = value['booking'];
                     totalamount = 0;
+                    coupondiscount = 0;
                     amounttopay = 0;
                     paidamount = 0;
                   }),
@@ -117,6 +118,8 @@ class WorkcardState extends State<Workcard> {
                   totalamount = totalamount +
                       (selected_package_cost + selected_pickup_type_cost)
                           .round(),
+                  coupondiscount =
+                      double.parse(value['booking']['bk_discount']),
                   for (var paylist in value['payments'])
                     {
                       paidamount = paidamount +
@@ -144,8 +147,9 @@ class WorkcardState extends State<Workcard> {
                           })
                         }
                     },
-                  grandtotal = (totalamount).toDouble(),
-                  amounttopay = ((totalamount) - (paidamount)).toDouble(),
+                  withoutcoupontotal = (totalamount).toDouble(),
+                  grandtotal = (totalamount).toDouble() - coupondiscount,
+                  amounttopay = ((grandtotal) - (paidamount)).toDouble(),
                   setState(() {}),
                 }
               else
@@ -161,6 +165,7 @@ class WorkcardState extends State<Workcard> {
       "bkj_bkid": widget.booking_id,
       "status": 1,
     };
+    print(req);
     setState(() {
       var inData = {"jobid": jobid['bkj_id']};
       temppendingjobs.add(inData);
@@ -171,7 +176,7 @@ class WorkcardState extends State<Workcard> {
         totalamount =
             totalamount + double.parse(jobid['bkj_cust_cost'].toString());
         grandtotal = (totalamount);
-        amounttopay = (totalamount - (paidamount));
+        amounttopay = (totalamount - (paidamount) - (coupondiscount));
         pendingjobs.removeWhere((item) => item['bkj_id'] == jobid['bkj_id']);
         setState(() {});
       }
@@ -1036,6 +1041,50 @@ class WorkcardState extends State<Workcard> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
                                 Text(
+                                  "Total: ",
+                                  style: montserratSemiBold.copyWith(
+                                      color: black, fontSize: width * 0.034),
+                                ),
+                                Text(
+                                  withoutcoupontotal.toString(),
+                                  style: montserratSemiBold.copyWith(
+                                      color: warningcolor,
+                                      fontSize: width * 0.034),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(right: 12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  "Coupon Discount: ",
+                                  style: montserratSemiBold.copyWith(
+                                      color: black, fontSize: width * 0.034),
+                                ),
+                                Text(
+                                  coupondiscount.toString(),
+                                  style: montserratSemiBold.copyWith(
+                                      color: warningcolor,
+                                      fontSize: width * 0.034),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(right: 12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
                                   "Grand Total: ",
                                   style: montserratSemiBold.copyWith(
                                       color: black, fontSize: width * 0.034),
@@ -1166,7 +1215,11 @@ class CustomSuccess extends StatelessWidget {
         decoration: new BoxDecoration(
           color: white,
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(0),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12)),
           boxShadow: [
             BoxShadow(
                 color: Colors.black26,
@@ -1184,14 +1237,19 @@ class CustomSuccess extends StatelessWidget {
                 Container(
                   height: 130,
                   decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0)),
                       gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      lightblueColor,
-                      syanColor,
-                    ],
-                  )),
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          lightblueColor,
+                          syanColor,
+                        ],
+                      )),
                 ),
                 Column(
                   children: [
@@ -1261,15 +1319,19 @@ class CustomWarning extends StatelessWidget {
       elevation: 0.0,
       backgroundColor: Colors.transparent,
       child: Container(
-        decoration: new BoxDecoration(
-          color: white,
+        decoration: BoxDecoration(
+          color: Colors.white,
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(0),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12)),
           boxShadow: [
             BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0)),
+              color: Colors.black26,
+              blurRadius: 10.0,
+            ),
           ],
         ),
         width: MediaQuery.of(context).size.width,
@@ -1279,7 +1341,17 @@ class CustomWarning extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(height: 130, color: warningcolor),
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                    color: warningcolor,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
+                        bottomLeft: Radius.circular(0),
+                        bottomRight: Radius.circular(0)),
+                  ),
+                ),
                 Column(
                   children: [
                     Image.asset(

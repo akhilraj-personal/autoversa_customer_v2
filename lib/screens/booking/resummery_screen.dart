@@ -285,61 +285,6 @@ class ResummeryScreenState extends State<ResummeryScreen> {
     super.dispose();
   }
 
-  // createBooking() async {
-  //   selectedTime = packdata['selected_timeslot'].split('- ')[1];
-  //   print(selectedTime);
-  //   currentTime = DateFormat("hh:mm a").format(DateTime.now());
-  //   print(currentTime);
-  //   if (selectedTime.compareTo(currentTime) < 0) {
-  //     setState(() {
-  //       isproceeding = false;
-  //     });
-  //     showDialog(
-  //       barrierDismissible: false,
-  //       context: context,
-  //       builder: (BuildContext context) => ReScheduleTimeAndDate(
-  //           bk_data: widget.bk_data,
-  //           currency: widget.currency,
-  //           custvehlist: widget.custvehlist,
-  //           selectedVeh: widget.selectedveh),
-  //     );
-  //   } else {
-  //     try {
-  //       final prefs = await SharedPreferences.getInstance();
-  //       Map<String, dynamic> booking = {
-  //         "bookid": bookingdetails['bk_id'],
-  //         "custId": prefs.getString('cust_id'),
-  //         "vehId": packdata['vehicle_id'],
-  //         "bookingdate": packdata['selected_date'],
-  //         "expenses": [],
-  //         "slot": packdata['selected_timeid'],
-  //         "pickupaddress": packdata['pick_up_location_id'],
-  //         "dropaddress": packdata['drop_location_id'],
-  //         "pickup_vat": packdata['pickup_vat'],
-  //         "pickuptype": packdata['pick_type_id'],
-  //         "pickupcost": (double.parse(packdata['pick_up_price']) -
-  //                 double.parse(packdata['pickup_vat']))
-  //             .toStringAsFixed(2),
-  //         "pack_vat": packdata['pack_vat'],
-  //         'complaint': additionalcommentsController.text.toString(),
-  //         "sourcetype": "MOB",
-  //         "advance": "0",
-  //         "coupon_id": coupon_id != 0 ? coupon_id : null,
-  //         "discount": discount != null ? discount : "0",
-  //         "total_amount": netpayable.round(),
-  //       };
-  //       await createRescheduleBooking(booking).then((value) {
-  //         if (value['ret_data'] == "success") {
-  //           createPayment(bookingdetails['bk_id'], value['payment_details']);
-  //           trnxId = value['payment_details']['id'];
-  //         }
-  //       });
-  //     } catch (e) {
-  //       print(e.toString());
-  //     }
-  //   }
-  // }
-
   createBooking() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -986,387 +931,404 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                         thickness: 1.5,
                         indent: 20,
                         endIndent: 20),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 30.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Savings",
-                            style: montserratSemiBold.copyWith(
-                              color: black,
-                              fontSize: width * 0.034,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    8.height,
-                    couponapplied
-                        ? ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: couponList.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.only(
-                                  left: 15.0,
-                                  right: 15.0,
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: Colors.grey.shade300,
-                                          width: 1.0,
-                                        ),
-                                      ),
-                                      padding: EdgeInsets.only(top: 15.0),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                height: 35,
-                                                width: 35,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  gradient: LinearGradient(
-                                                    colors: [
-                                                      lightblueColor,
-                                                      syanColor,
-                                                    ],
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
-                                                  ),
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset(
-                                                      ImageConst.coupon_icon,
-                                                      width: 25,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              8.width,
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Flexible(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Flexible(
-                                                              child: couponList[
-                                                                              index]
-                                                                          [
-                                                                          'coupon_discount_type'] ==
-                                                                      "1"
-                                                                  ? Text(
-                                                                      "You Saved " +
-                                                                          coupondiscountreceived +
-                                                                          "% with this code",
-                                                                      style: montserratSemiBold.copyWith(
-                                                                          fontSize:
-                                                                              width * 0.04),
-                                                                    )
-                                                                  : Text(
-                                                                      "You Saved " +
-                                                                          coupondiscountreceived +
-                                                                          " AED with this code",
-                                                                      style: montserratSemiBold.copyWith(
-                                                                          fontSize:
-                                                                              width * 0.04),
-                                                                    ),
-                                                            ),
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                Removedappliedcoupon(
-                                                                    coupondiscounttypereceived,
-                                                                    coupondiscountreceived);
-                                                              },
-                                                              child: Text(
-                                                                "Remove",
-                                                                style:
-                                                                    montserratMedium
-                                                                        .copyWith(
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.04,
-                                                                  color:
-                                                                      warningcolor,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Text(
-                                                          'Code Applied',
-                                                          style:
-                                                              montserratRegular
-                                                                  .copyWith(
-                                                            fontSize:
-                                                                width * 0.04,
-                                                            color: greyColor,
-                                                          ),
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ).expand(),
-                                            ],
-                                          ).paddingOnly(
-                                              right: 16.0,
-                                              left: 16.0,
-                                              bottom: 16.0),
-                                        ],
-                                      ),
-                                    ).paddingBottom(16.0),
-                                  ],
-                                ),
-                              );
-                            },
+                    couponList.length > 0
+                        ? SizedBox(
+                            height: 8,
                           )
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: couponList.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.only(
-                                  left: 15.0,
-                                  right: 15.0,
+                        : SizedBox(
+                            height: 0,
+                          ),
+                    couponList.length > 0
+                        ? Container(
+                            margin: EdgeInsets.only(left: 30.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Savings",
+                                  style: montserratSemiBold.copyWith(
+                                    color: black,
+                                    fontSize: width * 0.034,
+                                  ),
                                 ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: Colors.grey.shade300,
-                                          width: 1.0,
-                                        ),
-                                      ),
-                                      padding: EdgeInsets.only(top: 15.0),
-                                      child: Column(
-                                        children: [
-                                          Row(
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
+                    8.height,
+                    couponList.length > 0
+                        ? couponapplied
+                            ? ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: couponList.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: EdgeInsets.only(
+                                      left: 15.0,
+                                      right: 15.0,
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                              color: Colors.grey.shade300,
+                                              width: 1.0,
+                                            ),
+                                          ),
+                                          padding: EdgeInsets.only(top: 15.0),
+                                          child: Column(
                                             children: [
-                                              Container(
-                                                height: 35,
-                                                width: 35,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  gradient: LinearGradient(
-                                                    colors: [
-                                                      lightblueColor,
-                                                      syanColor,
-                                                    ],
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
-                                                  ),
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset(
-                                                      ImageConst.coupon_icon,
-                                                      width: 25,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              8.width,
                                               Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
                                                 children: [
-                                                  Flexible(
+                                                  Container(
+                                                    height: 35,
+                                                    width: 35,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      gradient: LinearGradient(
+                                                        colors: [
+                                                          lightblueColor,
+                                                          syanColor,
+                                                        ],
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight,
+                                                      ),
+                                                    ),
                                                     child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
                                                       children: [
-                                                        Row(
-                                                          children: [
-                                                            Flexible(
-                                                              child: couponList[
-                                                                              index]
-                                                                          [
-                                                                          'coupon_discount_type'] ==
-                                                                      "1"
-                                                                  ? Text(
-                                                                      "Save " +
-                                                                          couponList[index]
-                                                                              [
-                                                                              'coupon_discount'] +
-                                                                          " % more on this booking",
-                                                                      style: montserratSemiBold.copyWith(
-                                                                          fontSize:
-                                                                              width * 0.0425),
-                                                                    )
-                                                                  : Text(
-                                                                      "Save AED " +
-                                                                          couponList[index]
-                                                                              [
-                                                                              'coupon_discount'] +
-                                                                          " more on this booking",
-                                                                      style: montserratSemiBold.copyWith(
-                                                                          fontSize:
-                                                                              width * 0.0425),
-                                                                    ),
-                                                            ),
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                appliedcoupon(
-                                                                    couponList[
-                                                                            index]
-                                                                        [
-                                                                        'coupon_id'],
-                                                                    couponList[
-                                                                            index]
-                                                                        [
-                                                                        'coupon_discount_type'],
-                                                                    couponList[
-                                                                            index]
-                                                                        [
-                                                                        'coupon_discount'],
-                                                                    couponList[
-                                                                            index]
-                                                                        [
-                                                                        'coupon_code']);
-                                                              },
-                                                              child: Text(
-                                                                "Apply",
-                                                                style:
-                                                                    montserratMedium
-                                                                        .copyWith(
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.04,
-                                                                  color:
-                                                                      warningcolor,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Text(
-                                                          'Code: ' +
-                                                              couponList[index][
-                                                                      'coupon_code']
-                                                                  .toUpperCase(),
-                                                          style:
-                                                              montserratRegular
-                                                                  .copyWith(
-                                                            fontSize:
-                                                                width * 0.04,
-                                                            color: greyColor,
-                                                          ),
-                                                          textAlign:
-                                                              TextAlign.start,
+                                                        Image.asset(
+                                                          ImageConst
+                                                              .coupon_icon,
+                                                          width: 25,
                                                         ),
                                                       ],
                                                     ),
                                                   ),
+                                                  8.width,
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Flexible(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                Flexible(
+                                                                  child: couponList[index]
+                                                                              [
+                                                                              'coupon_discount_type'] ==
+                                                                          "1"
+                                                                      ? Text(
+                                                                          "You Saved " +
+                                                                              coupondiscountreceived +
+                                                                              "% with this code",
+                                                                          style:
+                                                                              montserratSemiBold.copyWith(fontSize: width * 0.04),
+                                                                        )
+                                                                      : Text(
+                                                                          "You Saved " +
+                                                                              coupondiscountreceived +
+                                                                              " AED with this code",
+                                                                          style:
+                                                                              montserratSemiBold.copyWith(fontSize: width * 0.04),
+                                                                        ),
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Removedappliedcoupon(
+                                                                        coupondiscounttypereceived,
+                                                                        coupondiscountreceived);
+                                                                  },
+                                                                  child: Text(
+                                                                    "Remove",
+                                                                    style: montserratMedium
+                                                                        .copyWith(
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.04,
+                                                                      color:
+                                                                          warningcolor,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Text(
+                                                              'Code Applied',
+                                                              style:
+                                                                  montserratRegular
+                                                                      .copyWith(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.04,
+                                                                color:
+                                                                    greyColor,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ).expand(),
                                                 ],
-                                              ).expand(),
+                                              ).paddingOnly(
+                                                  right: 16.0,
+                                                  left: 16.0,
+                                                  bottom: 16.0),
                                             ],
-                                          ).paddingOnly(
-                                              right: 16.0, left: 16.0),
-                                          8.height,
-                                          Divider(
-                                              color: divider_grey_color,
-                                              thickness: 1.5,
-                                              indent: 20,
-                                              endIndent: 20),
-                                          8.height,
-                                          Row(
+                                          ),
+                                        ).paddingBottom(16.0),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: couponList.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: EdgeInsets.only(
+                                      left: 15.0,
+                                      right: 15.0,
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                              color: Colors.grey.shade300,
+                                              width: 1.0,
+                                            ),
+                                          ),
+                                          padding: EdgeInsets.only(top: 15.0),
+                                          child: Column(
                                             children: [
                                               Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
                                                 children: [
-                                                  Text("View all Coupons",
-                                                      style: montserratSemiBold
-                                                          .copyWith(
-                                                              color: black,
-                                                              fontSize: width *
-                                                                  0.04)),
-                                                  4.width,
-                                                  RadiantGradientMask(
-                                                    child: Icon(
-                                                        Icons.arrow_forward,
-                                                        color: syanColor,
-                                                        size: 22),
-                                                  ),
-                                                ],
-                                              ).onTap(
-                                                () async {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) {
-                                                        return CouponListScreen(
-                                                          clickid: "direct",
-                                                          packageid: packdata[
-                                                                  'package_id']
-                                                              .toString(),
-                                                          vehiclegroupid: packdata[
-                                                                  'veh_groupid']
-                                                              .toString(),
-                                                          totalamount:
-                                                              totalamount
-                                                                  .toString(),
-                                                          package_id: {},
-                                                          custvehlist: widget
-                                                              .custvehlist,
-                                                          selectedveh: widget
-                                                              .selectedveh,
-                                                          currency:
-                                                              widget.currency,
-                                                          bk_data: {},
-                                                          packid: null,
-                                                          vehiclegroup: null,
-                                                        );
-                                                      },
+                                                  Container(
+                                                    height: 35,
+                                                    width: 35,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      gradient: LinearGradient(
+                                                        colors: [
+                                                          lightblueColor,
+                                                          syanColor,
+                                                        ],
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight,
+                                                      ),
                                                     ),
-                                                  );
-                                                },
-                                              ).expand()
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Image.asset(
+                                                          ImageConst
+                                                              .coupon_icon,
+                                                          width: 25,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  8.width,
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Flexible(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                Flexible(
+                                                                  child: couponList[index]
+                                                                              [
+                                                                              'coupon_discount_type'] ==
+                                                                          "1"
+                                                                      ? Text(
+                                                                          "Save " +
+                                                                              couponList[index]['coupon_discount'] +
+                                                                              " % more on this booking",
+                                                                          style:
+                                                                              montserratSemiBold.copyWith(fontSize: width * 0.0425),
+                                                                        )
+                                                                      : Text(
+                                                                          "Save AED " +
+                                                                              couponList[index]['coupon_discount'] +
+                                                                              " more on this booking",
+                                                                          style:
+                                                                              montserratSemiBold.copyWith(fontSize: width * 0.0425),
+                                                                        ),
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    appliedcoupon(
+                                                                        couponList[index]
+                                                                            [
+                                                                            'coupon_id'],
+                                                                        couponList[index]
+                                                                            [
+                                                                            'coupon_discount_type'],
+                                                                        couponList[index]
+                                                                            [
+                                                                            'coupon_discount'],
+                                                                        couponList[index]
+                                                                            [
+                                                                            'coupon_code']);
+                                                                  },
+                                                                  child: Text(
+                                                                    "Apply",
+                                                                    style: montserratMedium
+                                                                        .copyWith(
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.04,
+                                                                      color:
+                                                                          warningcolor,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Text(
+                                                              'Code: ' +
+                                                                  couponList[index]
+                                                                          [
+                                                                          'coupon_code']
+                                                                      .toUpperCase(),
+                                                              style:
+                                                                  montserratRegular
+                                                                      .copyWith(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.04,
+                                                                color:
+                                                                    greyColor,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ).expand(),
+                                                ],
+                                              ).paddingOnly(
+                                                  right: 16.0, left: 16.0),
+                                              8.height,
+                                              Divider(
+                                                  color: divider_grey_color,
+                                                  thickness: 1.5,
+                                                  indent: 20,
+                                                  endIndent: 20),
+                                              8.height,
+                                              Row(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text("View all Coupons",
+                                                          style: montserratSemiBold
+                                                              .copyWith(
+                                                                  color: black,
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.04)),
+                                                      4.width,
+                                                      RadiantGradientMask(
+                                                        child: Icon(
+                                                            Icons.arrow_forward,
+                                                            color: syanColor,
+                                                            size: 22),
+                                                      ),
+                                                    ],
+                                                  ).onTap(
+                                                    () async {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) {
+                                                            return CouponListScreen(
+                                                              clickid: "direct",
+                                                              packageid: packdata[
+                                                                      'package_id']
+                                                                  .toString(),
+                                                              vehiclegroupid:
+                                                                  packdata[
+                                                                          'veh_groupid']
+                                                                      .toString(),
+                                                              totalamount:
+                                                                  totalamount
+                                                                      .toString(),
+                                                              package_id: {},
+                                                              custvehlist: widget
+                                                                  .custvehlist,
+                                                              selectedveh: widget
+                                                                  .selectedveh,
+                                                              currency: widget
+                                                                  .currency,
+                                                              bk_data: {},
+                                                              packid: null,
+                                                              vehiclegroup:
+                                                                  null,
+                                                            );
+                                                          },
+                                                        ),
+                                                      );
+                                                    },
+                                                  ).expand()
+                                                ],
+                                              ).paddingOnly(
+                                                  right: 16.0, left: 16.0),
+                                              16.height,
                                             ],
-                                          ).paddingOnly(
-                                              right: 16.0, left: 16.0),
-                                          16.height,
-                                        ],
-                                      ),
-                                    ).paddingBottom(16.0),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
+                                          ),
+                                        ).paddingBottom(16.0),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              )
+                        : SizedBox(),
                     Divider(
                         color: divider_grey_color,
                         thickness: 1.5,
@@ -1608,15 +1570,19 @@ class CustomWarning extends StatelessWidget {
       elevation: 0.0,
       backgroundColor: Colors.transparent,
       child: Container(
-        decoration: new BoxDecoration(
-          color: white,
+        decoration: BoxDecoration(
+          color: Colors.white,
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(0),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12)),
           boxShadow: [
             BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0)),
+              color: Colors.black26,
+              blurRadius: 10.0,
+            ),
           ],
         ),
         width: MediaQuery.of(context).size.width,
@@ -1626,7 +1592,17 @@ class CustomWarning extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(height: 130, color: warningcolor),
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                    color: warningcolor,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
+                        bottomLeft: Radius.circular(0),
+                        bottomRight: Radius.circular(0)),
+                  ),
+                ),
                 Column(
                   children: [
                     Image.asset(
@@ -1696,15 +1672,19 @@ class CustomSuccess extends StatelessWidget {
       elevation: 0.0,
       backgroundColor: Colors.transparent,
       child: Container(
-        decoration: new BoxDecoration(
-          color: white,
+        decoration: BoxDecoration(
+          color: Colors.white,
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(0),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12)),
           boxShadow: [
             BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0)),
+              color: Colors.black26,
+              blurRadius: 10.0,
+            ),
           ],
         ),
         width: MediaQuery.of(context).size.width,
@@ -1717,14 +1697,19 @@ class CustomSuccess extends StatelessWidget {
                 Container(
                   height: 130,
                   decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0)),
                       gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      lightblueColor,
-                      syanColor,
-                    ],
-                  )),
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          lightblueColor,
+                          syanColor,
+                        ],
+                      )),
                 ),
                 // Container(height: 130, color: black),
                 Column(
@@ -1737,7 +1722,7 @@ class CustomSuccess extends StatelessWidget {
                     SizedBox(
                       height: 16,
                     ),
-                    Text("Booking Successfull",
+                    Text("Booking successfull",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
                             fontSize: width * 0.034, color: white)),
@@ -1904,5 +1889,73 @@ class ReScheduleTimeAndDate extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class CouponDialog extends StatelessWidget {
+  final String couponCode;
+  final int couponDiscount;
+  CouponDialog({required this.couponCode, required this.couponDiscount});
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: Container(
+            decoration: BoxDecoration(
+              color: context.scaffoldBackgroundColor,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10.0,
+                  offset: Offset(0.0, 10.0),
+                ),
+              ],
+            ),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    finish(context);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(16),
+                    alignment: Alignment.centerRight,
+                    child: Icon(Icons.close, color: Colors.grey),
+                  ),
+                ),
+                Image.asset(ImageConst.success,
+                    color: Colors.black, width: 55, height: 55),
+                SizedBox(height: 24),
+                Padding(
+                  padding: EdgeInsets.only(left: 16, right: 16),
+                  child: Text("Coupon Applied: $couponCode",
+                      style: montserratRegular.copyWith(
+                          color: syanColor, fontSize: width * 0.04)),
+                ),
+                SizedBox(height: 8),
+                Padding(
+                  padding: EdgeInsets.only(left: 16, right: 16),
+                  child: Text("You saved AED $couponDiscount",
+                      style: montserratMedium.copyWith(
+                          color: black, fontSize: width * 0.06)),
+                ),
+                SizedBox(height: 8),
+                Padding(
+                  padding: EdgeInsets.only(left: 16, right: 16),
+                  child: Text("with this coupon code",
+                      style: montserratMedium.copyWith(
+                          color: syanColor, fontSize: width * 0.04)),
+                ),
+                SizedBox(height: 30),
+              ],
+            )));
   }
 }

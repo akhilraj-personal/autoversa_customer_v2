@@ -83,7 +83,8 @@ class CouponListScreenState extends State<CouponListScreen> {
     });
   }
 
-  appliedcoupon(couponid, coupondiscounttype, coupondiscount, couponcode) {
+  appliedcoupon(couponid, coupondiscounttype, coupondiscount, couponcode,
+      coupondiscountamount) {
     couponapplied = true;
     appliedcouponid = couponid;
     appliedcoupondiscounttype = coupondiscounttype;
@@ -92,18 +93,17 @@ class CouponListScreenState extends State<CouponListScreen> {
     setState(() {});
     if (coupondiscounttype == "1") {
       couponapplied = true;
-      netpayable = double.parse(widget.totalamount) -
-          (double.parse(widget.totalamount) *
-              (double.parse(appliedcoupondiscount) / 100));
-      discount = (double.parse(widget.totalamount.toString()) -
+      netpayable = (double.parse(widget.totalamount)) -
+          (double.parse(coupondiscountamount));
+      discount = (double.parse(widget.totalamount).round() -
               double.parse(netpayable.toString()))
           .round();
       setState(() {});
     } else if (coupondiscounttype == "0") {
       couponapplied = true;
-      netpayable =
-          double.parse(widget.totalamount) - (double.parse(coupondiscount));
-      discount = (double.parse(widget.totalamount.toString()) -
+      netpayable = (double.parse(widget.totalamount).round()) -
+          (double.parse(coupondiscountamount));
+      discount = (double.parse(widget.totalamount).round() -
               double.parse(netpayable.toString()))
           .round();
       setState(() {});
@@ -125,23 +125,23 @@ class CouponListScreenState extends State<CouponListScreen> {
                   discountamount: discount,
                   netpayableamount: netpayable)));
     } else if (widget.clickid == "awaiting") {
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => ResummeryScreen(
-      //             bk_data: widget.bk_data,
-      //             custvehlist: widget.custvehlist,
-      //             selectedveh: widget.selectedveh,
-      //             currency: widget.currency,
-      //             couponid: appliedcouponid,
-      //             coupondiscounttype: appliedcoupondiscounttype,
-      //             coupondiscount: appliedcoupondiscount,
-      //             couponcode: appliedcouponcode,
-      //             discountamount: discount,
-      //             netpayableamount: netpayable,
-      //             couponapplied: couponapplied,
-      //             vehiclegroup: widget.vehiclegroup,
-      //             packid: widget.packid)));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ResummeryScreen(
+                  bk_data: widget.bk_data,
+                  custvehlist: widget.custvehlist,
+                  selectedveh: widget.selectedveh,
+                  currency: widget.currency,
+                  couponid: appliedcouponid,
+                  coupondiscounttype: appliedcoupondiscounttype,
+                  coupondiscount: appliedcoupondiscount,
+                  couponcode: appliedcouponcode,
+                  discountamount: discount,
+                  netpayableamount: netpayable,
+                  couponapplied: couponapplied,
+                  vehiclegroup: widget.vehiclegroup,
+                  packid: widget.packid)));
     }
   }
 
@@ -410,7 +410,9 @@ class CouponListScreenState extends State<CouponListScreen> {
                                                               couponList[index][
                                                                   'coupon_discount'],
                                                               couponList[index][
-                                                                  'coupon_code']);
+                                                                  'coupon_code'],
+                                                              couponList[index][
+                                                                  'discountamount']);
                                                         },
                                                         child: Text(
                                                           "Apply",

@@ -37,8 +37,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
   var pickuppackagecost = 0.0;
   var selected_package_cost = 0.0;
   var selected_pickup_type_cost = 0.0;
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
+  var withoutcoupontotal = 0.0;
+  var coupondiscount = 0.0;
 
   @override
   void initState() {
@@ -113,6 +113,9 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                 {
                   setState(() {
                     packagebooking = value['booking'];
+                    totalamount = 0;
+                    coupondiscount = 0;
+                    paidamount = 0;
                   }),
                   selected_package_cost =
                       double.parse(value['booking']['bkp_cust_amount']) +
@@ -128,6 +131,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                   pickuppackagecost =
                       double.parse(value['booking']['bkp_cust_amount']) +
                           pickupcost,
+                  coupondiscount =
+                      double.parse(value['booking']['bk_discount']),
                   for (var paylist in value['payments'])
                     {
                       paidamount = paidamount +
@@ -146,7 +151,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                           pendingjobs.add(joblist),
                         },
                     },
-                  grandtotal = (totalamount),
+                  withoutcoupontotal = (totalamount).toDouble(),
+                  grandtotal = (totalamount).toDouble() - coupondiscount,
                   setState(() {}),
                 }
               else
@@ -595,6 +601,50 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                   ),
                             Divider(
                               color: black,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(right: 12.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    "Total: ",
+                                    style: montserratSemiBold.copyWith(
+                                        color: black, fontSize: width * 0.034),
+                                  ),
+                                  Text(
+                                    withoutcoupontotal.toString(),
+                                    style: montserratSemiBold.copyWith(
+                                        color: warningcolor,
+                                        fontSize: width * 0.034),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(right: 12.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    "Coupon Discount: ",
+                                    style: montserratSemiBold.copyWith(
+                                        color: black, fontSize: width * 0.034),
+                                  ),
+                                  Text(
+                                    coupondiscount.toString(),
+                                    style: montserratSemiBold.copyWith(
+                                        color: warningcolor,
+                                        fontSize: width * 0.034),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 4,
                             ),
                             Container(
                               padding: EdgeInsets.only(right: 12.0),

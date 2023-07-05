@@ -54,7 +54,7 @@ class VehicleUpdateState extends State<VehicleUpdate> {
         modelController.text = customervehicledetails['cv_model'] != null
             ? customervehicledetails['cv_model']
             : "";
-        varientController.text = customervehicledetails['cv_variant'] != null
+        varientController.text = customervehicledetails['cv_variant'] != ""
             ? customervehicledetails['cv_variant']
             : "";
         yearController.text = customervehicledetails['cv_year'] != null
@@ -80,7 +80,7 @@ class VehicleUpdateState extends State<VehicleUpdate> {
       'custvehId': widget.vehicle_id,
       'cv_make': customervehicledetails['cv_make'],
       'cv_model': customervehicledetails['cv_model'],
-      'cv_variant': customervehicledetails['cv_variant'] != null
+      'cv_variant': customervehicledetails['cv_variant'] != ""
           ? customervehicledetails['cv_variant']
           : "",
       'cv_year': customervehicledetails['cv_year'],
@@ -323,10 +323,10 @@ class VehicleUpdateState extends State<VehicleUpdate> {
                                   ],
                                 ))
                           ]),
-                          customervehicledetails['cv_variant'] != null
+                          customervehicledetails['cv_variant'] != ""
                               ? SizedBox(height: height * 0.04)
                               : SizedBox(height: height * 0.001),
-                          customervehicledetails['cv_variant'] != null
+                          customervehicledetails['cv_variant'] != ""
                               ? Stack(
                                   alignment: Alignment.bottomCenter,
                                   children: [
