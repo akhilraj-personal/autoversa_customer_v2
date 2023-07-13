@@ -74,9 +74,12 @@ class NotificationPageState extends State<NotificationPage> {
         setState(() {});
       }
     }).catchError((e) {
+      print(e.toString());
       setState(() {
         isActive = false;
       });
+      print("11111====>");
+      print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
@@ -96,6 +99,7 @@ class NotificationPageState extends State<NotificationPage> {
         Navigator.pushReplacementNamed(context, Routes.bottombar);
       }
     }).catchError((e) {
+      print("222222====>");
       print(e.toString());
       showCustomToast(context, ST.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
@@ -522,6 +526,8 @@ class Notification extends StatelessWidget {
                           )));
             }
           }).catchError((e) {
+            print("33333====>");
+            print(e.toString());
             showCustomToast(context, ST.of(context).toast_application_error,
                 bgColor: errorcolor, textColor: white);
           });

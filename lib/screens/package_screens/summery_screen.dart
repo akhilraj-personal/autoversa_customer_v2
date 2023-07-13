@@ -120,6 +120,7 @@ class SummeryPageState extends State<SummeryPage> {
       "vgroup_id": packdata['veh_groupid'],
       "totalamount": totalamount.toString(),
     };
+    print(req);
     couponList = [];
     await getCouponsListForCustomer(req).then((value) {
       if (value['ret_data'] == "success") {
@@ -1078,21 +1079,6 @@ class SummeryPageState extends State<SummeryPage> {
                     SizedBox(
                       height: 8,
                     ),
-                    Container(
-                      margin: EdgeInsets.only(left: 30.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Savings",
-                            style: montserratSemiBold.copyWith(
-                              color: black,
-                              fontSize: width * 0.034,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                     couponList.length > 0
                         ? Container(
                             margin: EdgeInsets.only(left: 30.0),
@@ -1485,11 +1471,13 @@ class SummeryPageState extends State<SummeryPage> {
                                 },
                               )
                         : SizedBox(),
-                    Divider(
-                        color: divider_grey_color,
-                        thickness: 1.5,
-                        indent: 20,
-                        endIndent: 20),
+                    couponList.length > 0
+                        ? Divider(
+                            color: divider_grey_color,
+                            thickness: 1.5,
+                            indent: 20,
+                            endIndent: 20)
+                        : SizedBox(),
                     Container(
                       margin: EdgeInsets.only(left: 30.0),
                       child: Row(
@@ -1708,13 +1696,13 @@ class SummeryPageState extends State<SummeryPage> {
                                     ? Text(
                                         "Coupon - " + (couponcodeselected),
                                         style: montserratSemiBold.copyWith(
-                                            color: blueColor,
+                                            color: black,
                                             fontSize: width * 0.034),
                                       )
                                     : Text(
                                         "Coupon",
                                         style: montserratSemiBold.copyWith(
-                                            color: blueColor,
+                                            color: warningcolor,
                                             fontSize: width * 0.034),
                                       ),
                                 discount != null
@@ -1856,7 +1844,11 @@ class CustomWarning extends StatelessWidget {
         decoration: new BoxDecoration(
           color: white,
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(0),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12)),
           boxShadow: [
             BoxShadow(
                 color: Colors.black26,
@@ -1874,14 +1866,19 @@ class CustomWarning extends StatelessWidget {
                 Container(
                   height: 130,
                   decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0)),
                       gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      lightorangeColor,
-                      holdorangeColor,
-                    ],
-                  )),
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          lightorangeColor,
+                          holdorangeColor,
+                        ],
+                      )),
                 ),
                 // Container(height: 130, color: warningcolor),
                 Column(
@@ -1956,7 +1953,11 @@ class CustomSuccess extends StatelessWidget {
         decoration: new BoxDecoration(
           color: white,
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(0),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12)),
           boxShadow: [
             BoxShadow(
                 color: Colors.black26,
@@ -1974,14 +1975,19 @@ class CustomSuccess extends StatelessWidget {
                 Container(
                   height: 130,
                   decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0)),
                       gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      lightblueColor,
-                      syanColor,
-                    ],
-                  )),
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          lightblueColor,
+                          syanColor,
+                        ],
+                      )),
                 ),
                 // Container(height: 130, color: black),
                 Column(

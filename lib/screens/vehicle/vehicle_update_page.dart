@@ -9,7 +9,6 @@ import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class VehicleUpdate extends StatefulWidget {
   final String vehicle_id;
@@ -54,7 +53,7 @@ class VehicleUpdateState extends State<VehicleUpdate> {
         modelController.text = customervehicledetails['cv_model'] != null
             ? customervehicledetails['cv_model']
             : "";
-        varientController.text = customervehicledetails['cv_variant'] != ""
+        varientController.text = customervehicledetails['cv_variant'] != null
             ? customervehicledetails['cv_variant']
             : "";
         yearController.text = customervehicledetails['cv_year'] != null
@@ -75,12 +74,11 @@ class VehicleUpdateState extends State<VehicleUpdate> {
   }
 
   CustomerVehicleUpdate() async {
-    final prefs = await SharedPreferences.getInstance();
     Map req = {
       'custvehId': widget.vehicle_id,
       'cv_make': customervehicledetails['cv_make'],
       'cv_model': customervehicledetails['cv_model'],
-      'cv_variant': customervehicledetails['cv_variant'] != ""
+      'cv_variant': customervehicledetails['cv_variant'] != null
           ? customervehicledetails['cv_variant']
           : "",
       'cv_year': customervehicledetails['cv_year'],
@@ -323,10 +321,10 @@ class VehicleUpdateState extends State<VehicleUpdate> {
                                   ],
                                 ))
                           ]),
-                          customervehicledetails['cv_variant'] != ""
+                          customervehicledetails['cv_variant'] != null
                               ? SizedBox(height: height * 0.04)
                               : SizedBox(height: height * 0.001),
-                          customervehicledetails['cv_variant'] != ""
+                          customervehicledetails['cv_variant'] != null
                               ? Stack(
                                   alignment: Alignment.bottomCenter,
                                   children: [

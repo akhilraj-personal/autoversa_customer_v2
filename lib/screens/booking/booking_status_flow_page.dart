@@ -944,6 +944,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             'RFDC',
             'DEDC',
             'DLCC',
+            'BAPC',
             'HOLDC',
           ];
           var position = cust_status_master
@@ -1097,12 +1098,13 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.firstWhere(
-                      (it) => it["code"] == statuslist["bkt_code"],
-                      orElse: () => null)) ==
-                  null) {
-                statusflow.add(temp);
-              }
+              statusflow.add(temp);
+              // if ((statusflow.firstWhere(
+              //         (it) => it["code"] == statuslist["bkt_code"],
+              //         orElse: () => null)) ==
+              //     null) {
+              //   statusflow.add(temp);
+              // }
             } else if (statuslist["bkt_code"] == "RFDC" &&
                 statuslist['bkt_task'] != "Unhold") {
               var temp = {
@@ -1120,16 +1122,17 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.firstWhere(
-                      (it) => it["code"] == statuslist["bkt_code"],
-                      orElse: () => null)) ==
-                  null) {
-                statusflow.add(temp);
-              }
+              statusflow.add(temp);
+              // if ((statusflow.firstWhere(
+              //         (it) => it["code"] == statuslist["bkt_code"],
+              //         orElse: () => null)) ==
+              //     null) {
+              //   statusflow.add(temp);
+              // }
             } else if (statuslist["bkt_code"] == "DEDC" &&
                 statuslist['bkt_task'] != "Unhold") {
               var temp = {
-                "status": "Driver en route to\nyour location",
+                "status": "Driver en route \nfor delivery",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -1142,12 +1145,13 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "hold_flag": false,
                 "unhold_status": null,
               };
-              if ((statusflow.firstWhere(
-                      (it) => it["code"] == statuslist["bkt_code"],
-                      orElse: () => null)) ==
-                  null) {
-                statusflow.add(temp);
-              }
+              statusflow.add(temp);
+              // if ((statusflow.firstWhere(
+              //         (it) => it["code"] == statuslist["bkt_code"],
+              //         orElse: () => null)) ==
+              //     null) {
+              //   statusflow.add(temp);
+              // }
             } else if (statuslist["bkt_code"] == "DLCC") {
               var temp = {
                 "status": "Delivery completed",
@@ -1184,6 +1188,22 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "color": activecolor,
                 "active_flag": true,
                 "hold_flag": true,
+                "unhold_status": null,
+              };
+              statusflow.add(temp);
+            } else if (statuslist["bkt_code"] == "BAPC") {
+              var temp = {
+                "status": "Booking Rescheduled",
+                "time": DateFormat('dd-MM-yyyy').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
+                    " / " +
+                    DateFormat('hh:mm a').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "code": statuslist["bkt_code"],
+                "icon": 'assets/icons/booking_created_active.png',
+                "color": activecolor,
+                "active_flag": true,
+                "hold_flag": false,
                 "unhold_status": null,
               };
               statusflow.add(temp);
@@ -1307,6 +1327,23 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
               };
               statusflow.add(temp);
             } else if (statuslist["bkt_code"] == "RFDC" &&
+                statuslist['bkt_task'] == "Unhold") {
+              var temp = {
+                "status": "Unhold",
+                "time": DateFormat('dd-MM-yyyy').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!) +
+                    " / " +
+                    DateFormat('hh:mm a').format(
+                        DateTime.tryParse(statuslist["bkt_created_on"])!),
+                "code": statuslist["bkt_code"],
+                "icon": 'assets/icons/unhold.png',
+                "color": activecolor,
+                "active_flag": true,
+                "hold_flag": false,
+                "unhold_status": "unhold",
+              };
+              statusflow.add(temp);
+            } else if (statuslist["bkt_code"] == "DEDC" &&
                 statuslist['bkt_task'] == "Unhold") {
               var temp = {
                 "status": "Unhold",

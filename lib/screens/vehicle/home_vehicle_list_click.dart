@@ -18,7 +18,9 @@ import 'package:shimmer/shimmer.dart';
 
 class HomeVehicleListClick extends StatefulWidget {
   final String vehicle_id;
-  const HomeVehicleListClick({required this.vehicle_id, super.key});
+  final int selectedVeh;
+  const HomeVehicleListClick(
+      {required this.vehicle_id, required this.selectedVeh, super.key});
 
   @override
   State<HomeVehicleListClick> createState() => HomeVehicleListClickState();
@@ -137,7 +139,7 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
                   package_id: pack_details,
                   custvehlist: customerVehList,
                   currency: currency,
-                  selectedVeh: selectedVeh,
+                  selectedVeh: widget.selectedVeh,
                   booking_list: bookingList,
                   pack_type: 1,
                 )));

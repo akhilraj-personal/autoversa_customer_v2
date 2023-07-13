@@ -92,6 +92,8 @@ class VehiclelistState extends State<Vehiclelist> {
             context, "Created a booking. so can't delete the vehicle",
             bgColor: warningcolor, textColor: Colors.white);
       }
+    }).catchError((e) {
+      print(e.toString());
     });
   }
 

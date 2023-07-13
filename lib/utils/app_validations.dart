@@ -66,9 +66,13 @@ fullNameValidation(value, context) {
 }
 
 plateNumberValidation(value) {
-  String pattern = r'^[a-zA-Z0-9 -/]+$';
+  String pattern = r'^[A-Za-z0-9 \-\/]+$';
   RegExp regExp = new RegExp(pattern);
-  if (!regExp.hasMatch(value)) {
+  if (value.length == 0) {
+    return null;
+  } else if (!regExp.hasMatch(value)) {
+    return "Enter valid data";
+  } else if (value.length < 7) {
     return "Enter valid data";
   }
   return null;

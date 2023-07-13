@@ -1132,10 +1132,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           MaterialPageRoute(
                                                               builder: (context) =>
                                                                   HomeVehicleListClick(
-                                                                      vehicle_id:
-                                                                          customerVehList[0]
-                                                                              [
-                                                                              'cv_id'])));
+                                                                    vehicle_id:
+                                                                        customerVehList[0]
+                                                                            [
+                                                                            'cv_id'],
+                                                                    selectedVeh:
+                                                                        0,
+                                                                  )));
                                                     }),
                                                   )
                                                 : SizedBox()),
@@ -1309,10 +1312,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     HomeVehicleListClick(
-                                                        vehicle_id:
-                                                            customerVehList[
-                                                                    index]
-                                                                ['cv_id'])));
+                                                      vehicle_id:
+                                                          customerVehList[index]
+                                                              ['cv_id'],
+                                                      selectedVeh: index,
+                                                    )));
                                       });
                                     },
                                   ),

@@ -47,7 +47,6 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   late List pickup_options = [];
   late List temppickup_options = [];
   late List timeslots = [];
-  final _formKey = GlobalKey<FormState>();
   List<Map<String, dynamic>> SelectAddressList = [];
   final TextEditingController textEditingController = TextEditingController();
   var selected_address = null;
@@ -511,23 +510,27 @@ class RescheduleScreenState extends State<RescheduleScreen> {
       backgroundColor: Colors.transparent,
       builder: (builder) {
         return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setBottomState) {
-          return DraggableScrollableSheet(
-            initialChildSize: 0.6,
-            minChildSize: 0.2,
-            maxChildSize: 1,
-            builder: (context, scrollController) {
-              return Container(
-                color: context.cardColor,
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Form(
-                    key: _formKey,
+          builder: (BuildContext context, StateSetter setBottomState) {
+            return DraggableScrollableSheet(
+              initialChildSize: 0.6,
+              minChildSize: 0.2,
+              maxChildSize: 1,
+              builder: (context, scrollController) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: context.cardColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: SingleChildScrollView(
+                    controller: scrollController,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        AnimatedContainer(
+                        Container(
                           margin: const EdgeInsets.all(8),
                           padding: EdgeInsets.all(8),
                           width: width * 1.85,
@@ -535,8 +538,6 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                             color: white,
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          duration: 1000.microseconds,
-                          curve: Curves.linearToEaseOut,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -599,13 +600,13 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.fromLTRB(
-                                                      16, 16, 16, 0),
+                                                      0, 16, 0, 0),
                                                   child: Container(
                                                     decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius.all(
                                                                 Radius.circular(
-                                                                    16)),
+                                                                    12)),
                                                         color: white),
                                                     child: TextField(
                                                       keyboardType:
@@ -613,7 +614,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                               .multiline,
                                                       minLines: 1,
                                                       maxLines: 5,
-                                                      maxLength: 500,
+                                                      maxLength: 230,
                                                       textInputAction:
                                                           TextInputAction
                                                               .newline,
@@ -625,17 +626,18 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                               hintStyle: montserratRegular
                                                                   .copyWith(
                                                                       color:
-                                                                          black,
+                                                                          grey,
                                                                       fontSize:
-                                                                          12),
+                                                                          width *
+                                                                              0.034),
                                                               focusedBorder:
                                                                   OutlineInputBorder(
                                                                 borderSide:
                                                                     BorderSide(
                                                                         color:
-                                                                            greyColor,
+                                                                            black,
                                                                         width:
-                                                                            0.5),
+                                                                            1),
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
@@ -646,13 +648,13 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                 borderSide:
                                                                     BorderSide(
                                                                         color:
-                                                                            greyColor,
+                                                                            black,
                                                                         width:
-                                                                            0.5),
+                                                                            1),
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
-                                                                            10),
+                                                                            12),
                                                               )),
                                                       focusNode: cancelFocus,
                                                       onChanged: (value) {
@@ -666,127 +668,230 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                 ),
                                               ]),
                                           16.height,
-                                          GestureDetector(
-                                            onTap: () async {
-                                              if (cancel == "") {
-                                                setState(() =>
-                                                    iscancelsubmitted = false);
-                                                showCustomToast(
-                                                    context, "Enter Reason",
-                                                    bgColor: errorcolor,
-                                                    textColor: white);
-                                              } else {
-                                                try {
-                                                  setState(() =>
-                                                      iscancelsubmitted = true);
-                                                  Map req = {
-                                                    "bookid":
-                                                        widget.bk_data['bk_id'],
-                                                    "reason": cancel,
-                                                    "type": "CANCEL",
-                                                    "backendstatus": "CANB",
-                                                    "customerstatus": "CANC",
-                                                    "user_type": "0",
-                                                    "current_bstatus":
-                                                        "Awaiting payment",
-                                                    "current_cstatus":
-                                                        "Awaiting payment"
-                                                  };
-                                                  await booking_cancel(req)
-                                                      .then((value) {
-                                                    if (value['ret_data'] ==
-                                                        "success") {
-                                                      showCustomToast(context,
-                                                          "Booking Canceled",
-                                                          bgColor: Colors.black,
-                                                          textColor: white);
-                                                      Navigator
-                                                          .pushReplacementNamed(
-                                                              context,
-                                                              Routes.bottombar);
-                                                    } else {
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    Navigator.pop(context);
+                                                    setBottomState(() {});
+                                                  },
+                                                  child: Stack(
+                                                    alignment:
+                                                        Alignment.bottomCenter,
+                                                    children: [
+                                                      Container(
+                                                        height: height * 0.045,
+                                                        width: width * 0.4,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        14),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                  blurRadius:
+                                                                      16,
+                                                                  color: syanColor
+                                                                      .withOpacity(
+                                                                          .6),
+                                                                  spreadRadius:
+                                                                      0,
+                                                                  blurStyle:
+                                                                      BlurStyle
+                                                                          .outer,
+                                                                  offset:
+                                                                      Offset(0,
+                                                                          0)),
+                                                            ]),
+                                                      ),
+                                                      Container(
+                                                        height: height * 0.075,
+                                                        width: width * 0.4,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape: BoxShape
+                                                              .rectangle,
+                                                          border: Border.all(
+                                                              color: syanColor),
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          14)),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            begin: Alignment
+                                                                .topLeft,
+                                                            end: Alignment
+                                                                .bottomRight,
+                                                            colors: [
+                                                              white,
+                                                              white
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        child: Text(
+                                                          "BACK",
+                                                          style: montserratSemiBold
+                                                              .copyWith(
+                                                                  color:
+                                                                      syanColor),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    if (cancel == "") {
                                                       setState(() =>
                                                           iscancelsubmitted =
                                                               false);
+                                                      showCustomToast(context,
+                                                          "Enter Reason",
+                                                          bgColor: errorcolor,
+                                                          textColor: white);
+                                                    } else {
+                                                      try {
+                                                        setState(() =>
+                                                            iscancelsubmitted =
+                                                                true);
+                                                        Map req = {
+                                                          "bookid": widget
+                                                              .bk_data['bk_id'],
+                                                          "reason": cancel,
+                                                          "type": "CANCEL",
+                                                          "backendstatus":
+                                                              "CANB",
+                                                          "customerstatus":
+                                                              "CANC",
+                                                          "user_type": "0",
+                                                          "current_bstatus":
+                                                              "Awaiting payment",
+                                                          "current_cstatus":
+                                                              "Awaiting payment"
+                                                        };
+                                                        await booking_cancel(
+                                                                req)
+                                                            .then((value) {
+                                                          if (value[
+                                                                  'ret_data'] ==
+                                                              "success") {
+                                                            showCustomToast(
+                                                                context,
+                                                                "Booking Canceled",
+                                                                bgColor: Colors
+                                                                    .black,
+                                                                textColor:
+                                                                    white);
+                                                            Navigator
+                                                                .pushReplacementNamed(
+                                                                    context,
+                                                                    Routes
+                                                                        .bottombar);
+                                                          } else {
+                                                            setState(() =>
+                                                                iscancelsubmitted =
+                                                                    false);
+                                                          }
+                                                        });
+                                                      } catch (e) {
+                                                        setState(() =>
+                                                            iscancelsubmitted =
+                                                                false);
+                                                      }
+                                                      // finish(context);
                                                     }
-                                                  });
-                                                } catch (e) {
-                                                  setState(() =>
-                                                      iscancelsubmitted =
-                                                          false);
-                                                }
-                                                // finish(context);
-                                              }
-                                            },
-                                            child: Stack(
-                                              alignment: Alignment.bottomCenter,
-                                              children: [
-                                                Container(
-                                                  height: height * 0.045,
-                                                  width: height * 0.37,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              14),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                            blurRadius: 16,
-                                                            color: syanColor
-                                                                .withOpacity(
-                                                                    .6),
-                                                            spreadRadius: 0,
-                                                            blurStyle:
-                                                                BlurStyle.outer,
-                                                            offset:
-                                                                Offset(0, 0)),
-                                                      ]),
-                                                ),
-                                                Container(
-                                                  height: height * 0.075,
-                                                  width: height * 0.4,
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.rectangle,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                14)),
-                                                    gradient: LinearGradient(
-                                                      begin: Alignment.topLeft,
-                                                      end:
-                                                          Alignment.bottomRight,
-                                                      colors: [
-                                                        syanColor,
-                                                        lightblueColor,
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  child: !isproceeding
-                                                      ? Text(
-                                                          "SUBMIT",
-                                                          style: montserratSemiBold
-                                                              .copyWith(
-                                                                  color: Colors
-                                                                      .white),
-                                                        )
-                                                      : Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Transform.scale(
-                                                              scale: 0.7,
-                                                              child:
-                                                                  CircularProgressIndicator(
-                                                                color: white,
-                                                              ),
-                                                            ),
-                                                          ],
+                                                  },
+                                                  child: Stack(
+                                                    alignment:
+                                                        Alignment.bottomCenter,
+                                                    children: [
+                                                      Container(
+                                                        height: height * 0.045,
+                                                        width: width * 0.4,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        14),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                  blurRadius:
+                                                                      16,
+                                                                  color: syanColor
+                                                                      .withOpacity(
+                                                                          .6),
+                                                                  spreadRadius:
+                                                                      0,
+                                                                  blurStyle:
+                                                                      BlurStyle
+                                                                          .outer,
+                                                                  offset:
+                                                                      Offset(0,
+                                                                          0)),
+                                                            ]),
+                                                      ),
+                                                      Container(
+                                                        height: height * 0.075,
+                                                        width: width * 0.4,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape: BoxShape
+                                                              .rectangle,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          14)),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            begin: Alignment
+                                                                .topLeft,
+                                                            end: Alignment
+                                                                .bottomRight,
+                                                            colors: [
+                                                              syanColor,
+                                                              lightblueColor,
+                                                            ],
+                                                          ),
                                                         ),
+                                                        child: !isproceeding
+                                                            ? Text(
+                                                                "SUBMIT",
+                                                                style: montserratSemiBold
+                                                                    .copyWith(
+                                                                        color: Colors
+                                                                            .white),
+                                                              )
+                                                            : Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Transform
+                                                                      .scale(
+                                                                    scale: 0.7,
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color:
+                                                                          white,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
+                                              ]),
                                         ],
                                       ),
                                     ),
@@ -802,11 +907,11 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                       ],
                     ),
                   ),
-                ),
-              );
-            },
-          );
-        });
+                );
+              },
+            );
+          },
+        );
       },
     );
   }
