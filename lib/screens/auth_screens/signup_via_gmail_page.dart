@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/main.dart';
 import 'package:autoversa/provider/provider.dart';
 import 'package:autoversa/services/post_auth_services.dart';
@@ -97,7 +97,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
         });
       } else {}
     }).catchError((e) {
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -119,7 +119,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
       setState(() {
         isLoading = false;
       });
-      showCustomToast(context, ST.of(context).otp_invalid_text,
+      showCustomToast(context, lang.S.of(context).otp_invalid_text,
           bgColor: warningcolor, textColor: whiteColor);
     } else {
       await verifyOtp(req).then((value) {
@@ -132,7 +132,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
           //     bgColor: blackColor, textColor: whiteColor);
         } else if (value['ret_data'] == "MaxAttempt") {
           setState(() => isLoading = false);
-          showCustomToast(context, ST.of(context).max_otp_text,
+          showCustomToast(context, lang.S.of(context).max_otp_text,
               bgColor: warningcolor, textColor: whiteColor);
           otppin = "";
         } else {
@@ -142,7 +142,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
         }
       }).catchError((e) {
         setState(() => isLoading = false);
-        showCustomToast(context, ST.of(context).toast_application_error,
+        showCustomToast(context, lang.S.of(context).toast_application_error,
             bgColor: errorcolor, textColor: whiteColor);
       });
     }
@@ -180,7 +180,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
       }
     }).catchError((e) {
       setState(() => isLoading = false);
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -272,7 +272,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                           ),
                           SizedBox(height: 20),
                           Text(
-                            ST.of(context).register_new_account,
+                            lang.S.of(context).register_new_account,
                             style: montserratSemiBold.copyWith(
                                 color: blackColor, fontSize: 21),
                             textAlign: TextAlign.center,
@@ -316,7 +316,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                                           hint: Align(
                                               alignment: Alignment.center,
                                               child: Text(
-                                                ST.of(context).emirates,
+                                                lang.S.of(context).emirates,
                                                 style:
                                                     montserratRegular.copyWith(
                                                         color: blackColor,
@@ -398,7 +398,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                                               counterText: "",
                                               filled: true,
                                               hintText:
-                                                  ST.of(context).full_name,
+                                              lang.S.of(context).full_name,
                                               hintStyle:
                                                   montserratRegular.copyWith(
                                                       color: blackColor,
@@ -465,7 +465,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                                                   color: warningcolor),
                                               counterText: "",
                                               filled: true,
-                                              hintText: ST.of(context).email,
+                                              hintText: lang.S.of(context).email,
                                               hintStyle:
                                                   montserratRegular.copyWith(
                                                       color: blackColor,
@@ -552,7 +552,7 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                                               counterText: "",
                                               filled: true,
                                               hintText:
-                                                  ST.of(context).mobile_number,
+                                              lang.S.of(context).mobile_number,
                                               hintStyle:
                                                   montserratRegular.copyWith(
                                                       color: blackColor,
@@ -572,11 +572,11 @@ class SignupViaGmailState extends State<SignupViaGmail> {
                           ]),
                           SizedBox(height: height * 0.04),
                           Text(
-                            ST.of(context).send_verification_msg +
+                            lang.S.of(context).send_verification_msg +
                                 " " +
-                                ST.of(context).to_mentioned_number +
+                                lang.S.of(context).to_mentioned_number +
                                 "." +
-                                ST.of(context).please_enter_the_code,
+                                lang.S.of(context).please_enter_the_code,
                             style: montserratLight.copyWith(
                                 color: lightblackColor, fontSize: 14),
                             textAlign: TextAlign.center,

@@ -33,31 +33,10 @@ class ProfilePageState extends State<ProfilePage> {
   late Map<String, dynamic> custdetails = {};
   var vehcount = 0;
   String? nameProfile;
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     init();
     getProfileDetails();
   }
@@ -96,7 +75,6 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   Future<bool> _onWillPop() async {
@@ -365,7 +343,9 @@ class ProfilePageState extends State<ProfilePage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return Editprofie();
+                            return Editprofie(
+                              click_root: "editprofile",
+                            );
                           },
                         ),
                       );

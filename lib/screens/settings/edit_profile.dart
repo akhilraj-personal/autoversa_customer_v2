@@ -4,7 +4,8 @@ import 'dart:io';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
+import 'package:autoversa/main.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -25,7 +26,8 @@ import 'package:permission_handler/permission_handler.dart';
 import '../bottom_tab/bottomtab.dart';
 
 class Editprofie extends StatefulWidget {
-  const Editprofie({super.key});
+  final String click_root;
+  const Editprofie({required this.click_root, super.key});
 
   @override
   State<Editprofie> createState() => EditprofieState();
@@ -51,8 +53,6 @@ class EditprofieState extends State<Editprofie> {
   List<DropdownMenuItem<String>> items = [];
   List data = List<String>.empty();
   final _formKey = GlobalKey<FormState>();
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
   int MobileLength = 0;
   File? imagePicked;
   bool profilepicturechanged = false;
@@ -60,25 +60,6 @@ class EditprofieState extends State<Editprofie> {
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     init();
     getProfileDetails();
     _getStateList();
@@ -87,7 +68,6 @@ class EditprofieState extends State<Editprofie> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   Future<void> init() async {
@@ -119,7 +99,7 @@ class EditprofieState extends State<Editprofie> {
         });
       } else {}
     }).catchError((e) {
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     });
   }
@@ -213,15 +193,18 @@ class EditprofieState extends State<Editprofie> {
         showCustomToast(context, "Profile Details Updated",
             bgColor: Colors.black, textColor: Colors.white);
         setState(() => issubmitted = false);
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BottomNavBarScreen(
-              index: 4,
-            ),
-          ),
-          (route) => false,
-        );
+        widget.click_root == "editprofile"
+            ? Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BottomNavBarScreen(
+                    index: 4,
+                  ),
+                ),
+                (route) => false,
+              )
+            : Navigator.pushReplacementNamed(context, Routes.bottombar);
+        ;
       } else {
         setState(() => issubmitted = false);
         showCustomToast(context, value['ret_data'],
@@ -230,7 +213,7 @@ class EditprofieState extends State<Editprofie> {
     }).catchError((e) {
       setState(() => issubmitted = false);
       print(e);
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     });
   }
@@ -692,7 +675,7 @@ class EditprofieState extends State<Editprofie> {
                                                     ),
                                                     isExpanded: true,
                                                     hint: Text(
-                                                      ST.of(context).emirates,
+                                                      lang.S.of(context).emirates,
                                                       style: montserratMedium
                                                           .copyWith(
                                                               color:
@@ -864,7 +847,7 @@ class EditprofieState extends State<Editprofie> {
                                                                 warningcolor),
                                                         counterText: "",
                                                         filled: true,
-                                                        hintText: ST
+                                                        hintText: lang.S
                                                             .of(context)
                                                             .mobile_number,
                                                         hintStyle: montserratRegular

@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/main.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/AppWidgets.dart';
@@ -443,7 +443,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                         _selectDate(context);
                                       },
                                       title: Text(
-                                          ST.of(context).select_booking_date +
+                                          lang.S.of(context).select_booking_date +
                                               " ",
                                           style: montserratMedium.copyWith(
                                               color: black,
@@ -506,7 +506,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                       ),
                                     ),
                                     title: Text(
-                                        ST.of(context).select_a_time_slot,
+                                        lang.S.of(context).select_a_time_slot,
                                         overflow: TextOverflow.ellipsis,
                                         style: montserratMedium.copyWith(
                                             color: black,
@@ -625,7 +625,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                                                               [
                                                                               'tm_end_time']) +
                                                                       "\n" +
-                                                                      ST
+                                                                      lang.S
                                                                           .of(context)
                                                                           .slot_is_full,
                                                                   style: montserratMedium
@@ -660,7 +660,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                                       );
                                                     })
                                                 : Text(
-                                                    ST
+                                                    lang.S
                                                         .of(context)
                                                         .no_time_slot_available,
                                                     style: montserratMedium

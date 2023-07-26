@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/main.dart';
 import 'package:autoversa/provider/provider.dart';
 import 'package:autoversa/screens/auth_screens/signup_page.dart';
@@ -100,17 +100,18 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         startTimer();
         showCustomToast(context, "OTP Sent Successfully",
             bgColor: toastgrey, textColor: whiteColor);
-      } else {
+      } else if (value['ret_data'] ==
+          "Maximum attempt reached. Please try again later") {
         prefs.setBool('islogged', false);
         setState(() => isResend = false);
-        showCustomToast(context, value['message'],
+        showCustomToast(context, value['ret_data'],
             bgColor: warningcolor, textColor: whiteColor);
       }
     }).catchError((e) {
       print("1111111111111");
       print(e.toString());
       setState(() => isResend = false);
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -129,16 +130,17 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         startTimer();
         showCustomToast(context, "Call initiated",
             bgColor: toastgrey, textColor: whiteColor);
-      } else {
+      } else if (value['ret_data'] ==
+          "Maximum attempt reached. Please try again later") {
         setState(() => isResend = false);
-        showCustomToast(context, ST.of(context).try_another_method,
+        showCustomToast(context, lang.S.of(context).toast_application_error,
             bgColor: warningcolor, textColor: whiteColor);
       }
     }).catchError((e) {
       print("2222222222");
       print(e.toString());
       setState(() => isResend = false);
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -151,7 +153,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
       setState(() {
         isOtpVerifying = false;
       });
-      showCustomToast(context, ST.of(context).otp_invalid_text,
+      showCustomToast(context, lang.S.of(context).otp_invalid_text,
           bgColor: warningcolor, textColor: whiteColor);
     } else {
       final prefs = await SharedPreferences.getInstance();
@@ -217,7 +219,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         } else if (value['ret_data'] == "MaxAttempt") {
           verify_count++;
           setState(() => isOtpVerifying = false);
-          showCustomToast(context, ST.of(context).max_otp_text,
+          showCustomToast(context, lang.S.of(context).max_otp_text,
               bgColor: warningcolor, textColor: whiteColor);
           otppin = "";
         } else {
@@ -230,7 +232,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         print("333333333333");
         print(e.toString());
         setState(() => isOtpVerifying = false);
-        showCustomToast(context, ST.of(context).toast_application_error,
+        showCustomToast(context, lang.S.of(context).toast_application_error,
             bgColor: errorcolor, textColor: whiteColor);
       });
     }
@@ -320,14 +322,14 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                         ),
                         SizedBox(height: height * 0.05),
                         Text(
-                          ST.of(context).verify_mobile_number,
+                          lang.S.of(context).verify_mobile_number,
                           style: montserratSemiBold.copyWith(
                               color: blackColor, fontSize: width * 0.053),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: height * 0.03),
                         Text(
-                          ST.of(context).send_verification_msg +
+                          lang.S.of(context).send_verification_msg +
                               widget.country_code +
                               widget.phone,
                           style: montserratLight.copyWith(
@@ -339,14 +341,14 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                             Navigator.pushReplacementNamed(
                                 context, Routes.loginPage);
                           },
-                          child: Text('\n' + ST.of(context).change_number,
+                          child: Text('\n' + lang.S.of(context).change_number,
                               style: montserratMedium.copyWith(
                                   color: changenumberorange, fontSize: 14),
                               textAlign: TextAlign.end),
                         ),
                         SizedBox(height: height * 0.03),
                         Text(
-                          ST.of(context).please_enter_the_code,
+                          lang.S.of(context).please_enter_the_code,
                           style: montserratRegular.copyWith(
                               color: blackColor, fontSize: 14),
                           textAlign: TextAlign.center,
@@ -482,7 +484,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                                   isResend = false;
                                                 });
                                                 showCustomToast(context,
-                                                    ST.of(context).max_otp_text,
+                                                    lang.S.of(context).max_otp_text,
                                                     bgColor: warningcolor,
                                                     textColor: whiteColor);
                                               }
@@ -490,7 +492,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                           },
                                           child: Text(
                                               click_count >= 0
-                                                  ? ST
+                                                  ? lang.S
                                                       .of(context)
                                                       .resend_otp_text
                                                   : "",
@@ -512,7 +514,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                                   isResend = false;
                                                 });
                                                 showCustomToast(context,
-                                                    ST.of(context).max_otp_text,
+                                                    lang.S.of(context).max_otp_text,
                                                     bgColor: warningcolor,
                                                     textColor: whiteColor);
                                               }
@@ -520,7 +522,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                           },
                                           child: Text(
                                             click_count >= 1
-                                                ? ST
+                                                ? lang.S
                                                     .of(context)
                                                     .verify_call_text
                                                 : "",
@@ -535,11 +537,11 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                          Text(ST.of(context).otp_resend_try +
+                                          Text(lang.S.of(context).otp_resend_try +
                                               " " +
                                               OTPtimer.toString() +
                                               " " +
-                                              ST.of(context).seconds_text),
+                                              lang.S.of(context).seconds_text),
                                         ]),
                         ),
                         SizedBox(height: 20),
@@ -588,7 +590,7 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                 ),
                                 child: !isOtpVerifying
                                     ? Text(
-                                        ST.of(context).verify_me.toUpperCase(),
+                                  lang.S.of(context).verify_me.toUpperCase(),
                                         style: montserratSemiBold.copyWith(
                                             color: Colors.white),
                                       )

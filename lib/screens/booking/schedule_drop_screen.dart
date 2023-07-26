@@ -14,7 +14,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../constant/image_const.dart';
 import '../../constant/text_style.dart';
-import '../../generated/l10n.dart';
+import '../../generated/l10n.dart' as lang;
 import '../../main.dart';
 import '../../services/post_auth_services.dart';
 import '../../utils/AppWidgets.dart';
@@ -268,7 +268,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     } catch (e) {
       setState(() => isSubmitted = false);
       print(e.toString());
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     }
   }
@@ -391,7 +391,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     } catch (e) {
       setState(() => isSubmitted = false);
       print(e.toString());
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     }
   }
@@ -599,7 +599,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
           }
         }).catchError((e) {
           print(e.toString());
-          showCustomToast(context, ST.of(context).toast_application_error,
+          showCustomToast(context, lang.S.of(context).toast_application_error,
               bgColor: errorcolor, textColor: Colors.white);
         });
         // createPayment();
@@ -946,7 +946,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    ST.of(context).add_address + " ",
+                                    lang.S.of(context).add_address + " ",
                                     style: montserratSemiBold.copyWith(
                                         color: Colors.black,
                                         fontSize: width * 0.034),
@@ -1230,7 +1230,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                         ? Text(
                                             pickup_options[index]['pk_cost'] ==
                                                     "AED 0"
-                                                ? ST.of(context).free
+                                                ? lang.S.of(context).free
                                                 : pickup_options[index]
                                                     ['pk_cost'],
                                             textAlign: TextAlign.end,
@@ -1246,7 +1246,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                         : Text(
                                             pickup_options[index]['pk_cost'] ==
                                                     "AED 0"
-                                                ? ST.of(context).free
+                                                ? lang.S.of(context).free
                                                 : pickup_options[index]
                                                     ['pk_cost'],
                                             textAlign: TextAlign.end,

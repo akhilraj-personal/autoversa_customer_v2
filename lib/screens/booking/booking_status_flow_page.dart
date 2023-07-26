@@ -3003,15 +3003,17 @@ class ScheduleDelivery extends StatelessWidget {
       elevation: 0.0,
       backgroundColor: Colors.transparent,
       child: Container(
-        decoration: new BoxDecoration(
-          color: white,
+        decoration: BoxDecoration(
+          color: Colors.white,
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(0),
+          borderRadius:
+              BorderRadius.circular(12.0), // Adjust the value for desired curve
           boxShadow: [
             BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0)),
+              color: Colors.black26,
+              blurRadius: 10.0,
+              offset: const Offset(0.0, 10.0),
+            ),
           ],
         ),
         width: MediaQuery.of(context).size.width,
@@ -3024,16 +3026,17 @@ class ScheduleDelivery extends StatelessWidget {
                 Container(
                   height: 130,
                   decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
                       gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      white,
-                      white,
-                      white,
-                      white,
-                    ],
-                  )),
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          white,
+                          white,
+                          white,
+                          white,
+                        ],
+                      )),
                 ),
                 // Container(height: 130, color: blackColor),
                 Column(
@@ -3096,7 +3099,7 @@ class ScheduleDelivery extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            "CANCEL",
+                            "CLOSE",
                             style:
                                 montserratSemiBold.copyWith(color: syanColor),
                           ),

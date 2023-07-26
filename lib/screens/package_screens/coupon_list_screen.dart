@@ -1,6 +1,6 @@
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/screens/booking/resummery_screen.dart';
 import 'package:autoversa/screens/package_screens/summery_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
@@ -78,7 +78,7 @@ class CouponListScreenState extends State<CouponListScreen> {
       }
     }).catchError((e) {
       print(e.toString());
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     });
   }

@@ -16,7 +16,7 @@ class ImageWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 200.0,
+            height: 170.0,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.2),
             ),

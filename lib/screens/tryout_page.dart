@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
 import 'package:autoversa/screens/package_screens/summery_screen.dart';
@@ -328,7 +328,7 @@ class TryOutScreenState extends State<TryOutScreen> {
       getTimeSlots(new DateTime.now());
     } catch (e) {
       print(e.toString());
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     }
   }
@@ -1084,7 +1084,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        ST.of(context).add_address + " ",
+                                        lang.S.of(context).add_address + " ",
                                         style: montserratSemiBold.copyWith(
                                             color: black,
                                             fontSize: width * 0.034),
@@ -1415,7 +1415,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                                 ),
                               ),
                               Text(
-                                ST.of(context).drop_location_same,
+                                lang.S.of(context).drop_location_same,
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.clip,
                                 style: montserratMedium.copyWith(
@@ -1436,7 +1436,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                             children: <Widget>[
                               Padding(padding: EdgeInsets.all(8)),
                               Text(
-                                ST.of(context).select_drop_address + "*",
+                                lang.S.of(context).select_drop_address + "*",
                                 textAlign: TextAlign.start,
                                 style: montserratSemiBold.copyWith(
                                     color: black, fontSize: width * 0.034),
@@ -1697,7 +1697,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                       children: <Widget>[
                         Padding(padding: EdgeInsets.all(8)),
                         Text(
-                          ST.of(context).pickup_options + "*",
+                          lang.S.of(context).pickup_options + "*",
                           textAlign: TextAlign.start,
                           style: montserratSemiBold.copyWith(
                               color: black, fontSize: width * 0.034),
@@ -1847,7 +1847,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                                       ? Text(
                                           pickup_options[index]['pk_cost'] ==
                                                   "AED 0"
-                                              ? ST.of(context).free
+                                              ? lang.S.of(context).free
                                               : pickup_options[index]
                                                   ['pk_cost'],
                                           textAlign: TextAlign.end,
@@ -1859,7 +1859,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                                       : Text(
                                           pickup_options[index]['pk_cost'] ==
                                                   "AED 0"
-                                              ? ST.of(context).free
+                                              ? lang.S.of(context).free
                                               : pickup_options[index]
                                                   ['pk_cost'],
                                           textAlign: TextAlign.end,
@@ -1882,7 +1882,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                       children: [
                         Padding(padding: EdgeInsets.all(12)),
                         Text(
-                          ST.of(context).select_booking_date + "*",
+                          lang.S.of(context).select_booking_date + "*",
                           style: montserratSemiBold.copyWith(
                               fontSize: width * 0.034, color: black),
                         ),
@@ -1931,7 +1931,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                                   _selectDate(context);
                                 },
                                 title: Text(
-                                    ST.of(context).select_booking_date + " ",
+                                    lang.S.of(context).select_booking_date + " ",
                                     style: montserratMedium.copyWith(
                                         color: black, fontSize: width * 0.04),
                                     maxLines: 3),
@@ -1951,7 +1951,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                       children: [
                         Padding(padding: EdgeInsets.all(12)),
                         Text(
-                          ST.of(context).select_a_time_slot + "*",
+                          lang.S.of(context).select_a_time_slot + "*",
                           style: montserratSemiBold.copyWith(
                               fontSize: width * 0.034, color: black),
                         ),
@@ -1997,7 +1997,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                                       color: white, size: 28),
                                 ),
                               ),
-                              title: Text(ST.of(context).select_a_time_slot,
+                              title: Text(lang.S.of(context).select_a_time_slot,
                                   overflow: TextOverflow.ellipsis,
                                   style: montserratMedium.copyWith(
                                       color: black, fontSize: width * 0.04),
@@ -2114,7 +2114,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                                                                         [
                                                                         'tm_end_time']) +
                                                                 "\n" +
-                                                                ST
+                                                                lang.S
                                                                     .of(context)
                                                                     .slot_is_full,
                                                             style:
@@ -2147,7 +2147,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                                                 );
                                               })
                                           : Text(
-                                              ST
+                                              lang.S
                                                   .of(context)
                                                   .no_time_slot_available,
                                               style: montserratMedium.copyWith(
@@ -2235,7 +2235,7 @@ class TryOutScreenState extends State<TryOutScreen> {
                               ),
                               child: !isproceeding
                                   ? Text(
-                                      ST.of(context).proceed,
+                                      lang.S.of(context).proceed,
                                       style: montserratSemiBold.copyWith(
                                           color: Colors.white),
                                     )

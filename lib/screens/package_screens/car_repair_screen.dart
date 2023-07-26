@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/main.dart';
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/package_screens/schedule_screen.dart';
@@ -1357,7 +1357,7 @@ class CarRepairState extends State<CarRepair> {
                                       children: [
                                         Padding(
                                             padding: EdgeInsets.only(left: 16)),
-                                        Text(ST.of(context).additional_queries,
+                                        Text(lang.S.of(context).additional_queries,
                                             maxLines: 10,
                                             style: montserratRegular.copyWith(
                                                 color: black,
@@ -1385,7 +1385,7 @@ class CarRepairState extends State<CarRepair> {
                                             controller: complaint,
                                             decoration: InputDecoration(
                                                 counterText: "",
-                                                hintText: ST
+                                                hintText: lang.S
                                                     .of(context)
                                                     .your_message_here,
                                                 hintStyle:
@@ -1424,7 +1424,7 @@ class CarRepairState extends State<CarRepair> {
                                                   const EdgeInsets.fromLTRB(
                                                       14, 0, 14, 14),
                                               child: Text(
-                                                  ST
+                                                  lang.S
                                                       .of(context)
                                                       .press_record_dialogue,
                                                   style: montserratRegular
@@ -1713,7 +1713,7 @@ class CarRepairState extends State<CarRepair> {
                                             ),
                                             child: !isbooked
                                                 ? Text(
-                                                    ST.of(context).book_now,
+                                                    lang.S.of(context).book_now,
                                                     style: montserratSemiBold
                                                         .copyWith(
                                                             color:

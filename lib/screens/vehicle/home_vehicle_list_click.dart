@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
@@ -66,7 +66,7 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
       });
     } catch (e) {
       isPackageLoaded = false;
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     }
   }
@@ -90,7 +90,7 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
         });
       }
     }).catchError((e) {
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
   }
@@ -123,7 +123,7 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
         });
       }
     }).catchError((e) {
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
   }

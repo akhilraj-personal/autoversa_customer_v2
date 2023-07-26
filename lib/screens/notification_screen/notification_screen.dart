@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/main.dart';
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
@@ -80,7 +80,7 @@ class NotificationPageState extends State<NotificationPage> {
       });
       print("11111====>");
       print(e.toString());
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
   }
@@ -101,7 +101,7 @@ class NotificationPageState extends State<NotificationPage> {
     }).catchError((e) {
       print("222222====>");
       print(e.toString());
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
       setState(() {
         isActive = false;
@@ -528,7 +528,7 @@ class Notification extends StatelessWidget {
           }).catchError((e) {
             print("33333====>");
             print(e.toString());
-            showCustomToast(context, ST.of(context).toast_application_error,
+            showCustomToast(context, lang.S.of(context).toast_application_error,
                 bgColor: errorcolor, textColor: white);
           });
         } else if (model.nt_read == "1" && model.st_code != "DLCC") {

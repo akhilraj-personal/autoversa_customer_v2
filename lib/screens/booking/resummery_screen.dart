@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/booking/reschedule_screen.dart';
 import 'package:autoversa/screens/package_screens/coupon_list_screen.dart';
@@ -171,7 +171,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
       }
     }).catchError((e) {
       print(e.toString());
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     });
   }
@@ -1365,7 +1365,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                             textInputAction: TextInputAction.newline,
                             decoration: InputDecoration(
                                 counterText: "",
-                                hintText: ST.of(context).your_message_here,
+                                hintText: lang.S.of(context).your_message_here,
                                 hintStyle: montserratRegular.copyWith(
                                     color: black, fontSize: width * 0.034),
                                 focusedBorder: OutlineInputBorder(

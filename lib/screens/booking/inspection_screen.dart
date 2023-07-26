@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/screens/booking/image_full_screen.dart';
 import 'package:autoversa/screens/booking/image_size_widget.dart';
 import 'package:autoversa/screens/booking/inspection_image_screen.dart';
@@ -110,7 +110,7 @@ class InspectionScreenState extends State<InspectionScreen>
       }
     }).catchError((e) {
       setState(() {});
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     });
   }

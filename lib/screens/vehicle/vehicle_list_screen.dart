@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/vehicle/vehicle_add_page.dart';
 import 'package:autoversa/screens/vehicle/vehicle_update_page.dart';
@@ -75,7 +75,7 @@ class VehiclelistState extends State<Vehiclelist> {
       setState(() {
         isActive = false;
       });
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     });
   }

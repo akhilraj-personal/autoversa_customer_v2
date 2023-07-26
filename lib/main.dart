@@ -16,7 +16,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'generated/l10n.dart';
+import 'generated/l10n.dart' as lang;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,16 +56,16 @@ class MyApp extends StatelessWidget {
       child: ChangeNotifierProvider<LanguageChangeProvider>(
         create: (context) => LanguageChangeProvider(),
         child: Builder(
-          builder: (context) => GetMaterialApp(
+          builder: (context) => MaterialApp(
             locale: Provider.of<LanguageChangeProvider>(context, listen: true)
                 .currentLocale,
             localizationsDelegates: [
-              ST.delegate,
+              lang.S.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: ST.delegate.supportedLocales,
+            supportedLocales: lang.S.delegate.supportedLocales,
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               primarySwatch: Colors.blue,

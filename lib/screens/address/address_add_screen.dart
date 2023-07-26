@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/screens/address/address_list_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/app_validations.dart';
@@ -1067,7 +1067,7 @@ class AddressAddState extends State<AddressAdd> {
                                           ],
                                         )
                                       : Text(
-                                          ST.of(context).save.toUpperCase(),
+                                          lang.S.of(context).save.toUpperCase(),
                                           style: montserratSemiBold.copyWith(
                                               color: Colors.white),
                                         ),

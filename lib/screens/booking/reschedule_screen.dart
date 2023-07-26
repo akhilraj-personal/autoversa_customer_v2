@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/booking/resummery_screen.dart';
 import 'package:autoversa/services/location_controller.dart';
@@ -330,7 +330,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
       // }
       getTimeSlots(new DateTime.now());
     } catch (e) {
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     }
   }
@@ -1297,7 +1297,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  ST.of(context).add_address + " ",
+                                  lang.S.of(context).add_address + " ",
                                   style: montserratMedium.copyWith(
                                       color: black, fontSize: width * 0.034),
                                 ),
@@ -1530,7 +1530,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                           ),
                         ),
                         Text(
-                          ST.of(context).drop_location_same,
+                          lang.S.of(context).drop_location_same,
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.clip,
                           style: montserratMedium.copyWith(
@@ -1550,7 +1550,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                             children: <Widget>[
                               Padding(padding: EdgeInsets.all(8)),
                               Text(
-                                ST.of(context).select_drop_address + "*",
+                                lang.S.of(context).select_drop_address + "*",
                                 textAlign: TextAlign.start,
                                 style: montserratSemiBold.copyWith(
                                     color: black, fontSize: width * 0.034),
@@ -1811,7 +1811,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                       children: <Widget>[
                         Padding(padding: EdgeInsets.all(8)),
                         Text(
-                          ST.of(context).pickup_options + "*",
+                          lang.S.of(context).pickup_options + "*",
                           textAlign: TextAlign.start,
                           style: montserratSemiBold.copyWith(
                               color: black, fontSize: width * 0.034),
@@ -1910,7 +1910,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                       ? Text(
                                           pickup_options[index]['pk_cost'] ==
                                                   "AED 0"
-                                              ? ST.of(context).free
+                                              ? lang.S.of(context).free
                                               : pickup_options[index]
                                                   ['pk_cost'],
                                           textAlign: TextAlign.end,
@@ -1922,7 +1922,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                       : Text(
                                           pickup_options[index]['pk_cost'] ==
                                                   "AED 0"
-                                              ? ST.of(context).free
+                                              ? lang.S.of(context).free
                                               : pickup_options[index]
                                                   ['pk_cost'],
                                           textAlign: TextAlign.end,
@@ -1940,7 +1940,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                       children: [
                         Padding(padding: EdgeInsets.all(12)),
                         Text(
-                          ST.of(context).select_booking_date + "*",
+                          lang.S.of(context).select_booking_date + "*",
                           style: montserratSemiBold.copyWith(
                               fontSize: width * 0.034, color: black),
                         ),
@@ -1989,7 +1989,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                   _selectDate(context);
                                 },
                                 title: Text(
-                                    ST.of(context).select_booking_date + " ",
+                                    lang.S.of(context).select_booking_date + " ",
                                     style: montserratMedium.copyWith(
                                         color: black, fontSize: width * 0.04),
                                     maxLines: 3),
@@ -2009,7 +2009,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                       children: [
                         Padding(padding: EdgeInsets.all(12)),
                         Text(
-                          ST.of(context).select_a_time_slot + "*",
+                          lang.S.of(context).select_a_time_slot + "*",
                           style: montserratSemiBold.copyWith(
                               fontSize: width * 0.034, color: black),
                         ),
@@ -2055,7 +2055,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                       color: white, size: 28),
                                 ),
                               ),
-                              title: Text(ST.of(context).select_a_time_slot,
+                              title: Text(lang.S.of(context).select_a_time_slot,
                                   overflow: TextOverflow.ellipsis,
                                   style: montserratMedium.copyWith(
                                       color: black, fontSize: width * 0.04),
@@ -2172,7 +2172,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                                         [
                                                                         'tm_end_time']) +
                                                                 "\n" +
-                                                                ST
+                                                                lang.S
                                                                     .of(context)
                                                                     .slot_is_full,
                                                             style:
@@ -2205,7 +2205,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                 );
                                               })
                                           : Text(
-                                              ST
+                                              lang.S
                                                   .of(context)
                                                   .no_time_slot_available,
                                               style: montserratMedium.copyWith(

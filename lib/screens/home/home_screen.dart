@@ -19,7 +19,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../constant/image_const.dart';
 import '../../constant/text_style.dart';
-import '../../generated/l10n.dart';
+import '../../generated/l10n.dart' as lang;
 import '../../services/post_auth_services.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/common_utils.dart';
@@ -102,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
       isPackageLoaded = false;
       print("1");
       print(e.toString());
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     }
   }
@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }).catchError((e) {
       print("2");
       print(e.toString());
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
   }
@@ -158,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }).catchError((e) {
       print("3");
       print(e.toString());
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
   }
@@ -189,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         isActive = false;
       });
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
   }
@@ -369,7 +369,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) {
-                                                    return Editprofie();
+                                                    return Editprofie(
+                                                      click_root: "home",
+                                                    );
                                                   },
                                                 ),
                                               );
@@ -388,14 +390,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) {
-                                                      return Editprofie();
+                                                      return Editprofie(
+                                                        click_root: "home",
+                                                      );
                                                     },
                                                   ),
                                                 );
                                               },
                                               child: RichText(
                                                 text: TextSpan(
-                                                  text: ST
+                                                  text: lang.S
                                                           .of(context)
                                                           .dash_intro_text +
                                                       " ",
@@ -957,7 +961,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        ST
+                                                        lang.S
                                                             .of(context)
                                                             .new_vehicle_text,
                                                         style:
@@ -1670,10 +1674,12 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: EdgeInsets.only(
             left: width * 0.03, right: width * 0.06, bottom: height * 0.027),
         decoration: BoxDecoration(
-            image: type
-                ? DecorationImage(image: CachedNetworkImageProvider(img))
-                : DecorationImage(image: AssetImage(img)),
-            borderRadius: BorderRadius.circular(10)),
+          image: type
+              ? DecorationImage(
+                  image: CachedNetworkImageProvider(img), fit: BoxFit.cover)
+              : DecorationImage(image: AssetImage(img), fit: BoxFit.cover),
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

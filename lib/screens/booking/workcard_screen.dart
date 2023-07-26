@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/main.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -218,7 +218,7 @@ class WorkcardState extends State<Workcard> {
         createPaymentIntent(widget.booking_id, value['payment_details']);
       }
     }).catchError((e) {
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     });
   }
@@ -299,7 +299,11 @@ class WorkcardState extends State<Workcard> {
         showDialog(
           barrierDismissible: false,
           context: context,
-          builder: (BuildContext context) => CustomSuccess(),
+          builder: (BuildContext context) => CustomSuccess(
+              click_id: widget.click_id,
+              booking_id: widget.booking_id,
+              vehname: widget.vehname,
+              vehmake: widget.vehmake),
         );
       });
     } on Exception catch (e) {
@@ -1206,6 +1210,17 @@ class WorkcardState extends State<Workcard> {
 }
 
 class CustomSuccess extends StatelessWidget {
+  final int click_id;
+  final String booking_id;
+  final String vehname;
+  final String vehmake;
+
+  CustomSuccess({
+    required this.click_id,
+    required this.booking_id,
+    required this.vehname,
+    required this.vehmake,
+  });
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -1283,7 +1298,14 @@ class CustomSuccess extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pushReplacementNamed(context, Routes.bottombar);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Workcard(
+                            click_id: click_id,
+                            booking_id: booking_id,
+                            vehname: vehname,
+                            vehmake: vehmake)));
               },
               child: Container(
                 decoration: BoxDecoration(

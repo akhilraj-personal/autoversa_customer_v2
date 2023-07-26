@@ -17,7 +17,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../constant/image_const.dart';
 import '../../constant/text_style.dart';
-import '../../generated/l10n.dart';
+import '../../generated/l10n.dart' as lang;
 import '../../services/post_auth_services.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/common_utils.dart';
@@ -115,7 +115,7 @@ class _DashScreenState extends State<DashScreen> {
       });
     } catch (e) {
       isPackageLoaded = false;
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     }
   }
@@ -140,7 +140,7 @@ class _DashScreenState extends State<DashScreen> {
         });
       }
     }).catchError((e) {
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
   }
@@ -166,7 +166,7 @@ class _DashScreenState extends State<DashScreen> {
         });
       }
     }).catchError((e) {
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
   }
@@ -192,7 +192,7 @@ class _DashScreenState extends State<DashScreen> {
       setState(() {
         isActive = false;
       });
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
   }
@@ -369,7 +369,7 @@ class _DashScreenState extends State<DashScreen> {
                                                   left: width * 0.03),
                                               child: RichText(
                                                 text: TextSpan(
-                                                  text: ST
+                                                  text: lang.S
                                                           .of(context)
                                                           .dash_intro_text +
                                                       " ",
@@ -932,7 +932,7 @@ class _DashScreenState extends State<DashScreen> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        ST
+                                                        lang.S
                                                             .of(context)
                                                             .new_vehicle_text,
                                                         style:

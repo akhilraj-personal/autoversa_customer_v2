@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/package_screens/schedule_screen.dart';
 import 'package:autoversa/screens/package_screens/sound_player_screen.dart';
@@ -337,7 +337,7 @@ class PackageDetailsState extends State<PackageDetails> {
     final isRecording = recorder.isRecording;
     final icon = isRecording ? Icons.stop : Icons.mic;
     final animate = recorder.isRecording;
-    final isPlaying = player.isPlaying;
+    bool isPlaying = player.isPlaying;
     final playrecordicon = isPlaying
         ? Icons.stop_circle_outlined
         : Icons.play_circle_outline_sharp;
@@ -999,7 +999,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                       children: [
                                         Padding(
                                             padding: EdgeInsets.only(left: 16)),
-                                        Text(ST.of(context).additional_queries,
+                                        Text(lang.S.of(context).additional_queries,
                                             maxLines: 10,
                                             style: montserratRegular.copyWith(
                                                 color: black,
@@ -1027,7 +1027,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                             controller: complaint,
                                             decoration: InputDecoration(
                                                 counterText: "",
-                                                hintText: ST
+                                                hintText: lang.S
                                                     .of(context)
                                                     .your_message_here,
                                                 hintStyle:
@@ -1317,6 +1317,12 @@ class PackageDetailsState extends State<PackageDetails> {
                               isServicing && recordPending == false
                                   ? GestureDetector(
                                       onTap: () async {
+                                        if (player.isPlaying == true) {
+                                          player.togglePlaying(
+                                              whenFinished: () => setState(() {
+                                                    isPlaying = false;
+                                                  }));
+                                        }
                                         if (isbooked) return;
                                         setState(() => isbooked = true);
                                         await Future.delayed(
@@ -1362,7 +1368,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                             ),
                                             child: !isbooked
                                                 ? Text(
-                                                    ST.of(context).book_now,
+                                                    lang.S.of(context).book_now,
                                                     style: montserratSemiBold
                                                         .copyWith(
                                                             color: Colors.white,

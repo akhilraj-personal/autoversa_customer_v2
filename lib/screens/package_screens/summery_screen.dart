@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
-import 'package:autoversa/generated/l10n.dart';
+import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/package_screens/coupon_list_screen.dart';
 import 'package:autoversa/screens/package_screens/sound_player_screen.dart';
@@ -141,7 +141,7 @@ class SummeryPageState extends State<SummeryPage> {
         });
       }
     }).catchError((e) {
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     });
   }
@@ -378,7 +378,7 @@ class SummeryPageState extends State<SummeryPage> {
       setState(() {
         isproceeding = false;
       });
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     }
   }
@@ -492,7 +492,7 @@ class SummeryPageState extends State<SummeryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isPlaying = player.isPlaying;
+    bool isPlaying = player.isPlaying;
     final playrecordicon = isPlaying
         ? Icons.stop_circle_outlined
         : Icons.play_circle_outline_sharp;
@@ -1509,7 +1509,7 @@ class SummeryPageState extends State<SummeryPage> {
                             textInputAction: TextInputAction.newline,
                             decoration: InputDecoration(
                                 counterText: "",
-                                hintText: ST.of(context).your_message_here,
+                                hintText: lang.S.of(context).your_message_here,
                                 hintStyle: montserratMedium.copyWith(
                                     color: black, fontSize: width * 0.04),
                                 focusedBorder: OutlineInputBorder(
@@ -1762,6 +1762,12 @@ class SummeryPageState extends State<SummeryPage> {
                     ),
                     GestureDetector(
                       onTap: () async {
+                        if (player.isPlaying == true) {
+                          player.togglePlaying(
+                              whenFinished: () => setState(() {
+                                    isPlaying = false;
+                                  }));
+                        }
                         if (isproceeding) return;
                         setState(() => isproceeding = true);
                         await Future.delayed(Duration(milliseconds: 1000));

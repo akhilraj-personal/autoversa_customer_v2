@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../constant/image_const.dart';
 import '../../constant/text_style.dart';
-import '../../generated/l10n.dart';
+import '../../generated/l10n.dart' as lang;
 import '../../provider/provider.dart';
 import '../../services/pre_auth_services.dart';
 import '../../utils/app_validations.dart';
@@ -27,7 +27,6 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController mobileNumber = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
-  bool signincolor = true;
 
   customerLogin() async {
     setState(() {
@@ -70,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
     }).catchError((e) {
       print(e.toString());
       setState(() => isLoading = false);
-      showCustomToast(context, ST.of(context).toast_application_error,
+      showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
     });
   }
@@ -172,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                         SizedBox(height: height * 0.08),
                                         Text(
-                                          ST.of(context).welcome_text,
+                                          lang.S.of(context).welcome_text,
                                           style: montserratSemiBold.copyWith(
                                               color: blackColor, fontSize: 21),
                                         ),
@@ -266,7 +265,8 @@ class _LoginPageState extends State<LoginPage> {
                                                                   counterText:
                                                                       "",
                                                                   filled: true,
-                                                                  hintText: ST
+                                                                  hintText: lang
+                                                                      .S
                                                                       .of(
                                                                           context)
                                                                       .enter_mobile_text,
@@ -283,8 +283,6 @@ class _LoginPageState extends State<LoginPage> {
                                                               validator:
                                                                   (value) {
                                                                 print(value);
-                                                                signincolor =
-                                                                    false;
                                                                 return mobileNumberValidation(
                                                                     value,
                                                                     context);
@@ -305,11 +303,9 @@ class _LoginPageState extends State<LoginPage> {
                                                 if (_formKey.currentState!
                                                     .validate()) {
                                                   customerLogin();
-                                                  signincolor = true;
                                                   setState(() {});
                                                 } else {
                                                   setState(() {
-                                                    signincolor = false;
                                                     isLoading = false;
                                                   });
                                                 }
@@ -319,29 +315,6 @@ class _LoginPageState extends State<LoginPage> {
                                           child: Stack(
                                             alignment: Alignment.bottomCenter,
                                             children: [
-                                              signincolor
-                                                  ? Container(
-                                                      height: height * 0.045,
-                                                      width: height * 0.37,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(14),
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                                blurRadius: 16,
-                                                                color: syanColor
-                                                                    .withOpacity(
-                                                                        .6),
-                                                                spreadRadius: 0,
-                                                                blurStyle:
-                                                                    BlurStyle
-                                                                        .outer,
-                                                                offset: Offset(
-                                                                    0, 0)),
-                                                          ]),
-                                                    )
-                                                  : Container(),
                                               Container(
                                                 height: height * 0.075,
                                                 width: height * 0.4,
@@ -362,7 +335,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 ),
                                                 child: !isLoading
                                                     ? Text(
-                                                        ST
+                                                        lang.S
                                                             .of(context)
                                                             .sign_in
                                                             .toUpperCase(),
@@ -391,7 +364,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                         SizedBox(height: height * 0.03),
                                         Text(
-                                          ST.of(context).sign_in_alt,
+                                          lang.S.of(context).sign_in_alt,
                                           style: montserratRegular.copyWith(
                                               color: blackColor, fontSize: 12),
                                         ),
