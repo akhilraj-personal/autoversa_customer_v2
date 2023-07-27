@@ -75,6 +75,11 @@ class PackageDetailsState extends State<PackageDetails> {
     });
   }
 
+  String capitalize(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
+  }
+
   proceedbooking() async {
     final prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> packdata = {
@@ -964,7 +969,8 @@ class PackageDetailsState extends State<PackageDetails> {
                                             spacing: 24,
                                             children: List.generate(
                                               optionList.length,
-                                              (i) => Text(optionList[i]!,
+                                              (i) => Text(
+                                                  capitalize(optionList[i]!),
                                                   style: montserratSemiBold
                                                       .copyWith(
                                                           color: Colors.black,
@@ -999,7 +1005,10 @@ class PackageDetailsState extends State<PackageDetails> {
                                       children: [
                                         Padding(
                                             padding: EdgeInsets.only(left: 16)),
-                                        Text(lang.S.of(context).additional_queries,
+                                        Text(
+                                            lang.S
+                                                .of(context)
+                                                .additional_queries,
                                             maxLines: 10,
                                             style: montserratRegular.copyWith(
                                                 color: black,

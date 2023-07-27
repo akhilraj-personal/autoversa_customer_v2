@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart' as lang;
-import 'package:autoversa/main.dart';
+import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -385,7 +385,14 @@ class WorkcardState extends State<Workcard> {
           ),
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => BookingStatusFlow(
+                            bk_id: widget.booking_id,
+                            vehname: widget.vehname,
+                            make: widget.vehmake,
+                          )));
             },
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             iconSize: 18,
