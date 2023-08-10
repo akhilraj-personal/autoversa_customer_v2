@@ -14,10 +14,10 @@ import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BookingStatusFlow extends StatefulWidget {
   final String bk_id;
@@ -338,9 +338,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                         textColor: white);
                                                   } else {
                                                     try {
-                                                      final prefs =
-                                                          await SharedPreferences
-                                                              .getInstance();
                                                       Map req = {
                                                         "bookid": widget.bk_id,
                                                         "reason": cancel,
@@ -705,9 +702,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                       try {
                                                         setState(() =>
                                                             issubmitted = true);
-                                                        final prefs =
-                                                            await SharedPreferences
-                                                                .getInstance();
                                                         Map req = {
                                                           "bookid":
                                                               widget.bk_id,
@@ -851,7 +845,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
   unholdbookingbottomsheet() async {
     try {
       setState(() => issubmitted = true);
-      final prefs = await SharedPreferences.getInstance();
       Map req = {
         "bookid": widget.bk_id,
         "backendstatus": pastbackendstatus,
@@ -2519,10 +2512,25 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                     if (phoneStatus ==
                                                                         PermissionStatus
                                                                             .granted) {
-                                                                      bool?
-                                                                          res =
-                                                                          await FlutterPhoneDirectCaller.callNumber(drivercontact['us_country_code'] +
+                                                                      final Uri url = Uri(
+                                                                          scheme:
+                                                                              'tel',
+                                                                          path: drivercontact['us_country_code'] +
                                                                               drivercontact['us_phone']);
+                                                                      if (await canLaunchUrl(
+                                                                          url)) {
+                                                                        await launchUrl(
+                                                                            url);
+                                                                      } else {
+                                                                        print(
+                                                                            "Cannot call");
+                                                                      }
+
+                                                                      // bool?
+                                                                      //     res =
+                                                                      //     await FlutterPhoneDirectCaller.callNumber(drivercontact['us_country_code'] +
+                                                                      //         drivercontact['us_phone']);
+                                                                      //         launchUrl(tel: )
                                                                     }
                                                                   },
                                                                   child: Stack(
@@ -2836,10 +2844,23 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                   if (phoneStatus ==
                                                                       PermissionStatus
                                                                           .granted) {
-                                                                    bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
-                                                                            'us_country_code'] +
-                                                                        drivercontact[
-                                                                            'us_phone']);
+                                                                    final Uri url = Uri(
+                                                                        scheme:
+                                                                            'tel',
+                                                                        path: drivercontact['us_country_code'] +
+                                                                            drivercontact['us_phone']);
+                                                                    if (await canLaunchUrl(
+                                                                        url)) {
+                                                                      await launchUrl(
+                                                                          url);
+                                                                    } else {
+                                                                      print(
+                                                                          "Cannot call");
+                                                                    }
+                                                                    // bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
+                                                                    //         'us_country_code'] +
+                                                                    //     drivercontact[
+                                                                    //         'us_phone']);
                                                                   }
                                                                 },
                                                                 child: Stack(

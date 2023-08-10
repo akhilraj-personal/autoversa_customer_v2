@@ -100,7 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     } catch (e) {
       isPackageLoaded = false;
-      print("1");
       print(e.toString());
       showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
@@ -127,7 +126,6 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     }).catchError((e) {
-      print("2");
       print(e.toString());
       showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
@@ -156,7 +154,6 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     }).catchError((e) {
-      print("3");
       print(e.toString());
       showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
@@ -184,7 +181,6 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {});
       }
     }).catchError((e) {
-      print("4");
       print(e.toString());
       setState(() {
         isActive = false;

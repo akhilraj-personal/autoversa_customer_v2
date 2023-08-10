@@ -69,9 +69,9 @@ class PackageDetailsState extends State<PackageDetails> {
   void initState() {
     super.initState();
     init();
+    currentveh = widget.selectedVeh;
     Future.delayed(Duration.zero, () {
       _getpackageinfo();
-      currentveh = widget.selectedVeh;
     });
   }
 

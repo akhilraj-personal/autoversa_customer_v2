@@ -1151,8 +1151,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                             left: width * 0.025),
                                         child: Focus(
                                           child: TextFormField(
-                                            autovalidateMode: AutovalidateMode
-                                                .onUserInteraction,
                                             textCapitalization:
                                                 TextCapitalization.characters,
                                             controller: plateNumberController,

@@ -463,28 +463,28 @@ class VehiclelistState extends State<Vehiclelist> {
                                                           SizedBox(
                                                             height: 4,
                                                           ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: <Widget>[
-                                                              Container(
-                                                                child: Text(
-                                                                    custvehlist[index].cv_odometer !=
-                                                                            null
-                                                                        ? "Odometer: " +
-                                                                            custvehlist[index]
-                                                                                .cv_odometer
-                                                                        : "",
-                                                                    style: montserratRegular.copyWith(
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034,
-                                                                        color: Colors
-                                                                            .black)),
-                                                              ),
-                                                            ],
-                                                          ),
+                                                          // Row(
+                                                          //   mainAxisAlignment:
+                                                          //       MainAxisAlignment
+                                                          //           .spaceBetween,
+                                                          //   children: <Widget>[
+                                                          //     Container(
+                                                          //       child: Text(
+                                                          //           custvehlist[index].cv_odometer !=
+                                                          //                   null
+                                                          //               ? "Odometer: " +
+                                                          //                   custvehlist[index]
+                                                          //                       .cv_odometer
+                                                          //               : "",
+                                                          //           style: montserratRegular.copyWith(
+                                                          //               fontSize:
+                                                          //                   width *
+                                                          //                       0.034,
+                                                          //               color: Colors
+                                                          //                   .black)),
+                                                          //     ),
+                                                          //   ],
+                                                          // ),
                                                           SizedBox(
                                                             height: 8,
                                                           ),

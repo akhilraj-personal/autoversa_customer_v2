@@ -916,6 +916,83 @@ class RescheduleScreenState extends State<RescheduleScreen> {
     );
   }
 
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: context.cardColor,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Hold On",
+                style: montserratSemiBold.copyWith(
+                    fontSize: width * 0.04, color: black),
+              ),
+              16.height,
+              Text(
+                'Please read before proceeding.\n',
+                style: montserratMedium.copyWith(
+                    fontSize: width * 0.035, color: black),
+              ),
+              8.height,
+              Text(
+                '● Mulkya should not be expired',
+                style: montserratMedium.copyWith(
+                    fontSize: width * 0.035, color: black),
+              ),
+              4.height,
+              Text(
+                '● Be careful not to keep anything illicit inside the car',
+                style: montserratMedium.copyWith(
+                    fontSize: width * 0.035, color: black),
+              ),
+              16.height,
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          syanColor,
+                          lightblueColor,
+                        ],
+                      ),
+                    ),
+                    padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    child: Text(
+                      "OK",
+                      style: montserratSemiBold.copyWith(
+                          fontSize: width * 0.035, color: white),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+          contentPadding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12))),
+        );
+      },
+    );
+  }
+
   proceedToSummaryClick() async {
     final prefs = await SharedPreferences.getInstance();
     late Map<String, dynamic> packdata = {};
@@ -931,11 +1008,6 @@ class RescheduleScreenState extends State<RescheduleScreen> {
       } else if (selected_timeid == 0) {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a time slot",
-            bgColor: errorcolor, textColor: white);
-      } else if (isserviceble == false) {
-        setState(() => isproceeding = false);
-        showCustomToast(context,
-            "Selected location not in our service area. Please choose another location",
             bgColor: errorcolor, textColor: white);
       } else {
         packdata['package_cost'] = booking_package['bkp_cust_amount'];
@@ -989,11 +1061,6 @@ class RescheduleScreenState extends State<RescheduleScreen> {
       } else if (selected_timeid == 0) {
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a time slot",
-            bgColor: errorcolor, textColor: white);
-      } else if (isserviceble == false) {
-        setState(() => isproceeding = false);
-        showCustomToast(context,
-            "Selected location not in our service area. Please choose another location",
             bgColor: errorcolor, textColor: white);
       } else {
         packdata['package_cost'] = booking_package['bkp_cust_amount'];
@@ -1516,7 +1583,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                   isLocationCheck = value!;
                                   if (value != true) {
                                     isdroplocation = true;
-                                    selected_drop_address = 0;
+                                    selected_drop_address = null;
                                     dropCostCalculation(
                                         0, false, "Select Drop", false, false);
                                   } else {
@@ -1872,15 +1939,57 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                       ['pk_id'],
                                                   groupValue: pickupoption,
                                                   onChanged: (dynamic value) {
-                                                    setState(() {
-                                                      pickupoption = value;
-                                                      pickup_name =
-                                                          pickup_options[index]
-                                                              ['pk_name'];
-                                                      pickup_cost =
-                                                          pickup_options[index]
-                                                              ['pk_cost_value'];
-                                                    });
+                                                    if (ptemp == "" &&
+                                                        dtemp == "") {
+                                                      showCustomToast(context,
+                                                          "Choose a location",
+                                                          bgColor: errorcolor,
+                                                          textColor: white);
+                                                    } else {
+                                                      if (pickup_options[index][
+                                                              'pk_mulkiyaflag'] !=
+                                                          "0") {
+                                                        _showMyDialog();
+                                                        setState(() {
+                                                          pickupoption = value;
+                                                          pickup_name =
+                                                              pickup_options[
+                                                                      index]
+                                                                  ['pk_name'];
+                                                          pickup_cost =
+                                                              pickup_options[
+                                                                      index][
+                                                                  'pk_cost_value'];
+                                                        });
+                                                      } else {
+                                                        setState(() {
+                                                          pickupoption = value;
+                                                          pickup_name =
+                                                              pickup_options[
+                                                                      index]
+                                                                  ['pk_name'];
+                                                          pickup_cost =
+                                                              pickup_options[
+                                                                      index][
+                                                                  'pk_cost_value'];
+                                                        });
+                                                      }
+                                                      // setState(() {
+                                                      //   pickupoption = value;
+                                                      //   pickup_name =
+                                                      //       pickup_options[
+                                                      //               index]
+                                                      //           ['pk_name'];
+                                                      //   pickup_cost =
+                                                      //       pickup_options[
+                                                      //               index][
+                                                      //           'pk_cost_value'];
+                                                      //   pickup_vat =
+                                                      //       pickup_options[
+                                                      //               index][
+                                                      //           'pk_vat_value'];
+                                                      // });
+                                                    }
                                                   },
                                                 ),
                                         ),
@@ -1989,7 +2098,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                   _selectDate(context);
                                 },
                                 title: Text(
-                                    lang.S.of(context).select_booking_date + " ",
+                                    lang.S.of(context).select_booking_date +
+                                        " ",
                                     style: montserratMedium.copyWith(
                                         color: black, fontSize: width * 0.04),
                                     maxLines: 3),
@@ -2222,6 +2332,25 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                               ],
                             ),
                           ),
+                        ),
+                      ],
+                    ),
+                    4.height,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Flexible(
+                          child: Container(
+                              child: Padding(
+                            padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
+                            child: Text(
+                              "Drop location and type can be changed during drop schedule after work completion",
+                              overflow: TextOverflow.clip,
+                              style: montserratMedium.copyWith(
+                                  color: black.withOpacity(0.5),
+                                  fontSize: width * 0.0275),
+                            ),
+                          )),
                         ),
                       ],
                     ),

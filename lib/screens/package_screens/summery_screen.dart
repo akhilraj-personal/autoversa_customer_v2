@@ -18,7 +18,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SummeryPage extends StatefulWidget {
   final Map<String, dynamic> package_id;
@@ -125,7 +124,6 @@ class SummeryPageState extends State<SummeryPage> {
     await getCouponsListForCustomer(req).then((value) {
       if (value['ret_data'] == "success") {
         couponList = value['coupons'];
-
         for (int i = 0; i < couponList.length; i++) {
           if (double.parse(couponList[i]['discountamount'].toString()) >
               highestDiscountAmount) {
@@ -157,9 +155,9 @@ class SummeryPageState extends State<SummeryPage> {
       setState(() {});
       if (coupondiscounttype == "1") {
         couponapplied = true;
-        netpayable = (double.parse(totalamount.toString())) -
+        netpayable = (double.parse(totalamount.round().toString())) -
             (double.parse(coupondiscountamount));
-        discount = (double.parse(totalamount.toString()).round() -
+        discount = (double.parse(totalamount.round().toString()) -
                 double.parse(netpayable.toString()))
             .round();
         showDialog(
@@ -172,9 +170,9 @@ class SummeryPageState extends State<SummeryPage> {
         setState(() {});
       } else if (coupondiscounttype == "0") {
         couponapplied = true;
-        netpayable = (double.parse(totalamount.toString()).round()) -
+        netpayable = (double.parse(totalamount.round().toString())) -
             (double.parse(coupondiscountamount));
-        discount = (double.parse(totalamount.toString()).round() -
+        discount = (double.parse(totalamount.round().toString()) -
                 double.parse(netpayable.toString()))
             .round();
         showDialog(
@@ -227,7 +225,7 @@ class SummeryPageState extends State<SummeryPage> {
     if (coupontype == "1") {
       couponapplied = false;
       netpayable = totalamount;
-      discount = (double.parse(totalamount.toString()) +
+      discount = (double.parse(totalamount.round().toString()) +
               double.parse(netpayable.toString()))
           .round();
       showCustomToast(context, "Coupon removed",
@@ -236,7 +234,7 @@ class SummeryPageState extends State<SummeryPage> {
     } else if (coupontype == "0") {
       couponapplied = false;
       netpayable = totalamount + (double.parse(coupondiscount));
-      discount = (double.parse(totalamount.toString()) -
+      discount = (double.parse(totalamount.round().toString()) -
               double.parse(netpayable.toString()))
           .round();
       showCustomToast(context, "Coupon removed",
@@ -361,6 +359,7 @@ class SummeryPageState extends State<SummeryPage> {
         ),
       );
       var retdata = jsonDecode(response.toString());
+      print(response);
       if (retdata['ret_data'] == "success") {
         createPayment(retdata['booking_id'], retdata['payment_details']);
         bookId = retdata['booking_id'];
@@ -375,6 +374,7 @@ class SummeryPageState extends State<SummeryPage> {
             bgColor: errorcolor, textColor: white);
       }
     } catch (e) {
+      print(e.toString());
       setState(() {
         isproceeding = false;
       });
@@ -2006,7 +2006,7 @@ class CustomSuccess extends StatelessWidget {
                     SizedBox(
                       height: 16,
                     ),
-                    Text("Booking Successfull",
+                    Text("Payment successful!",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
                             fontSize: width * 0.034, color: white)),
@@ -2019,8 +2019,9 @@ class CustomSuccess extends StatelessWidget {
             ),
             Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
-                child: Text("Please check dashboard for booking status",
-                    textAlign: TextAlign.center,
+                child: Text(
+                    "Your booking has been created. You can check the status of your booking on your dashboard.",
+                    textAlign: TextAlign.justify,
                     style: montserratRegular.copyWith(
                         fontSize: width * 0.034, color: black))),
             SizedBox(

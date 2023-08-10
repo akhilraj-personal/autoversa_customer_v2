@@ -97,6 +97,9 @@ class NotificationPageState extends State<NotificationPage> {
         showCustomToast(context, "Notification Cleared",
             bgColor: black, textColor: white);
         Navigator.pushReplacementNamed(context, Routes.bottombar);
+      } else {
+        print("weeqew");
+        print(value['ret_data']);
       }
     }).catchError((e) {
       print("222222====>");

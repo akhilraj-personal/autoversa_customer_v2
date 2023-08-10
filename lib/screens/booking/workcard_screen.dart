@@ -158,6 +158,11 @@ class WorkcardState extends State<Workcard> {
         .catchError((e) {});
   }
 
+  String capitalize(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
+  }
+
   updateJob(jobid) async {
     Map req = {
       "job_id": jobid['bkj_id'],
@@ -735,18 +740,21 @@ class WorkcardState extends State<Workcard> {
                                                           approvedjobs[i][
                                                                       'bkj_jobname'] !=
                                                                   null
-                                                              ? approvedjobs[i][
-                                                                  'bkj_jobname']
+                                                              ? capitalize(
+                                                                  approvedjobs[
+                                                                          i][
+                                                                      'bkj_jobname'])
                                                               : "",
                                                           overflow:
                                                               TextOverflow.clip,
                                                           maxLines: 3,
-                                                          style: montserratMedium
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
+                                                          style:
+                                                              montserratMedium
+                                                                  .copyWith(
+                                                            color: black,
+                                                            fontSize:
+                                                                width * 0.034,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),

@@ -4,13 +4,10 @@ import 'dart:io';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/main.dart';
-import 'package:autoversa/screens/support/chat_screen.dart';
-import 'package:autoversa/screens/tryout_page.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -295,11 +292,18 @@ class SupportState extends State<Support> {
                                 openAppSettings();
                               }
                               if (phoneStatus == PermissionStatus.granted) {
-                                const number =
-                                    '+971509766075'; //set the number here
-                                bool? res =
-                                    await FlutterPhoneDirectCaller.callNumber(
-                                        number);
+                                final Uri url =
+                                    Uri(scheme: 'tel', path: '+971509766075');
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url);
+                                } else {
+                                  print("Cannot call");
+                                }
+                                // const number =
+                                //     '+971509766075'; //set the number here
+                                // bool? res =
+                                //     await FlutterPhoneDirectCaller.callNumber(
+                                //         number);
                               }
                             }).expand()
                       ],

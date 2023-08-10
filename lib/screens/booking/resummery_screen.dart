@@ -79,6 +79,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
   bool couponapplied = false;
   late double highestDiscountAmount = 0.0;
   List<dynamic> highestDiscountCoupons = [];
+  var vehiclgroup;
+  var pack_id;
 
   @override
   void initState() {
@@ -88,7 +90,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
       getBookingDetailsID();
       _setdatas();
       getCouponList();
-      appliedcoupon(0, 0, 0, 0);
+      appliedcoupon(0, 0, 0, 0, 0);
     });
   }
 
@@ -96,16 +98,17 @@ class ResummeryScreenState extends State<ResummeryScreen> {
     Map req = {"book_id": base64.encode(utf8.encode(widget.bk_data['bk_id']))};
     await getbookingdetails(req).then((value) {
       if (value['ret_data'] == "success") {
-        setState(() {
-          bookingdetails = value['booking'];
-          vehicle = value['booking']['vehicle'];
-          booking_package = value['booking']['booking_package'];
-          value['audio'] != null ? audio = value['audio'] : "";
-          additionalcommentsController.text =
-              bookingdetails['bk_complaint'] != null
-                  ? bookingdetails['bk_complaint']
-                  : "";
-        });
+        pack_id = value['booking']['booking_package']['bkp_pkg_id'];
+        vehiclgroup = value['booking']['vgroup'];
+        bookingdetails = value['booking'];
+        vehicle = value['booking']['vehicle'];
+        booking_package = value['booking']['booking_package'];
+        value['audio'] != null ? audio = value['audio'] : "";
+        additionalcommentsController.text =
+            bookingdetails['bk_complaint'] != null
+                ? bookingdetails['bk_complaint']
+                : "";
+        setState(() {});
         setState(() {
           vehiclename = vehicle['cv_variant'] != null
               ? vehicle['cv_make'] +
@@ -176,7 +179,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
     });
   }
 
-  appliedcoupon(couponid, coupondiscounttype, coupondiscount, couponcode) {
+  appliedcoupon(couponid, coupondiscounttype, coupondiscount, couponcode,
+      coupondiscountamount) {
     if (widget.couponid == null) {
       netpayable = 0.0;
       coupon_id = couponid;
@@ -186,32 +190,33 @@ class ResummeryScreenState extends State<ResummeryScreen> {
       setState(() {});
       if (coupondiscounttype == "1") {
         couponapplied = true;
-        netpayable =
-            totalamount - (totalamount * (double.parse(coupondiscount) / 100));
-        discount = (double.parse(totalamount.toString()) -
+        netpayable = (double.parse(totalamount.round().toString())) -
+            (double.parse(coupondiscountamount));
+        discount = (double.parse(totalamount.round().toString()) -
                 double.parse(netpayable.toString()))
             .round();
-        showCustomToast(
-            context,
-            "Coupon applied successfully. You saved up to AED " +
-                discount.toString() +
-                " for this booking",
-            bgColor: black,
-            textColor: white);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => CouponDialog(
+            couponCode: couponcode.toUpperCase(),
+            couponDiscount: discount,
+          ),
+        );
         setState(() {});
       } else if (coupondiscounttype == "0") {
         couponapplied = true;
-        netpayable = totalamount - (double.parse(coupondiscount));
-        discount = (double.parse(totalamount.toString()) -
+        netpayable = (double.parse(totalamount.round().toString())) -
+            (double.parse(coupondiscountamount));
+        discount = (double.parse(totalamount.round().toString()) -
                 double.parse(netpayable.toString()))
             .round();
-        showCustomToast(
-            context,
-            "Coupon applied successfully. You saved up to AED " +
-                discount.toString() +
-                " for this booking",
-            bgColor: black,
-            textColor: white);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => CouponDialog(
+            couponCode: couponcode.toUpperCase(),
+            couponDiscount: discount,
+          ),
+        );
         setState(() {});
       }
     } else if (widget.couponid != null) {
@@ -226,26 +231,26 @@ class ResummeryScreenState extends State<ResummeryScreen> {
       if (coupondiscounttypereceived == "1") {
         couponapplied = true;
         netpayable = couponnetpayable;
-        discount = couponapplieddiscount.round();
-        showCustomToast(
-            context,
-            "Coupon applied successfully. You saved up to AED " +
-                discount.toString() +
-                " for this booking",
-            bgColor: black,
-            textColor: white);
+        discount = couponapplieddiscount;
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => CouponDialog(
+            couponCode: couponcodeselected,
+            couponDiscount: couponapplieddiscount,
+          ),
+        );
         setState(() {});
       } else if (coupondiscounttypereceived == "0") {
         couponapplied = true;
         netpayable = couponnetpayable;
         discount = couponapplieddiscount;
-        showCustomToast(
-            context,
-            "Coupon applied successfully. You saved up to AED " +
-                discount.toString() +
-                " for this booking",
-            bgColor: black,
-            textColor: white);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => CouponDialog(
+            couponCode: couponcodeselected,
+            couponDiscount: couponapplieddiscount,
+          ),
+        );
         setState(() {});
       }
     }
@@ -255,7 +260,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
     if (coupontype == "1") {
       couponapplied = false;
       netpayable = totalamount;
-      discount = (double.parse(totalamount.toString()) +
+      discount = (double.parse(totalamount.round().toString()) +
               double.parse(netpayable.toString()))
           .round();
       showCustomToast(context, "Coupon removed",
@@ -264,7 +269,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
     } else if (coupontype == "0") {
       couponapplied = false;
       netpayable = totalamount + (double.parse(coupondiscount));
-      discount = (double.parse(totalamount.toString()) -
+      discount = (double.parse(totalamount.round().toString()) -
               double.parse(netpayable.toString()))
           .round();
       showCustomToast(context, "Coupon removed",
@@ -575,23 +580,71 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       SizedBox(height: 8),
-                                      vehicle['cv_plate_number'] != "" &&
-                                              vehicle['cv_plate_number'] != null
+                                      widget.custvehlist[widget.selectedveh]
+                                                      ['cv_plate_number'] !=
+                                                  "" &&
+                                              widget.custvehlist[
+                                                          widget.selectedveh]
+                                                      ['cv_plate_number'] !=
+                                                  null
                                           ? Text(
-                                              vehicle['cv_plate_number']
+                                              widget.custvehlist[
+                                                      widget.selectedveh]
+                                                      ['cv_plate_number']
                                                   .toUpperCase(),
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: black,
-                                                      fontSize: width * 0.034),
+                                                      fontSize: width * 0.04),
                                               maxLines: 2)
                                           : SizedBox(),
-                                      Text(vehiclename,
-                                          style: montserratMedium.copyWith(
-                                              color: black,
-                                              fontSize: width * 0.034),
-                                          overflow: TextOverflow.clip,
-                                          maxLines: 5),
+                                      // vehicle['cv_plate_number'] != "" &&
+                                      //         vehicle['cv_plate_number'] != null
+                                      //     ? Text(
+                                      //         vehicle['cv_plate_number']
+                                      //             .toUpperCase(),
+                                      //         style:
+                                      //             montserratSemiBold.copyWith(
+                                      //                 color: black,
+                                      //                 fontSize: width * 0.034),
+                                      //         maxLines: 2)
+                                      //     : SizedBox(),
+                                      widget.custvehlist[widget.selectedveh]['cv_variant'] != "" && widget.custvehlist[widget.selectedveh]['cv_variant'] != null
+                                          ? Text(
+                                              widget.custvehlist[widget.selectedveh]['cv_make'] +
+                                                  " " +
+                                                  widget.custvehlist[widget.selectedveh]
+                                                      ['cv_model'] +
+                                                  " " +
+                                                  widget.custvehlist[widget.selectedveh]
+                                                      ['cv_variant'] +
+                                                  " ( " +
+                                                  widget.custvehlist[widget.selectedveh]
+                                                      ['cv_year'] +
+                                                  " )",
+                                              style: montserratMedium.copyWith(
+                                                  color: black,
+                                                  fontSize: width * 0.034),
+                                              overflow: TextOverflow.clip,
+                                              maxLines: 5)
+                                          : Text(
+                                              widget.custvehlist[widget.selectedveh]['cv_make'] +
+                                                  " " +
+                                                  widget.custvehlist[widget.selectedveh]
+                                                      ['cv_model'] +
+                                                  " ( " +
+                                                  widget.custvehlist[widget.selectedveh]
+                                                      ['cv_year'] +
+                                                  " )",
+                                              style: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
+                                              overflow: TextOverflow.clip,
+                                              maxLines: 5),
+                                      // Text(vehiclename,
+                                      //     style: montserratMedium.copyWith(
+                                      //         color: black,
+                                      //         fontSize: width * 0.034),
+                                      //     overflow: TextOverflow.clip,
+                                      //     maxLines: 5),
                                       Divider(),
                                       Text(
                                           booking_package['pkg_name'] != null
@@ -1209,7 +1262,10 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                                                             'coupon_discount'],
                                                                         couponList[index]
                                                                             [
-                                                                            'coupon_code']);
+                                                                            'coupon_code'],
+                                                                        couponList[index]
+                                                                            [
+                                                                            'discountamount']);
                                                                   },
                                                                   child: Text(
                                                                     "Apply",
@@ -1288,14 +1344,14 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                                         MaterialPageRoute(
                                                           builder: (context) {
                                                             return CouponListScreen(
-                                                              clickid: "direct",
-                                                              packageid: packdata[
-                                                                      'package_id']
+                                                              clickid:
+                                                                  "awaiting",
+                                                              packageid: widget
+                                                                  .packid
                                                                   .toString(),
-                                                              vehiclegroupid:
-                                                                  packdata[
-                                                                          'veh_groupid']
-                                                                      .toString(),
+                                                              vehiclegroupid: widget
+                                                                  .vehiclegroup
+                                                                  .toString(),
                                                               totalamount:
                                                                   totalamount
                                                                       .toString(),
@@ -1307,9 +1363,9 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                                               currency: widget
                                                                   .currency,
                                                               bk_data: {},
-                                                              packid: null,
+                                                              packid: pack_id,
                                                               vehiclegroup:
-                                                                  null,
+                                                                  vehiclgroup,
                                                             );
                                                           },
                                                         ),
@@ -1626,7 +1682,8 @@ class CustomWarning extends StatelessWidget {
             ),
             Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
-                child: Text("Please complete payment for further proceedings.",
+                child: Text(
+                    "Your payment is still pending. Complete payment for further proceedings.",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
                         fontSize: width * 0.032, color: black))),
@@ -1722,7 +1779,7 @@ class CustomSuccess extends StatelessWidget {
                     SizedBox(
                       height: 16,
                     ),
-                    Text("Booking successfull",
+                    Text("Payment successful!",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
                             fontSize: width * 0.034, color: white)),
@@ -1735,8 +1792,9 @@ class CustomSuccess extends StatelessWidget {
             ),
             Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
-                child: Text("Please check dashboard for booking status",
-                    textAlign: TextAlign.center,
+                child: Text(
+                    "Your booking has been created. You can check the status of your booking on your dashboard.",
+                    textAlign: TextAlign.justify,
                     style: montserratRegular.copyWith(
                         fontSize: width * 0.032, color: black))),
             SizedBox(

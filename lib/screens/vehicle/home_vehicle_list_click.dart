@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart' as lang;
@@ -46,7 +44,6 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
       _getCustomerVehicles();
       _getPackages();
     });
-    print(base64.encode(utf8.encode(widget.vehicle_id)));
     super.initState();
   }
 
@@ -129,9 +126,6 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
   }
 
   redirectPackage(pack_details, pack_typ, currency, noofvehicle) {
-    print(pack_details);
-    print(currency);
-    print(noofvehicle);
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -545,61 +539,6 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
                         ],
                       ),
                     ),
-
-                    // SliderTheme(
-                    //     data: SliderThemeData(
-                    //         activeTrackColor: syanColor,
-                    //         inactiveTrackColor: syanColor.withOpacity(0.1),
-                    //         thumbColor: syanColor,
-                    //         valueIndicatorColor: syanColor,
-                    //         activeTickMarkColor: Colors.transparent),
-                    //     child: Column(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         Slider(
-                    //             value: _currentOdometervalue,
-                    //             min: 1000,
-                    //             max: 100000,
-                    //             divisions: 10,
-                    //             label: _currentOdometervalue.round().toString(),
-                    //             onChanged: (double value) {
-                    //               print(value);
-                    //               setState(() {
-                    //                 _currentOdometervalue = value;
-                    //               });
-                    //             })
-                    //       ],
-                    //     )),
-                    // Container(
-                    //   margin: EdgeInsets.only(right: 22.0, left: 22.0),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //     children: <Widget>[
-                    //       Expanded(
-                    //         flex: 2,
-                    //         child: Text(
-                    //           "Odometer Value: ",
-                    //           textAlign: TextAlign.start,
-                    //           style: montserratMedium.copyWith(
-                    //             fontSize: width * 0.035,
-                    //             color: black,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Expanded(
-                    //         flex: 2,
-                    //         child: Text(
-                    //           _currentOdometervalue.toString() + "Kms",
-                    //           textAlign: TextAlign.end,
-                    //           style: montserratMedium.copyWith(
-                    //             fontSize: width * 0.035,
-                    //             color: black,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 ),
               ],
@@ -662,7 +601,6 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
                     divisions: divisions,
                     onChanged: (double value) {
                       setState(() => this.indexTop = value.toInt());
-                      print(value);
                     })
               ],
             )),

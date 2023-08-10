@@ -45,7 +45,6 @@ class CouponListScreen extends StatefulWidget {
 class CouponListScreenState extends State<CouponListScreen> {
   late List couponList = [];
   final TextEditingController couponCodeController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   bool couponapplied = false;
   var appliedcouponid;
   var appliedcoupondiscounttype;
@@ -70,6 +69,8 @@ class CouponListScreenState extends State<CouponListScreen> {
       "vgroup_id": widget.vehiclegroupid,
       "totalamount": widget.totalamount,
     };
+    print("holoooooo=====>");
+    print(req);
     couponList = [];
     await getCouponsListForCustomer(req).then((value) {
       if (value['ret_data'] == "success") {
@@ -93,7 +94,7 @@ class CouponListScreenState extends State<CouponListScreen> {
     setState(() {});
     if (coupondiscounttype == "1") {
       couponapplied = true;
-      netpayable = (double.parse(widget.totalamount)) -
+      netpayable = (double.parse(widget.totalamount).round()) -
           (double.parse(coupondiscountamount));
       discount = (double.parse(widget.totalamount).round() -
               double.parse(netpayable.toString()))

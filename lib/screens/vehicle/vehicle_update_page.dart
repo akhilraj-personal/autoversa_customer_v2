@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart' as lang;
@@ -35,6 +37,7 @@ class VehicleUpdateState extends State<VehicleUpdate> {
     super.initState();
     Future.delayed(Duration.zero, () {
       CustomerVehicleDetails();
+      print(base64.encode(utf8.encode(widget.vehicle_id)));
     });
   }
 
@@ -59,10 +62,12 @@ class VehicleUpdateState extends State<VehicleUpdate> {
         yearController.text = customervehicledetails['cv_year'] != null
             ? customervehicledetails['cv_year']
             : "";
+
         platenumberController.text =
             customervehicledetails['cv_plate_number'] != null
                 ? customervehicledetails['cv_plate_number']
                 : "";
+
         setState(() {});
       }
     });
@@ -88,14 +93,16 @@ class VehicleUpdateState extends State<VehicleUpdate> {
       "cv_vinnumber": customervehicledetails['cv_vinnumber'] != null
           ? customervehicledetails['cv_vinnumber']
           : "",
-      "cv_odometer": customervehicledetails['cv_cust_id'] != null
-          ? customervehicledetails['cv_cust_id']
+      "cv_odometer": customervehicledetails['cv_odometer'] != null
+          ? customervehicledetails['cv_odometer']
           : "",
       "cv_cust_id": customervehicledetails['cv_cust_id'] != null
           ? customervehicledetails['cv_cust_id']
           : "",
     };
+    print(req);
     await updateCustomerVehicle(req).then((value) {
+      print(value);
       if (value['ret_data'] == "success") {
         setState(() {
           showCustomToast(context, "Vehicle Details Updated",
@@ -113,8 +120,18 @@ class VehicleUpdateState extends State<VehicleUpdate> {
         });
       } else {
         setState(() => issubmitted = false);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BottomNavBarScreen(
+              index: 2,
+            ),
+          ),
+          (route) => false,
+        );
       }
     }).catchError((e) {
+      print(e.toString());
       setState(() => issubmitted = false);
       showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: whiteColor);
@@ -506,10 +523,8 @@ class VehicleUpdateState extends State<VehicleUpdate> {
                                         child: TextFormField(
                                           controller: platenumberController,
                                           textAlign: TextAlign.center,
-                                          keyboardType: TextInputType.multiline,
-                                          minLines: 1,
-                                          maxLength: 80,
-                                          maxLines: 3,
+                                          keyboardType: TextInputType.text,
+                                          maxLength: 10,
                                           style: montserratLight.copyWith(
                                               color: blackColor, fontSize: 14),
                                           decoration: InputDecoration(
@@ -519,11 +534,13 @@ class VehicleUpdateState extends State<VehicleUpdate> {
                                                       color: warningcolor),
                                               counterText: "",
                                               filled: true,
-                                              hintText: "Plate Number",
+                                              hintText: lang.S
+                                                  .of(context)
+                                                  .plate_number,
                                               hintStyle:
-                                                  montserratRegular.copyWith(
+                                                  montserratMedium.copyWith(
                                                       color: blackColor,
-                                                      fontSize: 14),
+                                                      fontSize: width * 0.04),
                                               border: InputBorder.none,
                                               fillColor: whiteColor),
                                           onChanged: (value) {
@@ -535,7 +552,7 @@ class VehicleUpdateState extends State<VehicleUpdate> {
                                             return plateNumberValidation(value);
                                           },
                                           textCapitalization:
-                                              TextCapitalization.sentences,
+                                              TextCapitalization.characters,
                                         ),
                                       ),
                                     ),

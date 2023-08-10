@@ -171,14 +171,18 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       dlocdistance = plocdistance;
       dtempdata = ptempdata;
       selected_drop_address = pick_address;
+      setState(() {});
       if (servicedistance > plocdistance) {
         if (freeservicedistance > plocdistance) {
           dropCostCalculation(plocdistance * 2, true, "", true, false);
+          setState(() {});
         } else {
           dropCostCalculation(plocdistance * 2, true, "", false, false);
+          setState(() {});
         }
       } else {
         dropCostCalculation(plocdistance * 2, true, "", false, true);
+        setState(() {});
         // dropCostCalculation(0, false, "No Service", false);
         // toast("Service not available in this location");
       }
@@ -189,14 +193,17 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           pickup_options = [];
           dropCostCalculation(
               (plocdistance + dlocdistance), true, "", true, false);
+          setState(() {});
         } else {
           dropCostCalculation(
               (plocdistance + dlocdistance), true, "", false, false);
+          setState(() {});
         }
       } else {
         pickup_options = [];
         dropCostCalculation(
             (plocdistance + dlocdistance), true, "", false, true);
+        setState(() {});
         // dropCostCalculation((plocdistance + dlocdistance), true, "", true);
         // dropCostCalculation(0, false, "No Service", false);
         // toast("Service not available in this location");
@@ -205,6 +212,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       dropCostCalculation(0, false, "Select Drop", false, false);
       showCustomToast(context, "Please select drop location",
           bgColor: errorcolor, textColor: white);
+      setState(() {});
     }
   }
 
@@ -224,10 +232,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           pickup_options = [];
           tdistance = plocdistance + dlocdistance;
           dropCostCalculation(tdistance, true, "", true, false);
+          setState(() {});
         } else {
           pickup_options = [];
           tdistance = plocdistance + dlocdistance;
           dropCostCalculation(tdistance, true, "", false, false);
+          setState(() {});
         }
       } else {
         // toast("Service not available in this location");
@@ -235,11 +245,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         pickup_options = [];
         tdistance = plocdistance + dlocdistance;
         dropCostCalculation(tdistance, true, "", false, true);
+        setState(() {});
       }
     } else {
       dropCostCalculation(0, false, "Select Pickup", false, false);
       showCustomToast(context, "Please select pickup location",
           bgColor: errorcolor, textColor: white);
+      setState(() {});
     }
   }
 
@@ -1102,13 +1114,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                               autovalidateMode: AutovalidateMode
                                                   .onUserInteraction,
                                               decoration: InputDecoration(
-                                                //Add isDense true and zero Padding.
-                                                //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                                                 isDense: true,
                                                 contentPadding: EdgeInsets.zero,
                                                 focusedBorder:
                                                     OutlineInputBorder(
-                                                  // width: 0.0 produces a thin "hairline" border
                                                   borderSide: const BorderSide(
                                                       color: const Color(
                                                           0xffCCCCCC),
@@ -1118,7 +1127,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 ),
                                                 focusedErrorBorder:
                                                     OutlineInputBorder(
-                                                  // width: 0.0 produces a thin "hairline" border
                                                   borderSide: const BorderSide(
                                                       color: const Color(
                                                           0xffCCCCCC),
@@ -1128,7 +1136,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                 ),
                                                 enabledBorder:
                                                     OutlineInputBorder(
-                                                  // width: 0.0 produces a thin "hairline" border
                                                   borderSide: const BorderSide(
                                                       color: const Color(
                                                           0xffCCCCCC),
@@ -1137,7 +1144,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                       BorderRadius.circular(12),
                                                 ),
                                                 errorBorder: OutlineInputBorder(
-                                                  // width: 0.0 produces a thin "hairline" border
                                                   borderSide: const BorderSide(
                                                       color:
                                                           const Color(0xfffff),
@@ -1150,8 +1156,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   fontSize: 12,
                                                   color: warningcolor,
                                                 ),
-                                                //Add more decoration as you want here
-                                                //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                                               ),
                                               isExpanded: true,
                                               hint: Text(
@@ -1353,7 +1357,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                         isLocationCheck = value!;
                                         if (value != true) {
                                           isdroplocation = true;
-                                          selected_drop_address = 0;
+                                          selected_drop_address = null;
                                           dropCostCalculation(0, false,
                                               "Select Drop", false, false);
                                         } else {
@@ -1454,14 +1458,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                         AutovalidateMode
                                                             .onUserInteraction,
                                                     decoration: InputDecoration(
-                                                      //Add isDense true and zero Padding.
-                                                      //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                                                       isDense: true,
                                                       contentPadding:
                                                           EdgeInsets.zero,
                                                       focusedBorder:
                                                           OutlineInputBorder(
-                                                        // width: 0.0 produces a thin "hairline" border
                                                         borderSide:
                                                             const BorderSide(
                                                                 color: const Color(
@@ -1473,7 +1474,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                       ),
                                                       focusedErrorBorder:
                                                           OutlineInputBorder(
-                                                        // width: 0.0 produces a thin "hairline" border
                                                         borderSide:
                                                             const BorderSide(
                                                                 color: const Color(
@@ -1485,7 +1485,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                       ),
                                                       enabledBorder:
                                                           OutlineInputBorder(
-                                                        // width: 0.0 produces a thin "hairline" border
                                                         borderSide:
                                                             const BorderSide(
                                                                 color: const Color(
@@ -1497,7 +1496,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                       ),
                                                       errorBorder:
                                                           OutlineInputBorder(
-                                                        // width: 0.0 produces a thin "hairline" border
                                                         borderSide:
                                                             const BorderSide(
                                                                 color:
@@ -1514,8 +1512,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                         fontSize: 12,
                                                         color: warningcolor,
                                                       ),
-                                                      //Add more decoration as you want here
-                                                      //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                                                     ),
                                                     isExpanded: true,
                                                     hint: Text(
@@ -1884,7 +1880,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                   _selectDate(context);
                                 },
                                 title: Text(
-                                    lang.S.of(context).select_booking_date + " ",
+                                    lang.S.of(context).select_booking_date +
+                                        " ",
                                     style: montserratMedium.copyWith(
                                         color: black, fontSize: width * 0.04),
                                     maxLines: 3),

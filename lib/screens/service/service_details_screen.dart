@@ -705,14 +705,14 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                           SizedBox(
                             width: 20.0,
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(right: 20.0),
-                            child: Text(
-                              "Paid Date" + ": ",
-                              style: montserratRegular.copyWith(
-                                  fontSize: width * 0.032),
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: EdgeInsets.only(right: 20.0),
+                          //   child: Text(
+                          //     "Paid Date" + ": ",
+                          //     style: montserratRegular.copyWith(
+                          //         fontSize: width * 0.032),
+                          //   ),
+                          // ),
                         ],
                       ),
                       Row(

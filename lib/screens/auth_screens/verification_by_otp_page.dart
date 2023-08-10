@@ -105,10 +105,9 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         prefs.setBool('islogged', false);
         setState(() => isResend = false);
         showCustomToast(context, value['ret_data'],
-            bgColor: warningcolor, textColor: whiteColor);
+            bgColor: errorcolor, textColor: whiteColor);
       }
     }).catchError((e) {
-      print("1111111111111");
       print(e.toString());
       setState(() => isResend = false);
       showCustomToast(context, lang.S.of(context).toast_application_error,
@@ -133,11 +132,10 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
       } else if (value['ret_data'] ==
           "Maximum attempt reached. Please try again later") {
         setState(() => isResend = false);
-        showCustomToast(context, lang.S.of(context).toast_application_error,
-            bgColor: warningcolor, textColor: whiteColor);
+        showCustomToast(context, value['ret_data'],
+            bgColor: errorcolor, textColor: whiteColor);
       }
     }).catchError((e) {
-      print("2222222222");
       print(e.toString());
       setState(() => isResend = false);
       showCustomToast(context, lang.S.of(context).toast_application_error,
@@ -229,7 +227,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
               bgColor: warningcolor, textColor: whiteColor);
         }
       }).catchError((e) {
-        print("333333333333");
         print(e.toString());
         setState(() => isOtpVerifying = false);
         showCustomToast(context, lang.S.of(context).toast_application_error,
@@ -354,85 +351,6 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: height * 0.02),
-                        // Container(
-                        //   height: 70,
-                        //   width: height * 0.3,
-                        //   child: Column(
-                        //     children: [
-                        //       PinFieldAutoFill(
-                        //         currentCode: otpCode,
-                        //         decoration: const BoxLooseDecoration(
-                        //             radius: Radius.circular(12),
-                        //             strokeColorBuilder:
-                        //                 FixedColorBuilder(Color(0xFF8C4A52))),
-                        //         codeLength: 4,
-                        //         onCodeChanged: (code) {
-                        //           print("OnCodeChanged : $code");
-                        //           otpCode = code.toString();
-                        //         },
-                        //         onCodeSubmitted: (val) {
-                        //           print("OnCodeSubmitted : $val");
-                        //         },
-                        //       )
-                        //     ],
-                        //   ),
-                        // ),
-                        // OtpTextField(
-                        //   numberOfFields: 4,
-                        //   fieldWidth: width * 0.14,
-                        //   clearText: true,
-                        //   focusedBorderColor: syanColor,
-                        //   cursorColor: syanColor,
-                        //   showFieldAsBox: true,
-                        //   borderRadius:
-                        //       const BorderRadius.all(Radius.circular(12.0)),
-                        //   onCodeChanged: (String code) {
-                        //     setState(() {
-                        //       otppin = "";
-                        //     });
-                        //   },
-                        //   onSubmit: (String verificationCode) {
-                        //     setState(() {
-                        //       otppin = verificationCode;
-                        //     });
-                        //   }, // end onSubmit
-                        // ),
-
-                        // TextFieldPin(
-                        //     textController: textEditingController,
-                        //     autoFocus: true,
-                        //     codeLength: _otpCodeLength,
-                        //     alignment: MainAxisAlignment.center,
-                        //     defaultBoxSize: width * 0.135,
-                        //     margin: 5,
-                        //     selectedBoxSize: width * 0.135,
-                        //     textStyle:
-                        //         montserratSemiBold.copyWith(fontSize: 16),
-                        //     defaultDecoration: _pinPutDecoration.copyWith(
-                        //         border: Border.all(
-                        //             color: greyColor.withOpacity(0.6))),
-                        //     selectedDecoration: _pinPutDecoration,
-                        //     onChange: (verificationCode) {
-                        //       setState(() {
-                        //         otppin = verificationCode;
-                        //         print(otppin);
-                        //       });
-                        //     }),
-
-                        // PinFieldAutoFill(
-                        //   codeLength: 4,
-                        //   decoration: const BoxLooseDecoration(
-                        //       radius: Radius.circular(12),
-                        //       strokeColorBuilder:
-                        //           FixedColorBuilder(Color(0xFF8C4A52))),
-                        //   currentCode: _code,
-                        //   onCodeSubmitted: (code) {},
-                        //   onCodeChanged: (code) {
-                        //     if (code!.length == 4) {
-                        //       FocusScope.of(context).requestFocus(FocusNode());
-                        //     }
-                        //   },
-                        // ),
                         Center(
                           child: PinCodeFields(
                             controller: controller,
@@ -483,8 +401,11 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                                 setState(() {
                                                   isResend = false;
                                                 });
-                                                showCustomToast(context,
-                                                    lang.S.of(context).max_otp_text,
+                                                showCustomToast(
+                                                    context,
+                                                    lang.S
+                                                        .of(context)
+                                                        .max_otp_text,
                                                     bgColor: warningcolor,
                                                     textColor: whiteColor);
                                               }
@@ -513,8 +434,11 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                                 setState(() {
                                                   isResend = false;
                                                 });
-                                                showCustomToast(context,
-                                                    lang.S.of(context).max_otp_text,
+                                                showCustomToast(
+                                                    context,
+                                                    lang.S
+                                                        .of(context)
+                                                        .max_otp_text,
                                                     bgColor: warningcolor,
                                                     textColor: whiteColor);
                                               }
@@ -537,14 +461,16 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                          Text(lang.S.of(context).otp_resend_try +
+                                          Text(lang.S
+                                                  .of(context)
+                                                  .otp_resend_try +
                                               " " +
                                               OTPtimer.toString() +
                                               " " +
                                               lang.S.of(context).seconds_text),
                                         ]),
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 80),
                         GestureDetector(
                           onTap: () {
                             setState(() {
@@ -590,7 +516,10 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                                 ),
                                 child: !isOtpVerifying
                                     ? Text(
-                                  lang.S.of(context).verify_me.toUpperCase(),
+                                        lang.S
+                                            .of(context)
+                                            .verify_me
+                                            .toUpperCase(),
                                         style: montserratSemiBold.copyWith(
                                             color: Colors.white),
                                       )
