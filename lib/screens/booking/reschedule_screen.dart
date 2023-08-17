@@ -423,6 +423,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     "active_flag": 1
                   };
                   timeslots.add(slotemp);
+                  timeslots.sort((a, b) =>
+                      a['tm_start_time'].compareTo(b['tm_start_time']));
                 } else {
                   var slotemp = {
                     "tm_id": bslots['tm_id'],
@@ -431,6 +433,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                     "active_flag": 0
                   };
                   timeslots.add(slotemp);
+                  timeslots.sort((a, b) =>
+                      a['tm_start_time'].compareTo(b['tm_start_time']));
                 }
               }
             }
@@ -449,6 +453,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                   "active_flag": 1
                 };
                 timeslots.add(slotemp);
+                timeslots.sort(
+                    (a, b) => a['tm_start_time'].compareTo(b['tm_start_time']));
               } else {
                 var slotemp = {
                   "tm_id": bslots['tm_id'],
@@ -457,6 +463,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                   "active_flag": 0
                 };
                 timeslots.add(slotemp);
+                timeslots.sort(
+                    (a, b) => a['tm_start_time'].compareTo(b['tm_start_time']));
               }
             }
           }

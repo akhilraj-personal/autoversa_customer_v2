@@ -496,9 +496,10 @@ class _BottomButtonState extends State<_BottomButton> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Out of service area",
+                "OUT OF SERVICE AREA",
+                textAlign: TextAlign.center,
                 style: montserratSemiBold.copyWith(
-                    fontSize: width * 0.04, color: black),
+                    fontSize: width * 0.035, color: syanColor),
               ),
               16.height,
               Text(
@@ -647,7 +648,9 @@ class _BottomButtonState extends State<_BottomButton> {
                         )
                       : Text(
                           "OUT OF SERVICE AREA",
-                          style: montserratSemiBold.copyWith(color: syanColor),
+                          textAlign: TextAlign.center,
+                          style: montserratSemiBold.copyWith(
+                              fontSize: width * 0.035, color: syanColor),
                         ),
                 ),
               ],

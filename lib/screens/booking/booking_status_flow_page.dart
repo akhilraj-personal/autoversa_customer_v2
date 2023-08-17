@@ -897,6 +897,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
         "backend_status": value['booking']['back_status']['st_id'],
         "customer_status": value['booking']['cust_status']['st_id'],
       };
+      print(req);
       setState(() {
         statusflow = [];
       });
@@ -1092,12 +1093,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "unhold_status": null,
               };
               statusflow.add(temp);
-              // if ((statusflow.firstWhere(
-              //         (it) => it["code"] == statuslist["bkt_code"],
-              //         orElse: () => null)) ==
-              //     null) {
-              //   statusflow.add(temp);
-              // }
             } else if (statuslist["bkt_code"] == "RFDC" &&
                 statuslist['bkt_task'] != "Unhold") {
               var temp = {
@@ -1116,12 +1111,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "unhold_status": null,
               };
               statusflow.add(temp);
-              // if ((statusflow.firstWhere(
-              //         (it) => it["code"] == statuslist["bkt_code"],
-              //         orElse: () => null)) ==
-              //     null) {
-              //   statusflow.add(temp);
-              // }
             } else if (statuslist["bkt_code"] == "DEDC" &&
                 statuslist['bkt_task'] != "Unhold") {
               var temp = {
@@ -1139,12 +1128,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                 "unhold_status": null,
               };
               statusflow.add(temp);
-              // if ((statusflow.firstWhere(
-              //         (it) => it["code"] == statuslist["bkt_code"],
-              //         orElse: () => null)) ==
-              //     null) {
-              //   statusflow.add(temp);
-              // }
             } else if (statuslist["bkt_code"] == "DLCC") {
               var temp = {
                 "status": "Delivery completed",
@@ -1169,8 +1152,9 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             } else if (statuslist["bkt_code"] == "HOLDC") {
               reasonhold = statuslist['bkt_content'];
               splittedreason = reasonhold.split(':');
+              reasonforhold = splittedreason[1].split(')')[0];
               var temp = {
-                "status": "Reason: " + splittedreason[1].trim(),
+                "status": "Reason: " + reasonforhold,
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -1378,9 +1362,9 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
               splittedstatus = previousstatus.split(',');
               reasonhold = statuslist['bkt_content'];
               splittedreason = reasonhold.split(':');
+              reasonforhold = splittedreason[1].split(')')[0];
               pastcustomerstatus = splittedstatus[1].trim();
               pastbackendstatus = splittedstatus[0].trim();
-              reasonforhold = splittedreason[1].trim();
               setState(() {});
             }
           }
@@ -2521,9 +2505,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                           url)) {
                                                                         await launchUrl(
                                                                             url);
-                                                                      } else {
-                                                                        print(
-                                                                            "Cannot call");
                                                                       }
 
                                                                       // bool?
@@ -2853,9 +2834,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                         url)) {
                                                                       await launchUrl(
                                                                           url);
-                                                                    } else {
-                                                                      print(
-                                                                          "Cannot call");
                                                                     }
                                                                     // bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
                                                                     //         'us_country_code'] +

@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
       child: ChangeNotifierProvider<LanguageChangeProvider>(
         create: (context) => LanguageChangeProvider(),
         child: Builder(
-          builder: (context) => MaterialApp(
+          builder: (context) => GetMaterialApp(
             locale: Provider.of<LanguageChangeProvider>(context, listen: true)
                 .currentLocale,
             localizationsDelegates: [

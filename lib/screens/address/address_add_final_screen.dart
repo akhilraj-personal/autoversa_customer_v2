@@ -90,7 +90,6 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
   late GoogleMapController _mapController;
 
   new_map_location() async {
-    // ignore: unnecessary_null_comparison
     cityController.text = widget.selected_administrativeArea != null
         ? widget.selected_administrativeArea
         : "";

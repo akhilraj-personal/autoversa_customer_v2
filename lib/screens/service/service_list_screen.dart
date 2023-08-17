@@ -74,8 +74,10 @@ class ServiceListState extends State<ServiceList> {
           }
           for (var cancelled in value['cancelled_list']) {
             bookingList.add(cancelled);
+            // splittedreason = cancelled['bkt_content'].split(':');
             splittedreason = cancelled['bkt_content'].split(':');
-            cancelreason = splittedreason[1].trim();
+            cancelreason = splittedreason[1].split(')')[0];
+            // cancelreason = splittedreason[1].trim();
           }
           isActive = false;
           setState(() {});

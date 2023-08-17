@@ -432,6 +432,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     "tm_end_time": bslots['tm_end_time'],
                     "active_flag": 1
                   };
+                  timeslots.sort((a, b) =>
+                      a['tm_start_time'].compareTo(b['tm_start_time']));
                   timeslots.add(slotemp);
                 } else {
                   var slotemp = {
@@ -440,6 +442,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     "tm_end_time": bslots['tm_end_time'],
                     "active_flag": 0
                   };
+                  timeslots.sort((a, b) =>
+                      a['tm_start_time'].compareTo(b['tm_start_time']));
                   timeslots.add(slotemp);
                 }
               }
@@ -458,6 +462,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   "tm_end_time": bslots['tm_end_time'],
                   "active_flag": 1
                 };
+                timeslots.sort(
+                    (a, b) => a['tm_start_time'].compareTo(b['tm_start_time']));
                 timeslots.add(slotemp);
               } else {
                 var slotemp = {
@@ -466,6 +472,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   "tm_end_time": bslots['tm_end_time'],
                   "active_flag": 0
                 };
+                timeslots.sort(
+                    (a, b) => a['tm_start_time'].compareTo(b['tm_start_time']));
                 timeslots.add(slotemp);
               }
             }
@@ -1387,18 +1395,95 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           )
                         : SizedBox(),
                     isdroplocation
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(padding: EdgeInsets.all(8)),
-                              Text(
-                                lang.S.of(context).select_drop_address + "*",
-                                textAlign: TextAlign.start,
-                                style: montserratSemiBold.copyWith(
-                                    color: black, fontSize: width * 0.034),
-                              ),
-                            ],
+                        ? Container(
+                            margin: EdgeInsets.only(right: 16.0, left: 16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  lang.S.of(context).select_drop_address + "*",
+                                  textAlign: TextAlign.start,
+                                  style: montserratSemiBold.copyWith(
+                                      color: black, fontSize: width * 0.034),
+                                ),
+                                custAddressList.length != 0
+                                    ? GestureDetector(
+                                        onTap: () async {
+                                          PermissionStatus locationStatus =
+                                              await Permission.location
+                                                  .request();
+                                          if (locationStatus ==
+                                              PermissionStatus.denied) {
+                                            showCustomToast(context,
+                                                "This Permission is recommended for location access.",
+                                                bgColor: errorcolor,
+                                                textColor: white);
+                                          }
+                                          if (locationStatus ==
+                                              PermissionStatus
+                                                  .permanentlyDenied) {
+                                            openAppSettings();
+                                          }
+                                          if (locationStatus ==
+                                              PermissionStatus.granted) {
+                                            Get.put(LocationController());
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddAddressViaGmap(
+                                                          pack_type:
+                                                              widget.pack_type,
+                                                          click_id: 2,
+                                                          package_id:
+                                                              widget.package_id,
+                                                          custvehlist: widget
+                                                              .custvehlist,
+                                                          currency:
+                                                              widget.currency,
+                                                          selectedveh: widget
+                                                              .selectedveh,
+                                                          pickup_loc:
+                                                              selected_address !=
+                                                                      null
+                                                                  ? selected_address
+                                                                  : 0,
+                                                          drop_loc:
+                                                              selected_drop_address !=
+                                                                      null
+                                                                  ? selected_drop_address
+                                                                  : 0,
+                                                          drop_flag: false,
+                                                          bk_id: "",
+                                                          vehname: "",
+                                                          make: "",
+                                                        )));
+                                          }
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              lang.S.of(context).add_address +
+                                                  " ",
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: black,
+                                                      fontSize: width * 0.034),
+                                            ),
+                                            Container(
+                                              child: Image.asset(
+                                                ImageConst.add_black,
+                                                scale: 4.8,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    : Row(),
+                              ],
+                            ),
                           )
                         : Row(),
                     isdroplocation
