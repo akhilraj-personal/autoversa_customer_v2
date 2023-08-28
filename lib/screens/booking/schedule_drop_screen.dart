@@ -462,7 +462,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                   .where((c) => c['tem_slotid'] == bslots['tm_id'])
                   .toList()
                   .length;
-
               if (count == value['driver_count']) {
                 var slotemp = {
                   "tm_id": bslots['tm_id'],

@@ -432,9 +432,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     "tm_end_time": bslots['tm_end_time'],
                     "active_flag": 1
                   };
+                  timeslots.add(slotemp);
                   timeslots.sort((a, b) =>
                       a['tm_start_time'].compareTo(b['tm_start_time']));
-                  timeslots.add(slotemp);
                 } else {
                   var slotemp = {
                     "tm_id": bslots['tm_id'],
@@ -442,9 +442,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     "tm_end_time": bslots['tm_end_time'],
                     "active_flag": 0
                   };
+                  timeslots.add(slotemp);
                   timeslots.sort((a, b) =>
                       a['tm_start_time'].compareTo(b['tm_start_time']));
-                  timeslots.add(slotemp);
                 }
               }
             }
@@ -454,7 +454,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   .where((c) => c['tem_slotid'] == bslots['tm_id'])
                   .toList()
                   .length;
-
               if (count == value['driver_count']) {
                 var slotemp = {
                   "tm_id": bslots['tm_id'],
@@ -462,9 +461,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   "tm_end_time": bslots['tm_end_time'],
                   "active_flag": 1
                 };
+                timeslots.add(slotemp);
                 timeslots.sort(
                     (a, b) => a['tm_start_time'].compareTo(b['tm_start_time']));
-                timeslots.add(slotemp);
               } else {
                 var slotemp = {
                   "tm_id": bslots['tm_id'],
@@ -472,9 +471,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   "tm_end_time": bslots['tm_end_time'],
                   "active_flag": 0
                 };
+                timeslots.add(slotemp);
                 timeslots.sort(
                     (a, b) => a['tm_start_time'].compareTo(b['tm_start_time']));
-                timeslots.add(slotemp);
               }
             }
           }

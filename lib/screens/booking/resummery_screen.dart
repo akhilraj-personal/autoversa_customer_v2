@@ -191,7 +191,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
       if (coupondiscounttype == "1") {
         couponapplied = true;
         netpayable = (double.parse(totalamount.round().toString())) -
-            (double.parse(coupondiscountamount));
+            (double.parse(coupondiscountamount).round());
         discount = (double.parse(totalamount.round().toString()) -
                 double.parse(netpayable.toString()))
             .round();
@@ -206,7 +206,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
       } else if (coupondiscounttype == "0") {
         couponapplied = true;
         netpayable = (double.parse(totalamount.round().toString())) -
-            (double.parse(coupondiscountamount));
+            (double.parse(coupondiscountamount).round());
         discount = (double.parse(totalamount.round().toString()) -
                 double.parse(netpayable.toString()))
             .round();

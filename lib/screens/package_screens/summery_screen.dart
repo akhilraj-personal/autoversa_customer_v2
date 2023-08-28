@@ -100,12 +100,20 @@ class SummeryPageState extends State<SummeryPage> {
       if (packdata['package_cost'] != null) {
         totalamount = double.parse(packdata['package_cost'].toString()) +
             double.parse(packdata['pick_up_price'].toString());
+        print("1111===>>>");
+        print(totalamount);
         netpayable = double.parse(packdata['package_cost'].toString()) +
             double.parse(packdata['pick_up_price'].toString());
+        print("2222===>>>");
+        print(netpayable);
         setState(() {});
       } else {
         totalamount = double.parse(packdata['pick_up_price'].toString());
+        print("3333===>>>");
+        print(totalamount);
         netpayable = double.parse(packdata['pick_up_price'].toString());
+        print("4444===>>>");
+        print(netpayable);
         setState(() {});
       }
     });
@@ -156,7 +164,7 @@ class SummeryPageState extends State<SummeryPage> {
       if (coupondiscounttype == "1") {
         couponapplied = true;
         netpayable = (double.parse(totalamount.round().toString())) -
-            (double.parse(coupondiscountamount));
+            (double.parse(coupondiscountamount).round());
         discount = (double.parse(totalamount.round().toString()) -
                 double.parse(netpayable.toString()))
             .round();
@@ -171,7 +179,7 @@ class SummeryPageState extends State<SummeryPage> {
       } else if (coupondiscounttype == "0") {
         couponapplied = true;
         netpayable = (double.parse(totalamount.round().toString())) -
-            (double.parse(coupondiscountamount));
+            (double.parse(coupondiscountamount).round());
         discount = (double.parse(totalamount.round().toString()) -
                 double.parse(netpayable.toString()))
             .round();

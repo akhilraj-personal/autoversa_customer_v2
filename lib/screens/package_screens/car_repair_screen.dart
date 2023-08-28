@@ -102,6 +102,7 @@ class CarRepairState extends State<CarRepair> {
           "model": widget.custvehlist[currentveh]['cv_model'],
           "variant": widget.custvehlist[currentveh]['cv_variant'],
           "year": widget.custvehlist[currentveh]['cv_year'],
+          "vehicle_id": widget.custvehlist[currentveh]['cv_id'],
         };
         var nonMapCount = 0;
         await getServicePackageDetails(req).then((value) {
@@ -1357,7 +1358,10 @@ class CarRepairState extends State<CarRepair> {
                                       children: [
                                         Padding(
                                             padding: EdgeInsets.only(left: 16)),
-                                        Text(lang.S.of(context).additional_queries,
+                                        Text(
+                                            lang.S
+                                                .of(context)
+                                                .additional_queries,
                                             maxLines: 10,
                                             style: montserratRegular.copyWith(
                                                 color: black,

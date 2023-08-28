@@ -69,8 +69,6 @@ class CouponListScreenState extends State<CouponListScreen> {
       "vgroup_id": widget.vehiclegroupid,
       "totalamount": widget.totalamount,
     };
-    print("holoooooo=====>");
-    print(req);
     couponList = [];
     await getCouponsListForCustomer(req).then((value) {
       if (value['ret_data'] == "success") {
@@ -86,6 +84,7 @@ class CouponListScreenState extends State<CouponListScreen> {
 
   appliedcoupon(couponid, coupondiscounttype, coupondiscount, couponcode,
       coupondiscountamount) {
+    netpayable = 0.0;
     couponapplied = true;
     appliedcouponid = couponid;
     appliedcoupondiscounttype = coupondiscounttype;
@@ -95,7 +94,7 @@ class CouponListScreenState extends State<CouponListScreen> {
     if (coupondiscounttype == "1") {
       couponapplied = true;
       netpayable = (double.parse(widget.totalamount).round()) -
-          (double.parse(coupondiscountamount));
+          (double.parse(coupondiscountamount).round().toDouble());
       discount = (double.parse(widget.totalamount).round() -
               double.parse(netpayable.toString()))
           .round();
@@ -103,7 +102,7 @@ class CouponListScreenState extends State<CouponListScreen> {
     } else if (coupondiscounttype == "0") {
       couponapplied = true;
       netpayable = (double.parse(widget.totalamount).round()) -
-          (double.parse(coupondiscountamount));
+          (double.parse(coupondiscountamount).round().toDouble());
       discount = (double.parse(widget.totalamount).round() -
               double.parse(netpayable.toString()))
           .round();

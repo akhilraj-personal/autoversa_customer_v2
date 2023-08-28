@@ -134,11 +134,15 @@ class PackageDetailsState extends State<PackageDetails> {
           "model": widget.custvehlist[currentveh]['cv_model'],
           "variant": widget.custvehlist[currentveh]['cv_variant'],
           "year": widget.custvehlist[currentveh]['cv_year'],
+          "vehicle_id": widget.custvehlist[currentveh]['cv_id'],
         };
+        print(req);
         totalCost = 0.0;
         totalExclusiveCost = 0.0;
         var nonMapCount = 0;
         await getPackageDetails(req).then((value) {
+          print("44444444444============>");
+          print(value);
           if (value['ret_data'] == "success") {
             gs_vat = int.parse(value['settings']['gs_vat']);
             veh_groupid = int.parse(value['veh_group']['vgroup_id']);
@@ -300,6 +304,7 @@ class PackageDetailsState extends State<PackageDetails> {
           }
         });
       } catch (e) {
+        print("1111111111=============>");
         print(e.toString());
       }
     } else {
