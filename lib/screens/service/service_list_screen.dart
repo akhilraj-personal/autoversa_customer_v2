@@ -25,34 +25,15 @@ class ServiceList extends StatefulWidget {
 }
 
 class ServiceListState extends State<ServiceList> {
+  Map<String, String?> cancelReasons = {};
   var bookingList = [];
   bool isActive = true;
   var splittedreason;
   var cancelreason;
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
+
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     init();
     Future.delayed(Duration.zero, () {
       getBookings();
@@ -76,6 +57,8 @@ class ServiceListState extends State<ServiceList> {
             bookingList.add(cancelled);
             splittedreason = cancelled['bkt_content'].split(':');
             cancelreason = splittedreason[1].split(')')[0];
+            String bookingId = cancelled['bk_id'];
+            cancelReasons[bookingId] = cancelreason;
           }
           isActive = false;
           setState(() {});
@@ -106,26 +89,6 @@ class ServiceListState extends State<ServiceList> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
-  }
-
-  Future<bool> _onWillPop() async {
-    return (await showConfirmDialogCustom(
-          context,
-          height: 65,
-          title: 'Confirmation',
-          subTitle: 'Are to sure you want to exit ?',
-          primaryColor: syanColor,
-          customCenterWidget: Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: Image.asset("assets/icons/logout_icon.png",
-                width: width / 2, height: 95),
-          ),
-          onAccept: (v) {
-            Navigator.of(context).pop(true);
-          },
-        )) ??
-        false;
   }
 
   @override
@@ -293,24 +256,6 @@ class ServiceListState extends State<ServiceList> {
                                   padding: EdgeInsets.only(top: 16, bottom: 16),
                                   itemCount: bookingList.length,
                                   itemBuilder: (context, index) {
-                                    AlertDialog Cancelreason = AlertDialog(
-                                      backgroundColor: context.cardColor,
-                                      title: Text(
-                                        "Cancel Reason",
-                                        style: montserratSemiBold.copyWith(
-                                            color: black,
-                                            fontSize: width * 0.034),
-                                      ),
-                                      content: Text(
-                                        cancelreason != null
-                                            ? cancelreason.toUpperCase()
-                                            : "",
-                                        style: montserratRegular.copyWith(
-                                            color: black,
-                                            fontSize: width * 0.032),
-                                      ),
-                                      actions: [],
-                                    );
                                     return Padding(
                                       padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
                                       child: Stack(
@@ -546,25 +491,53 @@ class ServiceListState extends State<ServiceList> {
                                                                 ),
                                                                 GestureDetector(
                                                                   onTap: () {
-                                                                    showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (BuildContext
-                                                                              context) {
-                                                                        return Cancelreason;
-                                                                      },
-                                                                    );
+                                                                    if (bookingList[index]
+                                                                            [
+                                                                            'st_code'] ==
+                                                                        "CANC") {
+                                                                      String
+                                                                          bookingId =
+                                                                          bookingList[index]
+                                                                              [
+                                                                              'bk_id'];
+                                                                      String?
+                                                                          cancelReason =
+                                                                          cancelReasons[
+                                                                              bookingId];
+                                                                      if (cancelReason !=
+                                                                          null) {
+                                                                        showCancelReasonDialog(
+                                                                            context,
+                                                                            cancelReason);
+                                                                      }
+                                                                    }
                                                                   },
                                                                   child: Padding(
                                                                       padding: EdgeInsets.only(right: 8, top: 8),
-                                                                      child: Icon(
-                                                                        Icons
-                                                                            .info,
-                                                                        color:
-                                                                            black,
-                                                                        size:
-                                                                            22,
+                                                                      child: Container(
+                                                                        width:
+                                                                            40,
+                                                                        height:
+                                                                            40,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          shape:
+                                                                              BoxShape.circle,
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .withOpacity(0.3),
+                                                                        ),
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              Icon(
+                                                                            Icons.info,
+                                                                            color:
+                                                                                black,
+                                                                            size:
+                                                                                22,
+                                                                          ),
+                                                                        ),
                                                                       )),
                                                                 )
                                                               ],
@@ -744,6 +717,45 @@ class ServiceListState extends State<ServiceList> {
               ),
             ),
           )),
+    );
+  }
+
+  void showCancelReasonDialog(BuildContext context, String cancelReason) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Cancel Reason"),
+          content: Text(
+            cancelReason,
+            style: montserratMedium.copyWith(
+              color: Colors.black,
+              fontSize: 16,
+            ),
+          ),
+          actions: <Widget>[
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: syanColor,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  "OK",
+                  style: montserratMedium.copyWith(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

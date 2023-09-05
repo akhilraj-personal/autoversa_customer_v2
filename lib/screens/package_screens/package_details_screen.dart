@@ -141,8 +141,6 @@ class PackageDetailsState extends State<PackageDetails> {
         totalExclusiveCost = 0.0;
         var nonMapCount = 0;
         await getPackageDetails(req).then((value) {
-          print("44444444444============>");
-          print(value);
           if (value['ret_data'] == "success") {
             gs_vat = int.parse(value['settings']['gs_vat']);
             veh_groupid = int.parse(value['veh_group']['vgroup_id']);
@@ -278,7 +276,7 @@ class PackageDetailsState extends State<PackageDetails> {
             if (value['settings']['gs_isvat'] == "1") {
               packVat = totalCost * (gs_vat / 100);
               packVat = totalExclusiveCost * (gs_vat / 100);
-              totalCost = totalCost + (totalCost * (gs_vat / 100));
+              totalCost = totalCost + (totalCost * (gs_vat / 100)).round();
               totalExclusiveCost =
                   totalExclusiveCost + (totalExclusiveCost * (gs_vat / 100));
             }
@@ -304,7 +302,6 @@ class PackageDetailsState extends State<PackageDetails> {
           }
         });
       } catch (e) {
-        print("1111111111=============>");
         print(e.toString());
       }
     } else {

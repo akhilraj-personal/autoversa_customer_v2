@@ -1535,9 +1535,9 @@ class CarRepairState extends State<CarRepair> {
                                                               ),
                                                             ),
                                                           ),
-                                                          AMTimerWidget(
-                                                              controller:
-                                                                  timeController),
+                                                          // AMTimerWidget(
+                                                          //     controller:
+                                                          //         timeController),
                                                         ],
                                                       ),
                                                     ),

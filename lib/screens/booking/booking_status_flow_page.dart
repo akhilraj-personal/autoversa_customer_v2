@@ -63,8 +63,6 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
   var holdedby;
   List<Map<String, dynamic>> temppendingjobs = [];
   DateTime selectedDate = DateTime.now();
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
 
   @override
   void initState() {

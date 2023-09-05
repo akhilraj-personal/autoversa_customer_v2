@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:autoversa/constant/image_const.dart';
-import 'package:autoversa/constant/text_style.dart';
 import 'package:flutter/material.dart';
 
 class TimerController extends ValueNotifier<bool> {

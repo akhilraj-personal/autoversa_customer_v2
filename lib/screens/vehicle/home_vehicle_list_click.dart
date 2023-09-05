@@ -403,14 +403,12 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
                     ),
                     SliderTheme(
                       data: SliderThemeData(
-                        /// ticks in between
                         activeTickMarkColor: Colors.transparent,
                         inactiveTickMarkColor: Colors.transparent,
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // buildSliderSideLabel(),
                           const SizedBox(height: 16),
                           buildSliderTopLabel(),
                         ],

@@ -39,8 +39,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
   final _formKey = GlobalKey<FormState>();
   bool isvariant = false;
   bool issubmitted = false;
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
   bool isFocused = false;
 
   @override
@@ -149,8 +147,6 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                   value: item['veh_variant'].toString()))
               .toList();
         });
-      } else {
-        // toasty(context, language!.lblPhoneErr);
       }
     }).catchError((e) {
       print(e.toString());

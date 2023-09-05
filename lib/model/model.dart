@@ -154,3 +154,35 @@ class AMSeviceModel {
       this.isServiceCheck = false,
       this.isPackageCheck = false});
 }
+
+class ServiceHistoryModel {
+  var bkid;
+  var bk_number;
+  var bk_type;
+  var bk_color;
+  var bk_icon;
+  var bk_booking_date;
+  var sch_time;
+  var st_name;
+  var st_code;
+  var tem_id;
+  var rejectreason;
+  var pick_flag;
+  var flag;
+
+  ServiceHistoryModel({
+    this.bkid,
+    this.bk_number,
+    this.bk_type,
+    this.bk_color,
+    this.bk_icon,
+    this.bk_booking_date,
+    this.sch_time,
+    this.st_name,
+    this.st_code,
+    this.tem_id,
+    this.rejectreason,
+    this.pick_flag,
+    this.flag,
+  });
+}

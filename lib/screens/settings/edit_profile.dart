@@ -53,7 +53,6 @@ class EditprofieState extends State<Editprofie> {
   List<DropdownMenuItem<String>> items = [];
   List data = List<String>.empty();
   final _formKey = GlobalKey<FormState>();
-  int MobileLength = 0;
   File? imagePicked;
   bool profilepicturechanged = false;
 
@@ -675,7 +674,9 @@ class EditprofieState extends State<Editprofie> {
                                                     ),
                                                     isExpanded: true,
                                                     hint: Text(
-                                                      lang.S.of(context).emirates,
+                                                      lang.S
+                                                          .of(context)
+                                                          .emirates,
                                                       style: montserratMedium
                                                           .copyWith(
                                                               color:
