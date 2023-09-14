@@ -53,6 +53,8 @@ class PackageDetailsState extends State<PackageDetails> {
   bool isPriceShow = false;
   late Map<String, dynamic> packageinfo;
   double totalCost = 0.0;
+  double operationlabourrate = 0.0;
+  double servicelabourrate = 0.0;
   double totalExclusiveCost = 0.0;
   double packVat = 0.0;
   bool isbooked = false;
@@ -80,40 +82,6 @@ class PackageDetailsState extends State<PackageDetails> {
     return text[0].toUpperCase() + text.substring(1).toLowerCase();
   }
 
-  proceedbooking() async {
-    final prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> packdata = {
-      "packtype": widget.pack_type,
-      "package_id": widget.package_id['pkg_id'],
-      "vehicle_id": widget.custvehlist[currentveh]['cv_id'],
-      "complaint": complaint.text.toString(),
-      "audio_location": prefs.containsKey('comp_audio')
-          ? prefs.containsKey('comp_audio')
-          : "",
-      "package_cost": totalCost,
-      "gs_vat": gs_vat,
-      "veh_groupid": veh_groupid,
-      "ser_veh_groupid": ser_veh_groupid,
-      "pack_vat": packVat,
-      "pack_extra_details": pack_extra_details
-    };
-    prefs.setString("booking_data", json.encode(packdata));
-    setState(() => isbooked = false);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ScheduleScreen(
-                package_id: widget.package_id,
-                custvehlist: widget.custvehlist,
-                currency: widget.currency,
-                selectedveh: currentveh,
-                booking_list: widget.booking_list,
-                pickup_loc: 0,
-                drop_loc: 0,
-                click_id: 1,
-                pack_type: widget.pack_type)));
-  }
-
   _getpackageinfo() async {
     var booking_flag = false;
     if (widget.booking_list.length > 0) {
@@ -138,6 +106,8 @@ class PackageDetailsState extends State<PackageDetails> {
         };
         print(req);
         totalCost = 0.0;
+        operationlabourrate = 0.0;
+        servicelabourrate = 0.0;
         totalExclusiveCost = 0.0;
         var nonMapCount = 0;
         await getPackageDetails(req).then((value) {
@@ -166,6 +136,8 @@ class PackageDetailsState extends State<PackageDetails> {
                 if (operations['opvm_billexclusion'] == "0") {
                   if (operations['spo_billexclusion'] == "0") {
                     if (operations['opvm_pack_timeunit'] != null) {
+                      operationlabourrate =
+                          double.parse(value['labourrate']['lr_rate']);
                       totalCost = totalCost +
                           (double.parse(operations['opvm_pack_timeunit']) *
                               double.parse(value['labourrate']['lr_rate']));
@@ -179,6 +151,8 @@ class PackageDetailsState extends State<PackageDetails> {
                     isofferprice = true;
                     setState(() {});
                     if (operations['opvm_pack_timeunit'] != null) {
+                      operationlabourrate =
+                          double.parse(value['labourrate']['lr_rate']);
                       totalExclusiveCost = totalExclusiveCost +
                           (double.parse(operations['opvm_pack_timeunit']) *
                               double.parse(value['labourrate']['lr_rate']));
@@ -188,10 +162,14 @@ class PackageDetailsState extends State<PackageDetails> {
                   isofferprice = true;
                   setState(() {});
                   if (operations['opvm_pack_timeunit'] != null) {
+                    operationlabourrate =
+                        double.parse(value['labourrate']['lr_rate']);
                     totalExclusiveCost = totalExclusiveCost +
                         (double.parse(operations['opvm_pack_timeunit']) *
                             double.parse(value['labourrate']['lr_rate']));
                   }
+                } else if (operations['opvm_billexclusion'] == null) {
+                  nonMapCount++;
                 }
               }
               for (var spares in sup_packs['spares']) {
@@ -232,6 +210,8 @@ class PackageDetailsState extends State<PackageDetails> {
               if (serv['pse_billexclusion'] == "0") {
                 if (serv['sevm_billexclusion'] == "0") {
                   if (serv['sevm_pack_timeunit'] != null) {
+                    servicelabourrate =
+                        double.parse(value['service_labourrate']['lr_rate']);
                     totalCost = totalCost +
                         (double.parse(serv['sevm_pack_timeunit']) *
                             double.parse(
@@ -247,16 +227,22 @@ class PackageDetailsState extends State<PackageDetails> {
                   isofferprice = true;
                   setState(() {});
                   if (serv['sevm_pack_timeunit'] != null) {
+                    servicelabourrate =
+                        double.parse(value['service_labourrate']['lr_rate']);
                     totalExclusiveCost = totalExclusiveCost +
                         (double.parse(serv['sevm_pack_timeunit']) *
                             double.parse(
                                 value['service_labourrate']['lr_rate']));
                   }
+                } else if (serv['sevm_billexclusion'] == null) {
+                  nonMapCount++;
                 }
               } else if (serv['pse_billexclusion'] == "1") {
                 isofferprice = true;
                 setState(() {});
                 if (serv['sevm_pack_timeunit'] != null) {
+                  servicelabourrate =
+                      double.parse(value['service_labourrate']['lr_rate']);
                   totalExclusiveCost = totalExclusiveCost +
                       (double.parse(serv['sevm_pack_timeunit']) *
                           double.parse(value['service_labourrate']['lr_rate']));
@@ -313,6 +299,43 @@ class PackageDetailsState extends State<PackageDetails> {
       isPriceShow = true;
       setState(() {});
     }
+  }
+
+  proceedbooking() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> packdata = {
+      "packtype": widget.pack_type,
+      "package_id": widget.package_id['pkg_id'],
+      "vehicle_id": widget.custvehlist[currentveh]['cv_id'],
+      "brand": widget.custvehlist[currentveh]['cv_make'],
+      "complaint": complaint.text.toString(),
+      "audio_location": prefs.containsKey('comp_audio')
+          ? prefs.containsKey('comp_audio')
+          : "",
+      "package_cost": totalCost,
+      "operationlabourrate": operationlabourrate,
+      "servicelabourrate": servicelabourrate,
+      "gs_vat": gs_vat,
+      "veh_groupid": veh_groupid,
+      "ser_veh_groupid": ser_veh_groupid,
+      "pack_vat": packVat,
+      "pack_extra_details": pack_extra_details
+    };
+    prefs.setString("booking_data", json.encode(packdata));
+    setState(() => isbooked = false);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ScheduleScreen(
+                package_id: widget.package_id,
+                custvehlist: widget.custvehlist,
+                currency: widget.currency,
+                selectedveh: currentveh,
+                booking_list: widget.booking_list,
+                pickup_loc: 0,
+                drop_loc: 0,
+                click_id: 1,
+                pack_type: widget.pack_type)));
   }
 
   Future<void> init() async {
@@ -1295,6 +1318,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                                       await player.togglePlaying(
                                                           whenFinished: () =>
                                                               setState(() {}));
+
                                                       setState(() {});
                                                     },
                                                   ),
@@ -1314,9 +1338,17 @@ class PackageDetailsState extends State<PackageDetails> {
                                                   color: Colors.grey,
                                                   size: 32),
                                               onPressed: () {
-                                                setState(() {
-                                                  recordLocation = false;
-                                                });
+                                                showConfirmDialogCustom(
+                                                  context,
+                                                  primaryColor: syanColor,
+                                                  title:
+                                                      "Are you sure you want to delete this audio recording.?",
+                                                  onAccept: (v) {
+                                                    setState(() {
+                                                      recordLocation = false;
+                                                    });
+                                                  },
+                                                );
                                               },
                                             ),
                                           ),

@@ -106,7 +106,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     HomeScreen(),
     Vehiclelist(click_id: 1),
     ServiceList(click_id: 1),
-    ProfilePage(),
+    ProfilePage(click_root: "bottomtab"),
   ];
 
   @override

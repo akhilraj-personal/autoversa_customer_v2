@@ -88,8 +88,8 @@ class InspectionScreenState extends State<InspectionScreen>
           getinspection = value['inspection'];
           for (var filetype in value['medias']) {
             if (filetype['bka_type'] == "png" ||
-                filetype['bka_type'] == "5" ||
-                filetype['bka_type'] == "6") {
+                filetype['bka_type'] == "6" ||
+                filetype['bka_type'] == "5") {
               vehicleimages.add(filetype['bka_url']);
               setState(() {});
             } else if (filetype['bka_type'] == "mp4") {

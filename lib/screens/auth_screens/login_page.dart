@@ -69,8 +69,8 @@ class _LoginPageState extends State<LoginPage> {
     }).catchError((e) {
       print(e.toString());
       setState(() => isLoading = false);
-      showCustomToast(context, lang.S.of(context).toast_application_error,
-          bgColor: errorcolor, textColor: whiteColor);
+      // showCustomToast(context, lang.S.of(context).toast_application_error,
+      //     bgColor: errorcolor, textColor: whiteColor);
     });
   }
 

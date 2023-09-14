@@ -6,6 +6,7 @@ import 'package:autoversa/screens/booking/reschedule_screen.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
 import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
+import 'package:autoversa/screens/settings/profile_screen.dart';
 import 'package:autoversa/screens/vehicle/home_vehicle_list_click.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
@@ -24,17 +25,16 @@ import '../../services/post_auth_services.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/common_utils.dart';
 import '../../utils/text_utils.dart';
-import '../settings/edit_profile.dart';
 import '../vehicle/vehicle_add_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreen> createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreenState extends State<HomeScreen> {
   String cut_name = "";
   late List customerVehList = [];
   late List bookingList = [];
@@ -242,22 +242,24 @@ class _HomeScreenState extends State<HomeScreen> {
         context, MaterialPageRoute(builder: (context) => NotificationPage()));
   }
 
-  Future<bool> _onWillPop() async {
-    return (await showConfirmDialogCustom(
-          context,
-          height: 65,
-          title: 'Confirmation',
-          subTitle: 'Are you sure you want to exit ?',
-          primaryColor: syanColor,
-          customCenterWidget: Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: Image.asset("assets/icons/logout_icon.png",
-                width: width / 2, height: 95),
+  Future<bool> showExitPopup(BuildContext context) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Exit App'),
+            content: Text('Do you want to exit the App?'),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('No'),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Yes'),
+              ),
+            ],
           ),
-          onAccept: (v) {
-            Navigator.of(context).pop(true);
-          },
-        )) ??
+        ) ??
         false;
   }
 
@@ -271,7 +273,13 @@ class _HomeScreenState extends State<HomeScreen> {
           systemNavigationBarColor: Colors.white,
         ),
         child: WillPopScope(
-            onWillPop: _onWillPop,
+            onWillPop: () async {
+              bool exit = await showExitPopup(context);
+              if (exit) {
+                SystemNavigator.pop();
+              }
+              return Future.value(false);
+            },
             child: Scaffold(
               body: RefreshIndicator(
                   child: SingleChildScrollView(
@@ -365,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) {
-                                                    return Editprofie(
+                                                    return ProfilePage(
                                                       click_root: "home",
                                                     );
                                                   },
@@ -386,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) {
-                                                      return Editprofie(
+                                                      return ProfilePage(
                                                         click_root: "home",
                                                       );
                                                     },

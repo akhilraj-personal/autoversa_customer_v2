@@ -881,9 +881,14 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
           booking = value['booking'];
           booking_package = value['booking']['booking_package'];
           pickup_timeslot = value['booking']['pickup_timeslot'];
-          drivercontact = value['booking']['driver_contact'];
           vehicle = value['booking']['vehicle'];
         });
+        var driverContact = value['booking']['driver_contact'];
+        if (driverContact is Map<String, dynamic>) {
+          setState(() {
+            drivercontact = driverContact;
+          });
+        }
         if (value['booking']['drop_timeslot'] != null) {
           setState(() {
             drop_timeslot = value['booking']['drop_timeslot'];
@@ -2018,7 +2023,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                 MaterialPageRoute(
                                                                     builder: (context) => ReschedulefromBooking(
                                                                         scheduletype:
-                                                                            3,
+                                                                            5,
                                                                         bk_id: widget
                                                                             .bk_id)))
                                                             : Navigator.push(
@@ -2266,7 +2271,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                 MaterialPageRoute(
                                                                     builder: (context) => ReschedulefromBooking(
                                                                         scheduletype:
-                                                                            3,
+                                                                            5,
                                                                         bk_id: widget
                                                                             .bk_id)))
                                                             : Navigator.push(

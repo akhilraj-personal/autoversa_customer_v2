@@ -167,7 +167,8 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
         if (value['ret_data'] == "success") {
           verify_count++;
 
-          if (value['customer']['cust_type'] == "old") {
+          if (value['customer']['cust_type'] == "old" &&
+              value['customer']['cust_delete_flag'] == "0") {
             if (value['customer']['name'] == null ||
                 value['customer']['emirate'] == null) {
               prefs.setString('cust_id', value['customer']['id']);
@@ -213,6 +214,11 @@ class LoginOTPVerificationState extends State<LoginOTPVerification> {
                           countrycode: value['customer']['country_code'],
                           phone: value['customer']['phone'],
                         )));
+          } else if (value['customer']['cust_delete_flag'] == "1") {
+            setState(() => isOtpVerifying = false);
+            showCustomToast(context,
+                "Your account has been deactivated. Please contact Autoversa for more information.",
+                bgColor: warningcolor, textColor: whiteColor);
           }
         } else if (value['ret_data'] == "MaxAttempt") {
           verify_count++;

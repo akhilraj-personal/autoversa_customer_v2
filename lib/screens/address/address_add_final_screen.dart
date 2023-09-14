@@ -655,6 +655,9 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                         drop_loc_map = -1;
                                       }
                                       if (widget.click_id == 1) {
+                                        showCustomToast(context,
+                                            "Your address has been saved successfully.",
+                                            bgColor: black, textColor: white);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -666,6 +669,9 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                           ),
                                         );
                                       } else if (widget.click_id == 2) {
+                                        showCustomToast(context,
+                                            "Your address has been saved successfully.",
+                                            bgColor: black, textColor: white);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -685,6 +691,9 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                           ),
                                         );
                                       } else if (widget.click_id == 3) {
+                                        showCustomToast(context,
+                                            "Your address has been saved successfully.",
+                                            bgColor: black, textColor: white);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -702,6 +711,9 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                           ),
                                         );
                                       } else if (widget.click_id == 4) {
+                                        showCustomToast(context,
+                                            "Your address has been saved successfully.",
+                                            bgColor: black, textColor: white);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(

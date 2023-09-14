@@ -189,6 +189,8 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                     "active_flag": 1
                   };
                   timeslots.add(slotemp);
+                  timeslots.sort((a, b) =>
+                      a['tm_start_time'].compareTo(b['tm_start_time']));
                 } else {
                   var slotemp = {
                     "tm_id": bslots['tm_id'],
@@ -197,6 +199,8 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                     "active_flag": 0
                   };
                   timeslots.add(slotemp);
+                  timeslots.sort((a, b) =>
+                      a['tm_start_time'].compareTo(b['tm_start_time']));
                 }
               }
             }
@@ -215,6 +219,8 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                   "active_flag": 1
                 };
                 timeslots.add(slotemp);
+                timeslots.sort(
+                    (a, b) => a['tm_start_time'].compareTo(b['tm_start_time']));
               } else {
                 var slotemp = {
                   "tm_id": bslots['tm_id'],
@@ -223,6 +229,8 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                   "active_flag": 0
                 };
                 timeslots.add(slotemp);
+                timeslots.sort(
+                    (a, b) => a['tm_start_time'].compareTo(b['tm_start_time']));
               }
             }
           }
@@ -257,8 +265,15 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
             Navigator.pushReplacementNamed(context, Routes.bottombar);
           });
         } else {
+          print("else error ====>");
+          print(value['ret_data']);
           setState(() => isproceeding = false);
         }
+      }).catchError((e) {
+        print("e====>");
+        print(e.toString());
+        showCustomToast(context, lang.S.of(context).toast_application_error,
+            bgColor: errorcolor, textColor: white);
       });
     }
   }
@@ -443,7 +458,9 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                                         _selectDate(context);
                                       },
                                       title: Text(
-                                          lang.S.of(context).select_booking_date +
+                                          lang.S
+                                                  .of(context)
+                                                  .select_booking_date +
                                               " ",
                                           style: montserratMedium.copyWith(
                                               color: black,

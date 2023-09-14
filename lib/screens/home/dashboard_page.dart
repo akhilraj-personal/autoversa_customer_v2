@@ -6,6 +6,8 @@ import 'package:autoversa/screens/booking/reschedule_screen.dart';
 import 'package:autoversa/screens/notification_screen/notification_screen.dart';
 import 'package:autoversa/screens/package_screens/car_repair_screen.dart';
 import 'package:autoversa/screens/package_screens/package_details_screen.dart';
+import 'package:autoversa/screens/settings/profile_screen.dart';
+import 'package:autoversa/screens/vehicle/home_vehicle_list_click.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../constant/image_const.dart';
@@ -22,17 +25,17 @@ import '../../services/post_auth_services.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/common_utils.dart';
 import '../../utils/text_utils.dart';
-// import '../NextScreen.dart';
+import '../settings/edit_profile.dart';
 import '../vehicle/vehicle_add_page.dart';
 
 class DashScreen extends StatefulWidget {
   const DashScreen({super.key});
 
   @override
-  State<DashScreen> createState() => _DashScreenState();
+  State<DashScreen> createState() => DashScreenState();
 }
 
-class _DashScreenState extends State<DashScreen> {
+class DashScreenState extends State<DashScreen> {
   String cut_name = "";
   late List customerVehList = [];
   late List bookingList = [];
@@ -41,8 +44,6 @@ class _DashScreenState extends State<DashScreen> {
   String currency = "";
   int selectedVeh = 0;
   bool noofvehicle = false;
-  StreamSubscription? internetconnection;
-  bool isoffline = false;
   bool isActive = true;
 
   bool isBookingLoaded = false,
@@ -62,30 +63,16 @@ class _DashScreenState extends State<DashScreen> {
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     Future.delayed(Duration.zero, () {
       _getCustomerVehicles();
       _getPackages();
       _getCustomerBookingList();
       _getNotificationList();
+    });
+    Permission.notification.isDenied.then((value) {
+      if (value) {
+        Permission.notification.request();
+      }
     });
     init();
   }
@@ -97,7 +84,6 @@ class _DashScreenState extends State<DashScreen> {
 
   @override
   void dispose() {
-    // internetconnection!.cancel();
     super.dispose();
   }
 
@@ -115,6 +101,7 @@ class _DashScreenState extends State<DashScreen> {
       });
     } catch (e) {
       isPackageLoaded = false;
+      print(e.toString());
       showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     }
@@ -140,6 +127,7 @@ class _DashScreenState extends State<DashScreen> {
         });
       }
     }).catchError((e) {
+      print(e.toString());
       showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
@@ -148,6 +136,7 @@ class _DashScreenState extends State<DashScreen> {
   _getCustomerBookingList() async {
     bookingList = [];
     final prefs = await SharedPreferences.getInstance();
+    isExpanded = false;
     Map req = {"custId": prefs.getString("cust_id")};
     await getCustomerBookingList(req).then((value) {
       if (value['ret_data'] == "success") {
@@ -166,20 +155,24 @@ class _DashScreenState extends State<DashScreen> {
         });
       }
     }).catchError((e) {
+      print(e.toString());
       showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     });
   }
 
   _getNotificationList() async {
-    notificationList = [];
-    Map req = {};
+    final prefs = await SharedPreferences.getInstance();
+    Map req = {"custId": prefs.getString('cust_id')};
+    print(req);
     await getCustomerNotificationList(req).then((value) {
       if (value['ret_data'] == "success") {
         for (var notify in value['notification_list']) {
           NotificationModel noti = new NotificationModel();
           noti.nt_read = notify['nt_read'];
-          notificationList.add(noti);
+          if (noti.nt_read == "0") {
+            notificationList.add(noti);
+          }
         }
         setState(() {
           isActive = false;
@@ -189,6 +182,7 @@ class _DashScreenState extends State<DashScreen> {
         setState(() {});
       }
     }).catchError((e) {
+      print(e.toString());
       setState(() {
         isActive = false;
       });
@@ -231,7 +225,9 @@ class _DashScreenState extends State<DashScreen> {
   }
 
   Future refresh() async {
+    _getCustomerVehicles();
     _getCustomerBookingList();
+    _getNotificationList();
     setState(() {});
   }
 
@@ -247,22 +243,24 @@ class _DashScreenState extends State<DashScreen> {
         context, MaterialPageRoute(builder: (context) => NotificationPage()));
   }
 
-  Future<bool> _onWillPop() async {
-    return (await showConfirmDialogCustom(
-          context,
-          height: 65,
-          title: 'Confirmation',
-          subTitle: 'Are to sure you want to exit ?',
-          primaryColor: syanColor,
-          customCenterWidget: Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: Image.asset("assets/icons/logout_icon.png",
-                width: width / 2, height: 95),
+  Future<bool> showExitPopup(BuildContext context) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Exit App'),
+            content: Text('Do you want to exit the App?'),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('No'),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Yes'),
+              ),
+            ],
           ),
-          onAccept: (v) {
-            Navigator.of(context).pop(true);
-          },
-        )) ??
+        ) ??
         false;
   }
 
@@ -271,12 +269,18 @@ class _DashScreenState extends State<DashScreen> {
     return AnnotatedRegion(
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
           statusBarColor: Colors.transparent,
           systemNavigationBarColor: Colors.white,
         ),
         child: WillPopScope(
-            onWillPop: _onWillPop,
+            onWillPop: () async {
+              bool exit = await showExitPopup(context);
+              if (exit) {
+                SystemNavigator.pop();
+              }
+              return Future.value(false);
+            },
             child: Scaffold(
               body: RefreshIndicator(
                   child: SingleChildScrollView(
@@ -290,9 +294,15 @@ class _DashScreenState extends State<DashScreen> {
                             height: isExpanded == false
                                 ? bookingList.length > 0
                                     ? bookingList.length > 1
-                                        ? height *
-                                            0.4 *
-                                            (bookingList.length * 0.6)
+                                        ? bookingList.length < 3
+                                            ? (height * 0.4) +
+                                                (bookingList.length *
+                                                    height *
+                                                    0.07)
+                                            : (height * 0.4) +
+                                                (bookingList.length *
+                                                    height *
+                                                    0.082)
                                         : height * 0.4
                                     : isVehicleLoaded
                                         ? customerVehList.length == 0
@@ -300,7 +310,8 @@ class _DashScreenState extends State<DashScreen> {
                                             : height * 0.3
                                         : height * 0.3
                                 : bookingList.length > 1
-                                    ? height * 0.7 * (bookingList.length * 0.6)
+                                    ? (height * 0.7) +
+                                        (bookingList.length * height * 0.082)
                                     : height * 0.7,
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
@@ -358,15 +369,39 @@ class _DashScreenState extends State<DashScreen> {
                                       Row(
                                         children: [
                                           GestureDetector(
-                                            onTap: () {},
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return ProfilePage(
+                                                      click_root: "home",
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            },
                                             child: Image.asset(
                                               ImageConst.person,
                                               scale: 3.6,
                                             ),
                                           ),
                                           Container(
-                                              margin: EdgeInsets.only(
-                                                  left: width * 0.03),
+                                            margin: EdgeInsets.only(
+                                                left: width * 0.03),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return ProfilePage(
+                                                        click_root: "home",
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                              },
                                               child: RichText(
                                                 text: TextSpan(
                                                   text: lang.S
@@ -380,16 +415,18 @@ class _DashScreenState extends State<DashScreen> {
                                                               width * 0.034),
                                                   children: <TextSpan>[
                                                     TextSpan(
-                                                        text: cut_name,
-                                                        style: montserratBold
-                                                            .copyWith(
-                                                                color: white,
-                                                                fontSize:
-                                                                    width *
-                                                                        0.034)),
+                                                      text: cut_name,
+                                                      style: montserratBold
+                                                          .copyWith(
+                                                              color: white,
+                                                              fontSize: width *
+                                                                  0.034),
+                                                    ),
                                                   ],
                                                 ),
-                                              )),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
 
@@ -398,10 +435,15 @@ class _DashScreenState extends State<DashScreen> {
                                         onTap: () {
                                           notificationclick();
                                         },
-                                        child: Image.asset(
-                                          ImageConst.notification_without,
-                                          scale: 3.7,
-                                        ),
+                                        child: notificationList.length != 0
+                                            ? Image.asset(
+                                                ImageConst.notification_with,
+                                                scale: 3.7,
+                                              )
+                                            : Image.asset(
+                                                ImageConst.notification_without,
+                                                scale: 3.7,
+                                              ),
                                       )
                                     ],
                                   ),
@@ -446,101 +488,99 @@ class _DashScreenState extends State<DashScreen> {
                                                           (bookingList[index]
                                                                   ['st_code'] !=
                                                               "CANC")
-                                                      ? Container(
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  top: height *
-                                                                      0.02),
-                                                          decoration: BoxDecoration(
-                                                              color: white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10)),
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            left: width * 0.04,
-                                                            right: width * 0.03,
-                                                            top: height * 0.012,
-                                                            bottom:
-                                                                height * 0.012,
-                                                          ),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  ///--------- first text -------------
-                                                                  Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Text(
-                                                                        bookingList[index]['pkg_name'] !=
-                                                                                null
-                                                                            ? bookingList[index]['pkg_name'] +
-                                                                                " (" +
-                                                                                bookingList[index]['bk_number'] +
-                                                                                ")"
-                                                                            : "",
-                                                                        style: montserratSemiBold.copyWith(
-                                                                            color:
-                                                                                black,
-                                                                            fontSize:
-                                                                                width * 0.034),
-                                                                      ),
-                                                                      Text(
-                                                                        bookingList[index]['custstatus'] !=
-                                                                                null
-                                                                            ? bookingList[index]['custstatus']
-                                                                            : "",
-                                                                        style: montserratBold.copyWith(
-                                                                            color:
-                                                                                syanColor,
-                                                                            fontSize:
-                                                                                width * 0.031),
-                                                                      ),
-                                                                      Container(
-                                                                        child:
-                                                                            Text(
-                                                                          bookingList[index]['cv_make'] +
-                                                                              " " +
-                                                                              bookingList[index]['cv_model'],
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                          style: montserratRegular.copyWith(
+                                                      ? GestureDetector(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              isExpanded =
+                                                                  !isExpanded;
+                                                              if (bookingList[
+                                                                          index]
+                                                                      [
+                                                                      'detail_flag'] ==
+                                                                  true) {
+                                                                bookingList[index]
+                                                                        [
+                                                                        'detail_flag'] =
+                                                                    false;
+                                                              } else {
+                                                                bookingList[index]
+                                                                        [
+                                                                        'detail_flag'] =
+                                                                    true;
+                                                              }
+                                                            });
+                                                          },
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    top: height *
+                                                                        0.02),
+                                                            decoration: BoxDecoration(
+                                                                color: white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                              left:
+                                                                  width * 0.04,
+                                                              right:
+                                                                  width * 0.03,
+                                                              top: height *
+                                                                  0.012,
+                                                              bottom: height *
+                                                                  0.012,
+                                                            ),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    ///--------- first text -------------
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Text(
+                                                                          bookingList[index]['pkg_name'] != null
+                                                                              ? bookingList[index]['pkg_name'] + " (" + bookingList[index]['bk_number'] + ")"
+                                                                              : "",
+                                                                          style: montserratSemiBold.copyWith(
                                                                               color: black,
-                                                                              fontSize: width * 0.029),
+                                                                              fontSize: width * 0.034),
                                                                         ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
+                                                                        Text(
+                                                                          bookingList[index]['custstatus'] != null
+                                                                              ? bookingList[index]['custstatus']
+                                                                              : "",
+                                                                          style: montserratBold.copyWith(
+                                                                              color: syanColor,
+                                                                              fontSize: width * 0.031),
+                                                                        ),
+                                                                        Container(
+                                                                          child:
+                                                                              Text(
+                                                                            bookingList[index]['cv_make'] +
+                                                                                " " +
+                                                                                bookingList[index]['cv_model'],
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                            style:
+                                                                                montserratRegular.copyWith(color: black, fontSize: width * 0.029),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
 
-                                                                  ///--------- up down arrow -------------
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      setState(
-                                                                          () {
-                                                                        isExpanded =
-                                                                            !isExpanded;
-                                                                        if (bookingList[index]['detail_flag'] ==
-                                                                            true) {
-                                                                          bookingList[index]['detail_flag'] =
-                                                                              false;
-                                                                        } else {
-                                                                          bookingList[index]['detail_flag'] =
-                                                                              true;
-                                                                        }
-                                                                      });
-                                                                    },
-                                                                    child: Image
-                                                                        .asset(
+                                                                    ///--------- up down arrow -------------
+                                                                    Image.asset(
                                                                       bookingList[index]['detail_flag'] !=
                                                                               null
                                                                           ? bookingList[index]['detail_flag'] == true
@@ -549,217 +589,215 @@ class _DashScreenState extends State<DashScreen> {
                                                                           : ImageConst.downarrow,
                                                                       scale: 4,
                                                                     ),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                              isExpanded == true
-                                                                  ? bookingList[index]
-                                                                              [
-                                                                              'detail_flag'] ==
-                                                                          true
-                                                                      ? Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            ///--------- Package -------------
-                                                                            Container(
-                                                                              margin: EdgeInsets.only(top: height * 0.03),
-                                                                              child: Text(
-                                                                                bookingList[index]['cv_variant'] != null ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " (" + bookingList[index]['cv_year'] + ")" : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")",
-                                                                                style: montserratRegular.copyWith(color: black, fontSize: width * 0.037),
-                                                                              ),
-                                                                            ),
-
-                                                                            ///--------- Date -------------
-                                                                            Container(
-                                                                                margin: EdgeInsets.only(top: height * 0.007, bottom: height * 0.007),
-                                                                                child: RichText(
-                                                                                  text: TextSpan(
-                                                                                    text: "Date: ",
-                                                                                    style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
-                                                                                    children: <TextSpan>[
-                                                                                      TextSpan(text: bookingList[index]['bk_booking_date'] != null ? DateFormat('dd-MM-yyyy').format(DateTime.tryParse(bookingList[index]['bk_booking_date'])!) : "", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034)),
-                                                                                    ],
-                                                                                  ),
-                                                                                )),
-
-                                                                            ///--------- time -------------
-                                                                            RichText(
-                                                                              text: TextSpan(
-                                                                                text: "Time: ",
-                                                                                style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
-                                                                                children: <TextSpan>[
-                                                                                  TextSpan(text: bookingList[index]['tm_start_time'] != null ? timeFormatter(bookingList[index]['tm_start_time']) + " - " + timeFormatter(bookingList[index]['tm_end_time']) : "", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034)),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-
-                                                                            ///--------- divider -------------
-                                                                            Container(
-                                                                              margin: EdgeInsets.only(top: height * 0.02, bottom: height * 0.02, left: width * 0.01, right: width * 0.01),
-                                                                              height: 1,
-                                                                              width: width,
-                                                                              color: greyColor,
-                                                                            ),
-
-                                                                            ///--------- currentOrder status -------------
-                                                                            Container(
-                                                                              margin: EdgeInsets.only(bottom: height * 0.008),
-                                                                              child: Text(
-                                                                                TextConst.currentOrder,
-                                                                                style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
-                                                                              ),
-                                                                            ),
-
-                                                                            ///--------- car image -------------
-
-                                                                            Row(
-                                                                              children: [
-                                                                                if (bookingList[index]['st_code'] == "BKCC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.booking_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "DRPC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.driver_enroute_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "PIPC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.pickup_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "PIWC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.pickup_enroute_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "VAWC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.vehicle_wrkshp_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "WIPC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.work_in_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "CDLC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.confirm_drop_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "RFDC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.ready_delivery_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "DEDC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.drop_enrouted,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "DLCC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.delivery_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "HOLDC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.hold_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ] else if (bookingList[index]['st_code'] == "BAPC") ...[
-                                                                                  Image.asset(
-                                                                                    ImageConst.awaiting_payment_icon,
-                                                                                    scale: 4,
-                                                                                  ),
-                                                                                ],
-
-                                                                                ///--------- booking status -------------
-
-                                                                                Container(
-                                                                                  margin: EdgeInsets.only(left: width * 0.02),
-                                                                                  child: Text(
-                                                                                    bookingList[index]['custstatus'] != null ? bookingList[index]['custstatus'] : "",
-                                                                                    style: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
-                                                                                  ),
-                                                                                )
-                                                                              ],
-                                                                            ),
-
-                                                                            ///--------- view details -------------
-
-                                                                            GestureDetector(
-                                                                              onTap: () {
-                                                                                if (bookingList[index]['st_code'] == "BAPC") {
-                                                                                  if (DateTime.now().isBefore(DateTime.tryParse(bookingList[index]['bk_booking_date'])!)) {
-                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh, pickup_loc: 0, drop_loc: 0)));
-                                                                                  } else {
-                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh, pickup_loc: 0, drop_loc: 0)));
-                                                                                  }
-                                                                                } else {
-                                                                                  Navigator.push(
-                                                                                      context,
-                                                                                      MaterialPageRoute(
-                                                                                          builder: (context) => BookingStatusFlow(
-                                                                                                bk_id: bookingList[index]['bk_id'],
-                                                                                                vehname: bookingList[index]['cv_make'] != null
-                                                                                                    ? bookingList[index]['cv_variant'] != null
-                                                                                                        ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
-                                                                                                        : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
-                                                                                                    : "",
-                                                                                                make: bookingList[index]['cv_make'],
-                                                                                              )));
-                                                                                }
-                                                                                // Navigator.push(
-                                                                                //     context,
-                                                                                //     MaterialPageRoute(
-                                                                                //         builder: (context) => BookingStatusFlow(
-                                                                                //               bk_id: bookingList[index]['bk_id'],
-                                                                                //               vehname: bookingList[index]['cv_make'] != null
-                                                                                //                   ? bookingList[index]['cv_variant'] != null
-                                                                                //                       ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
-                                                                                //                       : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
-                                                                                //                   : "",
-                                                                                //               make: bookingList[index]['cv_make'],
-                                                                                //             )));
-                                                                              },
-                                                                              child: Container(
-                                                                                margin: EdgeInsets.only(top: height * 0.02, bottom: height * 0.01),
-                                                                                width: width / 3,
-                                                                                padding: EdgeInsets.all(height * 0.014),
-                                                                                decoration: BoxDecoration(
-                                                                                  color: lightGreyColor,
-                                                                                  border: Border.all(color: greyColor),
-                                                                                  borderRadius: BorderRadius.circular(
-                                                                                    height * 0.1,
-                                                                                  ),
+                                                                  ],
+                                                                ),
+                                                                isExpanded ==
+                                                                        true
+                                                                    ? bookingList[index]['detail_flag'] ==
+                                                                            true
+                                                                        ? Column(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              ///--------- Package -------------
+                                                                              Container(
+                                                                                margin: EdgeInsets.only(top: height * 0.03),
+                                                                                child: Text(
+                                                                                  bookingList[index]['cv_variant'] != null ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " (" + bookingList[index]['cv_year'] + ")" : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")",
+                                                                                  style: montserratRegular.copyWith(color: black, fontSize: width * 0.037),
                                                                                 ),
-                                                                                child: Row(
-                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                  children: [
-                                                                                    Text(
-                                                                                      TextConst.view,
+                                                                              ),
+
+                                                                              ///--------- Date -------------
+                                                                              Container(
+                                                                                  margin: EdgeInsets.only(top: height * 0.007, bottom: height * 0.007),
+                                                                                  child: RichText(
+                                                                                    text: TextSpan(
+                                                                                      text: "Date: ",
                                                                                       style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
+                                                                                      children: <TextSpan>[
+                                                                                        TextSpan(text: bookingList[index]['bk_booking_date'] != null ? DateFormat('dd-MM-yyyy').format(DateTime.tryParse(bookingList[index]['bk_booking_date'])!) : "", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034)),
+                                                                                      ],
                                                                                     ),
-                                                                                    Image.asset(
-                                                                                      ImageConst.right_arrow,
-                                                                                      color: greyColor,
-                                                                                      scale: 4,
-                                                                                    )
+                                                                                  )),
+
+                                                                              ///--------- time -------------
+                                                                              RichText(
+                                                                                text: TextSpan(
+                                                                                  text: "Time: ",
+                                                                                  style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
+                                                                                  children: <TextSpan>[
+                                                                                    TextSpan(text: bookingList[index]['tm_start_time'] != null ? timeFormatter(bookingList[index]['tm_start_time']) + " - " + timeFormatter(bookingList[index]['tm_end_time']) : "", style: montserratRegular.copyWith(color: black, fontSize: width * 0.034)),
                                                                                   ],
                                                                                 ),
                                                                               ),
-                                                                            )
-                                                                          ],
-                                                                        )
-                                                                      : Container()
-                                                                  : Container(),
-                                                            ],
-                                                          ),
-                                                        )
+
+                                                                              ///--------- divider -------------
+                                                                              Container(
+                                                                                margin: EdgeInsets.only(top: height * 0.02, bottom: height * 0.02, left: width * 0.01, right: width * 0.01),
+                                                                                height: 1,
+                                                                                width: width,
+                                                                                color: greyColor,
+                                                                              ),
+
+                                                                              ///--------- currentOrder status -------------
+                                                                              Container(
+                                                                                margin: EdgeInsets.only(bottom: height * 0.008),
+                                                                                child: Text(
+                                                                                  TextConst.currentOrder,
+                                                                                  style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
+                                                                                ),
+                                                                              ),
+
+                                                                              ///--------- car image -------------
+
+                                                                              Row(
+                                                                                children: [
+                                                                                  if (bookingList[index]['st_code'] == "BKCC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.booking_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "DRPC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.driver_enroute_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "PIPC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.pickup_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "PIWC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.pickup_enroute_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "VAWC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.vehicle_wrkshp_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "WIPC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.work_in_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "CDLC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.confirm_drop_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "RFDC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.ready_delivery_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "DEDC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.drop_enrouted,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "DLCC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.delivery_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "HOLDC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.hold_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ] else if (bookingList[index]['st_code'] == "BAPC") ...[
+                                                                                    Image.asset(
+                                                                                      ImageConst.awaiting_payment_icon,
+                                                                                      scale: 4,
+                                                                                    ),
+                                                                                  ],
+
+                                                                                  ///--------- booking status -------------
+
+                                                                                  Container(
+                                                                                    margin: EdgeInsets.only(left: width * 0.02),
+                                                                                    child: Text(
+                                                                                      bookingList[index]['custstatus'] != null ? bookingList[index]['custstatus'] : "",
+                                                                                      style: montserratRegular.copyWith(color: black, fontSize: width * 0.034),
+                                                                                    ),
+                                                                                  )
+                                                                                ],
+                                                                              ),
+
+                                                                              ///--------- view details -------------
+
+                                                                              GestureDetector(
+                                                                                onTap: () {
+                                                                                  if (bookingList[index]['st_code'] == "BAPC") {
+                                                                                    if (DateTime.now().isBefore(DateTime.tryParse(bookingList[index]['bk_booking_date'])!)) {
+                                                                                      Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh, pickup_loc: 0, drop_loc: 0)));
+                                                                                    } else {
+                                                                                      Navigator.push(context, MaterialPageRoute(builder: (context) => RescheduleScreen(bk_data: bookingList[index], custvehlist: customerVehList, currency: currency, selectedVeh: selectedVeh, pickup_loc: 0, drop_loc: 0)));
+                                                                                    }
+                                                                                  } else {
+                                                                                    Navigator.push(
+                                                                                        context,
+                                                                                        MaterialPageRoute(
+                                                                                            builder: (context) => BookingStatusFlow(
+                                                                                                  bk_id: bookingList[index]['bk_id'],
+                                                                                                  vehname: bookingList[index]['cv_make'] != null
+                                                                                                      ? bookingList[index]['cv_variant'] != null
+                                                                                                          ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
+                                                                                                          : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
+                                                                                                      : "",
+                                                                                                  make: bookingList[index]['cv_make'],
+                                                                                                )));
+                                                                                  }
+                                                                                  // Navigator.push(
+                                                                                  //     context,
+                                                                                  //     MaterialPageRoute(
+                                                                                  //         builder: (context) => BookingStatusFlow(
+                                                                                  //               bk_id: bookingList[index]['bk_id'],
+                                                                                  //               vehname: bookingList[index]['cv_make'] != null
+                                                                                  //                   ? bookingList[index]['cv_variant'] != null
+                                                                                  //                       ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
+                                                                                  //                       : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
+                                                                                  //                   : "",
+                                                                                  //               make: bookingList[index]['cv_make'],
+                                                                                  //             )));
+                                                                                },
+                                                                                child: Container(
+                                                                                  margin: EdgeInsets.only(top: height * 0.02, bottom: height * 0.01),
+                                                                                  width: width / 3,
+                                                                                  padding: EdgeInsets.all(height * 0.014),
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: lightGreyColor,
+                                                                                    border: Border.all(color: greyColor),
+                                                                                    borderRadius: BorderRadius.circular(
+                                                                                      height * 0.1,
+                                                                                    ),
+                                                                                  ),
+                                                                                  child: Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                    children: [
+                                                                                      Text(
+                                                                                        TextConst.view,
+                                                                                        style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.034),
+                                                                                      ),
+                                                                                      Image.asset(
+                                                                                        ImageConst.right_arrow,
+                                                                                        color: greyColor,
+                                                                                        scale: 4,
+                                                                                      )
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              )
+                                                                            ],
+                                                                          )
+                                                                        : Container()
+                                                                    : Container(),
+                                                              ],
+                                                            ),
+                                                          ))
                                                       : Container();
                                                 })
                                             : Container(),
@@ -834,20 +872,16 @@ class _DashScreenState extends State<DashScreen> {
                         Container(
                             height:
                                 isVehicleLoaded && customerVehList.length > 1
-                                    ? isBookingLoaded &&
-                                            bookingList.length > 0 &&
-                                            bookingList.length < 2
+                                    ? isBookingLoaded && bookingList.length == 1
                                         ? height * 0.11
                                         : bookingList.length > 1
-                                            ? height * 0.13
+                                            ? height * 0.08
                                             : height * 0.08
-                                    : isBookingLoaded &&
-                                            bookingList.length > 0 &&
-                                            bookingList.length < 2
+                                    : isBookingLoaded && bookingList.length == 1
                                         ? height * 0.07
                                         : bookingList.length > 1
                                             ? height * 0.09
-                                            : height * 0.05),
+                                            : height * 0.06),
                       ]),
                       isVehicleLoaded
                           ? customerVehList.length < 2
@@ -900,7 +934,7 @@ class _DashScreenState extends State<DashScreen> {
                                                   });
                                                 },
                                                 child: Container(
-                                                  height: height * 0.1,
+                                                  height: height * 0.14,
                                                   width: width,
                                                   padding: EdgeInsets.only(
                                                       left: width * 0.04,
@@ -1101,7 +1135,20 @@ class _DashScreenState extends State<DashScreen> {
                                                           width: width * 0.2,
                                                         )
                                                       ],
-                                                    ),
+                                                    ).onTap(() {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  HomeVehicleListClick(
+                                                                    vehicle_id:
+                                                                        customerVehList[0]
+                                                                            [
+                                                                            'cv_id'],
+                                                                    selectedVeh:
+                                                                        0,
+                                                                  )));
+                                                    }),
                                                   )
                                                 : SizedBox()),
                                   ],
@@ -1268,7 +1315,18 @@ class _DashScreenState extends State<DashScreen> {
                                                 width: width * 0.1,
                                               ),
                                             ))
-                                      ]);
+                                      ]).onTap(() {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HomeVehicleListClick(
+                                                      vehicle_id:
+                                                          customerVehList[index]
+                                                              ['cv_id'],
+                                                      selectedVeh: index,
+                                                    )));
+                                      });
                                     },
                                   ),
                                 )
@@ -1380,7 +1438,7 @@ class _DashScreenState extends State<DashScreen> {
                                             ],
                                           ),
                                           Image.asset(
-                                            ImageConst.handel,
+                                            ImageConst.benz_ico,
                                             scale: 4,
                                           )
                                         ],
@@ -1516,7 +1574,8 @@ class _DashScreenState extends State<DashScreen> {
                                     // Navigator.push(
                                     //     context,
                                     //     MaterialPageRoute(
-                                    //         builder: (context) => NextPage()));
+                                    //         builder: (context) =>
+                                    //             TryOutPage()));
                                   },
                                   child: Stack(
                                     alignment: Alignment.topRight,
@@ -1620,10 +1679,12 @@ class _DashScreenState extends State<DashScreen> {
         padding: EdgeInsets.only(
             left: width * 0.03, right: width * 0.06, bottom: height * 0.027),
         decoration: BoxDecoration(
-            image: type
-                ? DecorationImage(image: CachedNetworkImageProvider(img))
-                : DecorationImage(image: AssetImage(img)),
-            borderRadius: BorderRadius.circular(10)),
+          image: type
+              ? DecorationImage(
+                  image: CachedNetworkImageProvider(img), fit: BoxFit.cover)
+              : DecorationImage(image: AssetImage(img), fit: BoxFit.cover),
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1650,7 +1711,10 @@ class _DashScreenState extends State<DashScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            showCustomToast(context, "Coming Soon",
+                bgColor: warningcolor, textColor: white);
+          },
           child: Container(
             padding: EdgeInsets.all(height * 0.023),
             decoration: BoxDecoration(

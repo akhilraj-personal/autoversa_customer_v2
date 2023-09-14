@@ -23,7 +23,8 @@ import '../../provider/provider.dart';
 import '../../utils/common_utils.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final String click_root;
+  const ProfilePage({required this.click_root, super.key});
 
   @override
   State<ProfilePage> createState() => ProfilePageState();
@@ -75,25 +76,6 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<bool> _onWillPop() async {
-    return (await showConfirmDialogCustom(
-          context,
-          height: 65,
-          title: 'Confirmation',
-          subTitle: 'Are you sure you want to exit ?',
-          primaryColor: syanColor,
-          customCenterWidget: Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: Image.asset("assets/icons/logout_icon.png",
-                width: width / 2, height: 95),
-          ),
-          onAccept: (v) {
-            Navigator.of(context).pop(true);
-          },
-        )) ??
-        false;
   }
 
   logout_user() async {
