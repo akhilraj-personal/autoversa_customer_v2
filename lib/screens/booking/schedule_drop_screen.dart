@@ -597,6 +597,10 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
         Map<String, dynamic> pay_data = {
           'custId': prefs.getString('cust_id'),
           'booking_id': widget.bk_id,
+          'drop_location_id': new_selected_drop,
+          'selected_date': selectedDate.toString(),
+          'selected_timeid': selected_timeid,
+          'selected_timeslot': selected_timeslot,
           'tot_amount': pending_payment.toString(),
         };
         await create_workcard_payment(pay_data).then((value) {
@@ -1004,12 +1008,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                       autovalidateMode:
                                           AutovalidateMode.onUserInteraction,
                                       decoration: InputDecoration(
-                                        //Add isDense true and zero Padding.
-                                        //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                                         isDense: true,
                                         contentPadding: EdgeInsets.zero,
                                         focusedBorder: OutlineInputBorder(
-                                          // width: 0.0 produces a thin "hairline" border
                                           borderSide: const BorderSide(
                                               color: const Color(0xffCCCCCC),
                                               width: 0.0),
@@ -1017,7 +1018,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                               BorderRadius.circular(12),
                                         ),
                                         focusedErrorBorder: OutlineInputBorder(
-                                          // width: 0.0 produces a thin "hairline" border
                                           borderSide: const BorderSide(
                                               color: const Color(0xffCCCCCC),
                                               width: 0.0),
@@ -1025,7 +1025,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                               BorderRadius.circular(12),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                          // width: 0.0 produces a thin "hairline" border
                                           borderSide: const BorderSide(
                                               color: const Color(0xffCCCCCC),
                                               width: 0.0),
@@ -1033,7 +1032,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                               BorderRadius.circular(12),
                                         ),
                                         errorBorder: OutlineInputBorder(
-                                          // width: 0.0 produces a thin "hairline" border
                                           borderSide: const BorderSide(
                                               color: const Color(0xfffff),
                                               width: 0.0),
@@ -1044,8 +1042,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                           fontSize: 12,
                                           color: warningcolor,
                                         ),
-                                        //Add more decoration as you want here
-                                        //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                                       ),
                                       isExpanded: true,
                                       hint: Text(
@@ -1094,12 +1090,12 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                       textAlign:
                                                           TextAlign.justify,
                                                       overflow:
-                                                          TextOverflow.ellipsis,
+                                                          TextOverflow.clip,
                                                       style: montserratMedium
                                                           .copyWith(
                                                               color: toastgrey,
                                                               fontSize:
-                                                                  width * 0.03),
+                                                                  width * 0.04),
                                                     ),
                                                   ],
                                                 ))
@@ -1194,14 +1190,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                             .parse(pickup_options[
                                                                     index][
                                                                 'pk_cost_value']);
-                                                        // pickup_name =
-                                                        //     pickup_options[
-                                                        //             index]
-                                                        //         ['pk_name'];
-                                                        // pickup_cost =
-                                                        //     pickup_options[
-                                                        //             index][
-                                                        //         'pk_cost_value'];
                                                       });
                                                     },
                                                   ),
@@ -1248,7 +1236,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                         "PAID"
                                                     ? Colors.black
                                                     : Colors.green,
-                                                fontSize: width * 0.034),
+                                                fontSize: width * 0.04),
                                           )
                                         : Text(
                                             pickup_options[index]['pk_cost'] ==
@@ -1264,7 +1252,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                         "PAID"
                                                     ? warningcolor
                                                     : Colors.green,
-                                                fontSize: width * 0.034),
+                                                fontSize: width * 0.04),
                                           ),
                                   ],
                                 ),
@@ -1351,18 +1339,20 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                 child: Icon(Icons.av_timer_outlined,
                                     color: white, size: 28),
                               )),
-                          title: Text("Select a Time Slot" + "*",
-                              overflow: TextOverflow.clip,
+                          title: Text(lang.S.of(context).select_a_time_slot,
+                              overflow: TextOverflow.ellipsis,
                               style: montserratMedium.copyWith(
                                   color: black, fontSize: width * 0.04),
                               maxLines: 3),
                           subtitle: Text(
-                            selected_timeslot == ""
-                                ? "Time Slot"
-                                : selected_timeslot,
-                            style: montserratSemiBold.copyWith(
-                                color: black, fontSize: width * 0.04),
-                          ),
+                              selected_timeslot == ""
+                                  ? "Choose time slot"
+                                  : selected_timeslot,
+                              style: montserratSemiBold.copyWith(
+                                  color: black,
+                                  fontSize: selected_timeslot == ""
+                                      ? width * 0.034
+                                      : width * 0.04)),
                           textColor: black,
                           trailing: isExpanded
                               ? Container(
@@ -1459,11 +1449,11 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                     'tm_end_time']) +
                                                             "\n" +
                                                             "Slot Is Full",
-                                                        style: montserratRegular
+                                                        style: montserratMedium
                                                             .copyWith(
                                                           fontSize:
-                                                              width * 0.032,
-                                                          color: errorcolor,
+                                                              width * 0.04,
+                                                          color: black,
                                                         ),
                                                       )
                                                     : Text(
@@ -1475,21 +1465,23 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                                                 timeslots[index]
                                                                     [
                                                                     'tm_end_time']),
-                                                        style: montserratRegular
+                                                        style: montserratMedium
                                                             .copyWith(
                                                           fontSize:
-                                                              width * 0.034,
-                                                          color: Colors.black,
+                                                              width * 0.04,
+                                                          color: black,
                                                         ),
                                                       ),
                                               ],
                                             );
                                           })
                                       : Text(
-                                          "No time Slot",
-                                          style: montserratRegular.copyWith(
+                                          lang.S
+                                              .of(context)
+                                              .no_time_slot_available,
+                                          style: montserratMedium.copyWith(
                                             fontSize: width * 0.034,
-                                            color: Colors.black,
+                                            color: black,
                                           ),
                                         ),
                                 ],
@@ -1505,7 +1497,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                         onTap: () async {
                           if (isProceeding) return;
                           setState(() => isProceeding = true);
-                          // await Future.delayed(Duration(milliseconds: 1000));
                           scheduleDrop();
                         },
                         child: Stack(
@@ -1547,13 +1538,15 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                                       ? Text(
                                           "SCHEDULE",
                                           style: montserratSemiBold.copyWith(
-                                              color: Colors.white),
+                                              color: Colors.white,
+                                              fontSize: width * 0.034),
                                         )
                                       : Text(
                                           "PAY AED " +
                                               pending_payment.toString(),
                                           style: montserratSemiBold.copyWith(
-                                              color: Colors.white),
+                                              color: Colors.white,
+                                              fontSize: width * 0.034),
                                         )
                                   : Row(
                                       mainAxisAlignment:

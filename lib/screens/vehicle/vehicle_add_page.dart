@@ -140,11 +140,11 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                   child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        item['veh_variant'],
+                        item['veh_variant_master'],
                         style: montserratMedium.copyWith(
                             color: blackColor, fontSize: width * 0.04),
                       )),
-                  value: item['veh_variant'].toString()))
+                  value: item['veh_variant_master'].toString()))
               .toList();
         });
       }

@@ -54,7 +54,6 @@ class PackageDetailsState extends State<PackageDetails> {
   late Map<String, dynamic> packageinfo;
   double totalCost = 0.0;
   double operationlabourrate = 0.0;
-  double servicelabourrate = 0.0;
   double totalExclusiveCost = 0.0;
   double packVat = 0.0;
   bool isbooked = false;
@@ -64,7 +63,6 @@ class PackageDetailsState extends State<PackageDetails> {
   TextEditingController complaint = new TextEditingController();
   var gs_vat;
   var veh_groupid;
-  var ser_veh_groupid;
   bool isofferprice = false;
 
   @override
@@ -107,15 +105,12 @@ class PackageDetailsState extends State<PackageDetails> {
         print(req);
         totalCost = 0.0;
         operationlabourrate = 0.0;
-        servicelabourrate = 0.0;
         totalExclusiveCost = 0.0;
         var nonMapCount = 0;
         await getPackageDetails(req).then((value) {
           if (value['ret_data'] == "success") {
             gs_vat = int.parse(value['settings']['gs_vat']);
-            veh_groupid = int.parse(value['veh_group']['vgroup_id']);
-            ser_veh_groupid =
-                int.parse(value['service_veh_group']['vgroup_id']);
+            veh_groupid = int.parse(value['veh_group']['vgm_id']);
             optionList = [];
             pack_extra_details = value['pack_extra_details'];
             setState(() {});
@@ -137,13 +132,15 @@ class PackageDetailsState extends State<PackageDetails> {
                   if (operations['spo_billexclusion'] == "0") {
                     if (operations['opvm_pack_timeunit'] != null) {
                       operationlabourrate =
-                          double.parse(value['labourrate']['lr_rate']);
+                          double.parse(value['veh_group']['vgm_labour_rate']);
                       totalCost = totalCost +
                           (double.parse(operations['opvm_pack_timeunit']) *
-                              double.parse(value['labourrate']['lr_rate']));
+                              double.parse(
+                                  value['veh_group']['vgm_labour_rate']));
                       totalExclusiveCost = totalExclusiveCost +
                           (double.parse(operations['opvm_pack_timeunit']) *
-                              double.parse(value['labourrate']['lr_rate']));
+                              double.parse(
+                                  value['veh_group']['vgm_labour_rate']));
                     } else {
                       nonMapCount++;
                     }
@@ -152,10 +149,11 @@ class PackageDetailsState extends State<PackageDetails> {
                     setState(() {});
                     if (operations['opvm_pack_timeunit'] != null) {
                       operationlabourrate =
-                          double.parse(value['labourrate']['lr_rate']);
+                          double.parse(value['veh_group']['vgm_labour_rate']);
                       totalExclusiveCost = totalExclusiveCost +
                           (double.parse(operations['opvm_pack_timeunit']) *
-                              double.parse(value['labourrate']['lr_rate']));
+                              double.parse(
+                                  value['veh_group']['vgm_labour_rate']));
                     }
                   }
                 } else if (operations['opvm_billexclusion'] == "1") {
@@ -163,10 +161,11 @@ class PackageDetailsState extends State<PackageDetails> {
                   setState(() {});
                   if (operations['opvm_pack_timeunit'] != null) {
                     operationlabourrate =
-                        double.parse(value['labourrate']['lr_rate']);
+                        double.parse(value['veh_group']['vgm_labour_rate']);
                     totalExclusiveCost = totalExclusiveCost +
                         (double.parse(operations['opvm_pack_timeunit']) *
-                            double.parse(value['labourrate']['lr_rate']));
+                            double.parse(
+                                value['veh_group']['vgm_labour_rate']));
                   }
                 } else if (operations['opvm_billexclusion'] == null) {
                   nonMapCount++;
@@ -208,44 +207,17 @@ class PackageDetailsState extends State<PackageDetails> {
                 optionList.add(serv['ser_display_name']);
               }
               if (serv['pse_billexclusion'] == "0") {
-                if (serv['sevm_billexclusion'] == "0") {
-                  if (serv['sevm_pack_timeunit'] != null) {
-                    servicelabourrate =
-                        double.parse(value['service_labourrate']['lr_rate']);
-                    totalCost = totalCost +
-                        (double.parse(serv['sevm_pack_timeunit']) *
-                            double.parse(
-                                value['service_labourrate']['lr_rate']));
-                    totalExclusiveCost = totalExclusiveCost +
-                        (double.parse(serv['sevm_pack_timeunit']) *
-                            double.parse(
-                                value['service_labourrate']['lr_rate']));
-                  } else {
-                    nonMapCount++;
-                  }
-                } else if (serv['sevm_billexclusion'] == "1") {
-                  isofferprice = true;
-                  setState(() {});
-                  if (serv['sevm_pack_timeunit'] != null) {
-                    servicelabourrate =
-                        double.parse(value['service_labourrate']['lr_rate']);
-                    totalExclusiveCost = totalExclusiveCost +
-                        (double.parse(serv['sevm_pack_timeunit']) *
-                            double.parse(
-                                value['service_labourrate']['lr_rate']));
-                  }
-                } else if (serv['sevm_billexclusion'] == null) {
+                if (serv['sevm_cost'] != null) {
+                  totalCost = totalCost + (double.parse(serv['sevm_cost']));
+                } else {
                   nonMapCount++;
                 }
               } else if (serv['pse_billexclusion'] == "1") {
                 isofferprice = true;
                 setState(() {});
                 if (serv['sevm_pack_timeunit'] != null) {
-                  servicelabourrate =
-                      double.parse(value['service_labourrate']['lr_rate']);
-                  totalExclusiveCost = totalExclusiveCost +
-                      (double.parse(serv['sevm_pack_timeunit']) *
-                          double.parse(value['service_labourrate']['lr_rate']));
+                  totalExclusiveCost =
+                      totalExclusiveCost + (double.parse(serv['sevm_cost']));
                 }
               }
             }
@@ -308,16 +280,16 @@ class PackageDetailsState extends State<PackageDetails> {
       "package_id": widget.package_id['pkg_id'],
       "vehicle_id": widget.custvehlist[currentveh]['cv_id'],
       "brand": widget.custvehlist[currentveh]['cv_make'],
+      "model": widget.custvehlist[currentveh]['cv_model'],
+      "variant": widget.custvehlist[currentveh]['cv_variant'],
       "complaint": complaint.text.toString(),
       "audio_location": prefs.containsKey('comp_audio')
           ? prefs.containsKey('comp_audio')
           : "",
       "package_cost": totalCost,
       "operationlabourrate": operationlabourrate,
-      "servicelabourrate": servicelabourrate,
       "gs_vat": gs_vat,
       "veh_groupid": veh_groupid,
-      "ser_veh_groupid": ser_veh_groupid,
       "pack_vat": packVat,
       "pack_extra_details": pack_extra_details
     };
