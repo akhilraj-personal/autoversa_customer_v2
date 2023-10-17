@@ -1462,30 +1462,44 @@ class HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           isPackageLoaded
-                              ? GridView.builder(
-                                  padding: EdgeInsets.only(top: height * 0.02),
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                          // maxCrossAxisExtent: 200,
-                                          // childAspectRatio: 3 / 2,
-                                          crossAxisCount: 2,
-                                          crossAxisSpacing: 25,
-                                          mainAxisSpacing: 17),
-                                  itemCount: packageList.length,
-                                  itemBuilder: (BuildContext ctx, index) {
-                                    return commonWidget(
-                                        dotenv.env['aws_url']! +
-                                            this.packageList[index]
-                                                ['pkg_imageUrl'],
-                                        this.packageList[index]['pkg_name'],
-                                        true,
-                                        packageList[index],
-                                        packageList[index]['pkg_type'],
-                                        currency,
-                                        noofvehicle);
-                                  })
+                              ? packageList.length != 0
+                                  ? GridView.builder(
+                                      padding:
+                                          EdgeInsets.only(top: height * 0.02),
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                              // maxCrossAxisExtent: 200,
+                                              // childAspectRatio: 3 / 2,
+                                              crossAxisCount: 2,
+                                              crossAxisSpacing: 25,
+                                              mainAxisSpacing: 17),
+                                      itemCount: packageList.length,
+                                      itemBuilder: (BuildContext ctx, index) {
+                                        return commonWidget(
+                                            dotenv.env['aws_url']! +
+                                                this.packageList[index]
+                                                    ['pkg_imageUrl'],
+                                            this.packageList[index]['pkg_name'],
+                                            true,
+                                            packageList[index],
+                                            packageList[index]['pkg_type'],
+                                            currency,
+                                            noofvehicle);
+                                      })
+                                  : Container(
+                                      margin: EdgeInsets.only(
+                                        bottom: height * 0.07,
+                                      ),
+                                      height: height * 0.19,
+                                      child: Center(
+                                        child: Text(
+                                          'No Services Found',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ),
+                                    )
                               : Shimmer.fromColors(
                                   baseColor: lightGreyColor,
                                   highlightColor: greyColor,

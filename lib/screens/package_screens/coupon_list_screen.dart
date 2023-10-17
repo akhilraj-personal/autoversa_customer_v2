@@ -69,6 +69,7 @@ class CouponListScreenState extends State<CouponListScreen> {
       "vgroup_id": widget.vehiclegroupid,
       "totalamount": widget.totalamount,
     };
+    print(req);
     couponList = [];
     await getCouponsListForCustomer(req).then((value) {
       if (value['ret_data'] == "success") {

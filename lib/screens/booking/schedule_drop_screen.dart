@@ -493,6 +493,42 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     }
   }
 
+  scheduleDrop() async {
+    if (new_selected_drop == 0) {
+      setState(() => isProceeding = false);
+      showCustomToast(context, "Choose a drop location",
+          bgColor: errorcolor, textColor: white);
+    } else if (selected_drop == "") {
+      setState(() => isProceeding = false);
+      showCustomToast(context, "Choose a drop type",
+          bgColor: errorcolor, textColor: white);
+    } else if (selected_timeid == 0) {
+      setState(() => isProceeding = false);
+      showCustomToast(context, "Choose a time slot",
+          bgColor: errorcolor, textColor: white);
+    } else {
+      if (pending_payment > 0) {
+        final prefs = await SharedPreferences.getInstance();
+        Map<String, dynamic> pay_data = {
+          'custId': prefs.getString('cust_id'),
+          'booking_id': widget.bk_id,
+          'tot_amount': pending_payment.toString(),
+        };
+        await create_drop_payment(pay_data).then((value) {
+          if (value['ret_data'] == "success") {
+            trnxId = value['payment_details']['id'];
+            createPaymentIntent(widget.bk_id, value['payment_details']);
+          }
+        }).catchError((e) {
+          showCustomToast(context, lang.S.of(context).toast_application_error,
+              bgColor: errorcolor, textColor: Colors.white);
+        });
+      } else {
+        scheduleDropFinalize();
+      }
+    }
+  }
+
   createPaymentIntent(data, payment) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var billingDetails = BillingDetails(
@@ -550,6 +586,25 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
     );
     try {
       await Stripe.instance.presentPaymentSheet();
+      final prefs = await SharedPreferences.getInstance();
+      Map<String, dynamic> paymentreq = {
+        'custId': prefs.getString('cust_id'),
+        'booking_id': widget.bk_id,
+        'drop_location_id': new_selected_drop,
+        'selected_date': selectedDate.toString(),
+        'selected_timeid': selected_timeid,
+        'selected_timeslot': selected_timeslot,
+        'tot_amount': pending_payment.toString(),
+        'trxn_id': trnxId,
+      };
+      await create_payment_for_drop_confirmation(paymentreq).then((value) {
+        if (value['ret_data'] == "success") {
+        } else {
+          setState(() => isProceeding = false);
+          showCustomToast(context, value['ret_data'],
+              bgColor: errorcolor, textColor: white);
+        }
+      });
       setState(() {
         showDialog(
           barrierDismissible: false,
@@ -574,48 +629,6 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
             content: Text('Unforeseen error: ${e}'),
           ),
         );
-      }
-    }
-  }
-
-  scheduleDrop() async {
-    if (new_selected_drop == 0) {
-      setState(() => isProceeding = false);
-      showCustomToast(context, "Choose a drop location",
-          bgColor: errorcolor, textColor: white);
-    } else if (selected_drop == "") {
-      setState(() => isProceeding = false);
-      showCustomToast(context, "Choose a drop type",
-          bgColor: errorcolor, textColor: white);
-    } else if (selected_timeid == 0) {
-      setState(() => isProceeding = false);
-      showCustomToast(context, "Choose a time slot",
-          bgColor: errorcolor, textColor: white);
-    } else {
-      if (pending_payment > 0) {
-        final prefs = await SharedPreferences.getInstance();
-        Map<String, dynamic> pay_data = {
-          'custId': prefs.getString('cust_id'),
-          'booking_id': widget.bk_id,
-          'drop_location_id': new_selected_drop,
-          'selected_date': selectedDate.toString(),
-          'selected_timeid': selected_timeid,
-          'selected_timeslot': selected_timeslot,
-          'tot_amount': pending_payment.toString(),
-        };
-        await create_workcard_payment(pay_data).then((value) {
-          if (value['ret_data'] == "success") {
-            trnxId = value['payment_details']['id'];
-            createPaymentIntent(widget.bk_id, value['payment_details']);
-          }
-        }).catchError((e) {
-          print(e.toString());
-          showCustomToast(context, lang.S.of(context).toast_application_error,
-              bgColor: errorcolor, textColor: Colors.white);
-        });
-        // createPayment();
-      } else {
-        scheduleDropFinalize();
       }
     }
   }
@@ -1647,7 +1660,11 @@ class CustomWarning extends StatelessWidget {
         decoration: new BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(0),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12)),
           boxShadow: [
             BoxShadow(
                 color: Colors.black26,
@@ -1657,12 +1674,28 @@ class CustomWarning extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(height: 130, color: warningcolor),
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          lightorangeColor,
+                          holdorangeColor,
+                        ],
+                      )),
+                ),
                 Column(
                   children: [
                     Image.asset(
@@ -1735,7 +1768,11 @@ class CustomSuccess extends StatelessWidget {
         decoration: new BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(0),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12)),
           boxShadow: [
             BoxShadow(
                 color: Colors.black26,
@@ -1745,7 +1782,7 @@ class CustomSuccess extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
@@ -1753,16 +1790,20 @@ class CustomSuccess extends StatelessWidget {
                 Container(
                   height: 130,
                   decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0)),
                       gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      lightblueColor,
-                      syanColor,
-                    ],
-                  )),
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          lightblueColor,
+                          syanColor,
+                        ],
+                      )),
                 ),
-                // Container(height: 130, color: blackColor),
                 Column(
                   children: [
                     Image.asset(
@@ -1773,7 +1814,7 @@ class CustomSuccess extends StatelessWidget {
                     SizedBox(
                       height: 16,
                     ),
-                    Text("Booking Successfull",
+                    Text("Payment successful!",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
                             fontSize: width * 0.034, color: Colors.white)),
@@ -1786,7 +1827,8 @@ class CustomSuccess extends StatelessWidget {
             ),
             Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
-                child: Text("Please check dashboard for booking status",
+                child: Text(
+                    "Drop Details Saved Successfully. You can check the status of your booking on your dashboard.",
                     textAlign: TextAlign.center,
                     style: montserratRegular.copyWith(
                         fontSize: width * 0.034, color: Colors.black))),

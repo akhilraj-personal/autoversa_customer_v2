@@ -242,3 +242,13 @@ Future getCouponsListForCustomer(Map req) async {
 Future CheckAppliedCoupon(Map req) async {
   return handleResponse(await securedPostRequest('check_appliedcoupon', req));
 }
+
+Future create_drop_payment(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/create_drop_payment', req));
+}
+
+Future create_payment_for_drop_confirmation(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/confirm_payment_for_drop', req));
+}

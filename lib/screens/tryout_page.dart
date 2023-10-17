@@ -327,7 +327,6 @@ class TryOutScreenState extends State<TryOutScreen> {
       // }
       getTimeSlots(new DateTime.now());
     } catch (e) {
-      print(e.toString());
       showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: white);
     }
@@ -412,7 +411,6 @@ class TryOutScreenState extends State<TryOutScreen> {
     var currentHour = now.hour;
     final formattedDate = DateFormat('dd-MM-yyyy').format(now);
     final formattedpickedDate = DateFormat('dd-MM-yyyy').format(pickdate);
-    print(formattedpickedDate);
     selected_timeslot = "";
     selected_timeid = 0;
     isTimeCheck = "";
@@ -425,11 +423,8 @@ class TryOutScreenState extends State<TryOutScreen> {
     await getTimeSlotsForBooking(req).then((value) {
       buffer_time = int.parse(value['settings']['gs_bookingbuffer_time']);
       int currentMinute = (now.minute + buffer_time);
-      print(currentMinute);
       int hours = currentMinute ~/ 60;
       int minutes = currentMinute % 60;
-      print(hours);
-      print(minutes);
       timeslots = [];
       // var timeslot = value['time_slots'];
       if (value['ret_data'] == "success") {
@@ -438,10 +433,6 @@ class TryOutScreenState extends State<TryOutScreen> {
           var splittingTimeHours = timeHours.split(':');
           var splittedTimeHours = splittingTimeHours['0'].trim();
           var splittedTimeMinutes = splittingTimeHours['1'].trim();
-          print("01======>");
-          print(splittingTimeHours[0].trim());
-          print("02======>");
-          print(splittingTimeHours[1].trim());
           if (splittedTimeHours < currentHour) {
             return -1;
           } else if (splittedTimeHours > currentHour) {
@@ -484,7 +475,6 @@ class TryOutScreenState extends State<TryOutScreen> {
 
           setState(() {});
         } else {
-          print("Bie===>");
           setState(() {});
         }
       }
@@ -1931,7 +1921,8 @@ class TryOutScreenState extends State<TryOutScreen> {
                                   _selectDate(context);
                                 },
                                 title: Text(
-                                    lang.S.of(context).select_booking_date + " ",
+                                    lang.S.of(context).select_booking_date +
+                                        " ",
                                     style: montserratMedium.copyWith(
                                         color: black, fontSize: width * 0.04),
                                     maxLines: 3),

@@ -100,20 +100,12 @@ class SummeryPageState extends State<SummeryPage> {
       if (packdata['package_cost'] != null) {
         totalamount = double.parse(packdata['package_cost'].toString()) +
             double.parse(packdata['pick_up_price'].toString());
-        print("1111===>>>");
-        print(totalamount);
         netpayable = double.parse(packdata['package_cost'].toString()) +
             double.parse(packdata['pick_up_price'].toString());
-        print("2222===>>>");
-        print(netpayable);
         setState(() {});
       } else {
         totalamount = double.parse(packdata['pick_up_price'].toString());
-        print("3333===>>>");
-        print(totalamount);
         netpayable = double.parse(packdata['pick_up_price'].toString());
-        print("4444===>>>");
-        print(netpayable);
         setState(() {});
       }
     });
@@ -127,6 +119,7 @@ class SummeryPageState extends State<SummeryPage> {
       "vgroup_id": packdata['veh_groupid'],
       "totalamount": totalamount.toString(),
     };
+    print("coupon list req ====>");
     print(req);
     couponList = [];
     await getCouponsListForCustomer(req).then((value) {
@@ -157,7 +150,7 @@ class SummeryPageState extends State<SummeryPage> {
     if (widget.couponid == null) {
       netpayable = 0.0;
       coupon_id = couponid;
-      couponcodeselected = couponcode.toUpperCase();
+      couponcodeselected = couponcode;
       coupondiscountreceived = coupondiscount;
       coupondiscounttypereceived = coupondiscounttype;
       setState(() {});
@@ -264,7 +257,6 @@ class SummeryPageState extends State<SummeryPage> {
   void dispose() {
     super.dispose();
     player.dispose();
-    // internetconnection!.cancel();
   }
 
   createBooking() async {
@@ -1900,7 +1892,6 @@ class CustomWarning extends StatelessWidget {
                         ],
                       )),
                 ),
-                // Container(height: 130, color: warningcolor),
                 Column(
                   children: [
                     Image.asset(
@@ -1987,7 +1978,7 @@ class CustomSuccess extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
