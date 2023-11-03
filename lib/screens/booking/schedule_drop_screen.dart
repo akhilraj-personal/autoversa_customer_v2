@@ -1837,7 +1837,6 @@ class CustomSuccess extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                // Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, Routes.bottombar);
               },
               child: Container(

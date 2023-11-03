@@ -72,8 +72,6 @@ plateNumberValidation(value) {
     return null;
   } else if (!regExp.hasMatch(value)) {
     return "Enter valid data";
-  } else if (value.length < 7) {
-    return "Enter valid data";
   }
   return null;
 }

@@ -82,11 +82,12 @@ class VehiclelistState extends State<Vehiclelist> {
 
   vehicle_delete(id) async {
     Map delreq = {"cv_id": id};
-    await deleteCustomerVehicle(delreq).then((value) {
+    await deleteCustomerVehicle(delreq).then((value) async {
       if (value['ret_data'] == "success") {
-        _getCustomerVehicles();
         showCustomToast(context, "Vehicle Deleted",
             bgColor: Colors.black, textColor: Colors.white);
+        await Future.delayed(Duration(milliseconds: 1000));
+        _getCustomerVehicles();
       } else {
         showCustomToast(
             context, "Created a booking. so can't delete the vehicle",
@@ -105,26 +106,6 @@ class VehiclelistState extends State<Vehiclelist> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
-  }
-
-  Future<bool> _onWillPop() async {
-    return (await showConfirmDialogCustom(
-          context,
-          height: 65,
-          title: 'Confirmation',
-          subTitle: 'Are to sure you want to exit ?',
-          primaryColor: syanColor,
-          customCenterWidget: Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: Image.asset("assets/icons/logout_icon.png",
-                width: width / 2, height: 95),
-          ),
-          onAccept: (v) {
-            Navigator.of(context).pop(true);
-          },
-        )) ??
-        false;
   }
 
   @override

@@ -644,10 +644,12 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
         padding: EdgeInsets.only(
             left: width * 0.03, right: width * 0.06, bottom: height * 0.027),
         decoration: BoxDecoration(
-            image: type
-                ? DecorationImage(image: CachedNetworkImageProvider(img))
-                : DecorationImage(image: AssetImage(img)),
-            borderRadius: BorderRadius.circular(10)),
+          image: type
+              ? DecorationImage(
+                  image: CachedNetworkImageProvider(img), fit: BoxFit.cover)
+              : DecorationImage(image: AssetImage(img), fit: BoxFit.cover),
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

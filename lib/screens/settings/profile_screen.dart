@@ -7,6 +7,7 @@ import 'package:autoversa/screens/address/address_list_screen.dart';
 import 'package:autoversa/screens/service/service_list_screen.dart';
 import 'package:autoversa/screens/settings/edit_profile.dart';
 import 'package:autoversa/screens/support/support_screen.dart';
+import 'package:autoversa/screens/tryout_page.dart';
 import 'package:autoversa/screens/vehicle/vehicle_list_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
@@ -651,7 +652,18 @@ class ProfilePageState extends State<ProfilePage> {
                                 color: syanColor, size: 16)
                             .paddingOnly(right: 16),
                       ],
-                    ).onTap(() async {}),
+                    ).onTap(() async {
+                      String? name = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return Tryout();
+                          },
+                        ),
+                      );
+                      nameProfile = name;
+                      setState(() {});
+                    }),
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     //   children: [

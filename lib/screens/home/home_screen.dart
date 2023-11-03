@@ -96,6 +96,8 @@ class HomeScreenState extends State<HomeScreen> {
             currency = value['currency']['cy_code'];
             isPackageLoaded = true;
           });
+        } else if (value['ret_data'] == "fail") {
+          packageList.length == 0;
         }
       });
     } catch (e) {
