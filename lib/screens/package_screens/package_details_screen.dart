@@ -63,6 +63,7 @@ class PackageDetailsState extends State<PackageDetails> {
   TextEditingController complaint = new TextEditingController();
   var gs_vat;
   var veh_groupid;
+  var veh_lbr_rate;
   bool isofferprice = false;
 
   @override
@@ -111,6 +112,7 @@ class PackageDetailsState extends State<PackageDetails> {
           if (value['ret_data'] == "success") {
             gs_vat = int.parse(value['settings']['gs_vat']);
             veh_groupid = int.parse(value['veh_group']['vgm_id']);
+            veh_lbr_rate = value['veh_group']['vgm_labour_rate'];
             optionList = [];
             pack_extra_details = value['pack_extra_details'];
             setState(() {});
@@ -290,10 +292,12 @@ class PackageDetailsState extends State<PackageDetails> {
       "operationlabourrate": operationlabourrate,
       "gs_vat": gs_vat,
       "veh_groupid": veh_groupid,
+      "vgm_labour_rate": veh_lbr_rate,
       "pack_vat": packVat,
       "pack_extra_details": pack_extra_details
     };
     prefs.setString("booking_data", json.encode(packdata));
+    print(packdata);
     setState(() => isbooked = false);
     Navigator.push(
         context,

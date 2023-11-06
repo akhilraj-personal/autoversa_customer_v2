@@ -293,6 +293,7 @@ class SummeryPageState extends State<SummeryPage> {
         "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
         "gs_vat": packdata['gs_vat'].toStringAsFixed(2),
         "veh_groupid": packdata['veh_groupid'],
+        "vgm_labour_rate": packdata['vgm_labour_rate'],
         "total_amount": widget.netpayableamount != null && couponapplied == true
             ? widget.netpayableamount.round()
             : netpayable.round(),
@@ -333,6 +334,7 @@ class SummeryPageState extends State<SummeryPage> {
         "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
         "gs_vat": packdata['gs_vat'].toStringAsFixed(2),
         "veh_groupid": packdata['veh_groupid'],
+        "vgm_labour_rate": packdata['vgm_labour_rate'],
         "total_amount": widget.netpayableamount != null && couponapplied == true
             ? widget.netpayableamount.round()
             : netpayable.round(),
