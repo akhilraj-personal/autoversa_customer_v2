@@ -163,7 +163,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                   double.parse(selected_distance) > freeservicedistance
               ? "0"
               : ptype['pk_id'],
-          "pk_name": ptype['pk_name'],
+          "pk_name": ptype['pk_displayname'] != null
+              ? ptype['pk_displayname']
+              : ptype['pk_name'],
           "pk_cost": ptype['pk_id'] == currentDropType['pk_id'] &&
                   double.parse(tempCost) == 0
               ? "PAID"
@@ -242,7 +244,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                   serviceDistance > freeservicedistance
               ? "0"
               : ptype['pk_id'],
-          "pk_name": ptype['pk_name'],
+          "pk_name": ptype['pk_displayname'] != null
+              ? ptype['pk_displayname']
+              : ptype['pk_name'],
           "pk_cost":
               ptype['pk_id'] == currentDropType['pk_id'] && new_distance == 0
                   ? "PAID"
@@ -353,7 +357,9 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                       double.parse(selected_distance) > freeservicedistance
                   ? "0"
                   : ptype['pk_id'],
-              "pk_name": ptype['pk_name'],
+              "pk_name": ptype['pk_displayname'] != null
+                  ? ptype['pk_displayname']
+                  : ptype['pk_name'],
               "pk_cost": ptype['pk_id'] == currentDropType['pk_id']
                   ? "PAID"
                   : ptype['pk_freeFlag'] == "1" &&

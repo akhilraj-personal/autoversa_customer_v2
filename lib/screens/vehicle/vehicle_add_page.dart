@@ -862,6 +862,7 @@ class VehicleAddPageState extends State<VehicleAddPage> {
                                                       }
                                                     },
                                                     onChanged: (value) {
+                                                      print(value);
                                                       getModelVariantYear(
                                                           value);
                                                     },
