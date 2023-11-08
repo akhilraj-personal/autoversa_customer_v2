@@ -1580,899 +1580,1236 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
     );
   }
 
+  Future<bool> _onWillPop() async {
+    Navigator.pushReplacementNamed(context, Routes.bottombar);
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion(
-        value: SystemUiOverlayStyle(
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-          statusBarColor: Colors.white,
-          systemNavigationBarColor: Colors.white,
-        ),
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            flexibleSpace: Container(
-              alignment: Alignment.bottomCenter,
-              width: width,
-              height: height * 0.42,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    lightblueColor,
-                    syanColor,
-                  ],
-                ),
-              ),
-              child: ClipPath(
-                clipper: SinCosineWaveClipper(
-                  verticalPosition: VerticalPosition.top,
-                ),
-                child: Container(
-                  height: height * 0.81,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: AnnotatedRegion(
+          value: SystemUiOverlayStyle(
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+            statusBarColor: Colors.white,
+            systemNavigationBarColor: Colors.white,
+          ),
+          child: Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              flexibleSpace: Container(
+                alignment: Alignment.bottomCenter,
+                width: width,
+                height: height * 0.42,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      syanColor.withOpacity(0.3),
-                      Color.fromARGB(255, 176, 205, 210),
+                      lightblueColor,
+                      syanColor,
                     ],
-                  )),
+                  ),
+                ),
+                child: ClipPath(
+                  clipper: SinCosineWaveClipper(
+                    verticalPosition: VerticalPosition.top,
+                  ),
+                  child: Container(
+                    height: height * 0.81,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        syanColor.withOpacity(0.3),
+                        Color.fromARGB(255, 176, 205, 210),
+                      ],
+                    )),
+                  ),
                 ),
               ),
-            ),
-            title: Text(
-              "Booking Details",
-              style: montserratRegular.copyWith(
-                fontSize: width * 0.044,
-                color: Colors.white,
+              title: Text(
+                "Booking Details",
+                style: montserratRegular.copyWith(
+                  fontSize: width * 0.044,
+                  color: Colors.white,
+                ),
+              ),
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, Routes.bottombar);
+                },
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                iconSize: 18,
               ),
             ),
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, Routes.bottombar);
-              },
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              iconSize: 18,
-            ),
-          ),
-          body: RefreshIndicator(
-              displacement: 250,
-              backgroundColor: Colors.white,
-              color: syanColor,
-              strokeWidth: 3,
-              triggerMode: RefreshIndicatorTriggerMode.onEdge,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(16.0),
+            body: RefreshIndicator(
+                displacement: 250,
+                backgroundColor: Colors.white,
+                color: syanColor,
+                strokeWidth: 3,
+                triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Row(
-                          children: <Widget>[
-                            Padding(padding: EdgeInsets.all(4)),
-                            if (widget.make == 'Mercedes Benz') ...[
-                              Image.asset(
-                                ImageConst.benz_ico,
-                                width: width * 0.12,
-                              ),
-                            ] else if (widget.make == 'BMW') ...[
-                              Image.asset(
-                                ImageConst.bmw_ico,
-                                width: width * 0.12,
-                              ),
-                            ] else if (widget.make == 'Skoda') ...[
-                              Image.asset(
-                                ImageConst.skod_ico,
-                                width: width * 0.12,
-                              ),
-                            ] else if (widget.make == 'Audi') ...[
-                              Image.asset(
-                                ImageConst.aud_ico,
-                                width: width * 0.12,
-                              ),
-                            ] else if (widget.make == 'Porsche') ...[
-                              Image.asset(
-                                ImageConst.porsche_ico,
-                                width: width * 0.12,
-                              ),
-                            ] else if (widget.make == 'Volkswagen') ...[
-                              Image.asset(
-                                ImageConst.volkswagen_icon,
-                                width: width * 0.12,
-                              ),
-                            ] else ...[
-                              Image.asset(
-                                ImageConst.defcar_ico,
-                                width: width * 0.12,
-                              ),
-                            ],
-                            SizedBox(width: 16.0),
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: Text(
-                                              booking_package['pkg_name'] !=
-                                                      null
-                                                  ? booking_package[
-                                                          'pkg_name'] +
-                                                      " (" +
-                                                      booking['bk_number'] +
-                                                      ")"
-                                                  : "",
-                                              overflow: TextOverflow.clip,
-                                              style:
-                                                  montserratSemiBold.copyWith(
-                                                      color: black,
-                                                      fontSize: width * 0.04)),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 1,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Flexible(
-                                              child: Container(
-                                                child: Text(
-                                                  booking['bk_booking_date'] !=
-                                                          null
-                                                      ? DateFormat('dd-MM-yyyy')
-                                                          .format(DateTime
-                                                              .tryParse(booking[
-                                                                  'bk_booking_date'])!)
-                                                      : "",
-                                                  overflow: TextOverflow.clip,
-                                                  style:
-                                                      montserratMedium.copyWith(
-                                                          color: black,
-                                                          fontSize:
-                                                              width * 0.034),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Flexible(
-                                              child: Container(
-                                                child: Text(
-                                                  pickup_timeslot[
-                                                              'tm_start_time'] !=
-                                                          null
-                                                      ? timeFormatter(
-                                                              pickup_timeslot[
-                                                                  'tm_start_time']) +
-                                                          " - " +
-                                                          timeFormatter(
-                                                              pickup_timeslot[
-                                                                  'tm_end_time'])
-                                                      : "",
-                                                  overflow: TextOverflow.clip,
-                                                  style:
-                                                      montserratMedium.copyWith(
-                                                          color: black,
-                                                          fontSize:
-                                                              width * 0.034),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Container(
-                                          child: Text(
-                                            widget.vehname,
-                                            overflow: TextOverflow.clip,
-                                            style: montserratMedium.copyWith(
-                                                color: black,
-                                                fontSize: width * 0.034),
+                      Container(
+                        margin: EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Row(
+                            children: <Widget>[
+                              Padding(padding: EdgeInsets.all(4)),
+                              if (widget.make == 'Mercedes Benz') ...[
+                                Image.asset(
+                                  ImageConst.benz_ico,
+                                  width: width * 0.12,
+                                ),
+                              ] else if (widget.make == 'BMW') ...[
+                                Image.asset(
+                                  ImageConst.bmw_ico,
+                                  width: width * 0.12,
+                                ),
+                              ] else if (widget.make == 'Skoda') ...[
+                                Image.asset(
+                                  ImageConst.skod_ico,
+                                  width: width * 0.12,
+                                ),
+                              ] else if (widget.make == 'Audi') ...[
+                                Image.asset(
+                                  ImageConst.aud_ico,
+                                  width: width * 0.12,
+                                ),
+                              ] else if (widget.make == 'Porsche') ...[
+                                Image.asset(
+                                  ImageConst.porsche_ico,
+                                  width: width * 0.12,
+                                ),
+                              ] else if (widget.make == 'Volkswagen') ...[
+                                Image.asset(
+                                  ImageConst.volkswagen_icon,
+                                  width: width * 0.12,
+                                ),
+                              ] else ...[
+                                Image.asset(
+                                  ImageConst.defcar_ico,
+                                  width: width * 0.12,
+                                ),
+                              ],
+                              SizedBox(width: 16.0),
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Flexible(
+                                          child: Container(
+                                            child: Text(
+                                                booking_package['pkg_name'] !=
+                                                        null
+                                                    ? booking_package[
+                                                            'pkg_name'] +
+                                                        " (" +
+                                                        booking['bk_number'] +
+                                                        ")"
+                                                    : "",
+                                                overflow: TextOverflow.clip,
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        color: black,
+                                                        fontSize:
+                                                            width * 0.04)),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  8.height,
-                                  status['st_code'] == "HOLDC"
-                                      ? Row(
-                                          children: <Widget>[
-                                            status['st_code'] == "BKCC" ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        pastcustomerstatus ==
-                                                            "BKCC"
-                                                ? Expanded(
-                                                    flex: 1,
-                                                    child: GestureDetector(
-                                                      onTap: () async {
-                                                        cancelbookingbottomsheet();
-                                                      },
-                                                      child: Stack(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        children: [
-                                                          Container(
-                                                            height:
-                                                                height * 0.05,
-                                                            width: height * 0.2,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .rectangle,
-                                                              border:
-                                                                  Border.all(
-                                                                      color:
-                                                                          grey),
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          12)),
-                                                              gradient:
-                                                                  LinearGradient(
-                                                                begin: Alignment
-                                                                    .topLeft,
-                                                                end: Alignment
-                                                                    .bottomRight,
-                                                                colors: [
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            child: Text(
-                                                              "CANCEL",
-                                                              style: montserratSemiBold
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.025),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Row(),
-                                            SizedBox(
-                                              width: 2,
-                                            ),
-                                            status['st_code'] == "BKCC" ||
-                                                    status['st_code'] ==
-                                                        "CDLC" ||
-                                                    status['st_code'] ==
-                                                        "RFDC" ||
-                                                    status['st_code'] ==
-                                                        "DEDC" ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "BKCC") &&
-                                                        (holdedby == "0") ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "CDLC") &&
-                                                        (holdedby == "0") ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "RFDC") &&
-                                                        (holdedby == "0") ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "DEDC") &&
-                                                        (holdedby == "0")
-                                                ? Expanded(
-                                                    flex: 1,
-                                                    child: GestureDetector(
-                                                      onTap: () async {
-                                                        showConfirmDialogCustom(
-                                                          context,
-                                                          primaryColor:
-                                                              syanColor,
-                                                          title:
-                                                              'Unhold Booking.?',
-                                                          onAccept: (v) {
-                                                            unholdbookingbottomsheet();
-                                                          },
-                                                        );
-                                                      },
-                                                      child: Stack(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        children: [
-                                                          Container(
-                                                            height:
-                                                                height * 0.05,
-                                                            width: height * 0.2,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .rectangle,
-                                                              border:
-                                                                  Border.all(
-                                                                      color:
-                                                                          grey),
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          12)),
-                                                              gradient:
-                                                                  LinearGradient(
-                                                                begin: Alignment
-                                                                    .topLeft,
-                                                                end: Alignment
-                                                                    .bottomRight,
-                                                                colors: [
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            child: Text(
-                                                              "UNHOLD",
-                                                              style: montserratSemiBold
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.025),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Row(),
-                                            SizedBox(
-                                              width: 2,
-                                            ),
-                                            status['st_code'] == "BKCC" ||
-                                                    status['st_code'] ==
-                                                        "CDLC" ||
-                                                    status['st_code'] ==
-                                                        "RFDC" ||
-                                                    status['st_code'] ==
-                                                        "DEDC" ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "BKCC") ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "CDLC") ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "RFDC") ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "DEDC")
-                                                ? Expanded(
-                                                    flex: 1,
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        status['st_code'] ==
-                                                                    "BKCC" ||
-                                                                (status['st_code'] ==
-                                                                        "HOLDC" &&
-                                                                    pastcustomerstatus ==
-                                                                        "BKCC")
-                                                            ? Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) => ReschedulefromBooking(
-                                                                        scheduletype:
-                                                                            5,
-                                                                        bk_id: widget
-                                                                            .bk_id)))
-                                                            : Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) => ReschedulefromBooking(
-                                                                        scheduletype:
-                                                                            4,
-                                                                        bk_id: widget
-                                                                            .bk_id)));
-                                                      },
-                                                      child: Stack(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        children: [
-                                                          Container(
-                                                            height:
-                                                                height * 0.05,
-                                                            width: height * 0.2,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .rectangle,
-                                                              border:
-                                                                  Border.all(
-                                                                      color:
-                                                                          grey),
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          12)),
-                                                              gradient:
-                                                                  LinearGradient(
-                                                                begin: Alignment
-                                                                    .topLeft,
-                                                                end: Alignment
-                                                                    .bottomRight,
-                                                                colors: [
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            child: Text(
-                                                              "RESCHEDULE",
-                                                              style: montserratSemiBold
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.025),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Row(),
-                                          ],
-                                        )
-                                      : Row(
-                                          children: <Widget>[
-                                            status['st_code'] == "BKCC" ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        pastcustomerstatus ==
-                                                            "BKCC"
-                                                ? Expanded(
-                                                    flex: 1,
-                                                    child: GestureDetector(
-                                                      onTap: () async {
-                                                        cancelbookingbottomsheet();
-                                                      },
-                                                      child: Stack(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        children: [
-                                                          Container(
-                                                            height:
-                                                                height * 0.05,
-                                                            width: height * 0.2,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .rectangle,
-                                                              border:
-                                                                  Border.all(
-                                                                      color:
-                                                                          grey),
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          12)),
-                                                              gradient:
-                                                                  LinearGradient(
-                                                                begin: Alignment
-                                                                    .topLeft,
-                                                                end: Alignment
-                                                                    .bottomRight,
-                                                                colors: [
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            child: Text(
-                                                              "CANCEL",
-                                                              style: montserratSemiBold
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.025),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Row(),
-                                            SizedBox(
-                                              width: 2,
-                                            ),
-                                            status['st_code'] == "BKCC" ||
-                                                    status['st_code'] ==
-                                                        "CDLC" ||
-                                                    status['st_code'] ==
-                                                        "RFDC" ||
-                                                    status['st_code'] ==
-                                                        "DEDC" ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "BKCC") &&
-                                                        (holdedby == "0") ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "CDLC") &&
-                                                        (holdedby == "0") ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "RFDC") &&
-                                                        (holdedby == "0") ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        (pastcustomerstatus ==
-                                                            "DEDC") &&
-                                                        (holdedby == "0")
-                                                ? Expanded(
-                                                    flex: 1,
-                                                    child: GestureDetector(
-                                                      onTap: () async {
-                                                        holdbookingbottomsheet();
-                                                      },
-                                                      child: Stack(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        children: [
-                                                          Container(
-                                                            height:
-                                                                height * 0.05,
-                                                            width: height * 0.2,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .rectangle,
-                                                              border:
-                                                                  Border.all(
-                                                                      color:
-                                                                          grey),
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          12)),
-                                                              gradient:
-                                                                  LinearGradient(
-                                                                begin: Alignment
-                                                                    .topLeft,
-                                                                end: Alignment
-                                                                    .bottomRight,
-                                                                colors: [
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            child: Text(
-                                                              "HOLD",
-                                                              style: montserratSemiBold
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.025),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Row(),
-                                            SizedBox(
-                                              width: 2,
-                                            ),
-                                            status['st_code'] == "BKCC" ||
-                                                    status['st_code'] ==
-                                                        "CDLC" ||
-                                                    status['st_code'] ==
-                                                        "RFDC" ||
-                                                    status['st_code'] ==
-                                                        "DEDC" ||
-                                                    status['st_code'] ==
-                                                            "HOLDC" &&
-                                                        pastcustomerstatus ==
-                                                            "BKCC"
-                                                ? Expanded(
-                                                    flex: 1,
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        status['st_code'] ==
-                                                                    "BKCC" ||
-                                                                (status['st_code'] ==
-                                                                        "HOLDC" &&
-                                                                    pastcustomerstatus ==
-                                                                        "BKCC")
-                                                            ? Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) => ReschedulefromBooking(
-                                                                        scheduletype:
-                                                                            5,
-                                                                        bk_id: widget
-                                                                            .bk_id)))
-                                                            : Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) => ReschedulefromBooking(
-                                                                        scheduletype:
-                                                                            4,
-                                                                        bk_id: widget
-                                                                            .bk_id)));
-                                                      },
-                                                      child: Stack(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        children: [
-                                                          Container(
-                                                            height:
-                                                                height * 0.05,
-                                                            width: height * 0.2,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .rectangle,
-                                                              border:
-                                                                  Border.all(
-                                                                      color:
-                                                                          grey),
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          12)),
-                                                              gradient:
-                                                                  LinearGradient(
-                                                                begin: Alignment
-                                                                    .topLeft,
-                                                                end: Alignment
-                                                                    .bottomRight,
-                                                                colors: [
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                  white,
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            child: Text(
-                                                              "RESCHEDULE",
-                                                              style: montserratSemiBold
-                                                                  .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.025),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Row(),
-                                          ],
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 1,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Flexible(
+                                                child: Container(
+                                                  child: Text(
+                                                    booking['bk_booking_date'] !=
+                                                            null
+                                                        ? DateFormat(
+                                                                'dd-MM-yyyy')
+                                                            .format(DateTime
+                                                                .tryParse(booking[
+                                                                    'bk_booking_date'])!)
+                                                        : "",
+                                                    overflow: TextOverflow.clip,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                            color: black,
+                                                            fontSize:
+                                                                width * 0.034),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                ],
+                                        Expanded(
+                                          flex: 2,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Flexible(
+                                                child: Container(
+                                                  child: Text(
+                                                    pickup_timeslot[
+                                                                'tm_start_time'] !=
+                                                            null
+                                                        ? timeFormatter(
+                                                                pickup_timeslot[
+                                                                    'tm_start_time']) +
+                                                            " - " +
+                                                            timeFormatter(
+                                                                pickup_timeslot[
+                                                                    'tm_end_time'])
+                                                        : "",
+                                                    overflow: TextOverflow.clip,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                            color: black,
+                                                            fontSize:
+                                                                width * 0.034),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Flexible(
+                                          child: Container(
+                                            child: Text(
+                                              widget.vehname,
+                                              overflow: TextOverflow.clip,
+                                              style: montserratMedium.copyWith(
+                                                  color: black,
+                                                  fontSize: width * 0.034),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    8.height,
+                                    status['st_code'] == "HOLDC"
+                                        ? Row(
+                                            children: <Widget>[
+                                              status['st_code'] == "BKCC" ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          pastcustomerstatus ==
+                                                              "BKCC"
+                                                  ? Expanded(
+                                                      flex: 1,
+                                                      child: GestureDetector(
+                                                        onTap: () async {
+                                                          cancelbookingbottomsheet();
+                                                        },
+                                                        child: Stack(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          children: [
+                                                            Container(
+                                                              height:
+                                                                  height * 0.05,
+                                                              width:
+                                                                  height * 0.2,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .rectangle,
+                                                                border:
+                                                                    Border.all(
+                                                                        color:
+                                                                            grey),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            12)),
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  begin: Alignment
+                                                                      .topLeft,
+                                                                  end: Alignment
+                                                                      .bottomRight,
+                                                                  colors: [
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              child: Text(
+                                                                "CANCEL",
+                                                                style: montserratSemiBold.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.025),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Row(),
+                                              SizedBox(
+                                                width: 2,
+                                              ),
+                                              status['st_code'] == "BKCC" ||
+                                                      status['st_code'] ==
+                                                          "CDLC" ||
+                                                      status['st_code'] ==
+                                                          "RFDC" ||
+                                                      status['st_code'] ==
+                                                          "DEDC" ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "BKCC") &&
+                                                          (holdedby == "0") ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "CDLC") &&
+                                                          (holdedby == "0") ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "RFDC") &&
+                                                          (holdedby == "0") ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "DEDC") &&
+                                                          (holdedby == "0")
+                                                  ? Expanded(
+                                                      flex: 1,
+                                                      child: GestureDetector(
+                                                        onTap: () async {
+                                                          showConfirmDialogCustom(
+                                                            context,
+                                                            primaryColor:
+                                                                syanColor,
+                                                            title:
+                                                                'Unhold Booking.?',
+                                                            onAccept: (v) {
+                                                              unholdbookingbottomsheet();
+                                                            },
+                                                          );
+                                                        },
+                                                        child: Stack(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          children: [
+                                                            Container(
+                                                              height:
+                                                                  height * 0.05,
+                                                              width:
+                                                                  height * 0.2,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .rectangle,
+                                                                border:
+                                                                    Border.all(
+                                                                        color:
+                                                                            grey),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            12)),
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  begin: Alignment
+                                                                      .topLeft,
+                                                                  end: Alignment
+                                                                      .bottomRight,
+                                                                  colors: [
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              child: Text(
+                                                                "UNHOLD",
+                                                                style: montserratSemiBold.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.025),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Row(),
+                                              SizedBox(
+                                                width: 2,
+                                              ),
+                                              status['st_code'] == "BKCC" ||
+                                                      status['st_code'] ==
+                                                          "CDLC" ||
+                                                      status['st_code'] ==
+                                                          "RFDC" ||
+                                                      status['st_code'] ==
+                                                          "DEDC" ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "BKCC") ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "CDLC") ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "RFDC") ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "DEDC")
+                                                  ? Expanded(
+                                                      flex: 1,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          status['st_code'] ==
+                                                                      "BKCC" ||
+                                                                  (status['st_code'] ==
+                                                                          "HOLDC" &&
+                                                                      pastcustomerstatus ==
+                                                                          "BKCC")
+                                                              ? Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) => ReschedulefromBooking(
+                                                                          scheduletype:
+                                                                              5,
+                                                                          bk_id: widget
+                                                                              .bk_id)))
+                                                              : Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) => ReschedulefromBooking(
+                                                                          scheduletype:
+                                                                              4,
+                                                                          bk_id:
+                                                                              widget.bk_id)));
+                                                        },
+                                                        child: Stack(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          children: [
+                                                            Container(
+                                                              height:
+                                                                  height * 0.05,
+                                                              width:
+                                                                  height * 0.2,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .rectangle,
+                                                                border:
+                                                                    Border.all(
+                                                                        color:
+                                                                            grey),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            12)),
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  begin: Alignment
+                                                                      .topLeft,
+                                                                  end: Alignment
+                                                                      .bottomRight,
+                                                                  colors: [
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              child: Text(
+                                                                "RESCHEDULE",
+                                                                style: montserratSemiBold.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.025),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Row(),
+                                            ],
+                                          )
+                                        : Row(
+                                            children: <Widget>[
+                                              status['st_code'] == "BKCC" ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          pastcustomerstatus ==
+                                                              "BKCC"
+                                                  ? Expanded(
+                                                      flex: 1,
+                                                      child: GestureDetector(
+                                                        onTap: () async {
+                                                          cancelbookingbottomsheet();
+                                                        },
+                                                        child: Stack(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          children: [
+                                                            Container(
+                                                              height:
+                                                                  height * 0.05,
+                                                              width:
+                                                                  height * 0.2,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .rectangle,
+                                                                border:
+                                                                    Border.all(
+                                                                        color:
+                                                                            grey),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            12)),
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  begin: Alignment
+                                                                      .topLeft,
+                                                                  end: Alignment
+                                                                      .bottomRight,
+                                                                  colors: [
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              child: Text(
+                                                                "CANCEL",
+                                                                style: montserratSemiBold.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.025),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Row(),
+                                              SizedBox(
+                                                width: 2,
+                                              ),
+                                              status['st_code'] == "BKCC" ||
+                                                      status['st_code'] ==
+                                                          "CDLC" ||
+                                                      status['st_code'] ==
+                                                          "RFDC" ||
+                                                      status['st_code'] ==
+                                                          "DEDC" ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "BKCC") &&
+                                                          (holdedby == "0") ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "CDLC") &&
+                                                          (holdedby == "0") ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "RFDC") &&
+                                                          (holdedby == "0") ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          (pastcustomerstatus ==
+                                                              "DEDC") &&
+                                                          (holdedby == "0")
+                                                  ? Expanded(
+                                                      flex: 1,
+                                                      child: GestureDetector(
+                                                        onTap: () async {
+                                                          holdbookingbottomsheet();
+                                                        },
+                                                        child: Stack(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          children: [
+                                                            Container(
+                                                              height:
+                                                                  height * 0.05,
+                                                              width:
+                                                                  height * 0.2,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .rectangle,
+                                                                border:
+                                                                    Border.all(
+                                                                        color:
+                                                                            grey),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            12)),
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  begin: Alignment
+                                                                      .topLeft,
+                                                                  end: Alignment
+                                                                      .bottomRight,
+                                                                  colors: [
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              child: Text(
+                                                                "HOLD",
+                                                                style: montserratSemiBold.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.025),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Row(),
+                                              SizedBox(
+                                                width: 2,
+                                              ),
+                                              status['st_code'] == "BKCC" ||
+                                                      status['st_code'] ==
+                                                          "CDLC" ||
+                                                      status['st_code'] ==
+                                                          "RFDC" ||
+                                                      status['st_code'] ==
+                                                          "DEDC" ||
+                                                      status['st_code'] ==
+                                                              "HOLDC" &&
+                                                          pastcustomerstatus ==
+                                                              "BKCC"
+                                                  ? Expanded(
+                                                      flex: 1,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          status['st_code'] ==
+                                                                      "BKCC" ||
+                                                                  (status['st_code'] ==
+                                                                          "HOLDC" &&
+                                                                      pastcustomerstatus ==
+                                                                          "BKCC")
+                                                              ? Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) => ReschedulefromBooking(
+                                                                          scheduletype:
+                                                                              5,
+                                                                          bk_id: widget
+                                                                              .bk_id)))
+                                                              : Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) => ReschedulefromBooking(
+                                                                          scheduletype:
+                                                                              4,
+                                                                          bk_id:
+                                                                              widget.bk_id)));
+                                                        },
+                                                        child: Stack(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          children: [
+                                                            Container(
+                                                              height:
+                                                                  height * 0.05,
+                                                              width:
+                                                                  height * 0.2,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .rectangle,
+                                                                border:
+                                                                    Border.all(
+                                                                        color:
+                                                                            grey),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            12)),
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  begin: Alignment
+                                                                      .topLeft,
+                                                                  end: Alignment
+                                                                      .bottomRight,
+                                                                  colors: [
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                    white,
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              child: Text(
+                                                                "RESCHEDULE",
+                                                                style: montserratSemiBold.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.025),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Row(),
+                                            ],
+                                          ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(8),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            child: Text('Work Status',
-                                style: montserratSemiBold.copyWith(
-                                    color: black, fontSize: 17)),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                    Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.all(17.5),
-                          padding: EdgeInsets.all(8.5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 12,
-                                    color: syanColor.withOpacity(.9),
-                                    spreadRadius: 0,
-                                    blurStyle: BlurStyle.outer,
-                                    offset: Offset(0, 0)),
-                              ]),
-                        ),
-                        Container(
-                            margin: EdgeInsets.all(16.0),
-                            padding: EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: white,
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(16.0),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(8),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              child: Text('Work Status',
+                                  style: montserratSemiBold.copyWith(
+                                      color: black, fontSize: 17)),
                             ),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  booking['cv_registrationvalidity'] != null &&
-                                          booking['cv_registrationvalidity']
-                                                  .compareTo(CurrentDate) <
-                                              0
-                                      ? Divider()
-                                      : Row(),
-                                  booking['cv_registrationvalidity'] != null &&
-                                          booking['cv_registrationvalidity']
-                                                  .compareTo(CurrentDate) <
-                                              0
-                                      ? Row(
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: EdgeInsets.all(16),
-                                            ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: Container(
-                                                child: Text(
-                                                    "Registration card validity expired at " +
-                                                        booking[
-                                                            'cv_registrationvalidity'] +
-                                                        ".",
-                                                    overflow: TextOverflow.clip,
-                                                    style: TextStyle(
-                                                      fontSize: 14.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontStyle:
-                                                          FontStyle.normal,
-                                                      color: Colors.red,
-                                                    )),
+                          ),
+                        ],
+                      ),
+                      Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.all(17.5),
+                            padding: EdgeInsets.all(8.5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                      blurRadius: 12,
+                                      color: syanColor.withOpacity(.9),
+                                      spreadRadius: 0,
+                                      blurStyle: BlurStyle.outer,
+                                      offset: Offset(0, 0)),
+                                ]),
+                          ),
+                          Container(
+                              margin: EdgeInsets.all(16.0),
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: white,
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    booking['cv_registrationvalidity'] !=
+                                                null &&
+                                            booking['cv_registrationvalidity']
+                                                    .compareTo(CurrentDate) <
+                                                0
+                                        ? Divider()
+                                        : Row(),
+                                    booking['cv_registrationvalidity'] !=
+                                                null &&
+                                            booking['cv_registrationvalidity']
+                                                    .compareTo(CurrentDate) <
+                                                0
+                                        ? Row(
+                                            children: <Widget>[
+                                              Padding(
+                                                padding: EdgeInsets.all(16),
                                               ),
-                                            ),
-                                          ],
-                                        )
-                                      : Row(),
-                                  statusflow.length > 0
-                                      ? ListView.builder(
-                                          itemCount: statusflow.length,
-                                          scrollDirection: Axis.vertical,
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Expanded(
-                                                        flex: 5,
-                                                        child: statusView(
-                                                            statusflow[index]
-                                                                ["status"],
-                                                            statusflow[index]
-                                                                ["icon"],
-                                                            statusflow[index]
-                                                                ["time"],
-                                                            statusflow[index]
-                                                                ["active_flag"],
-                                                            statusflow[index]
-                                                                ["hold_flag"],
-                                                            statusflow[index][
-                                                                "unhold_status"]),
-                                                      ),
-                                                      statusflow[index][
-                                                                      'code'] ==
-                                                                  "DRPC" &&
+                                              Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  child: Text(
+                                                      "Registration card validity expired at " +
+                                                          booking[
+                                                              'cv_registrationvalidity'] +
+                                                          ".",
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      style: TextStyle(
+                                                        fontSize: 14.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                        color: Colors.red,
+                                                      )),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Row(),
+                                    statusflow.length > 0
+                                        ? ListView.builder(
+                                            itemCount: statusflow.length,
+                                            scrollDirection: Axis.vertical,
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Expanded(
+                                                          flex: 5,
+                                                          child: statusView(
+                                                              statusflow[index]
+                                                                  ["status"],
+                                                              statusflow[index]
+                                                                  ["icon"],
+                                                              statusflow[index]
+                                                                  ["time"],
                                                               statusflow[index][
-                                                                      'unhold_status'] !=
-                                                                  "unhold" &&
-                                                              (status["st_code"] ==
-                                                                  "DRPC")
-                                                          ? Expanded(
-                                                              flex: 2,
-                                                              child: Container(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
+                                                                  "active_flag"],
+                                                              statusflow[index]
+                                                                  ["hold_flag"],
+                                                              statusflow[index][
+                                                                  "unhold_status"]),
+                                                        ),
+                                                        statusflow[index][
+                                                                        'code'] ==
+                                                                    "DRPC" &&
+                                                                statusflow[index]
+                                                                        [
+                                                                        'unhold_status'] !=
+                                                                    "unhold" &&
+                                                                (status["st_code"] ==
+                                                                    "DRPC")
+                                                            ? Expanded(
+                                                                flex: 2,
                                                                 child:
-                                                                    GestureDetector(
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  child:
+                                                                      GestureDetector(
+                                                                    onTap:
+                                                                        () async {
+                                                                      PermissionStatus
+                                                                          phoneStatus =
+                                                                          await Permission
+                                                                              .phone
+                                                                              .request();
+                                                                      if (phoneStatus ==
+                                                                          PermissionStatus
+                                                                              .denied) {
+                                                                        showCustomToast(
+                                                                            context,
+                                                                            "This Permission is recommended for calling.",
+                                                                            bgColor:
+                                                                                errorcolor,
+                                                                            textColor:
+                                                                                white);
+                                                                      }
+                                                                      if (phoneStatus ==
+                                                                          PermissionStatus
+                                                                              .permanentlyDenied) {
+                                                                        openAppSettings();
+                                                                      }
+                                                                      if (phoneStatus ==
+                                                                          PermissionStatus
+                                                                              .granted) {
+                                                                        final Uri
+                                                                            url =
+                                                                            Uri(
+                                                                                scheme: 'tel',
+                                                                                path: drivercontact['us_country_code'] + drivercontact['us_phone']);
+                                                                        if (await canLaunchUrl(
+                                                                            url)) {
+                                                                          await launchUrl(
+                                                                              url);
+                                                                        }
+
+                                                                        // bool?
+                                                                        //     res =
+                                                                        //     await FlutterPhoneDirectCaller.callNumber(drivercontact['us_country_code'] +
+                                                                        //         drivercontact['us_phone']);
+                                                                        //         launchUrl(tel: )
+                                                                      }
+                                                                    },
+                                                                    child:
+                                                                        Stack(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .bottomCenter,
+                                                                      children: [
+                                                                        Container(
+                                                                          height:
+                                                                              height * 0.05,
+                                                                          width:
+                                                                              height * 0.2,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            shape:
+                                                                                BoxShape.rectangle,
+                                                                            border:
+                                                                                Border.all(color: syanColor),
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(12)),
+                                                                            gradient:
+                                                                                LinearGradient(
+                                                                              begin: Alignment.topLeft,
+                                                                              end: Alignment.bottomRight,
+                                                                              colors: [
+                                                                                lightblueColor,
+                                                                                syanColor,
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          child:
+                                                                              Text(
+                                                                            "CALL",
+                                                                            style:
+                                                                                montserratSemiBold.copyWith(color: white, fontSize: width * 0.03),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ))
+                                                            : const SizedBox(
+                                                                height: 0,
+                                                              ),
+                                                        statusflow[index][
+                                                                        'code'] ==
+                                                                    "PIWC" &&
+                                                                statusflow[index]
+                                                                        [
+                                                                        'unhold_status'] !=
+                                                                    "unhold"
+                                                            ? Expanded(
+                                                                flex: 2,
+                                                                child:
+                                                                    Container(
+                                                                  child:
+                                                                      GestureDetector(
+                                                                    onTap:
+                                                                        () async {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => InspectionScreen(bookid: widget.bk_id, booknum: booking['bk_number'], bookdate: booking['bk_booking_date'], booktime: timeFormatter(pickup_timeslot['tm_start_time']) + " - " + timeFormatter(pickup_timeslot['tm_end_time']), pkgname: booking_package['pkg_name'], vehname: widget.vehname, vehmake: vehicle['cv_make'])));
+                                                                    },
+                                                                    child:
+                                                                        Stack(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .bottomCenter,
+                                                                      children: [
+                                                                        Container(
+                                                                          height:
+                                                                              height * 0.05,
+                                                                          width:
+                                                                              height * 0.2,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            shape:
+                                                                                BoxShape.rectangle,
+                                                                            border:
+                                                                                Border.all(color: syanColor),
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(12)),
+                                                                            gradient:
+                                                                                LinearGradient(
+                                                                              begin: Alignment.topLeft,
+                                                                              end: Alignment.bottomRight,
+                                                                              colors: [
+                                                                                lightblueColor,
+                                                                                syanColor,
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          child:
+                                                                              Text(
+                                                                            "INSPECTION\nREPORT",
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            style:
+                                                                                montserratSemiBold.copyWith(color: white, fontSize: width * 0.026),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ))
+                                                            : const SizedBox(
+                                                                height: 0,
+                                                              ),
+                                                        statusflow[index][
+                                                                        'code'] ==
+                                                                    "WIPC" &&
+                                                                statusflow[index]
+                                                                        [
+                                                                        'unhold_status'] !=
+                                                                    "unhold"
+                                                            ? Expanded(
+                                                                flex: 2,
+                                                                child:
+                                                                    Container(
+                                                                  child:
+                                                                      GestureDetector(
+                                                                    onTap:
+                                                                        () async {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => Workcard(click_id: 1, booking_id: widget.bk_id, vehname: widget.vehname, vehmake: vehicle['cv_make'])));
+                                                                    },
+                                                                    child:
+                                                                        Stack(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Container(
+                                                                          height:
+                                                                              height * 0.05,
+                                                                          width:
+                                                                              height * 0.2,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            shape:
+                                                                                BoxShape.rectangle,
+                                                                            border:
+                                                                                Border.all(color: syanColor),
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(12)),
+                                                                            gradient:
+                                                                                LinearGradient(
+                                                                              begin: Alignment.topLeft,
+                                                                              end: Alignment.bottomRight,
+                                                                              colors: [
+                                                                                lightblueColor,
+                                                                                syanColor,
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          child:
+                                                                              Text(
+                                                                            "WORK CARD",
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            style:
+                                                                                montserratSemiBold.copyWith(color: white, fontSize: width * 0.026),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ))
+                                                            : const SizedBox(
+                                                                height: 0,
+                                                              ),
+                                                        statusflow[index][
+                                                                        'code'] ==
+                                                                    "CDLC" &&
+                                                                statusflow[index]
+                                                                        [
+                                                                        'unhold_status'] !=
+                                                                    "unhold" &&
+                                                                (status["st_code"] ==
+                                                                    "CDLC")
+                                                            ? Expanded(
+                                                                flex: 2,
+                                                                child:
+                                                                    Container(
+                                                                  child:
+                                                                      GestureDetector(
+                                                                    onTap:
+                                                                        () async {
+                                                                      temppendingjobs.length ==
+                                                                              0
+                                                                          ? Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                                  builder: (context) => ScheduleDropScreen(
+                                                                                        bk_id: widget.bk_id,
+                                                                                        vehname: widget.vehname,
+                                                                                        make: widget.make,
+                                                                                        click_id: 1,
+                                                                                      )))
+                                                                          : Navigator.push(context, MaterialPageRoute(builder: (context) => Workcard(click_id: 2, booking_id: widget.bk_id, vehname: widget.vehname, vehmake: vehicle['cv_make'])));
+                                                                    },
+                                                                    child:
+                                                                        Stack(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .bottomCenter,
+                                                                      children: [
+                                                                        Container(
+                                                                          height:
+                                                                              height * 0.05,
+                                                                          width:
+                                                                              height * 0.2,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            shape:
+                                                                                BoxShape.rectangle,
+                                                                            border:
+                                                                                Border.all(color: temppendingjobs.length == 0 ? syanColor : warningcolor),
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(12)),
+                                                                            gradient: temppendingjobs.length == 0
+                                                                                ? LinearGradient(
+                                                                                    begin: Alignment.topLeft,
+                                                                                    end: Alignment.bottomRight,
+                                                                                    colors: [
+                                                                                      lightblueColor,
+                                                                                      syanColor,
+                                                                                    ],
+                                                                                  )
+                                                                                : LinearGradient(
+                                                                                    begin: Alignment.topLeft,
+                                                                                    end: Alignment.bottomRight,
+                                                                                    colors: [
+                                                                                      lightorangeColor,
+                                                                                      holdorangeColor,
+                                                                                    ],
+                                                                                  ),
+                                                                          ),
+                                                                          child: temppendingjobs.length == 0
+                                                                              ? Text('SCHEDULE\nDELIVERY', textAlign: TextAlign.center, style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026))
+                                                                              : Text('PENDING\nPAYMENT', textAlign: TextAlign.center, style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026)),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ))
+                                                            : const SizedBox(
+                                                                height: 0,
+                                                              ),
+                                                        statusflow[index][
+                                                                        'code'] ==
+                                                                    "DEDC" &&
+                                                                statusflow[index]
+                                                                        [
+                                                                        'unhold_status'] !=
+                                                                    "unhold" &&
+                                                                (status["st_code"] ==
+                                                                    "DEDC")
+                                                            ? Expanded(
+                                                                flex: 2,
+                                                                child: Container(
+                                                                    child: GestureDetector(
                                                                   onTap:
                                                                       () async {
                                                                     PermissionStatus
@@ -2509,18 +2846,16 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                         await launchUrl(
                                                                             url);
                                                                       }
-
-                                                                      // bool?
-                                                                      //     res =
-                                                                      //     await FlutterPhoneDirectCaller.callNumber(drivercontact['us_country_code'] +
-                                                                      //         drivercontact['us_phone']);
-                                                                      //         launchUrl(tel: )
+                                                                      // bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
+                                                                      //         'us_country_code'] +
+                                                                      //     drivercontact[
+                                                                      //         'us_phone']);
                                                                     }
                                                                   },
                                                                   child: Stack(
                                                                     alignment:
                                                                         Alignment
-                                                                            .bottomCenter,
+                                                                            .center,
                                                                     children: [
                                                                       Container(
                                                                         height: height *
@@ -2559,434 +2894,102 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                ),
-                                                              ))
-                                                          : const SizedBox(
-                                                              height: 0,
-                                                            ),
-                                                      statusflow[index][
-                                                                      'code'] ==
-                                                                  "PIWC" &&
-                                                              statusflow[index][
-                                                                      'unhold_status'] !=
-                                                                  "unhold"
-                                                          ? Expanded(
-                                                              flex: 2,
-                                                              child: Container(
+                                                                )))
+                                                            : const SizedBox(
+                                                                height: 0,
+                                                              ),
+                                                        statusflow[index][
+                                                                        'code'] ==
+                                                                    "DLCC" &&
+                                                                statusflow[index]
+                                                                        [
+                                                                        'unhold_status'] !=
+                                                                    "unhold"
+                                                            ? Expanded(
+                                                                flex: 2,
                                                                 child:
-                                                                    GestureDetector(
-                                                                  onTap:
-                                                                      () async {
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (context) => InspectionScreen(
-                                                                                bookid: widget.bk_id,
-                                                                                booknum: booking['bk_number'],
-                                                                                bookdate: booking['bk_booking_date'],
-                                                                                booktime: timeFormatter(pickup_timeslot['tm_start_time']) + " - " + timeFormatter(pickup_timeslot['tm_end_time']),
-                                                                                pkgname: booking_package['pkg_name'],
-                                                                                vehname: widget.vehname,
-                                                                                vehmake: vehicle['cv_make'])));
-                                                                  },
-                                                                  child: Stack(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .bottomCenter,
-                                                                    children: [
-                                                                      Container(
-                                                                        height: height *
-                                                                            0.05,
-                                                                        width: height *
-                                                                            0.2,
-                                                                        alignment:
-                                                                            Alignment.center,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          shape:
-                                                                              BoxShape.rectangle,
-                                                                          border:
-                                                                              Border.all(color: syanColor),
-                                                                          borderRadius:
-                                                                              BorderRadius.all(Radius.circular(12)),
-                                                                          gradient:
-                                                                              LinearGradient(
-                                                                            begin:
-                                                                                Alignment.topLeft,
-                                                                            end:
-                                                                                Alignment.bottomRight,
-                                                                            colors: [
-                                                                              lightblueColor,
-                                                                              syanColor,
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                        child:
-                                                                            Text(
-                                                                          "INSPECTION\nREPORT",
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          style: montserratSemiBold.copyWith(
-                                                                              color: white,
-                                                                              fontSize: width * 0.026),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ))
-                                                          : const SizedBox(
-                                                              height: 0,
-                                                            ),
-                                                      statusflow[index][
-                                                                      'code'] ==
-                                                                  "WIPC" &&
-                                                              statusflow[index][
-                                                                      'unhold_status'] !=
-                                                                  "unhold"
-                                                          ? Expanded(
-                                                              flex: 2,
-                                                              child: Container(
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap:
-                                                                      () async {
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (context) => Workcard(
-                                                                                click_id: 1,
-                                                                                booking_id: widget.bk_id,
-                                                                                vehname: widget.vehname,
-                                                                                vehmake: vehicle['cv_make'])));
-                                                                  },
-                                                                  child: Stack(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    children: [
-                                                                      Container(
-                                                                        height: height *
-                                                                            0.05,
-                                                                        width: height *
-                                                                            0.2,
-                                                                        alignment:
-                                                                            Alignment.center,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          shape:
-                                                                              BoxShape.rectangle,
-                                                                          border:
-                                                                              Border.all(color: syanColor),
-                                                                          borderRadius:
-                                                                              BorderRadius.all(Radius.circular(12)),
-                                                                          gradient:
-                                                                              LinearGradient(
-                                                                            begin:
-                                                                                Alignment.topLeft,
-                                                                            end:
-                                                                                Alignment.bottomRight,
-                                                                            colors: [
-                                                                              lightblueColor,
-                                                                              syanColor,
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                        child:
-                                                                            Text(
-                                                                          "WORK CARD",
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          style: montserratSemiBold.copyWith(
-                                                                              color: white,
-                                                                              fontSize: width * 0.026),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ))
-                                                          : const SizedBox(
-                                                              height: 0,
-                                                            ),
-                                                      statusflow[index][
-                                                                      'code'] ==
-                                                                  "CDLC" &&
-                                                              statusflow[index][
-                                                                      'unhold_status'] !=
-                                                                  "unhold" &&
-                                                              (status["st_code"] ==
-                                                                  "CDLC")
-                                                          ? Expanded(
-                                                              flex: 2,
-                                                              child: Container(
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap:
-                                                                      () async {
-                                                                    temppendingjobs.length ==
-                                                                            0
-                                                                        ? Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                                builder: (context) => ScheduleDropScreen(
-                                                                                      bk_id: widget.bk_id,
-                                                                                      vehname: widget.vehname,
-                                                                                      make: widget.make,
-                                                                                      click_id: 1,
-                                                                                    )))
-                                                                        : Navigator.push(context, MaterialPageRoute(builder: (context) => Workcard(click_id: 2, booking_id: widget.bk_id, vehname: widget.vehname, vehmake: vehicle['cv_make'])));
-                                                                  },
-                                                                  child: Stack(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .bottomCenter,
-                                                                    children: [
-                                                                      Container(
-                                                                        height: height *
-                                                                            0.05,
-                                                                        width: height *
-                                                                            0.2,
-                                                                        alignment:
-                                                                            Alignment.center,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          shape:
-                                                                              BoxShape.rectangle,
-                                                                          border:
-                                                                              Border.all(color: temppendingjobs.length == 0 ? syanColor : warningcolor),
-                                                                          borderRadius:
-                                                                              BorderRadius.all(Radius.circular(12)),
-                                                                          gradient: temppendingjobs.length == 0
-                                                                              ? LinearGradient(
-                                                                                  begin: Alignment.topLeft,
-                                                                                  end: Alignment.bottomRight,
-                                                                                  colors: [
-                                                                                    lightblueColor,
-                                                                                    syanColor,
-                                                                                  ],
-                                                                                )
-                                                                              : LinearGradient(
-                                                                                  begin: Alignment.topLeft,
-                                                                                  end: Alignment.bottomRight,
-                                                                                  colors: [
-                                                                                    lightorangeColor,
-                                                                                    holdorangeColor,
-                                                                                  ],
-                                                                                ),
-                                                                        ),
-                                                                        child: temppendingjobs.length ==
-                                                                                0
-                                                                            ? Text('SCHEDULE\nDELIVERY',
-                                                                                textAlign: TextAlign.center,
-                                                                                style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026))
-                                                                            : Text('PENDING\nPAYMENT', textAlign: TextAlign.center, style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026)),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ))
-                                                          : const SizedBox(
-                                                              height: 0,
-                                                            ),
-                                                      statusflow[index][
-                                                                      'code'] ==
-                                                                  "DEDC" &&
-                                                              statusflow[index][
-                                                                      'unhold_status'] !=
-                                                                  "unhold" &&
-                                                              (status["st_code"] ==
-                                                                  "DEDC")
-                                                          ? Expanded(
-                                                              flex: 2,
-                                                              child: Container(
+                                                                    Container(
                                                                   child:
                                                                       GestureDetector(
-                                                                onTap:
-                                                                    () async {
-                                                                  PermissionStatus
-                                                                      phoneStatus =
-                                                                      await Permission
-                                                                          .phone
-                                                                          .request();
-                                                                  if (phoneStatus ==
-                                                                      PermissionStatus
-                                                                          .denied) {
-                                                                    showCustomToast(
-                                                                        context,
-                                                                        "This Permission is recommended for calling.",
-                                                                        bgColor:
-                                                                            errorcolor,
-                                                                        textColor:
-                                                                            white);
-                                                                  }
-                                                                  if (phoneStatus ==
-                                                                      PermissionStatus
-                                                                          .permanentlyDenied) {
-                                                                    openAppSettings();
-                                                                  }
-                                                                  if (phoneStatus ==
-                                                                      PermissionStatus
-                                                                          .granted) {
-                                                                    final Uri url = Uri(
-                                                                        scheme:
-                                                                            'tel',
-                                                                        path: drivercontact['us_country_code'] +
-                                                                            drivercontact['us_phone']);
-                                                                    if (await canLaunchUrl(
-                                                                        url)) {
-                                                                      await launchUrl(
-                                                                          url);
-                                                                    }
-                                                                    // bool? res = await FlutterPhoneDirectCaller.callNumber(drivercontact[
-                                                                    //         'us_country_code'] +
-                                                                    //     drivercontact[
-                                                                    //         'us_phone']);
-                                                                  }
-                                                                },
-                                                                child: Stack(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Container(
-                                                                      height:
-                                                                          height *
-                                                                              0.05,
-                                                                      width:
-                                                                          height *
-                                                                              0.2,
+                                                                    onTap:
+                                                                        () async {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => ServicehistoryDetails(
+                                                                                    bk_id: widget.bk_id,
+                                                                                  )));
+                                                                    },
+                                                                    child:
+                                                                        Stack(
                                                                       alignment:
                                                                           Alignment
-                                                                              .center,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        shape: BoxShape
-                                                                            .rectangle,
-                                                                        border: Border.all(
-                                                                            color:
-                                                                                syanColor),
-                                                                        borderRadius:
-                                                                            BorderRadius.all(Radius.circular(12)),
-                                                                        gradient:
-                                                                            LinearGradient(
-                                                                          begin:
-                                                                              Alignment.topLeft,
-                                                                          end: Alignment
-                                                                              .bottomRight,
-                                                                          colors: [
-                                                                            lightblueColor,
-                                                                            syanColor,
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                      child:
-                                                                          Text(
-                                                                        "CALL",
-                                                                        style: montserratSemiBold.copyWith(
-                                                                            color:
-                                                                                white,
-                                                                            fontSize:
-                                                                                width * 0.03),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              )))
-                                                          : const SizedBox(
-                                                              height: 0,
-                                                            ),
-                                                      statusflow[index][
-                                                                      'code'] ==
-                                                                  "DLCC" &&
-                                                              statusflow[index][
-                                                                      'unhold_status'] !=
-                                                                  "unhold"
-                                                          ? Expanded(
-                                                              flex: 2,
-                                                              child: Container(
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap:
-                                                                      () async {
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (context) => ServicehistoryDetails(
-                                                                                  bk_id: widget.bk_id,
-                                                                                )));
-                                                                  },
-                                                                  child: Stack(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .bottomCenter,
-                                                                    children: [
-                                                                      Container(
-                                                                        height: height *
-                                                                            0.05,
-                                                                        width: height *
-                                                                            0.2,
-                                                                        alignment:
-                                                                            Alignment.center,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          shape:
-                                                                              BoxShape.rectangle,
-                                                                          border:
-                                                                              Border.all(color: syanColor),
-                                                                          borderRadius:
-                                                                              BorderRadius.all(Radius.circular(12)),
-                                                                          gradient:
-                                                                              LinearGradient(
-                                                                            begin:
-                                                                                Alignment.topLeft,
-                                                                            end:
-                                                                                Alignment.bottomRight,
-                                                                            colors: [
-                                                                              lightblueColor,
-                                                                              syanColor,
-                                                                            ],
+                                                                              .bottomCenter,
+                                                                      children: [
+                                                                        Container(
+                                                                          height:
+                                                                              height * 0.05,
+                                                                          width:
+                                                                              height * 0.2,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            shape:
+                                                                                BoxShape.rectangle,
+                                                                            border:
+                                                                                Border.all(color: syanColor),
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(12)),
+                                                                            gradient:
+                                                                                LinearGradient(
+                                                                              begin: Alignment.topLeft,
+                                                                              end: Alignment.bottomRight,
+                                                                              colors: [
+                                                                                lightblueColor,
+                                                                                syanColor,
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          child:
+                                                                              Text(
+                                                                            "VIEW HISTORY",
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            style:
+                                                                                montserratSemiBold.copyWith(color: white, fontSize: width * 0.026),
                                                                           ),
                                                                         ),
-                                                                        child:
-                                                                            Text(
-                                                                          "VIEW HISTORY",
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          style: montserratSemiBold.copyWith(
-                                                                              color: white,
-                                                                              fontSize: width * 0.026),
-                                                                        ),
-                                                                      ),
-                                                                    ],
+                                                                      ],
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                              ))
-                                                          : const SizedBox(
-                                                              height: 0,
-                                                            ),
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                    height: 30,
-                                                    width: 2,
-                                                    color: statusflow[index]
-                                                        ["color"],
-                                                    margin: EdgeInsets.only(
-                                                      left: width * 0.047,
+                                                                ))
+                                                            : const SizedBox(
+                                                                height: 0,
+                                                              ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                ]);
-                                          })
-                                      : SizedBox(),
-                                ])),
-                      ],
-                    ),
-                  ],
+                                                    Container(
+                                                      height: 30,
+                                                      width: 2,
+                                                      color: statusflow[index]
+                                                          ["color"],
+                                                      margin: EdgeInsets.only(
+                                                        left: width * 0.047,
+                                                      ),
+                                                    ),
+                                                  ]);
+                                            })
+                                        : SizedBox(),
+                                  ])),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              onRefresh: refresh),
-        ));
+                onRefresh: refresh),
+          )),
+    );
   }
 }
 
