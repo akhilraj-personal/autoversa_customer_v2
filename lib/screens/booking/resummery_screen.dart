@@ -129,15 +129,12 @@ class ResummeryScreenState extends State<ResummeryScreen> {
       if (packdata['package_cost'] != null) {
         totalamount =
             double.parse((packdata['package_cost']).toString()).round() +
-                double.parse(packdata['pack_vat'].toString()).round() +
                 double.parse(packdata['pick_up_price'].toString());
         netpayable =
             double.parse((packdata['package_cost']).toString()).round() +
-                double.parse(packdata['pack_vat'].toString()).round() +
                 double.parse(packdata['pick_up_price'].toString());
         setState(() {});
-        packagecost = double.parse(packdata['package_cost'].toString()) +
-            double.parse(packdata['pack_vat'].toString());
+        packagecost = double.parse(packdata['package_cost'].toString());
       } else {
         totalamount = double.parse(packdata['pick_up_price'].toString());
         netpayable = double.parse(packdata['pick_up_price'].toString());
@@ -598,17 +595,6 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                                       fontSize: width * 0.04),
                                               maxLines: 2)
                                           : SizedBox(),
-                                      // vehicle['cv_plate_number'] != "" &&
-                                      //         vehicle['cv_plate_number'] != null
-                                      //     ? Text(
-                                      //         vehicle['cv_plate_number']
-                                      //             .toUpperCase(),
-                                      //         style:
-                                      //             montserratSemiBold.copyWith(
-                                      //                 color: black,
-                                      //                 fontSize: width * 0.034),
-                                      //         maxLines: 2)
-                                      //     : SizedBox(),
                                       widget.custvehlist[widget.selectedveh]['cv_variant'] != "" && widget.custvehlist[widget.selectedveh]['cv_variant'] != null
                                           ? Text(
                                               widget.custvehlist[widget.selectedveh]['cv_make'] +
@@ -639,12 +625,6 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                               style: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
                                               overflow: TextOverflow.clip,
                                               maxLines: 5),
-                                      // Text(vehiclename,
-                                      //     style: montserratMedium.copyWith(
-                                      //         color: black,
-                                      //         fontSize: width * 0.034),
-                                      //     overflow: TextOverflow.clip,
-                                      //     maxLines: 5),
                                       Divider(),
                                       Text(
                                           booking_package['pkg_name'] != null

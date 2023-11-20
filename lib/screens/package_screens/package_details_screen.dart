@@ -65,6 +65,10 @@ class PackageDetailsState extends State<PackageDetails> {
   var veh_groupid;
   var veh_lbr_rate;
   bool isofferprice = false;
+  double roundedTotalCost = 0.0;
+  double roundedtotalExclusiveCost = 0.0;
+  late int roundedCostValue = 0;
+  late int roundedExclusiveCostValue = 0;
 
   @override
   void initState() {
@@ -107,6 +111,10 @@ class PackageDetailsState extends State<PackageDetails> {
         totalCost = 0.0;
         operationlabourrate = 0.0;
         totalExclusiveCost = 0.0;
+        roundedTotalCost = 0;
+        roundedtotalExclusiveCost = 0;
+        roundedCostValue = 0;
+        roundedExclusiveCostValue = 0;
         var nonMapCount = 0;
         await getPackageDetails(req).then((value) {
           if (value['ret_data'] == "success") {
@@ -224,26 +232,35 @@ class PackageDetailsState extends State<PackageDetails> {
               }
             }
             if (value['pack_extra'] == null) {
-              totalCost = totalCost * (1).round();
-              totalExclusiveCost = totalExclusiveCost * (1).round();
+              totalCost = totalCost * (1);
+              totalExclusiveCost = totalExclusiveCost * (1);
             } else {
-              totalCost = totalCost + double.parse(value['pack_extra']).round();
-              totalExclusiveCost = totalExclusiveCost +
-                  double.parse(value['pack_extra']).round();
+              totalCost = totalCost + double.parse(value['pack_extra']);
+              totalExclusiveCost =
+                  totalExclusiveCost + double.parse(value['pack_extra']);
             }
 
             setState(() {});
             if (value['settings']['gs_isvat'] == "1") {
               packVat = totalCost * (gs_vat / 100);
               packVat = totalExclusiveCost * (gs_vat / 100);
-              totalCost = totalCost + (totalCost * (gs_vat / 100)).round();
-              totalExclusiveCost =
-                  totalExclusiveCost + (totalExclusiveCost * (gs_vat / 100));
+              totalCost = (totalCost + (totalCost * (gs_vat / 100)));
+              roundedTotalCost = double.parse(totalCost.toStringAsFixed(2));
+              roundedCostValue = roundedTotalCost.round();
+              totalExclusiveCost = totalExclusiveCost +
+                  (totalExclusiveCost * (gs_vat / 100)).round();
+              roundedtotalExclusiveCost =
+                  double.parse(totalExclusiveCost.toStringAsFixed(2));
+              roundedExclusiveCostValue = roundedtotalExclusiveCost.round();
             }
             if (nonMapCount == 0) {
               isPriceShow = true;
               setState(() {});
             } else {
+              roundedTotalCost = 0;
+              roundedtotalExclusiveCost = 0;
+              roundedCostValue = 0;
+              roundedExclusiveCostValue = 0;
               totalCost = 0.0;
               totalExclusiveCost = 0.0;
               isServicing = false;
@@ -252,7 +269,10 @@ class PackageDetailsState extends State<PackageDetails> {
               setState(() {});
             }
           } else {
-            // optionList.add("Sorry currently we don't service your vehicle");
+            roundedTotalCost = 0;
+            roundedtotalExclusiveCost = 0;
+            roundedCostValue = 0;
+            roundedExclusiveCostValue = 0;
             totalCost = 0.0;
             totalExclusiveCost = 0.0;
             isServicing = false;
@@ -265,6 +285,10 @@ class PackageDetailsState extends State<PackageDetails> {
         print(e.toString());
       }
     } else {
+      roundedTotalCost = 0;
+      roundedtotalExclusiveCost = 0;
+      roundedCostValue = 0;
+      roundedExclusiveCostValue = 0;
       totalCost = 0.0;
       totalExclusiveCost = 0.0;
       serviceMsg =
@@ -288,7 +312,7 @@ class PackageDetailsState extends State<PackageDetails> {
       "audio_location": prefs.containsKey('comp_audio')
           ? prefs.containsKey('comp_audio')
           : "",
-      "package_cost": totalCost,
+      "package_cost": roundedCostValue,
       "operationlabourrate": operationlabourrate,
       "gs_vat": gs_vat,
       "veh_groupid": veh_groupid,
@@ -564,7 +588,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                                             text: TextSpan(
                                                                                               children: <TextSpan>[
                                                                                                 TextSpan(
-                                                                                                  text: isPriceShow ? widget.currency + " " + (totalExclusiveCost.round()).toString() : "Loading",
+                                                                                                  text: isPriceShow ? widget.currency + " " + roundedExclusiveCostValue.toString() : "Loading",
                                                                                                   style: montserratSemiBold.copyWith(
                                                                                                     color: Colors.grey,
                                                                                                     fontSize: width * 0.0275,
@@ -572,14 +596,14 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                                                   ),
                                                                                                 ),
                                                                                                 TextSpan(
-                                                                                                  text: isPriceShow ? " " + widget.currency + " " + (totalCost.round()).toString() : "Loading",
+                                                                                                  text: isPriceShow ? " " + widget.currency + " " + roundedCostValue.toString() : "Loading",
                                                                                                   style: montserratSemiBold.copyWith(color: warningcolor, fontSize: width * 0.0355),
                                                                                                 ),
                                                                                               ],
                                                                                             ),
                                                                                           )
                                                                                         : Text(
-                                                                                            isPriceShow ? widget.currency + " " + (totalCost.round()).toString() : "Loading",
+                                                                                            isPriceShow ? widget.currency + " " + roundedCostValue.toString() : "Loading",
                                                                                             style: montserratSemiBold.copyWith(color: warningcolor, fontSize: width * 0.04),
                                                                                           ),
                                                                                   ],
@@ -797,7 +821,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                         text: isPriceShow
                                                                             ? widget.currency +
                                                                                 " " +
-                                                                                (totalExclusiveCost.round()).toString()
+                                                                                roundedExclusiveCostValue.toString()
                                                                             : "Loading",
                                                                         style: montserratSemiBold
                                                                             .copyWith(
@@ -814,7 +838,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                             ? " " +
                                                                                 widget.currency +
                                                                                 " " +
-                                                                                (totalCost.round()).toString()
+                                                                                roundedCostValue.toString()
                                                                             : "Loading",
                                                                         style: montserratSemiBold.copyWith(
                                                                             color:
@@ -829,7 +853,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                                                   isPriceShow
                                                                       ? widget.currency +
                                                                           " " +
-                                                                          (totalCost.round())
+                                                                          roundedCostValue
                                                                               .toString()
                                                                       : "Loading",
                                                                   style: montserratSemiBold.copyWith(

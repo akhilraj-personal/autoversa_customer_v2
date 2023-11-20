@@ -37,31 +37,10 @@ class SignupPageState extends State<SignupPage> {
   List<DropdownMenuItem<String>> items = [];
   List data = List<String>.empty();
   bool isLoading = false;
-  bool isoffline = false;
-  StreamSubscription? internetconnection;
 
   @override
   void initState() {
     super.initState();
-    // internetconnection = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult result) {
-    //   if (result == ConnectivityResult.none) {
-    //     setState(() {
-    //       isoffline = true;
-    //       Navigator.push(context,
-    //           MaterialPageRoute(builder: (context) => NoInternetScreen()));
-    //     });
-    //   } else if (result == ConnectivityResult.mobile) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   } else if (result == ConnectivityResult.wifi) {
-    //     setState(() {
-    //       isoffline = false;
-    //     });
-    //   }
-    // });
     init();
     Future.delayed(Duration.zero, () {
       _getStateList();
@@ -76,7 +55,6 @@ class SignupPageState extends State<SignupPage> {
   @override
   void dispose() {
     super.dispose();
-    // internetconnection!.cancel();
   }
 
   _getStateList() async {
@@ -456,7 +434,7 @@ class SignupPageState extends State<SignupPage> {
                                               counterText: "",
                                               filled: true,
                                               hintText:
-                                              lang.S.of(context).full_name,
+                                                  lang.S.of(context).full_name,
                                               hintStyle:
                                                   montserratMedium.copyWith(
                                                       color: userNameFocus
@@ -531,7 +509,8 @@ class SignupPageState extends State<SignupPage> {
                                                   color: warningcolor),
                                               counterText: "",
                                               filled: true,
-                                              hintText: lang.S.of(context).email,
+                                              hintText:
+                                                  lang.S.of(context).email,
                                               hintStyle:
                                                   montserratMedium.copyWith(
                                                       color: emailFocus.hasFocus
@@ -622,8 +601,9 @@ class SignupPageState extends State<SignupPage> {
                                                   color: warningcolor),
                                               counterText: "",
                                               filled: true,
-                                              hintText:
-                                              lang.S.of(context).mobile_number,
+                                              hintText: lang.S
+                                                  .of(context)
+                                                  .mobile_number,
                                               hintStyle:
                                                   montserratMedium.copyWith(
                                                       color: blackColor,
@@ -688,7 +668,10 @@ class SignupPageState extends State<SignupPage> {
                                   ),
                                   child: !isLoading
                                       ? Text(
-                                    lang.S.of(context).sign_up.toUpperCase(),
+                                          lang.S
+                                              .of(context)
+                                              .sign_up
+                                              .toUpperCase(),
                                           style: montserratSemiBold.copyWith(
                                               color: Colors.white),
                                         )

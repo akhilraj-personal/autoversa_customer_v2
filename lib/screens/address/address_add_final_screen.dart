@@ -85,6 +85,8 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
     drop_loc_map = widget.drop_loc;
     drop_flag_map = widget.drop_flag;
     new_map_location();
+    print("=======================>");
+    print(widget.selected_sublocality);
   }
 
   late GoogleMapController _mapController;
@@ -105,6 +107,12 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
     setState(() {});
+    // if (widget.selected_sublocality == null ||
+    //     widget.selected_sublocality == "") {
+    //   print("no area for this location==========>");
+    //   showCustomToast(context, "no area for this location==========>",
+    //       bgColor: black, textColor: white);
+    // }
   }
 
   @override
@@ -357,70 +365,175 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                             ],
                           ),
                           8.height,
-                          Stack(alignment: Alignment.bottomCenter, children: [
-                            Container(
-                              height: height * 0.045,
-                              width: height * 0.37,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 12,
-                                        color: syanColor.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurStyle: BlurStyle.outer,
-                                        offset: Offset(0, 0)),
-                                  ]),
-                            ),
-                            Container(
-                                height: height * 0.075,
-                                decoration: BoxDecoration(
-                                  color: lightGreyColor,
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(color: borderGreyColor),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Container(
+                          widget.selected_sublocality == null ||
+                                  widget.selected_sublocality == ""
+                              ? Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                      Container(
+                                        height: height * 0.045,
+                                        width: height * 0.37,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(16),
-                                            color: lightGreyColor),
-                                        padding: EdgeInsets.only(
-                                            left: width * 0.025,
-                                            right: width * 0.025),
-                                        child: TextField(
-                                          controller: areaController,
-                                          enabled: false,
-                                          textAlign: TextAlign.left,
-                                          keyboardType: TextInputType.number,
-                                          maxLines: 1,
-                                          style: montserratMedium.copyWith(
-                                              color: Colors.black,
-                                              fontSize: width * 0.04),
-                                          decoration: InputDecoration(
-                                              errorStyle: TextStyle(
-                                                  fontSize: width * 0.032,
-                                                  color: warningcolor),
-                                              counterText: "",
-                                              filled: true,
-                                              hintText: "Selected area",
-                                              hintStyle:
-                                                  montserratRegular.copyWith(
-                                                      color: Colors.black,
-                                                      fontSize: width * 0.034),
-                                              border: InputBorder.none,
-                                              fillColor: lightGreyColor),
-                                        ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 12,
+                                                  color:
+                                                      syanColor.withOpacity(.5),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
                                       ),
-                                    ),
-                                  ],
-                                ))
-                          ]),
+                                      Container(
+                                          height: height * 0.075,
+                                          decoration: BoxDecoration(
+                                            color: white,
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            border: Border.all(
+                                                color: borderGreyColor),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              16),
+                                                      color: white),
+                                                  padding: EdgeInsets.only(
+                                                      left: width * 0.025,
+                                                      right: width * 0.025),
+                                                  child: TextFormField(
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    textCapitalization:
+                                                        TextCapitalization
+                                                            .words,
+                                                    controller: areaController,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    textAlign: TextAlign.start,
+                                                    maxLength: 50,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                            color: black,
+                                                            fontSize:
+                                                                width * 0.04),
+                                                    decoration: InputDecoration(
+                                                        errorStyle: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                warningcolor),
+                                                        counterText: "",
+                                                        filled: true,
+                                                        hintText: "Enter Area",
+                                                        border:
+                                                            InputBorder.none,
+                                                        fillColor: white),
+                                                    validator: (value) {
+                                                      if (value == 0) {
+                                                        return "Enter Area";
+                                                      }
+                                                      return null;
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ))
+                                    ])
+                              : Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                      Container(
+                                        height: height * 0.045,
+                                        width: height * 0.37,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 12,
+                                                  color:
+                                                      syanColor.withOpacity(.5),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Container(
+                                          height: height * 0.075,
+                                          decoration: BoxDecoration(
+                                            color: lightGreyColor,
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            border: Border.all(
+                                                color: borderGreyColor),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              16),
+                                                      color: lightGreyColor),
+                                                  padding: EdgeInsets.only(
+                                                      left: width * 0.025,
+                                                      right: width * 0.025),
+                                                  child: TextField(
+                                                    controller: areaController,
+                                                    enabled: false,
+                                                    textAlign: TextAlign.left,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    maxLines: 1,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                            color: Colors.black,
+                                                            fontSize:
+                                                                width * 0.04),
+                                                    decoration: InputDecoration(
+                                                        errorStyle: TextStyle(
+                                                            fontSize:
+                                                                width * 0.032,
+                                                            color:
+                                                                warningcolor),
+                                                        counterText: "",
+                                                        filled: true,
+                                                        hintText:
+                                                            "Selected area",
+                                                        hintStyle: montserratRegular
+                                                            .copyWith(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034),
+                                                        border:
+                                                            InputBorder.none,
+                                                        fillColor:
+                                                            lightGreyColor),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ))
+                                    ]),
                           8.height,
                           Column(
                             children: <Widget>[
@@ -625,6 +738,10 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                 setState(() => isproceeding = false);
                                 showCustomToast(context, "Enter Address",
                                     bgColor: errorcolor, textColor: white);
+                              } else if (widget.selected_sublocality == "" &&
+                                  areaController.text.length == 0) {
+                                showCustomToast(context, "Enter Area",
+                                    bgColor: errorcolor, textColor: white);
                               } else {
                                 final prefs =
                                     await SharedPreferences.getInstance();
@@ -636,7 +753,9 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                     "countryId": 1,
                                     "stateId":
                                         widget.selected_administrativeArea,
-                                    "cityId": widget.selected_sublocality,
+                                    "cityId": widget.selected_sublocality != ""
+                                        ? widget.selected_sublocality
+                                        : areaController.text.toString(),
                                     "address": addressController.text,
                                     "landmark": landmark,
                                     "add_type": AddressType,
@@ -644,9 +763,9 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                     "longitude": widget.selected_longitude,
                                     "cust_id": prefs.getString("cust_id")
                                   };
+                                  print(req);
                                   await saveCustomerAddress(req).then((value) {
                                     if (value['ret_data'] == "success") {
-                                      // int count = 0;
                                       if (drop_flag_map == true) {
                                         pickup_loc_map = -1;
                                         drop_loc_map = 0;

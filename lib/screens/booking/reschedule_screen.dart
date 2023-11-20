@@ -60,7 +60,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   var isTimeCheck;
   var freeservicedistance = 0;
   var servicedistance = 0;
-  var selected_package_cost = 0.0;
+  double selected_package_cost = 0.0;
   bool isdroplocation = false;
   bool isLocationCheck = true;
   var pickupoption;
@@ -83,6 +83,8 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   var vehiclgroup;
   var pack_id;
   var buffertime = "0";
+  double roundedTotalCost = 0.0;
+  late int roundedCostValue = 0;
 
   @override
   void initState() {
@@ -108,8 +110,10 @@ class RescheduleScreenState extends State<RescheduleScreen> {
         });
         selected_package_cost = double.parse(
                 value['booking']['booking_package']['bkp_cust_amount']) +
-            double.parse(value['booking']['booking_package']['bkp_vat'])
-                .round();
+            double.parse(value['booking']['booking_package']['bkp_vat']);
+        roundedTotalCost =
+            double.parse(selected_package_cost.toStringAsFixed(2));
+        roundedCostValue = roundedTotalCost.round();
         setState(() {
           vehiclename = vehicle['cv_variant'] != null
               ? vehicle['cv_make'] +
@@ -1017,7 +1021,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
         showCustomToast(context, "Choose a time slot",
             bgColor: errorcolor, textColor: white);
       } else {
-        packdata['package_cost'] = booking_package['bkp_cust_amount'];
+        packdata['package_cost'] = roundedCostValue;
         packdata['pack_vat'] = booking_package['bkp_vat'];
         packdata['pickup_vat'] = bookingdetails['bk_pickup_vat'];
         packdata['pick_up_location'] = SelectAddressList[selected_address];
@@ -1070,7 +1074,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
         showCustomToast(context, "Choose a time slot",
             bgColor: errorcolor, textColor: white);
       } else {
-        packdata['package_cost'] = booking_package['bkp_cust_amount'];
+        packdata['package_cost'] = roundedCostValue;
         packdata['pick_up_location'] = SelectAddressList[selected_address];
         packdata['pick_up_location_id'] = ptemp;
         packdata['drop_location_id'] = dtemp;
@@ -1308,7 +1312,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                         height: 2,
                                       ),
                                       Text(
-                                        selected_package_cost.toString(),
+                                        roundedCostValue.toString(),
                                         style: montserratSemiBold.copyWith(
                                             color: warningcolor,
                                             fontSize: width * 0.04),

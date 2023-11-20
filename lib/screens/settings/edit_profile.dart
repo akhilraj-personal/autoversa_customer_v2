@@ -109,6 +109,7 @@ class EditprofieState extends State<Editprofie> {
       "cust_id":
           base64.encode(utf8.encode(prefs.getString("cust_id").toString()))
     };
+    print(req);
     await getprofiledetails(req)
         .then((value) => {
               if (value['ret_data'] == "success")
@@ -1121,9 +1122,9 @@ class EditprofieState extends State<Editprofie> {
                             ),
                             onPressed: () async {
                               PermissionStatus storageStatus =
-                                  await Permission.storage.request();
+                                  await Permission.camera.request();
                               PermissionStatus cameraStatus =
-                                  await Permission.storage.request();
+                                  await Permission.camera.request();
                               if (cameraStatus == PermissionStatus.denied ||
                                   storageStatus == PermissionStatus.denied) {
                                 showCustomToast(context,

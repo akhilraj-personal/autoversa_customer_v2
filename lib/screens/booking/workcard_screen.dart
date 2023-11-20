@@ -123,7 +123,7 @@ class WorkcardState extends State<Workcard> {
                   }),
                   selected_package_cost =
                       double.parse(value['booking']['bkp_cust_amount']) +
-                          double.parse(value['booking']['bkp_vat']).round(),
+                          double.parse(value['booking']['bkp_vat']),
                   selected_pickup_type_cost =
                       double.parse(value['booking']['bk_pickup_cost']) +
                           double.parse(value['booking']['bk_pickup_vat']),
@@ -678,7 +678,9 @@ class WorkcardState extends State<Workcard> {
                                           Container(
                                             padding: EdgeInsets.all(6),
                                             child: Text(
-                                              selected_package_cost.toString(),
+                                              selected_package_cost
+                                                  .round()
+                                                  .toString(),
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: warningcolor,
