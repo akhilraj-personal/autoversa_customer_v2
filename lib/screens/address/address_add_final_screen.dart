@@ -85,8 +85,6 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
     drop_loc_map = widget.drop_loc;
     drop_flag_map = widget.drop_flag;
     new_map_location();
-    print("=======================>");
-    print(widget.selected_sublocality);
   }
 
   late GoogleMapController _mapController;
@@ -107,12 +105,6 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
     setState(() {});
-    // if (widget.selected_sublocality == null ||
-    //     widget.selected_sublocality == "") {
-    //   print("no area for this location==========>");
-    //   showCustomToast(context, "no area for this location==========>",
-    //       bgColor: black, textColor: white);
-    // }
   }
 
   @override
@@ -763,7 +755,6 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                     "longitude": widget.selected_longitude,
                                     "cust_id": prefs.getString("cust_id")
                                   };
-                                  print(req);
                                   await saveCustomerAddress(req).then((value) {
                                     if (value['ret_data'] == "success") {
                                       if (drop_flag_map == true) {
