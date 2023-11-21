@@ -77,7 +77,8 @@ plateNumberValidation(value) {
 }
 
 emailValidation(value, context) {
-  String pattern = r'^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
+  String pattern =
+      r'^[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+$';
   RegExp regExp = new RegExp(pattern);
   if (value.length == 0) {
     return null;

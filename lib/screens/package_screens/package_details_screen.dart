@@ -920,6 +920,20 @@ class PackageDetailsState extends State<PackageDetails> {
                               SizedBox(
                                 height: 12,
                               ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(padding: EdgeInsets.only(left: 16)),
+                                  Text("What's Included",
+                                      maxLines: 10,
+                                      style: montserratRegular.copyWith(
+                                          color: black,
+                                          fontSize: width * 0.034))
+                                ],
+                              ),
+                              SizedBox(
+                                height: 12,
+                              ),
                               isServicing
                                   ? optionList.isEmpty
                                       ? ListView.builder(
@@ -1020,6 +1034,20 @@ class PackageDetailsState extends State<PackageDetails> {
                                                             width * 0.034)),
                                           ]),
                                     ),
+                              SizedBox(
+                                height: 12,
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(padding: EdgeInsets.only(left: 16)),
+                                  Text("Parts not included",
+                                      maxLines: 10,
+                                      style: montserratRegular.copyWith(
+                                          color: black,
+                                          fontSize: width * 0.034))
+                                ],
+                              ),
                               SizedBox(
                                 height: 12,
                               ),

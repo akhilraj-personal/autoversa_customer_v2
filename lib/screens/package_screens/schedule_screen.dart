@@ -159,14 +159,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   pickupaddresschange(pick_address) {
-    setState(() {
-      pickupoption = "";
-      isTimeCheck = "";
-      ptempdata = custAddressList[pick_address]['cad_id'];
-      selected_address = pick_address;
-      plocdistance = int.parse(custAddressList[pick_address]['cad_distance']);
-    });
-
+    pickupoption = "";
+    isTimeCheck = "";
+    ptempdata = custAddressList[pick_address]['cad_id'];
+    selected_address = pick_address;
+    plocdistance = int.parse(custAddressList[pick_address]['cad_distance']);
+    setState(() {});
     if (isLocationCheck) {
       dlocdistance = plocdistance;
       dtempdata = ptempdata;
@@ -217,13 +215,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   dropaddresschange(drop_address) {
-    setState(() {
-      pickupoption = "";
-      isTimeCheck = "";
-      dtempdata = custAddressList[drop_address]['cad_id'];
-      selected_drop_address = drop_address;
-      dlocdistance = int.parse(custAddressList[drop_address]['cad_distance']);
-    });
+    pickupoption = "";
+    isTimeCheck = "";
+    dtempdata = custAddressList[drop_address]['cad_id'];
+    selected_drop_address = drop_address;
+    dlocdistance = int.parse(custAddressList[drop_address]['cad_distance']);
+    setState(() {});
     var tdistance = 0;
     if (plocdistance != "") {
       if (servicedistance > dlocdistance && servicedistance > plocdistance) {
@@ -544,7 +541,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               ),
               8.height,
               Text(
-                '● Mulkya should not be expired',
+                '● Registration card should not be expired',
                 style: montserratMedium.copyWith(
                     fontSize: width * 0.035, color: black),
               ),
