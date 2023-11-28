@@ -64,7 +64,6 @@ dependencies:
   url_launcher: ^6.1.11
   flutter_pin_code_fields: ^1.2.0
   dotted_border: ^2.0.0+3
-  
 
 
 dev_dependencies:

@@ -140,6 +140,8 @@ class SummeryPageState extends State<SummeryPage> {
         });
       }
     }).catchError((e) {
+      print("11111111");
+      print(e.toString());
       showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     });
@@ -382,6 +384,7 @@ class SummeryPageState extends State<SummeryPage> {
             bgColor: errorcolor, textColor: white);
       }
     } catch (e) {
+      print("222222222222");
       print(e.toString());
       setState(() {
         isproceeding = false;

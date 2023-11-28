@@ -142,17 +142,17 @@ class WorkcardState extends State<Workcard> {
                     },
                   for (var joblist in value['jobs'])
                     {
-                      if (joblist['bkj_status'] == "1")
+                      if (joblist['bkj_status'] == "2")
                         {
                           approvedjobs.add(joblist),
                           totalamount = totalamount +
                               double.parse(joblist['bkj_cust_cost'].toString()),
                         }
-                      else if (joblist['bkj_status'] == "0")
+                      else if (joblist['bkj_status'] == "1")
                         {
                           pendingjobs.add(joblist),
                         },
-                      if (joblist['bkj_status'] == "1" &&
+                      if (joblist['bkj_status'] == "2" &&
                           joblist['bkj_payment_status'] == "0")
                         {
                           setState(() {
@@ -183,7 +183,7 @@ class WorkcardState extends State<Workcard> {
       "job_id": jobid['bkj_id'],
       "jobname": jobid['bkj_jobname'],
       "bkj_bkid": widget.booking_id,
-      "status": 1,
+      "status": 2,
     };
     print(req);
     setState(() {
@@ -199,6 +199,8 @@ class WorkcardState extends State<Workcard> {
         amounttopay = (totalamount - (paidamount) - (coupondiscount));
         pendingjobs.removeWhere((item) => item['bkj_id'] == jobid['bkj_id']);
         setState(() {});
+      } else {
+        print(value['ret_data']);
       }
     });
   }
@@ -208,7 +210,7 @@ class WorkcardState extends State<Workcard> {
       "job_id": jobid['bkj_id'],
       "jobname": jobid['bkj_jobname'],
       "bkj_bkid": widget.booking_id,
-      "status": 2,
+      "status": 3,
     };
     setState(() {});
     await withoutpayment(req).then((value) {
@@ -236,8 +238,13 @@ class WorkcardState extends State<Workcard> {
       if (value['ret_data'] == "success") {
         trnxId = value['payment_details']['id'];
         createPaymentIntent(widget.booking_id, value['payment_details']);
+      } else {
+        print("1111111111111111");
+        print(value['ret_data']);
       }
     }).catchError((e) {
+      print("222222222222222222");
+      print(e.toString());
       showCustomToast(context, lang.S.of(context).toast_application_error,
           bgColor: errorcolor, textColor: Colors.white);
     });

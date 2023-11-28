@@ -49,6 +49,7 @@ class PackageDetailsState extends State<PackageDetails> {
   late List pack_extra_details = [];
   bool recordLocation = false;
   var optionList = [];
+  var sparesList = [];
   int currentveh = 0;
   bool isPriceShow = false;
   late Map<String, dynamic> packageinfo;
@@ -211,6 +212,10 @@ class PackageDetailsState extends State<PackageDetails> {
                   }
                 }
               }
+            }
+            for (var spr in value['spares']) {
+              sparesList.add(spr['psn_displayname']);
+              setState(() {});
             }
             for (var serv in value['services']) {
               if (serv['pse_visibility'] == "0") {
@@ -920,17 +925,21 @@ class PackageDetailsState extends State<PackageDetails> {
                               SizedBox(
                                 height: 12,
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(padding: EdgeInsets.only(left: 16)),
-                                  Text("What's Included",
-                                      maxLines: 10,
-                                      style: montserratRegular.copyWith(
-                                          color: black,
-                                          fontSize: width * 0.034))
-                                ],
-                              ),
+                              isServicing
+                                  ? Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 16)),
+                                        Text("What's Included",
+                                            maxLines: 10,
+                                            style: montserratBold.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034))
+                                      ],
+                                    )
+                                  : SizedBox(),
                               SizedBox(
                                 height: 12,
                               ),
@@ -1010,7 +1019,7 @@ class PackageDetailsState extends State<PackageDetails> {
                                               optionList.length,
                                               (i) => Text(
                                                   capitalize(optionList[i]!),
-                                                  style: montserratSemiBold
+                                                  style: montserratRegular
                                                       .copyWith(
                                                           color: Colors.black,
                                                           fontSize:
@@ -1037,17 +1046,52 @@ class PackageDetailsState extends State<PackageDetails> {
                               SizedBox(
                                 height: 12,
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(padding: EdgeInsets.only(left: 16)),
-                                  Text("Parts not included",
-                                      maxLines: 10,
-                                      style: montserratRegular.copyWith(
-                                          color: black,
-                                          fontSize: width * 0.034))
-                                ],
-                              ),
+                              isServicing
+                                  ? sparesList.length > 0
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 16)),
+                                            Text("Parts not included",
+                                                maxLines: 10,
+                                                style: montserratBold.copyWith(
+                                                    color: black,
+                                                    fontSize: width * 0.034))
+                                          ],
+                                        )
+                                      : SizedBox()
+                                  : SizedBox(),
+                              sparesList.length > 0
+                                  ? SizedBox(
+                                      height: 12,
+                                    )
+                                  : SizedBox(),
+                              isServicing
+                                  ? sparesList.length > 0
+                                      ? Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16),
+                                          child: UL(
+                                            symbolType: SymbolType.Bullet,
+                                            symbolColor: redColor,
+                                            spacing: 24,
+                                            children: List.generate(
+                                              sparesList.length,
+                                              (i) => Text(
+                                                  capitalize(sparesList[i]!),
+                                                  style: montserratRegular
+                                                      .copyWith(
+                                                          color: Colors.black,
+                                                          fontSize:
+                                                              width * 0.04)),
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox()
+                                  : SizedBox(),
                               SizedBox(
                                 height: 12,
                               ),

@@ -159,11 +159,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   pickupaddresschange(pick_address) {
-    pickupoption = "";
-    isTimeCheck = "";
-    ptempdata = custAddressList[pick_address]['cad_id'];
-    selected_address = pick_address;
-    plocdistance = int.parse(custAddressList[pick_address]['cad_distance']);
+    setState(() {
+      pickupoption = "";
+      isTimeCheck = "";
+      ptempdata = custAddressList[pick_address]['cad_id'];
+      selected_address = pick_address;
+      plocdistance = int.parse(custAddressList[pick_address]['cad_distance']);
+    });
     setState(() {});
     if (isLocationCheck) {
       dlocdistance = plocdistance;
@@ -215,11 +217,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   dropaddresschange(drop_address) {
-    pickupoption = "";
-    isTimeCheck = "";
-    dtempdata = custAddressList[drop_address]['cad_id'];
-    selected_drop_address = drop_address;
-    dlocdistance = int.parse(custAddressList[drop_address]['cad_distance']);
+    setState(() {
+      pickupoption = "";
+      isTimeCheck = "";
+      dtempdata = custAddressList[drop_address]['cad_id'];
+      selected_drop_address = drop_address;
+      dlocdistance = int.parse(custAddressList[drop_address]['cad_distance']);
+    });
     setState(() {});
     var tdistance = 0;
     if (plocdistance != "") {

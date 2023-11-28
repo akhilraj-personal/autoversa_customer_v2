@@ -138,9 +138,14 @@ class SignupPageState extends State<SignupPage> {
             elevation: 0,
             backgroundColor: whiteColor,
             shadowColor: whiteColor,
-            leading: BackButton(onPressed: () {
-              Navigator.pushReplacementNamed(context, Routes.loginPage);
-            }),
+            leading: BackButton(
+              onPressed: () async {
+                bool confirm = await _showExitConfirmationDialog(context);
+                if (confirm) {
+                  Navigator.pushReplacementNamed(context, Routes.loginPage);
+                }
+              },
+            ),
             iconTheme: IconThemeData(color: blackColor),
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarIconBrightness: Brightness.dark,
