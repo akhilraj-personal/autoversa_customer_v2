@@ -123,6 +123,7 @@ class PackageDetailsState extends State<PackageDetails> {
             veh_groupid = int.parse(value['veh_group']['vgm_id']);
             veh_lbr_rate = value['veh_group']['vgm_labour_rate'];
             optionList = [];
+            sparesList = [];
             pack_extra_details = value['pack_extra_details'];
             setState(() {});
             isServicing = true;

@@ -52,6 +52,7 @@ class WorkcardState extends State<Workcard> {
   var grandtotal = 0.0;
   var grandpaidamount = 0.0;
   var pickuppackagecost = 0.0;
+  var consumablecost = 0.0;
   var trnxId;
   bool isproceeding = false;
 
@@ -117,6 +118,7 @@ class WorkcardState extends State<Workcard> {
                     temppendingjobs = [];
                     packagebooking = value['booking'];
                     totalamount = 0;
+                    consumablecost = 0;
                     coupondiscount = 0;
                     amounttopay = 0;
                     paidamount = 0;
@@ -142,7 +144,8 @@ class WorkcardState extends State<Workcard> {
                     },
                   for (var joblist in value['jobs'])
                     {
-                      if (joblist['bkj_status'] == "2")
+                      if (joblist['bkj_status'] == "2" ||
+                          joblist['bkj_status'] == "4")
                         {
                           approvedjobs.add(joblist),
                           totalamount = totalamount +
@@ -163,7 +166,12 @@ class WorkcardState extends State<Workcard> {
                         }
                     },
                   withoutcoupontotal = (totalamount).toDouble(),
-                  grandtotal = (totalamount).toDouble() - coupondiscount,
+                  consumablecost = value['booking']['bkp_consumcost'] != null
+                      ? double.parse(value['booking']['bkp_consumcost'])
+                      : 0.0,
+                  grandtotal =
+                      ((totalamount).toDouble() + (consumablecost).toDouble()) -
+                          coupondiscount,
                   amounttopay = ((grandtotal) - (paidamount)).toDouble(),
                   setState(() {}),
                 }
@@ -1141,6 +1149,33 @@ class WorkcardState extends State<Workcard> {
                             SizedBox(
                               height: 4,
                             ),
+                            packagebooking['bkp_consumcost'] != null
+                                ? Container(
+                                    padding: EdgeInsets.only(right: 12.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          "Consumables: ",
+                                          style: montserratSemiBold.copyWith(
+                                              color: black,
+                                              fontSize: width * 0.034),
+                                        ),
+                                        Text(
+                                          consumablecost.toString(),
+                                          style: montserratSemiBold.copyWith(
+                                              color: warningcolor,
+                                              fontSize: width * 0.034),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
+                            packagebooking['bkp_consumcost'] != null
+                                ? SizedBox(
+                                    height: 4,
+                                  )
+                                : SizedBox(),
                             Container(
                               padding: EdgeInsets.only(right: 12.0),
                               child: Row(
