@@ -369,7 +369,7 @@ class SummeryPageState extends State<SummeryPage> {
         ),
       );
       var retdata = jsonDecode(response.toString());
-      print(response);
+      print(retdata);
       if (retdata['ret_data'] == "success") {
         createPayment(retdata['booking_id'], retdata['payment_details']);
         bookId = retdata['booking_id'];
@@ -380,6 +380,7 @@ class SummeryPageState extends State<SummeryPage> {
         bookingdate = packdata['selected_date'];
         await prefs.remove("booking_data");
       } else {
+        print(retdata['ret_data']);
         showCustomToast(context, "Couldn't complete booking",
             bgColor: errorcolor, textColor: white);
       }

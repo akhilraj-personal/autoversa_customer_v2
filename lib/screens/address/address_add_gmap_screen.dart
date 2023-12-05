@@ -107,9 +107,7 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
       String areaName =
           await getAreaNameFromCoordinates(value.latitude, value.longitude);
       bool isInsideAbuDhabi = checkIfInsideAbuDhabi(areaName);
-
       oustideabudhabi = !isInsideAbuDhabi;
-
       if (oustideabudhabi) {
         oustideabudhabi = true;
         showCustomToast(context,
@@ -119,7 +117,6 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
         oustideabudhabi = false;
         setState(() {});
       }
-
       setState(() {});
     });
   }

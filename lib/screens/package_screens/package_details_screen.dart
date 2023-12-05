@@ -106,7 +106,7 @@ class PackageDetailsState extends State<PackageDetails> {
           "model": widget.custvehlist[currentveh]['cv_model'],
           "variant": widget.custvehlist[currentveh]['cv_variant'],
           "year": widget.custvehlist[currentveh]['cv_year'],
-          "vehicle_id": widget.custvehlist[currentveh]['cv_id'],
+          // "vehicle_id": widget.custvehlist[currentveh]['cv_id'],
         };
         print(req);
         totalCost = 0.0;
