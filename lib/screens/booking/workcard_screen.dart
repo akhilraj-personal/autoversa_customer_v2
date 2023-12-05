@@ -55,6 +55,8 @@ class WorkcardState extends State<Workcard> {
   var consumablecost = 0.0;
   var trnxId;
   bool isproceeding = false;
+  bool selectAll = false;
+  List<Map<String, dynamic>> selectedJobs = [];
 
   @override
   void initState() {
@@ -186,53 +188,53 @@ class WorkcardState extends State<Workcard> {
     return text[0].toUpperCase() + text.substring(1).toLowerCase();
   }
 
-  updateJob(jobid) async {
-    Map req = {
-      "job_id": jobid['bkj_id'],
-      "jobname": jobid['bkj_jobname'],
-      "bkj_bkid": widget.booking_id,
-      "status": 2,
-    };
-    print(req);
-    setState(() {
-      var inData = {"jobid": jobid['bkj_id']};
-      temppendingjobs.add(inData);
-    });
-    await withoutpayment(req).then((value) {
-      if (value['ret_data'] == "success") {
-        approvedjobs.add(jobid);
-        totalamount =
-            totalamount + double.parse(jobid['bkj_cust_cost'].toString());
-        grandtotal = (totalamount);
-        amounttopay = (totalamount - (paidamount) - (coupondiscount));
-        pendingjobs.removeWhere((item) => item['bkj_id'] == jobid['bkj_id']);
-        setState(() {});
-      } else {
-        print(value['ret_data']);
-      }
-    });
-  }
+  // updateJob(jobid) async {
+  //   Map req = {
+  //     "job_id": jobid['bkj_id'],
+  //     "jobname": jobid['bkj_jobname'],
+  //     "bkj_bkid": widget.booking_id,
+  //     "status": 2,
+  //   };
+  //   print(req);
+  //   setState(() {
+  //     var inData = {"jobid": jobid['bkj_id']};
+  //     temppendingjobs.add(inData);
+  //   });
+  //   await withoutpayment(req).then((value) {
+  //     if (value['ret_data'] == "success") {
+  //       approvedjobs.add(jobid);
+  //       totalamount =
+  //           totalamount + double.parse(jobid['bkj_cust_cost'].toString());
+  //       grandtotal = (totalamount);
+  //       amounttopay = (totalamount - (paidamount) - (coupondiscount));
+  //       pendingjobs.removeWhere((item) => item['bkj_id'] == jobid['bkj_id']);
+  //       setState(() {});
+  //     } else {
+  //       print(value['ret_data']);
+  //     }
+  //   });
+  // }
 
-  rejectJob(jobid) async {
-    Map req = {
-      "job_id": jobid['bkj_id'],
-      "jobname": jobid['bkj_jobname'],
-      "bkj_bkid": widget.booking_id,
-      "status": 3,
-    };
-    setState(() {});
-    await withoutpayment(req).then((value) {
-      if (value['ret_data'] == "success") {
-        pendingjobs.removeWhere((item) => item['bkj_id'] == jobid['bkj_id']);
-        setState(() {});
-        showCustomToast(context, "Job Rejected",
-            bgColor: Colors.black, textColor: Colors.white);
-      } else {
-        showCustomToast(context, value['ret_data'],
-            bgColor: warningcolor, textColor: Colors.white);
-      }
-    });
-  }
+  // rejectJob(jobid) async {
+  //   Map req = {
+  //     "job_id": jobid['bkj_id'],
+  //     "jobname": jobid['bkj_jobname'],
+  //     "bkj_bkid": widget.booking_id,
+  //     "status": 3,
+  //   };
+  //   setState(() {});
+  //   await withoutpayment(req).then((value) {
+  //     if (value['ret_data'] == "success") {
+  //       pendingjobs.removeWhere((item) => item['bkj_id'] == jobid['bkj_id']);
+  //       setState(() {});
+  //       showCustomToast(context, "Job Rejected",
+  //           bgColor: Colors.black, textColor: Colors.white);
+  //     } else {
+  //       showCustomToast(context, value['ret_data'],
+  //           bgColor: warningcolor, textColor: Colors.white);
+  //     }
+  //   });
+  // }
 
   createPayment() async {
     final prefs = await SharedPreferences.getInstance();
@@ -883,7 +885,7 @@ class WorkcardState extends State<Workcard> {
                                           overflow: TextOverflow.clip,
                                           style: montserratSemiBold.copyWith(
                                             fontSize: width * 0.034,
-                                            color: black,
+                                            color: warningcolor,
                                           ),
                                         ),
                                         16.height,
@@ -897,18 +899,60 @@ class WorkcardState extends State<Workcard> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Flexible(
-                                                  child: Container(
-                                                    child: Text("Job Name",
-                                                        overflow:
-                                                            TextOverflow.clip,
-                                                        maxLines: 3,
-                                                        style: montserratSemiBold
-                                                            .copyWith(
-                                                                fontSize:
-                                                                    width *
-                                                                        0.032,
-                                                                color: black)),
-                                                  ),
+                                                  child: Row(children: [
+                                                    Checkbox(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(4.0),
+                                                      ),
+                                                      value: selectAll,
+                                                      fillColor:
+                                                          MaterialStateProperty
+                                                              .all(syanColor),
+                                                      onChanged: (bool? value) {
+                                                        setState(() {
+                                                          selectAll =
+                                                              value ?? false;
+
+                                                          if (selectAll) {
+                                                            selectedJobs =
+                                                                pendingjobs
+                                                                    .map(
+                                                                        (job) =>
+                                                                            {
+                                                                              'job_id': job['bkj_id'].toString(),
+                                                                              'status': "0",
+                                                                            })
+                                                                    .toList();
+                                                            print(
+                                                                "select all added===>");
+                                                            print(selectedJobs);
+                                                          } else {
+                                                            selectedJobs
+                                                                .clear();
+                                                            print(
+                                                                "select all removed===>");
+                                                            print(selectedJobs);
+                                                          }
+                                                        });
+                                                      },
+                                                    ),
+                                                    Container(
+                                                      child: Text("Job Name",
+                                                          overflow:
+                                                              TextOverflow.clip,
+                                                          maxLines: 3,
+                                                          style: montserratSemiBold
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.032,
+                                                                  color:
+                                                                      black)),
+                                                    ),
+                                                  ]),
                                                 ),
                                               ],
                                             ).expand(),
@@ -923,101 +967,174 @@ class WorkcardState extends State<Workcard> {
                                                                     width *
                                                                         0.032,
                                                                 color: black))),
-                                                20.width,
-                                                Container(
-                                                  padding: EdgeInsets.all(8),
-                                                  child: Text('Action',
-                                                      style: montserratSemiBold
-                                                          .copyWith(
-                                                              fontSize:
-                                                                  width * 0.032,
-                                                              color: black)),
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.all(8),
-                                                  child: Text('      ',
-                                                      style: montserratRegular
-                                                          .copyWith(
-                                                              fontSize:
-                                                                  width * 0.032,
-                                                              color: black)),
-                                                ),
                                               ],
                                             ),
                                           ],
                                         ),
                                         Divider(),
                                         Column(
-                                          children: List.generate(
-                                            pendingjobs.length,
-                                            (i) => Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                          children: [
+                                            Column(
+                                              children: List.generate(
+                                                pendingjobs.length,
+                                                (i) => Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    Flexible(
-                                                      child: Container(
-                                                        child: Text(
+                                                    Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Flexible(
+                                                          child: Row(
+                                                            children: [
+                                                              Checkbox(
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              4.0),
+                                                                ),
+                                                                fillColor:
+                                                                    MaterialStateProperty
+                                                                        .all(
+                                                                            syanColor),
+                                                                value: selectedJobs.any((jobInfo) =>
+                                                                    jobInfo[
+                                                                        'job_id'] ==
+                                                                    pendingjobs[
+                                                                            i][
+                                                                        'bkj_id']),
+                                                                onChanged:
+                                                                    (bool?
+                                                                        value) {
+                                                                  setState(() {
+                                                                    if (value !=
+                                                                        null) {
+                                                                      Map<String,
+                                                                              dynamic>
+                                                                          jobInfo =
+                                                                          {
+                                                                        'job_id':
+                                                                            pendingjobs[i]['bkj_id'],
+                                                                        'status':
+                                                                            "0",
+                                                                      };
+
+                                                                      if (value) {
+                                                                        selectedJobs
+                                                                            .add(jobInfo);
+                                                                        print(
+                                                                            "added===>");
+                                                                        print(
+                                                                            selectedJobs);
+                                                                      } else {
+                                                                        selectedJobs.removeWhere((jobInfo) =>
+                                                                            jobInfo['job_id'] ==
+                                                                            pendingjobs[i]['bkj_id']);
+                                                                        print(
+                                                                            "removed===>");
+                                                                        print(
+                                                                            selectedJobs);
+                                                                      }
+                                                                    }
+
+                                                                    selectAll = selectedJobs
+                                                                            .length ==
+                                                                        pendingjobs
+                                                                            .length;
+                                                                  });
+                                                                },
+                                                              ),
+                                                              Expanded(
+                                                                child:
+                                                                    Container(
+                                                                  child: Text(
+                                                                    pendingjobs[i]
+                                                                            [
+                                                                            'bkj_jobname']
+                                                                        .toUpperCase(),
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .clip,
+                                                                    maxLines: 9,
+                                                                    style: montserratMedium
+                                                                        .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.034,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ).expand(),
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          padding:
+                                                              EdgeInsets.all(8),
+                                                          child: Text(
                                                             pendingjobs[i][
-                                                                    'bkj_jobname']
-                                                                .toUpperCase(),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .clip,
-                                                            maxLines: 3,
-                                                            style: montserratMedium
-                                                                .copyWith(
-                                                                    color:
-                                                                        black,
-                                                                    fontSize:
-                                                                        width *
-                                                                            0.034)),
-                                                      ),
+                                                                'bkj_cust_cost'],
+                                                            style:
+                                                                montserratSemiBold
+                                                                    .copyWith(
+                                                              color:
+                                                                  warningcolor,
+                                                              fontSize:
+                                                                  width * 0.032,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
-                                                ).expand(),
-                                                Row(
-                                                  children: [
-                                                    Container(
-                                                      padding:
-                                                          EdgeInsets.all(8),
-                                                      child: Text(
-                                                        pendingjobs[i]
-                                                            ['bkj_cust_cost'],
-                                                        style:
-                                                            montserratSemiBold
-                                                                .copyWith(
-                                                          color: warningcolor,
-                                                          fontSize:
-                                                              width * 0.032,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    20.width,
-                                                    Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.red
-                                                              .withAlpha(30),
-                                                          borderRadius:
-                                                              radius(10),
-                                                          border: Border.all(
-                                                              color:
-                                                                  Colors.red),
-                                                        ),
-                                                        child: IconButton(
-                                                          onPressed: () {
-                                                            showConfirmDialogCustom(
+                                                ),
+                                              ),
+                                            ),
+                                            selectAll || selectedJobs.isNotEmpty
+                                                ? Divider(
+                                                    color: black,
+                                                  )
+                                                : SizedBox(),
+                                            selectAll || selectedJobs.isNotEmpty
+                                                ? Container(
+                                                    padding: EdgeInsets.all(2),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red
+                                                                .withAlpha(30),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            border: Border.all(
+                                                                color:
+                                                                    Colors.red),
+                                                          ),
+                                                          child: IconButton(
+                                                            onPressed: () {
+                                                              showConfirmDialogCustom(
                                                                 height: 65,
                                                                 context,
                                                                 title:
-                                                                    'Are you sure you want to reject this job.?',
+                                                                    'Are you sure you want to reject this job?',
                                                                 primaryColor:
                                                                     warningcolor,
                                                                 customCenterWidget:
@@ -1026,97 +1143,147 @@ class WorkcardState extends State<Workcard> {
                                                                       EdgeInsets
                                                                           .only(
                                                                               top: 8),
-                                                                  child: Image.asset(
-                                                                      "assets/icons/reject.png",
-                                                                      width:
-                                                                          width /
-                                                                              2,
-                                                                      height:
-                                                                          95),
-                                                                ), onAccept:
+                                                                  child: Image
+                                                                      .asset(
+                                                                    "assets/icons/reject.png",
+                                                                    width:
+                                                                        width /
+                                                                            2,
+                                                                    height: 95,
+                                                                  ),
+                                                                ),
+                                                                onAccept:
                                                                     (v) async {
-                                                              rejectJob(
-                                                                  pendingjobs[
-                                                                      i]);
-                                                              setState(() {});
-                                                            });
-                                                          },
-                                                          icon: Icon(
-                                                              Icons
-                                                                  .close_outlined,
-                                                              color: redColor),
-                                                          iconSize: 22,
-                                                        )),
-                                                    8.width,
-                                                    Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.green
-                                                              .withAlpha(30),
-                                                          borderRadius:
-                                                              radius(10),
-                                                          border: Border.all(
-                                                              color:
-                                                                  Colors.green),
+                                                                  selectedJobs
+                                                                      .forEach(
+                                                                          (jobInfo) {
+                                                                    jobInfo['status'] =
+                                                                        "3";
+                                                                  });
+                                                                  Map req = {
+                                                                    'selectedjobs':
+                                                                        selectedJobs
+                                                                  };
+                                                                  print(
+                                                                      "send data=====>");
+                                                                  print(req);
+                                                                  await multipleJobUpdate(
+                                                                          req)
+                                                                      .then(
+                                                                          (value) {
+                                                                    if (value[
+                                                                            'ret_data'] ==
+                                                                        "success") {
+                                                                      print(value[
+                                                                          'ret_data']);
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
+                                                                    } else {
+                                                                      print(value[
+                                                                          'ret_data']);
+                                                                    }
+                                                                  });
+                                                                },
+                                                              );
+                                                            },
+                                                            icon: Icon(
+                                                                Icons
+                                                                    .close_outlined,
+                                                                color:
+                                                                    redColor),
+                                                            iconSize: 22,
+                                                          ),
                                                         ),
-                                                        child: IconButton(
-                                                          onPressed: () {
-                                                            showConfirmDialogCustom(
-                                                              height: 65,
-                                                              context,
-                                                              title:
-                                                                  'Approve Job.?',
-                                                              primaryColor:
-                                                                  syanColor,
-                                                              customCenterWidget:
-                                                                  Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        top: 8),
-                                                                child: Image.asset(
+                                                        SizedBox(width: 8),
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.green
+                                                                .withAlpha(30),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .green),
+                                                          ),
+                                                          child: IconButton(
+                                                            onPressed: () {
+                                                              showConfirmDialogCustom(
+                                                                height: 65,
+                                                                context,
+                                                                title:
+                                                                    'Approve Job?',
+                                                                primaryColor:
+                                                                    syanColor,
+                                                                customCenterWidget:
+                                                                    Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                              top: 8),
+                                                                  child: Image
+                                                                      .asset(
                                                                     "assets/icons/approve.png",
                                                                     width:
                                                                         width /
                                                                             2,
-                                                                    height: 95),
-                                                              ),
-                                                              onAccept:
-                                                                  (v) async {
-                                                                updateJob(
-                                                                    pendingjobs[
-                                                                        i]);
-                                                                setState(() {});
-                                                                final prefs =
-                                                                    await SharedPreferences
-                                                                        .getInstance();
-                                                                var pendingjob =
-                                                                    pendingjobs[
-                                                                            i][
-                                                                        'bkj_id'];
-                                                                prefs.setString(
-                                                                    "pendingjobpayment",
-                                                                    pendingjob);
-                                                                showCustomToast(
-                                                                    context,
-                                                                    "Approved and waiting for payment",
-                                                                    bgColor:
-                                                                        black,
-                                                                    textColor:
-                                                                        white);
-                                                              },
-                                                            );
-                                                          },
-                                                          icon: Icon(
-                                                              Icons.check_sharp,
-                                                              color:
-                                                                  greenColor),
-                                                          iconSize: 22,
-                                                        )),
-                                                  ],
-                                                ),
-                                              ],
-                                            ).paddingSymmetric(vertical: 8),
-                                          ),
+                                                                    height: 95,
+                                                                  ),
+                                                                ),
+                                                                onAccept:
+                                                                    (v) async {
+                                                                  selectedJobs
+                                                                      .forEach(
+                                                                          (jobInfo) {
+                                                                    jobInfo['status'] =
+                                                                        "2";
+                                                                  });
+
+                                                                  Map req = {
+                                                                    'selectedjobs':
+                                                                        selectedJobs
+                                                                  };
+                                                                  print(
+                                                                      "send data=====>");
+                                                                  print(req);
+                                                                  await multipleJobUpdate(
+                                                                          req)
+                                                                      .then(
+                                                                          (value) {
+                                                                    if (value[
+                                                                            'ret_data'] ==
+                                                                        "success") {
+                                                                      print(value[
+                                                                          'ret_data']);
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
+                                                                    } else {
+                                                                      print(value[
+                                                                          'ret_data']);
+                                                                    }
+                                                                  });
+                                                                },
+                                                              );
+                                                            },
+                                                            icon: Icon(
+                                                                Icons
+                                                                    .check_sharp,
+                                                                color:
+                                                                    greenColor),
+                                                            iconSize: 22,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                : SizedBox()
+                                          ],
                                         ),
                                       ],
                                     ),

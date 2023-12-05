@@ -166,6 +166,11 @@ Future withoutpayment(Map req) async {
       'Booking/BookingController/Job_status_update_bycust', req));
 }
 
+Future multipleJobUpdate(Map req) async {
+  return handleResponse(await securedPostRequest(
+      'Booking/BookingController/multiple_Job_status_update_bycust', req));
+}
+
 Future getcardjobdetails(Map req) async {
   return handleResponse(await securedPostRequest(
       'Booking/BookingController/Get_jobdetails_bybkid', req));
