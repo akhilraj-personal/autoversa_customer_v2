@@ -653,16 +653,16 @@ class ProfilePageState extends State<ProfilePage> {
                             .paddingOnly(right: 16),
                       ],
                     ).onTap(() async {
-                      String? name = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return Tryout();
-                          },
-                        ),
-                      );
-                      nameProfile = name;
-                      setState(() {});
+                      // String? name = await Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) {
+                      //       return Tryout();
+                      //     },
+                      //   ),
+                      // );
+                      // nameProfile = name;
+                      // setState(() {});
                     }),
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.spaceBetween,

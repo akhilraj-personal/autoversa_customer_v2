@@ -59,7 +59,7 @@ class WorkcardState extends State<Workcard> {
   var type = "0";
   bool isproceeding = false;
   bool selectAll = false;
-  List<Map<String, dynamic>> selectedJobs = [];
+  List<Map<String, String>> selectedJobs = [];
 
   @override
   void initState() {
@@ -128,7 +128,6 @@ class WorkcardState extends State<Workcard> {
                     amounttopay = 0;
                     paidamount = 0;
                   }),
-                  gs_vat = int.parse(value['gs_vat']),
                   selected_package_cost =
                       double.parse(value['booking']['bkp_cust_amount']) +
                           double.parse(value['booking']['bkp_vat']),
@@ -166,14 +165,10 @@ class WorkcardState extends State<Workcard> {
                             temppendingjobs.add(pendingjobid);
                             setState(() {});
                           })
-                        },
+                        }
                     },
                   withoutcoupontotal = (totalamount).toDouble(),
-                  print("===========>"),
-                  print(withoutcoupontotal),
                   withoutcoupontotalvat = (totalamount).toDouble() * 0.05,
-                  print("<==========="),
-                  print(withoutcoupontotalvat),
                   withoutcoupontotalwithoutvat =
                       withoutcoupontotal - withoutcoupontotalvat,
                   consumablecost = value['booking']['bk_consumcost'] != null &&
@@ -199,11 +194,6 @@ class WorkcardState extends State<Workcard> {
   }
 
   createPayment(consumablecost, consumableflag) async {
-    print("======||=====");
-    print(consumablecost);
-    print(consumableflag);
-    print(temppendingjobs.length);
-    print("======||=====");
     if (consumablecost != 0 && temppendingjobs.length == 0) {
       type = "0";
       setState(() {});
@@ -219,7 +209,6 @@ class WorkcardState extends State<Workcard> {
       type = "2";
       setState(() {});
     }
-
     final prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> pay_data = {
       'custId': prefs.getString('cust_id'),
@@ -227,8 +216,6 @@ class WorkcardState extends State<Workcard> {
       'tot_amount': amounttopay.toString(),
       'job_id': temppendingjobs
     };
-    print("kkkkk====>");
-    print(pay_data);
     await create_workcard_payment(pay_data).then((value) {
       if (value['ret_data'] == "success") {
         trnxId = value['payment_details']['id'];
@@ -306,8 +293,6 @@ class WorkcardState extends State<Workcard> {
         'job_id': temppendingjobs,
         'type': type
       };
-      print("qwerty=========>");
-      print(paymentreq);
       await create_payment_for_job_workcard(paymentreq).then((value) {
         if (value['ret_data'] == "success") {
         } else {
@@ -425,6 +410,7 @@ class WorkcardState extends State<Workcard> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    // SizedBox(height: 10),
                     Container(
                       width: MediaQuery.of(context).size.width,
                       child: SingleChildScrollView(
@@ -600,540 +586,153 @@ class WorkcardState extends State<Workcard> {
                                     ),
                                   ),
                                   16.height,
-                                  Stack(
-                                    alignment: Alignment.topLeft,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
-                                        decoration:
-                                            boxDecorationRoundedWithShadow(12,
-                                                backgroundColor:
-                                                    context.cardColor),
-                                        child: Column(
-                                          children: [
-                                            16.height,
-                                            Row(
-                                              children: [
-                                                Image.asset(
-                                                  "assets/icons/service_list_icon.png",
-                                                  height: height * 0.043,
-                                                  width: height * 0.043,
-                                                  fit: BoxFit.contain,
-                                                ).cornerRadiusWithClipRRect(
-                                                    8.0),
-                                                8.width,
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    createRichText(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      list: <TextSpan>[
-                                                        TextSpan(
-                                                          text: packagebooking[
-                                                                      'pkg_name'] !=
-                                                                  null
-                                                              ? packagebooking[
-                                                                  'pkg_name']
-                                                              : "",
-                                                          style: montserratMedium
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                        ),
-                                                        TextSpan(text: ''),
-                                                      ],
-                                                    ),
-                                                    8.height,
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        RichText(
-                                                          text: TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text:
-                                                                    "Amount: ",
-                                                                style: montserratRegular.copyWith(
-                                                                    color:
-                                                                        greyColor,
-                                                                    fontSize:
-                                                                        width *
-                                                                            0.034),
-                                                              ),
-                                                              TextSpan(
-                                                                text: packagebooking[
-                                                                            'bkp_cust_amount'] !=
-                                                                        null
-                                                                    ? "AED " +
-                                                                        packagebooking[
-                                                                            'bkp_cust_amount']
-                                                                    : "",
-                                                                style: montserratRegular.copyWith(
-                                                                    color:
-                                                                        greyColor,
-                                                                    fontSize:
-                                                                        width *
-                                                                            0.034),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        16.width,
-                                                        RichText(
-                                                          text: TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text: "VAT: ",
-                                                                style: montserratRegular
-                                                                    .copyWith(
-                                                                        color:
-                                                                            grey,
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034),
-                                                              ),
-                                                              TextSpan(
-                                                                text: packagebooking[
-                                                                            'bkp_vat'] !=
-                                                                        null
-                                                                    ? "AED " +
-                                                                        packagebooking[
-                                                                            'bkp_vat']
-                                                                    : "",
-                                                                style: montserratRegular.copyWith(
-                                                                    color:
-                                                                        greyColor,
-                                                                    fontSize:
-                                                                        width *
-                                                                            0.034),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    8.height,
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        Text(
-                                                          'Net Billable: ',
-                                                          style: montserratMedium
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                        ),
-                                                        8.width,
-                                                        Text(
-                                                          "AED " +
-                                                              selected_package_cost
-                                                                  .round()
-                                                                  .toString(),
-                                                          style: montserratSemiBold.copyWith(
-                                                              color:
-                                                                  warningcolor,
-                                                              fontSize: width *
-                                                                  0.034),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    8.height,
-                                                  ],
-                                                ),
-                                              ],
-                                            ).paddingOnly(
-                                                right: 16.0, left: 16.0),
-                                            8.height,
-                                          ],
-                                        ),
-                                      ).paddingTop(8.0),
-                                      Container(
-                                        padding: EdgeInsets.all(2.0),
-                                        decoration:
-                                            boxDecorationWithRoundedCorners(
-                                          backgroundColor: Colors.green,
-                                          borderRadius: radius(12),
-                                        ),
-                                        child: Text(
-                                          "PAID",
-                                          style: montserratMedium.copyWith(
-                                              color: white,
-                                              fontSize: width * 0.034),
-                                        ).paddingOnly(right: 10.0, left: 10.0),
-                                      ).paddingLeft(16.0),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Flexible(
+                                            child: Container(
+                                              child: Text("Package & Job Name",
+                                                  overflow: TextOverflow.clip,
+                                                  maxLines: 3,
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                          fontSize:
+                                                              width * 0.032,
+                                                          color: black)),
+                                            ),
+                                          ),
+                                        ],
+                                      ).expand(),
+                                      Row(
+                                        children: [
+                                          Container(
+                                              padding: EdgeInsets.all(8),
+                                              child: Text('Cost (AED)',
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                          fontSize:
+                                                              width * 0.032,
+                                                          color:
+                                                              warningcolor))),
+                                          8.width,
+                                          Text('Status',
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      fontSize: width * 0.032,
+                                                      color: black)),
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                  8.height,
-                                  Stack(
-                                    alignment: Alignment.topLeft,
+                                  Divider(),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
-                                        decoration:
-                                            boxDecorationRoundedWithShadow(12,
-                                                backgroundColor:
-                                                    context.cardColor),
-                                        child: Column(
-                                          children: [
-                                            16.height,
-                                            Row(
-                                              children: [
-                                                Image.asset(
-                                                  "assets/icons/service_list_icon.png",
-                                                  height: height * 0.043,
-                                                  width: height * 0.043,
-                                                  fit: BoxFit.contain,
-                                                ).cornerRadiusWithClipRRect(
-                                                    8.0),
-                                                8.width,
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    createRichText(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      list: <TextSpan>[
-                                                        TextSpan(
-                                                          text: "Pickup Cost",
-                                                          style: montserratMedium
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                        ),
-                                                        TextSpan(text: ''),
-                                                      ],
-                                                    ),
-                                                    8.height,
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        RichText(
-                                                          text: TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text:
-                                                                    "Amount: ",
-                                                                style: montserratRegular
-                                                                    .copyWith(
-                                                                        color:
-                                                                            grey,
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034),
-                                                              ),
-                                                              TextSpan(
-                                                                text: packagebooking[
-                                                                            'bk_pickup_cost'] !=
-                                                                        null
-                                                                    ? "AED " +
-                                                                        packagebooking[
-                                                                            'bk_pickup_cost']
-                                                                    : "",
-                                                                style: montserratRegular.copyWith(
-                                                                    color:
-                                                                        greyColor,
-                                                                    fontSize:
-                                                                        width *
-                                                                            0.034),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        16.width,
-                                                        RichText(
-                                                          text: TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text: "VAT: ",
-                                                                style: montserratRegular
-                                                                    .copyWith(
-                                                                        color:
-                                                                            grey,
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034),
-                                                              ),
-                                                              TextSpan(
-                                                                text: packagebooking[
-                                                                            'bk_pickup_vat'] !=
-                                                                        null
-                                                                    ? "AED " +
-                                                                        packagebooking[
-                                                                            'bk_pickup_vat']
-                                                                    : "",
-                                                                style: montserratRegular.copyWith(
-                                                                    color:
-                                                                        greyColor,
-                                                                    fontSize:
-                                                                        width *
-                                                                            0.034),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    8.height,
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        Text(
-                                                          'Net Billable: ',
-                                                          style: montserratMedium
-                                                              .copyWith(
-                                                                  color: black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
-                                                        ),
-                                                        8.width,
-                                                        Text(
-                                                          selected_pickup_type_cost
-                                                                      .toString() ==
-                                                                  "0.0"
-                                                              ? "FREE"
-                                                              : "AED " +
-                                                                  (selected_pickup_type_cost
-                                                                      .toStringAsFixed(
-                                                                          2)),
-                                                          style: montserratSemiBold.copyWith(
-                                                              color:
-                                                                  warningcolor,
-                                                              fontSize: width *
-                                                                  0.034),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    8.height,
-                                                  ],
-                                                ),
-                                              ],
-                                            ).paddingOnly(
-                                                right: 16.0, left: 16.0),
-                                            8.height,
-                                          ],
-                                        ),
-                                      ).paddingTop(4.0),
-                                      Container(
-                                        padding: EdgeInsets.all(2.0),
-                                        decoration:
-                                            boxDecorationWithRoundedCorners(
-                                          backgroundColor: Colors.green,
-                                          borderRadius: radius(12),
-                                        ),
-                                        child: Text(
-                                          "PAID",
-                                          style: montserratMedium.copyWith(
-                                              color: white,
-                                              fontSize: width * 0.034),
-                                        ).paddingOnly(right: 10.0, left: 10.0),
-                                      ).paddingLeft(16.0),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Flexible(
+                                            child: Container(
+                                              child: Text(
+                                                packagebooking['pkg_name'] !=
+                                                        null
+                                                    ? packagebooking['pkg_name']
+                                                    : "",
+                                                overflow: TextOverflow.clip,
+                                                maxLines: 3,
+                                                style:
+                                                    montserratMedium.copyWith(
+                                                        color: black,
+                                                        fontSize:
+                                                            width * 0.034),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ).expand(),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(6),
+                                            child: Text(
+                                              selected_package_cost
+                                                  .round()
+                                                  .toStringAsFixed(2),
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: warningcolor,
+                                                      fontSize: width * 0.034),
+                                            ),
+                                          ),
+                                          8.width,
+                                          Text("PAID",
+                                              style: montserratMedium.copyWith(
+                                                  fontSize: width * 0.034,
+                                                  color: Colors.green)),
+                                        ],
+                                      ),
                                     ],
-                                  ),
-                                  packagebooking['bk_consumcost'] != "0.00"
-                                      ? 8.height
-                                      : 0.height,
-                                  packagebooking['bk_consumcost'] != "0.00"
-                                      ? Stack(
-                                          alignment: Alignment.topLeft,
-                                          children: [
-                                            Container(
-                                              decoration:
-                                                  boxDecorationRoundedWithShadow(
-                                                      12,
-                                                      backgroundColor:
-                                                          context.cardColor),
-                                              child: Column(
-                                                children: [
-                                                  16.height,
-                                                  Row(
-                                                    children: [
-                                                      Image.asset(
-                                                        "assets/icons/service_list_icon.png",
-                                                        height: height * 0.043,
-                                                        width: height * 0.043,
-                                                        fit: BoxFit.contain,
-                                                      ).cornerRadiusWithClipRRect(
-                                                          8.0),
-                                                      8.width,
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          createRichText(
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            list: <TextSpan>[
-                                                              TextSpan(
-                                                                text:
-                                                                    "Consumables",
-                                                                style: montserratMedium.copyWith(
-                                                                    color:
-                                                                        black,
-                                                                    fontSize:
-                                                                        width *
-                                                                            0.034),
-                                                              ),
-                                                              TextSpan(
-                                                                  text: ''),
-                                                            ],
-                                                          ),
-                                                          8.height,
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceAround,
-                                                            children: [
-                                                              RichText(
-                                                                text: TextSpan(
-                                                                  children: [
-                                                                    TextSpan(
-                                                                      text:
-                                                                          "Amount: ",
-                                                                      style: montserratRegular.copyWith(
-                                                                          color:
-                                                                              grey,
-                                                                          fontSize:
-                                                                              width * 0.034),
-                                                                    ),
-                                                                    TextSpan(
-                                                                      text: packagebooking['bk_consumcost'] !=
-                                                                              null
-                                                                          ? "AED " +
-                                                                              packagebooking['bk_consumcost']
-                                                                          : "",
-                                                                      style: montserratRegular.copyWith(
-                                                                          color:
-                                                                              greyColor,
-                                                                          fontSize:
-                                                                              width * 0.034),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              16.width,
-                                                              RichText(
-                                                                text: TextSpan(
-                                                                  children: [
-                                                                    TextSpan(
-                                                                      text:
-                                                                          "VAT: ",
-                                                                      style: montserratRegular.copyWith(
-                                                                          color:
-                                                                              grey,
-                                                                          fontSize:
-                                                                              width * 0.034),
-                                                                    ),
-                                                                    TextSpan(
-                                                                      text: packagebooking['bk_consumvat'] !=
-                                                                              null
-                                                                          ? "AED " +
-                                                                              packagebooking['bk_consumvat']
-                                                                          : "",
-                                                                      style: montserratRegular.copyWith(
-                                                                          color:
-                                                                              greyColor,
-                                                                          fontSize:
-                                                                              width * 0.034),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              )
-                                                            ],
-                                                          ),
-                                                          8.height,
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceAround,
-                                                            children: [
-                                                              Text(
-                                                                'Net Billable: ',
-                                                                style: montserratMedium.copyWith(
-                                                                    color:
-                                                                        black,
-                                                                    fontSize:
-                                                                        width *
-                                                                            0.034),
-                                                              ),
-                                                              8.width,
-                                                              Text(
-                                                                "AED " +
-                                                                    consumablecost
-                                                                        .toStringAsFixed(
-                                                                            2),
-                                                                style: montserratSemiBold.copyWith(
-                                                                    color:
-                                                                        warningcolor,
-                                                                    fontSize:
-                                                                        width *
-                                                                            0.034),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          8.height,
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ).paddingOnly(
-                                                      right: 16.0, left: 16.0),
-                                                  8.height,
-                                                ],
+                                  ).paddingSymmetric(vertical: 2),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Flexible(
+                                            child: Container(
+                                              child: Text(
+                                                "Pickup Cost",
+                                                overflow: TextOverflow.clip,
+                                                maxLines: 3,
+                                                style:
+                                                    montserratMedium.copyWith(
+                                                        color: black,
+                                                        fontSize:
+                                                            width * 0.034),
                                               ),
-                                            ).paddingTop(4.0),
-                                            Container(
-                                              padding: EdgeInsets.all(2.0),
-                                              decoration:
-                                                  boxDecorationWithRoundedCorners(
-                                                backgroundColor: packagebooking[
-                                                            'bk_consumepaymentflag'] !=
-                                                        "4"
-                                                    ? Colors.orange
-                                                    : Colors.green,
-                                                borderRadius: radius(12),
-                                              ),
-                                              child: packagebooking[
-                                                          'bk_consumepaymentflag'] !=
-                                                      "4"
-                                                  ? Text(
-                                                      "PENDING PAYMENT",
-                                                      style: montserratMedium
-                                                          .copyWith(
-                                                              color: white,
-                                                              fontSize: width *
-                                                                  0.034),
-                                                    ).paddingOnly(
-                                                      right: 10.0, left: 10.0)
-                                                  : Text(
-                                                      "PAID",
-                                                      style: montserratMedium
-                                                          .copyWith(
-                                                              color: white,
-                                                              fontSize: width *
-                                                                  0.034),
-                                                    ).paddingOnly(
-                                                      right: 10.0, left: 10.0),
-                                            ).paddingLeft(16.0),
-                                          ],
-                                        )
-                                      : SizedBox(),
+                                            ),
+                                          ),
+                                        ],
+                                      ).expand(),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(6),
+                                            child: Text(
+                                                selected_pickup_type_cost
+                                                            .toString() ==
+                                                        "0.0"
+                                                    ? "FREE"
+                                                    : (selected_pickup_type_cost
+                                                        .toStringAsFixed(2)),
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        fontSize: width * 0.034,
+                                                        color: warningcolor)),
+                                          ),
+                                          8.width,
+                                          Text("PAID",
+                                              style: montserratMedium.copyWith(
+                                                  fontSize: width * 0.034,
+                                                  color: Colors.green)),
+                                        ],
+                                      ),
+                                    ],
+                                  ).paddingSymmetric(vertical: 2),
+                                  2.height,
                                   approvedjobs.isEmpty
                                       ? Container(
                                           decoration: BoxDecoration(
@@ -1160,161 +759,77 @@ class WorkcardState extends State<Workcard> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Stack(
-                                                        alignment:
-                                                            Alignment.topLeft,
-                                                        children: [
-                                                          Container(
-                                                            decoration: boxDecorationRoundedWithShadow(
-                                                                12,
-                                                                backgroundColor:
-                                                                    context
-                                                                        .cardColor),
-                                                            child: Column(
-                                                              children: [
-                                                                16.height,
-                                                                Row(
-                                                                  children: [
-                                                                    Image.asset(
-                                                                      "assets/icons/service_list_icon.png",
-                                                                      height: height *
-                                                                          0.043,
-                                                                      width: height *
-                                                                          0.043,
-                                                                      fit: BoxFit
-                                                                          .contain,
-                                                                    ).cornerRadiusWithClipRRect(
-                                                                        8.0),
-                                                                    8.width,
-                                                                    Expanded(
-                                                                      child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Text(
-                                                                            approvedjobs[i]['bkj_jobname'] != null
-                                                                                ? capitalize(approvedjobs[i]['bkj_jobname'])
-                                                                                : "",
-                                                                            overflow:
-                                                                                TextOverflow.clip,
-                                                                            maxLines:
-                                                                                3,
-                                                                            style:
-                                                                                montserratMedium.copyWith(
-                                                                              color: black,
-                                                                              fontSize: width * 0.034,
-                                                                            ),
-                                                                          ),
-                                                                          8.height,
-                                                                          Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.start,
-                                                                            children: [
-                                                                              RichText(
-                                                                                text: TextSpan(
-                                                                                  children: [
-                                                                                    TextSpan(
-                                                                                      text: "Amount: ",
-                                                                                      style: montserratRegular.copyWith(color: greyColor, fontSize: width * 0.034),
-                                                                                    ),
-                                                                                    TextSpan(
-                                                                                      text: (double.parse(approvedjobs[i]['bkj_cust_cost']) / (1 + gs_vat / 100)).toStringAsFixed(2),
-                                                                                      style: montserratRegular.copyWith(color: greyColor, fontSize: width * 0.034),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              16.width,
-                                                                              RichText(
-                                                                                text: TextSpan(
-                                                                                  children: [
-                                                                                    TextSpan(
-                                                                                      text: "VAT: ",
-                                                                                      style: montserratRegular.copyWith(color: grey, fontSize: width * 0.034),
-                                                                                    ),
-                                                                                    TextSpan(
-                                                                                      text: gs_vat != null ? "AED " + (double.parse(approvedjobs[i]['bkj_cust_cost']) - double.parse(approvedjobs[i]['bkj_cust_cost']) / (1 + gs_vat / 100)).toStringAsFixed(2) : "",
-                                                                                      style: montserratRegular.copyWith(color: greyColor, fontSize: width * 0.034),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                          8.height,
-                                                                          Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.start,
-                                                                            children: [
-                                                                              Text(
-                                                                                'Net Billable: ',
-                                                                                style: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
-                                                                              ),
-                                                                              8.width,
-                                                                              Text(
-                                                                                approvedjobs[i]['bkj_cust_cost'] != null ? "AED: " + approvedjobs[i]['bkj_cust_cost'] : "",
-                                                                                style: montserratSemiBold.copyWith(color: warningcolor, fontSize: width * 0.034),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                          8.height,
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ).paddingOnly(
-                                                                    right: 16.0,
-                                                                    left: 16.0),
-                                                              ],
+                                                      Flexible(
+                                                        child: Container(
+                                                          child: Text(
+                                                            approvedjobs[i][
+                                                                        'bkj_jobname'] !=
+                                                                    null
+                                                                ? capitalize(
+                                                                    approvedjobs[
+                                                                            i][
+                                                                        'bkj_jobname'])
+                                                                : "",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                            maxLines: 3,
+                                                            style:
+                                                                montserratMedium
+                                                                    .copyWith(
+                                                              color: black,
+                                                              fontSize:
+                                                                  width * 0.034,
                                                             ),
-                                                          ).paddingTop(8.0),
-                                                          Container(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    2.0),
-                                                            decoration:
-                                                                boxDecorationWithRoundedCorners(
-                                                              backgroundColor:
-                                                                  approvedjobs[i]
-                                                                              [
-                                                                              'bkj_payment_status'] ==
-                                                                          "0"
-                                                                      ? Colors
-                                                                          .orange
-                                                                      : Colors
-                                                                          .green,
-                                                              borderRadius:
-                                                                  radius(12),
-                                                            ),
-                                                            child: approvedjobs[i]['bkj_payment_status'] == "0"
-                                                                ? Text("PAYMENT PENDING",
-                                                                        style: montserratMedium.copyWith(
-                                                                            fontSize: width *
-                                                                                0.034,
-                                                                            color: Colors
-                                                                                .white))
-                                                                    .paddingOnly(
-                                                                        right:
-                                                                            10.0,
-                                                                        left:
-                                                                            10.0)
-                                                                : Text("PAID",
-                                                                        style: montserratMedium.copyWith(
-                                                                            fontSize: width *
-                                                                                0.034,
-                                                                            color:
-                                                                                white))
-                                                                    .paddingOnly(
-                                                                        right: 10.0,
-                                                                        left: 10.0),
-                                                          ).paddingLeft(16.0),
-                                                        ],
+                                                          ),
+                                                        ),
                                                       ),
                                                     ],
                                                   ).expand(),
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.all(6),
+                                                        child: Text(
+                                                            approvedjobs[i][
+                                                                        'bkj_cust_cost'] !=
+                                                                    null
+                                                                ? approvedjobs[
+                                                                        i][
+                                                                    'bkj_cust_cost']
+                                                                : "",
+                                                            style: montserratSemiBold
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.032,
+                                                                    color:
+                                                                        warningcolor)),
+                                                      ),
+                                                      8.width,
+                                                      approvedjobs[i][
+                                                                  'bkj_payment_status'] ==
+                                                              "0"
+                                                          ? Text("PENDING",
+                                                              style: montserratMedium
+                                                                  .copyWith(
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.034,
+                                                                      color: Colors
+                                                                          .red))
+                                                          : Text("PAID",
+                                                              style: montserratMedium.copyWith(
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034,
+                                                                  color: Colors
+                                                                      .green)),
+                                                    ],
+                                                  )
                                                 ],
-                                              ).paddingSymmetric(vertical: 8),
+                                              ).paddingSymmetric(vertical: 2),
                                             ),
                                           ),
                                         ),
@@ -1324,7 +839,7 @@ class WorkcardState extends State<Workcard> {
                             pendingjobs.isEmpty
                                 ? Container()
                                 : Container(
-                                    padding: EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(16.0),
                                     decoration: boxDecorationWithRoundedCorners(
                                       backgroundColor: white,
                                       borderRadius: radius(8),
@@ -1333,6 +848,16 @@ class WorkcardState extends State<Workcard> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
+                                        Text(
+                                          "Job Pending Approval",
+                                          textAlign: TextAlign.start,
+                                          overflow: TextOverflow.clip,
+                                          style: montserratSemiBold.copyWith(
+                                            fontSize: width * 0.034,
+                                            color: warningcolor,
+                                          ),
+                                        ),
+                                        4.height,
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -1370,229 +895,181 @@ class WorkcardState extends State<Workcard> {
                                                                               'status': "0",
                                                                             })
                                                                     .toList();
+                                                            print(
+                                                                "select all added===>");
+                                                            print(selectedJobs);
                                                           } else {
                                                             selectedJobs
                                                                 .clear();
+                                                            print(
+                                                                "select all removed===>");
+                                                            print(selectedJobs);
                                                           }
                                                         });
                                                       },
                                                     ),
                                                     Container(
-                                                      child: Text(
-                                                        "Job Pending Approval",
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        overflow:
-                                                            TextOverflow.clip,
-                                                        style:
-                                                            montserratSemiBold
-                                                                .copyWith(
-                                                          fontSize: 16,
-                                                          color: warningcolor,
-                                                        ),
-                                                      ),
+                                                      child: Text("Job Name",
+                                                          overflow:
+                                                              TextOverflow.clip,
+                                                          maxLines: 3,
+                                                          style: montserratSemiBold
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.032,
+                                                                  color:
+                                                                      black)),
                                                     ),
                                                   ]),
                                                 ),
                                               ],
                                             ).expand(),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                    padding: EdgeInsets.all(8),
+                                                    child: Text('Cost (AED)',
+                                                        style: montserratSemiBold
+                                                            .copyWith(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.032,
+                                                                color: black))),
+                                              ],
+                                            ),
                                           ],
                                         ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 0),
-                                          child: Column(
-                                            children: List.generate(
-                                              pendingjobs.length,
-                                              (i) => Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Stack(
-                                                        alignment:
-                                                            Alignment.topLeft,
-                                                        children: [
-                                                          Container(
-                                                            decoration: boxDecorationRoundedWithShadow(
-                                                                12,
-                                                                backgroundColor:
-                                                                    context
-                                                                        .cardColor),
-                                                            child: Column(
-                                                              children: [
-                                                                16.height,
-                                                                Row(
-                                                                  children: [
-                                                                    Checkbox(
-                                                                      shape:
-                                                                          RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(4.0),
-                                                                      ),
-                                                                      fillColor:
-                                                                          MaterialStateProperty.all(
-                                                                              syanColor),
-                                                                      value: selectedJobs.any((jobInfo) =>
-                                                                          jobInfo[
-                                                                              'job_id'] ==
-                                                                          pendingjobs[i]
-                                                                              [
-                                                                              'bkj_id']),
-                                                                      onChanged:
-                                                                          (bool?
-                                                                              value) {
-                                                                        setState(
-                                                                            () {
-                                                                          if (value !=
-                                                                              null) {
-                                                                            Map<String, dynamic>
-                                                                                jobInfo =
-                                                                                {
-                                                                              'job_id': pendingjobs[i]['bkj_id'],
-                                                                              'status': "0",
-                                                                            };
+                                        Divider(),
+                                        Column(
+                                          children: [
+                                            Column(
+                                              children: List.generate(
+                                                pendingjobs.length,
+                                                (i) => Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Flexible(
+                                                          child: Row(
+                                                            children: [
+                                                              Checkbox(
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              4.0),
+                                                                ),
+                                                                fillColor:
+                                                                    MaterialStateProperty
+                                                                        .all(
+                                                                            syanColor),
+                                                                value: selectedJobs.any((jobInfo) =>
+                                                                    jobInfo[
+                                                                        'job_id'] ==
+                                                                    pendingjobs[
+                                                                            i][
+                                                                        'bkj_id']),
+                                                                onChanged:
+                                                                    (bool?
+                                                                        value) {
+                                                                  setState(() {
+                                                                    if (value !=
+                                                                        null) {
+                                                                      Map<String,
+                                                                              String>
+                                                                          jobInfo =
+                                                                          {
+                                                                        'job_id':
+                                                                            pendingjobs[i]['bkj_id'].toString(),
+                                                                        'status':
+                                                                            0.toString(),
+                                                                      };
 
-                                                                            if (value) {
-                                                                              selectedJobs.add(jobInfo);
-                                                                            } else {
-                                                                              selectedJobs.removeWhere((jobInfo) => jobInfo['job_id'] == pendingjobs[i]['bkj_id']);
-                                                                            }
-                                                                          }
-
-                                                                          selectAll =
-                                                                              selectedJobs.length == pendingjobs.length;
-                                                                        });
-                                                                      },
-                                                                    ),
-                                                                    8.width,
-                                                                    Expanded(
-                                                                      child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Text(
-                                                                            pendingjobs[i]['bkj_jobname'] != null
-                                                                                ? capitalize(
-                                                                                    pendingjobs[i]['bkj_jobname'],
-                                                                                  )
-                                                                                : "",
-                                                                            overflow:
-                                                                                TextOverflow.clip,
-                                                                            maxLines:
-                                                                                3,
-                                                                            style:
-                                                                                montserratMedium.copyWith(
-                                                                              color: black,
-                                                                              fontSize: width * 0.034,
-                                                                            ),
-                                                                          ),
-                                                                          8.height,
-                                                                          Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.start,
-                                                                            children: [
-                                                                              RichText(
-                                                                                text: TextSpan(
-                                                                                  children: [
-                                                                                    TextSpan(
-                                                                                      text: "Amount: ",
-                                                                                      style: montserratRegular.copyWith(color: greyColor, fontSize: width * 0.034),
-                                                                                    ),
-                                                                                    TextSpan(
-                                                                                      text: (double.parse(pendingjobs[i]['bkj_cust_cost']) / (1 + gs_vat / 100)).toStringAsFixed(2),
-                                                                                      style: montserratRegular.copyWith(color: greyColor, fontSize: width * 0.034),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              16.width,
-                                                                              RichText(
-                                                                                text: TextSpan(
-                                                                                  children: [
-                                                                                    TextSpan(
-                                                                                      text: "VAT: ",
-                                                                                      style: montserratRegular.copyWith(color: grey, fontSize: width * 0.034),
-                                                                                    ),
-                                                                                    TextSpan(
-                                                                                      text: gs_vat != null ? "AED " + (double.parse(pendingjobs[i]['bkj_cust_cost']) - double.parse(pendingjobs[i]['bkj_cust_cost']) / (1 + gs_vat / 100)).toStringAsFixed(2) : "",
-                                                                                      style: montserratRegular.copyWith(color: greyColor, fontSize: width * 0.034),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                          8.height,
-                                                                          Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.start,
-                                                                            children: [
-                                                                              Text(
-                                                                                'Net Billable: ',
-                                                                                style: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
-                                                                              ),
-                                                                              8.width,
-                                                                              Text(
-                                                                                pendingjobs[i]['bkj_cust_cost'] != null ? "AED: " + pendingjobs[i]['bkj_cust_cost'] : "",
-                                                                                style: montserratSemiBold.copyWith(color: warningcolor, fontSize: width * 0.034),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                          8.height,
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ).paddingOnly(
-                                                                    right: 16.0,
-                                                                    left: 16.0),
-                                                              ],
-                                                            ),
-                                                          ).paddingTop(8.0),
-                                                          Container(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    2.0),
-                                                            decoration:
-                                                                boxDecorationWithRoundedCorners(
-                                                              backgroundColor:
-                                                                  Colors.red,
-                                                              borderRadius:
-                                                                  radius(12),
-                                                            ),
-                                                            child: Text(
-                                                              "PENDING APPROVAL",
-                                                              style: montserratMedium
-                                                                  .copyWith(
+                                                                      if (value) {
+                                                                        selectedJobs
+                                                                            .add(jobInfo);
+                                                                      } else {
+                                                                        selectedJobs.removeWhere((jobInfo) =>
+                                                                            jobInfo['job_id'] ==
+                                                                            pendingjobs[i]['bkj_id'].toString());
+                                                                      }
+                                                                    }
+                                                                    selectAll = selectedJobs
+                                                                            .length ==
+                                                                        pendingjobs
+                                                                            .length;
+                                                                  });
+                                                                },
+                                                              ),
+                                                              Expanded(
+                                                                child:
+                                                                    Container(
+                                                                  child: Text(
+                                                                    pendingjobs[i]['bkj_jobname'] !=
+                                                                            null
+                                                                        ? capitalize(
+                                                                            pendingjobs[i]['bkj_jobname'],
+                                                                          )
+                                                                        : "",
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .clip,
+                                                                    maxLines: 3,
+                                                                    style: montserratMedium
+                                                                        .copyWith(
+                                                                      color:
+                                                                          black,
                                                                       fontSize:
                                                                           width *
                                                                               0.034,
-                                                                      color:
-                                                                          white),
-                                                            ).paddingOnly(
-                                                                right: 10.0,
-                                                                left: 10.0),
-                                                          ).paddingLeft(16.0),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ).expand(),
-                                                ],
-                                              ).paddingSymmetric(vertical: 8),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ).expand(),
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          padding:
+                                                              EdgeInsets.all(8),
+                                                          child: Text(
+                                                            pendingjobs[i][
+                                                                'bkj_cust_cost'],
+                                                            style:
+                                                                montserratSemiBold
+                                                                    .copyWith(
+                                                              color:
+                                                                  warningcolor,
+                                                              fontSize:
+                                                                  width * 0.032,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        Column(
-                                          children: [
+                                            selectAll || selectedJobs.isNotEmpty
+                                                ? Divider(
+                                                    color: black,
+                                                  )
+                                                : SizedBox(),
                                             selectAll || selectedJobs.isNotEmpty
                                                 ? Container(
                                                     padding: EdgeInsets.all(2),
@@ -1649,6 +1126,9 @@ class WorkcardState extends State<Workcard> {
                                                                     'selectedjobs':
                                                                         selectedJobs
                                                                   };
+                                                                  print(
+                                                                      "send data=====>");
+                                                                  print(req);
                                                                   await multipleJobUpdate(
                                                                           req)
                                                                       .then(
@@ -1656,6 +1136,8 @@ class WorkcardState extends State<Workcard> {
                                                                     if (value[
                                                                             'ret_data'] ==
                                                                         "success") {
+                                                                      print(value[
+                                                                          'ret_data']);
                                                                       Navigator.push(
                                                                           context,
                                                                           MaterialPageRoute(
@@ -1727,6 +1209,9 @@ class WorkcardState extends State<Workcard> {
                                                                     'selectedjobs':
                                                                         selectedJobs
                                                                   };
+                                                                  print(
+                                                                      "send data=====>");
+                                                                  print(req);
                                                                   await multipleJobUpdate(
                                                                           req)
                                                                       .then(
@@ -1734,10 +1219,15 @@ class WorkcardState extends State<Workcard> {
                                                                     if (value[
                                                                             'ret_data'] ==
                                                                         "success") {
+                                                                      print(value[
+                                                                          'ret_data']);
                                                                       Navigator.push(
                                                                           context,
                                                                           MaterialPageRoute(
                                                                               builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
+                                                                    } else {
+                                                                      print(value[
+                                                                          'ret_data']);
                                                                     }
                                                                   });
                                                                 },
@@ -1797,41 +1287,41 @@ class WorkcardState extends State<Workcard> {
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 12,
-                                    child: Text(
-                                      gs_vat != null
-                                          ? "VAT (" + gs_vat.toString() + "%): "
-                                          : "0",
-                                      textAlign: TextAlign.right,
-                                      style: montserratSemiBold.copyWith(
-                                        color: black,
-                                        fontSize: width * 0.034,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      withoutcoupontotalvat.toStringAsFixed(2),
-                                      style: montserratSemiBold.copyWith(
-                                          color: warningcolor,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // SizedBox(
+                            //   height: 4,
+                            // ),
+                            // Container(
+                            //   padding: EdgeInsets.only(right: 12.0),
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.end,
+                            //     crossAxisAlignment: CrossAxisAlignment.end,
+                            //     children: <Widget>[
+                            //       Expanded(
+                            //         flex: 12,
+                            //         child: Text(
+                            //           gs_vat != null
+                            //               ? "VAT (" + gs_vat.toString() + "%): "
+                            //               : "0",
+                            //           textAlign: TextAlign.right,
+                            //           style: montserratSemiBold.copyWith(
+                            //             color: black,
+                            //             fontSize: width * 0.034,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Expanded(
+                            //         flex: 3,
+                            //         child: Text(
+                            //           withoutcoupontotalvat.toStringAsFixed(2),
+                            //           style: montserratSemiBold.copyWith(
+                            //               color: warningcolor,
+                            //               fontSize: width * 0.034),
+                            //           textAlign: TextAlign.right,
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                             SizedBox(
                               height: 4,
                             ),
@@ -1876,7 +1366,7 @@ class WorkcardState extends State<Workcard> {
                                   Expanded(
                                     flex: 12,
                                     child: Text(
-                                      "Grand Total: ",
+                                      "Grand Total\n(VAT inclusive): ",
                                       style: montserratSemiBold.copyWith(
                                           color: black,
                                           fontSize: width * 0.034),
@@ -2034,7 +1524,7 @@ class WorkcardState extends State<Workcard> {
                                     ),
                                   )
                                 : Row(),
-                            const SizedBox(height: 100),
+                            const SizedBox(height: 300),
                           ],
                         ),
                       ),
@@ -2084,7 +1574,7 @@ class CustomSuccess extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.min, // To make the card compact
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
@@ -2198,7 +1688,7 @@ class CustomWarning extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.min, // To make the card compact
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
