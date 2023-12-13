@@ -171,11 +171,16 @@ class WorkcardState extends State<Workcard> {
                   withoutcoupontotalvat = (totalamount).toDouble() * 0.05,
                   withoutcoupontotalwithoutvat =
                       withoutcoupontotal - withoutcoupontotalvat,
-                  consumablecost = value['booking']['bk_consumcost'] != null &&
-                          value['booking']['bk_consumvat'] != null
-                      ? double.parse(value['booking']['bk_consumcost']) +
-                          double.parse(value['booking']['bk_consumvat'])
-                      : 0.0,
+                  if (value['booking']['bk_consumepaymentflag'] != "0")
+                    {
+                      consumablecost = value['booking']['bk_consumcost'] !=
+                                  null &&
+                              value['booking']['bk_consumvat'] != null
+                          ? double.parse(value['booking']['bk_consumcost']) +
+                              double.parse(value['booking']['bk_consumvat'])
+                          : 0.0,
+                      setState(() {})
+                    },
                   grandtotal =
                       ((totalamount).toDouble() + (consumablecost).toDouble()) -
                           coupondiscount,
@@ -193,21 +198,35 @@ class WorkcardState extends State<Workcard> {
     return text[0].toUpperCase() + text.substring(1).toLowerCase();
   }
 
-  createPayment(consumablecost, consumableflag) async {
-    if (consumablecost != 0 && temppendingjobs.length == 0) {
+  createPayment(paramsconsumablecost, consumableflag) async {
+    print("=============||============");
+    print(paramsconsumablecost);
+    print(consumableflag);
+    print(temppendingjobs.length);
+    print("=============||============");
+    if (paramsconsumablecost != 0 &&
+        temppendingjobs.length == 0 &&
+        int.parse(consumableflag) == 1) {
       type = "0";
+      print("Consumables only");
       setState(() {});
-    } else if (temppendingjobs.length != 0 && consumablecost == 0 ||
+    } else if (paramsconsumablecost == "0.00" &&
+            temppendingjobs.length != 0 &&
+            int.parse(consumableflag) == 0 ||
         temppendingjobs.length != 0 &&
-            consumablecost != 0 &&
+            paramsconsumablecost != 0 &&
             int.parse(consumableflag) == 4) {
       type = "1";
+      print("Job Only");
       setState(() {});
     } else if (temppendingjobs.length > 0 &&
-        consumablecost != 0 &&
+        paramsconsumablecost != 0 &&
         int.parse(consumableflag) == 1) {
       type = "2";
+      print("Both");
       setState(() {});
+    } else {
+      print("other");
     }
     final prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> pay_data = {
@@ -732,7 +751,69 @@ class WorkcardState extends State<Workcard> {
                                       ),
                                     ],
                                   ).paddingSymmetric(vertical: 2),
-                                  2.height,
+                                  packagebooking['bk_consumcost'] != "0.00" &&
+                                          packagebooking[
+                                                  'bk_consumepaymentflag'] !=
+                                              "0"
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Flexible(
+                                                  child: Container(
+                                                    child: Text(
+                                                      "Consumables",
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      maxLines: 3,
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color: black,
+                                                              fontSize: width *
+                                                                  0.034),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ).expand(),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.all(6),
+                                                  child: Text(
+                                                      consumablecost
+                                                          .toStringAsFixed(2),
+                                                      style: montserratSemiBold
+                                                          .copyWith(
+                                                              fontSize:
+                                                                  width * 0.034,
+                                                              color:
+                                                                  warningcolor)),
+                                                ),
+                                                8.width,
+                                                Text(
+                                                    packagebooking[
+                                                                'bk_consumepaymentflag'] !=
+                                                            "1"
+                                                        ? "PAID"
+                                                        : "PENDING",
+                                                    style: montserratMedium.copyWith(
+                                                        fontSize: width * 0.034,
+                                                        color: packagebooking[
+                                                                    'bk_consumepaymentflag'] !=
+                                                                "1"
+                                                            ? Colors.green
+                                                            : Colors.red)),
+                                              ],
+                                            ),
+                                          ],
+                                        ).paddingSymmetric(vertical: 2)
+                                      : SizedBox(),
                                   approvedjobs.isEmpty
                                       ? Container(
                                           decoration: BoxDecoration(
@@ -1287,41 +1368,6 @@ class WorkcardState extends State<Workcard> {
                                 ],
                               ),
                             ),
-                            // SizedBox(
-                            //   height: 4,
-                            // ),
-                            // Container(
-                            //   padding: EdgeInsets.only(right: 12.0),
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.end,
-                            //     crossAxisAlignment: CrossAxisAlignment.end,
-                            //     children: <Widget>[
-                            //       Expanded(
-                            //         flex: 12,
-                            //         child: Text(
-                            //           gs_vat != null
-                            //               ? "VAT (" + gs_vat.toString() + "%): "
-                            //               : "0",
-                            //           textAlign: TextAlign.right,
-                            //           style: montserratSemiBold.copyWith(
-                            //             color: black,
-                            //             fontSize: width * 0.034,
-                            //           ),
-                            //         ),
-                            //       ),
-                            //       Expanded(
-                            //         flex: 3,
-                            //         child: Text(
-                            //           withoutcoupontotalvat.toStringAsFixed(2),
-                            //           style: montserratSemiBold.copyWith(
-                            //               color: warningcolor,
-                            //               fontSize: width * 0.034),
-                            //           textAlign: TextAlign.right,
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
                             SizedBox(
                               height: 4,
                             ),
