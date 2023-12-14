@@ -46,6 +46,7 @@ class WorkcardState extends State<Workcard> {
   var withoutcoupontotalvat = 0.0;
   var withoutcoupontotalwithoutvat = 0.0;
   var coupondiscount = 0.0;
+  var normaldiscount = 0.0;
   var amounttopay = 0.0;
   var selected_package_cost = 0.0;
   var selected_pickup_type_cost = 0.0;
@@ -125,6 +126,7 @@ class WorkcardState extends State<Workcard> {
                     totalamount = 0;
                     consumablecost = 0;
                     coupondiscount = 0;
+                    normaldiscount = 0;
                     amounttopay = 0;
                     paidamount = 0;
                   }),
@@ -138,7 +140,11 @@ class WorkcardState extends State<Workcard> {
                       (selected_package_cost + selected_pickup_type_cost)
                           .round(),
                   coupondiscount =
-                      double.parse(value['booking']['bk_discount']),
+                      double.parse(value['booking']['bk_coupondiscount']),
+                  normaldiscount = double.parse(
+                      value['booking']['bk_discount'] != null
+                          ? value['booking']['bk_discount']
+                          : 0.0),
                   for (var paylist in value['payments'])
                     {
                       paidamount = paidamount +
@@ -183,7 +189,7 @@ class WorkcardState extends State<Workcard> {
                     },
                   grandtotal =
                       ((totalamount).toDouble() + (consumablecost).toDouble()) -
-                          coupondiscount,
+                          (coupondiscount + normaldiscount),
                   amounttopay = ((grandtotal) - (paidamount)).toDouble(),
                   setState(() {}),
                 }
@@ -1391,6 +1397,38 @@ class WorkcardState extends State<Workcard> {
                                     flex: 3,
                                     child: Text(
                                       coupondiscount.toStringAsFixed(2),
+                                      style: montserratSemiBold.copyWith(
+                                          color: warningcolor,
+                                          fontSize: width * 0.034),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(right: 12.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 12,
+                                    child: Text(
+                                      "Discounts: ",
+                                      style: montserratSemiBold.copyWith(
+                                          color: black,
+                                          fontSize: width * 0.034),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      normaldiscount.toStringAsFixed(2),
                                       style: montserratSemiBold.copyWith(
                                           color: warningcolor,
                                           fontSize: width * 0.034),
