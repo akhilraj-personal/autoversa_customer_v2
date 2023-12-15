@@ -1828,6 +1828,19 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                         ),
                                       ],
                                     ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      booking['bk_total_amount'] != null
+                                          ? "AED" +
+                                              " " +
+                                              booking['bk_total_amount']
+                                          : "AED 0.00",
+                                      style: montserratSemiBold.copyWith(
+                                          color: warningcolor,
+                                          fontSize: width * 0.04),
+                                    ),
                                     8.height,
                                     status['st_code'] == "HOLDC"
                                         ? Row(

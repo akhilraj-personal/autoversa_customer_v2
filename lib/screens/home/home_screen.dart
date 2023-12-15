@@ -221,7 +221,7 @@ class HomeScreenState extends State<HomeScreen> {
       }
     } else {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => VehicleAddPage()));
+          context, MaterialPageRoute(builder: (context) => VehicleAddPage(click: "fromhome")));
     }
   }
 
@@ -831,7 +831,7 @@ class HomeScreenState extends State<HomeScreen> {
                                                               MaterialPageRoute(
                                                                   builder:
                                                                       (context) =>
-                                                                          VehicleAddPage()));
+                                                                          VehicleAddPage(click: "fromhome")));
                                                         });
                                                       },
                                                       child: Row(
@@ -931,7 +931,7 @@ class HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) =>
-                                                                VehicleAddPage()));
+                                                                VehicleAddPage(click: "fromhome")));
                                                   });
                                                 },
                                                 child: Container(

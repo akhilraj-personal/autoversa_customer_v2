@@ -652,7 +652,7 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                         BorderRadius.all(Radius.circular(16)),
                                     color: white),
                                 child: TextFormField(
-                                    keyboardType: TextInputType.multiline,
+                                    keyboardType: TextInputType.text,
                                     minLines: 1,
                                     maxLength: 50,
                                     autovalidateMode:

@@ -14,8 +14,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../main.dart';
+
 class VehicleAddPage extends StatefulWidget {
-  const VehicleAddPage({super.key});
+  final String click;
+  const VehicleAddPage({required this.click, super.key});
 
   @override
   State<VehicleAddPage> createState() => VehicleAddPageState();
@@ -271,15 +274,17 @@ class VehicleAddPageState extends State<VehicleAddPage> {
           showCustomToast(context, lang.S.of(context).vehicle_save_toast,
               bgColor: blackColor, textColor: whiteColor);
           setState(() => issubmitted = false);
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BottomNavBarScreen(
-                index: 2,
-              ),
-            ),
-            (route) => false,
-          );
+          widget.click == "fromhome"
+              ? Navigator.pushReplacementNamed(context, Routes.bottombar)
+              : Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BottomNavBarScreen(
+                      index: 2,
+                    ),
+                  ),
+                  (route) => false,
+                );
         });
       } else {
         if (value['ret_message'] == "duplicate") {

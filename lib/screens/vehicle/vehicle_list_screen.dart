@@ -669,7 +669,8 @@ class VehiclelistState extends State<Vehiclelist> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => VehicleAddPage()));
+                          builder: (context) =>
+                              VehicleAddPage(click: "fromlist")));
                 },
                 heroTag: 'Add Vehicle',
               ))),

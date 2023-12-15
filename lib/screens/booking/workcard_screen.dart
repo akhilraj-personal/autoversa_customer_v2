@@ -43,8 +43,6 @@ class WorkcardState extends State<Workcard> {
   List<Map<String, dynamic>> temppendingjobs = [];
   var totalamount = 0.0;
   var withoutcoupontotal = 0.0;
-  var withoutcoupontotalvat = 0.0;
-  var withoutcoupontotalwithoutvat = 0.0;
   var coupondiscount = 0.0;
   var normaldiscount = 0.0;
   var amounttopay = 0.0;
@@ -174,9 +172,6 @@ class WorkcardState extends State<Workcard> {
                         }
                     },
                   withoutcoupontotal = (totalamount).toDouble(),
-                  withoutcoupontotalvat = (totalamount).toDouble() * 0.05,
-                  withoutcoupontotalwithoutvat =
-                      withoutcoupontotal - withoutcoupontotalvat,
                   if (value['booking']['bk_consumepaymentflag'] != "0")
                     {
                       consumablecost = value['booking']['bk_consumcost'] !=
@@ -645,7 +640,7 @@ class WorkcardState extends State<Workcard> {
                                                               width * 0.032,
                                                           color:
                                                               warningcolor))),
-                                          8.width,
+                                          24.width,
                                           Text('Status',
                                               style:
                                                   montserratSemiBold.copyWith(
@@ -692,13 +687,14 @@ class WorkcardState extends State<Workcard> {
                                               selected_package_cost
                                                   .round()
                                                   .toStringAsFixed(2),
+                                              textAlign: TextAlign.left,
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: warningcolor,
                                                       fontSize: width * 0.034),
                                             ),
                                           ),
-                                          8.width,
+                                          40.width,
                                           Text("PAID",
                                               style: montserratMedium.copyWith(
                                                   fontSize: width * 0.034,
@@ -748,7 +744,7 @@ class WorkcardState extends State<Workcard> {
                                                         fontSize: width * 0.034,
                                                         color: warningcolor)),
                                           ),
-                                          8.width,
+                                          40.width,
                                           Text("PAID",
                                               style: montserratMedium.copyWith(
                                                   fontSize: width * 0.034,
@@ -801,7 +797,7 @@ class WorkcardState extends State<Workcard> {
                                                               color:
                                                                   warningcolor)),
                                                 ),
-                                                8.width,
+                                                40.width,
                                                 Text(
                                                     packagebooking[
                                                                 'bk_consumepaymentflag'] !=
@@ -1343,104 +1339,129 @@ class WorkcardState extends State<Workcard> {
                                 color: black,
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 12,
-                                    child: Text(
-                                      "Total Cost: ",
-                                      textAlign: TextAlign.right,
-                                      style: montserratSemiBold.copyWith(
-                                        color: black,
-                                        fontSize: width * 0.034,
-                                      ),
+                            coupondiscount != 0 || normaldiscount != 0
+                                ? Container(
+                                    padding: EdgeInsets.only(right: 12.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 12,
+                                          child: Text(
+                                            "Total Cost: ",
+                                            textAlign: TextAlign.right,
+                                            style: montserratSemiBold.copyWith(
+                                              color: black,
+                                              fontSize: width * 0.034,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            withoutcoupontotal
+                                                .toStringAsFixed(2),
+                                            textAlign: TextAlign.right,
+                                            style: montserratSemiBold.copyWith(
+                                                color: warningcolor,
+                                                fontSize: width * 0.034),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      withoutcoupontotalwithoutvat
-                                          .toStringAsFixed(2),
-                                      textAlign: TextAlign.right,
-                                      style: montserratSemiBold.copyWith(
-                                          color: warningcolor,
-                                          fontSize: width * 0.034),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                  )
+                                : SizedBox(),
                             SizedBox(
                               height: 4,
                             ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 12,
-                                    child: Text(
-                                      "Coupon Discounts: ",
-                                      style: montserratSemiBold.copyWith(
-                                          color: black,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
+                            coupondiscount != 0
+                                ? Container(
+                                    padding: EdgeInsets.only(right: 12.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 12,
+                                          child: Text(
+                                            "Coupon Discounts: ",
+                                            style: montserratSemiBold.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            coupondiscount.toStringAsFixed(2),
+                                            style: montserratSemiBold.copyWith(
+                                                color: warningcolor,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      coupondiscount.toStringAsFixed(2),
-                                      style: montserratSemiBold.copyWith(
-                                          color: warningcolor,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                  )
+                                : SizedBox(),
                             SizedBox(
                               height: 4,
                             ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 12,
-                                    child: Text(
-                                      "Discounts: ",
-                                      style: montserratSemiBold.copyWith(
-                                          color: black,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
+                            normaldiscount != 0
+                                ? Container(
+                                    padding: EdgeInsets.only(right: 12.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 12,
+                                          child: Text(
+                                            "Discounts: ",
+                                            style: montserratSemiBold.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            normaldiscount.toStringAsFixed(2),
+                                            style: montserratSemiBold.copyWith(
+                                                color: warningcolor,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      normaldiscount.toStringAsFixed(2),
-                                      style: montserratSemiBold.copyWith(
-                                          color: warningcolor,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                  )
+                                : SizedBox(),
                             SizedBox(
                               height: 4,
                             ),
+                            // Container(
+                            //   child: RichText(
+                            //     text: TextSpan(
+                            //       text: "Grand Total ",
+                            //       style: montserratSemiBold.copyWith(
+                            //           color: black, fontSize: width * 0.034),
+                            //       children: <TextSpan>[
+                            //         TextSpan(
+                            //           text: "\n(VAT inclusive):",
+                            //           style: montserratRegular.copyWith(
+                            //               color: grey, fontSize: width * 0.03),
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
                             Container(
                               padding: EdgeInsets.only(right: 12.0),
                               child: Row(

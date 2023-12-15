@@ -220,7 +220,9 @@ class DashScreenState extends State<DashScreen> {
       }
     } else {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => VehicleAddPage()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => VehicleAddPage(click: "fromhome")));
     }
   }
 
@@ -828,9 +830,10 @@ class DashScreenState extends State<DashScreen> {
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          VehicleAddPage()));
+                                                                  builder: (context) =>
+                                                                      VehicleAddPage(
+                                                                          click:
+                                                                              "fromhome")));
                                                         });
                                                       },
                                                       child: Row(
@@ -930,7 +933,9 @@ class DashScreenState extends State<DashScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) =>
-                                                                VehicleAddPage()));
+                                                                VehicleAddPage(
+                                                                    click:
+                                                                        "fromhome")));
                                                   });
                                                 },
                                                 child: Container(
