@@ -249,7 +249,6 @@ class PackageDetailsState extends State<PackageDetails> {
             setState(() {});
             if (value['settings']['gs_isvat'] == "1") {
               packVat = totalCost * (gs_vat / 100);
-              packVat = totalExclusiveCost * (gs_vat / 100);
               totalCost = (totalCost + (totalCost * (gs_vat / 100)));
               roundedTotalCost = double.parse(totalCost.toStringAsFixed(2));
               roundedCostValue = roundedTotalCost.round();
@@ -327,7 +326,6 @@ class PackageDetailsState extends State<PackageDetails> {
       "pack_extra_details": pack_extra_details
     };
     prefs.setString("booking_data", json.encode(packdata));
-    print(packdata);
     setState(() => isbooked = false);
     Navigator.push(
         context,
