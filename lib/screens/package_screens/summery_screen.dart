@@ -289,8 +289,7 @@ class SummeryPageState extends State<SummeryPage> {
         "expenses": [],
         "packid": packdata['package_id'],
         "packtype": packdata['packtype'],
-        "packprice": (packdata['package_cost'] - packdata['pack_vat'])
-            .toStringAsFixed(2),
+        "packprice": packdata['packprice'],
         "pack_vat": packdata['pack_vat'].toStringAsFixed(2),
         "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
         "gs_vat": packdata['gs_vat'].toStringAsFixed(2),
@@ -330,8 +329,7 @@ class SummeryPageState extends State<SummeryPage> {
         "expenses": [],
         "packid": packdata['package_id'],
         "packtype": packdata['packtype'],
-        "packprice": (packdata['package_cost'] - packdata['pack_vat'])
-            .toStringAsFixed(2),
+        "packprice": packdata['packprice'],
         "pack_vat": packdata['pack_vat'].toStringAsFixed(2),
         "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
         "gs_vat": packdata['gs_vat'].toStringAsFixed(2),
@@ -739,7 +737,7 @@ class SummeryPageState extends State<SummeryPage> {
                                                 " " +
                                                 (packdata['package_cost']
                                                         .round())
-                                                    .toString()
+                                                    .toStringAsFixed(2)
                                             : "Based on Quotation",
                                         style: montserratSemiBold.copyWith(
                                             color: warningcolor,
@@ -759,7 +757,7 @@ class SummeryPageState extends State<SummeryPage> {
                                                     (double.parse(packdata[
                                                                 'pick_up_price'])
                                                             .round())
-                                                        .toString()
+                                                        .toStringAsFixed(2)
                                                 : "FREE"
                                             : "",
                                         style: montserratSemiBold.copyWith(
@@ -1690,7 +1688,7 @@ class SummeryPageState extends State<SummeryPage> {
                           Text(
                             widget.currency +
                                 " " +
-                                (totalamount.round()).toString(),
+                                (totalamount.round()).toStringAsFixed(2),
                             style: montserratSemiBold.copyWith(
                                 color: warningcolor, fontSize: width * 0.04),
                           ),
@@ -1721,7 +1719,8 @@ class SummeryPageState extends State<SummeryPage> {
                                     ? Text(
                                         widget.currency +
                                             " " +
-                                            (discount.round()).toString(),
+                                            (discount.round())
+                                                .toStringAsFixed(2),
                                         style: montserratSemiBold.copyWith(
                                             color: warningcolor,
                                             fontSize: width * 0.04),
@@ -1753,7 +1752,7 @@ class SummeryPageState extends State<SummeryPage> {
                                   widget.currency +
                                       " " +
                                       (widget.netpayableamount.round())
-                                          .toString(),
+                                          .toStringAsFixed(2),
                                   style: montserratSemiBold.copyWith(
                                       color: warningcolor,
                                       fontSize: width * 0.04),
@@ -1761,7 +1760,7 @@ class SummeryPageState extends State<SummeryPage> {
                               : Text(
                                   widget.currency +
                                       " " +
-                                      (netpayable.round()).toString(),
+                                      (netpayable.round()).toStringAsFixed(2),
                                   style: montserratSemiBold.copyWith(
                                       color: warningcolor,
                                       fontSize: width * 0.04),

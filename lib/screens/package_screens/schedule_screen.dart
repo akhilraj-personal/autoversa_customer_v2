@@ -976,7 +976,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                       Text(
                                         widget.currency +
                                             " " +
-                                            package_price.toString(),
+                                            package_price.toStringAsFixed(2),
                                         style: montserratSemiBold.copyWith(
                                             color: warningcolor,
                                             fontSize: width * 0.04),
