@@ -171,7 +171,6 @@ class WorkcardState extends State<Workcard> {
                           })
                         }
                     },
-                  withoutcoupontotal = (totalamount).toDouble(),
                   if (value['booking']['bk_consumepaymentflag'] != "0")
                     {
                       consumablecost = value['booking']['bk_consumcost'] !=
@@ -182,6 +181,8 @@ class WorkcardState extends State<Workcard> {
                           : 0.0,
                       setState(() {})
                     },
+                  withoutcoupontotal =
+                      ((totalamount).toDouble() + (consumablecost).toDouble()),
                   grandtotal =
                       ((totalamount).toDouble() + (consumablecost).toDouble()) -
                           (coupondiscount + normaldiscount),
@@ -200,16 +201,10 @@ class WorkcardState extends State<Workcard> {
   }
 
   createPayment(paramsconsumablecost, consumableflag) async {
-    print("=============||============");
-    print(paramsconsumablecost);
-    print(consumableflag);
-    print(temppendingjobs.length);
-    print("=============||============");
     if (paramsconsumablecost != 0 &&
         temppendingjobs.length == 0 &&
         int.parse(consumableflag) == 1) {
       type = "0";
-      print("Consumables only");
       setState(() {});
     } else if (paramsconsumablecost == "0.00" &&
             temppendingjobs.length != 0 &&
@@ -218,17 +213,13 @@ class WorkcardState extends State<Workcard> {
             paramsconsumablecost != 0 &&
             int.parse(consumableflag) == 4) {
       type = "1";
-      print("Job Only");
       setState(() {});
     } else if (temppendingjobs.length > 0 &&
         paramsconsumablecost != 0 &&
         int.parse(consumableflag) == 1) {
       type = "2";
-      print("Both");
       setState(() {});
-    } else {
-      print("other");
-    }
+    } else {}
     final prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> pay_data = {
       'custId': prefs.getString('cust_id'),
@@ -694,7 +685,7 @@ class WorkcardState extends State<Workcard> {
                                                       fontSize: width * 0.034),
                                             ),
                                           ),
-                                          40.width,
+                                          50.width,
                                           Text("PAID",
                                               style: montserratMedium.copyWith(
                                                   fontSize: width * 0.034,
@@ -744,7 +735,7 @@ class WorkcardState extends State<Workcard> {
                                                         fontSize: width * 0.034,
                                                         color: warningcolor)),
                                           ),
-                                          40.width,
+                                          50.width,
                                           Text("PAID",
                                               style: montserratMedium.copyWith(
                                                   fontSize: width * 0.034,
@@ -797,7 +788,15 @@ class WorkcardState extends State<Workcard> {
                                                               color:
                                                                   warningcolor)),
                                                 ),
-                                                40.width,
+                                                packagebooking[
+                                                            'bk_consumepaymentflag'] !=
+                                                        "1"
+                                                    ? SizedBox(
+                                                        width: 50,
+                                                      )
+                                                    : SizedBox(
+                                                        width: 8,
+                                                      ),
                                                 Text(
                                                     packagebooking[
                                                                 'bk_consumepaymentflag'] !=
@@ -890,7 +889,15 @@ class WorkcardState extends State<Workcard> {
                                                                     color:
                                                                         warningcolor)),
                                                       ),
-                                                      8.width,
+                                                      approvedjobs[i][
+                                                                  'bkj_payment_status'] !=
+                                                              "0"
+                                                          ? SizedBox(
+                                                              width: 50,
+                                                            )
+                                                          : SizedBox(
+                                                              width: 8,
+                                                            ),
                                                       approvedjobs[i][
                                                                   'bkj_payment_status'] ==
                                                               "0"
@@ -978,15 +985,9 @@ class WorkcardState extends State<Workcard> {
                                                                               'status': "0",
                                                                             })
                                                                     .toList();
-                                                            print(
-                                                                "select all added===>");
-                                                            print(selectedJobs);
                                                           } else {
                                                             selectedJobs
                                                                 .clear();
-                                                            print(
-                                                                "select all removed===>");
-                                                            print(selectedJobs);
                                                           }
                                                         });
                                                       },
@@ -1209,9 +1210,6 @@ class WorkcardState extends State<Workcard> {
                                                                     'selectedjobs':
                                                                         selectedJobs
                                                                   };
-                                                                  print(
-                                                                      "send data=====>");
-                                                                  print(req);
                                                                   await multipleJobUpdate(
                                                                           req)
                                                                       .then(
@@ -1219,15 +1217,10 @@ class WorkcardState extends State<Workcard> {
                                                                     if (value[
                                                                             'ret_data'] ==
                                                                         "success") {
-                                                                      print(value[
-                                                                          'ret_data']);
                                                                       Navigator.push(
                                                                           context,
                                                                           MaterialPageRoute(
                                                                               builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
-                                                                    } else {
-                                                                      print(value[
-                                                                          'ret_data']);
                                                                     }
                                                                   });
                                                                 },
@@ -1292,9 +1285,6 @@ class WorkcardState extends State<Workcard> {
                                                                     'selectedjobs':
                                                                         selectedJobs
                                                                   };
-                                                                  print(
-                                                                      "send data=====>");
-                                                                  print(req);
                                                                   await multipleJobUpdate(
                                                                           req)
                                                                       .then(
@@ -1302,15 +1292,10 @@ class WorkcardState extends State<Workcard> {
                                                                     if (value[
                                                                             'ret_data'] ==
                                                                         "success") {
-                                                                      print(value[
-                                                                          'ret_data']);
                                                                       Navigator.push(
                                                                           context,
                                                                           MaterialPageRoute(
                                                                               builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
-                                                                    } else {
-                                                                      print(value[
-                                                                          'ret_data']);
                                                                     }
                                                                   });
                                                                 },
