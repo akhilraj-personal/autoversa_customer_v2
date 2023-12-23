@@ -39,6 +39,8 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
   var selected_pickup_type_cost = 0.0;
   var withoutcoupontotal = 0.0;
   var coupondiscount = 0.0;
+  var normaldiscount = 0.0;
+  var consumablecost = 0.0;
 
   @override
   void initState() {
@@ -116,10 +118,12 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                     totalamount = 0;
                     coupondiscount = 0;
                     paidamount = 0;
+                    consumablecost = 0.0;
+                    normaldiscount = 0.0;
                   }),
                   selected_package_cost =
                       double.parse(value['booking']['bkp_cust_amount']) +
-                          double.parse(value['booking']['bkp_vat']).round(),
+                          double.parse(value['booking']['bkp_vat']),
                   selected_pickup_type_cost =
                       double.parse(value['booking']['bk_pickup_cost']) +
                           double.parse(value['booking']['bk_pickup_vat']),
@@ -133,6 +137,10 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                           pickupcost,
                   coupondiscount =
                       double.parse(value['booking']['bk_discount']),
+                  normaldiscount = double.parse(
+                      value['booking']['bk_discount'] != null
+                          ? value['booking']['bk_discount']
+                          : 0.0),
                   for (var paylist in value['payments'])
                     {
                       paidamount = paidamount +
@@ -140,25 +148,44 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                     },
                   for (var joblist in value['jobs'])
                     {
-                      if (joblist['bkj_status'] == "1")
+                      if (joblist['bkj_status'] == "2" ||
+                          joblist['bkj_status'] == "4")
                         {
                           approvedjobs.add(joblist),
                           totalamount = totalamount +
                               double.parse(joblist['bkj_cust_cost'].toString()),
                         }
-                      else if (joblist['bkj_status'] == "0")
+                      else if (joblist['bkj_status'] == "1")
                         {
                           pendingjobs.add(joblist),
                         },
                     },
-                  withoutcoupontotal = (totalamount).toDouble(),
-                  grandtotal = (totalamount).toDouble() - coupondiscount,
+                  if (value['booking']['bk_consumepaymentflag'] != "0")
+                    {
+                      consumablecost = value['booking']['bk_consumcost'] !=
+                                  null &&
+                              value['booking']['bk_consumvat'] != null
+                          ? double.parse(value['booking']['bk_consumcost']) +
+                              double.parse(value['booking']['bk_consumvat'])
+                          : 0.0,
+                      setState(() {})
+                    },
+                  withoutcoupontotal =
+                      ((totalamount).toDouble() + (consumablecost).toDouble()),
+                  grandtotal =
+                      ((totalamount).toDouble() + (consumablecost).toDouble()) -
+                          (coupondiscount + normaldiscount),
                   setState(() {}),
                 }
               else
                 {}
             })
         .catchError((e) {});
+  }
+
+  String capitalize(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
   }
 
   @override
@@ -464,15 +491,15 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                     Flexible(
                                       child: Container(
                                         child: Text(
-                                            packagebooking['pkg_name'] != null
-                                                ? packagebooking['pkg_name']
-                                                : "",
-                                            overflow: TextOverflow.clip,
-                                            maxLines: 3,
-                                            style: montserratRegular.copyWith(
-                                              fontSize: width * 0.032,
+                                          packagebooking['pkg_name'] != null
+                                              ? packagebooking['pkg_name']
+                                              : "",
+                                          overflow: TextOverflow.clip,
+                                          maxLines: 3,
+                                          style: montserratMedium.copyWith(
                                               color: black,
-                                            )),
+                                              fontSize: width * 0.034),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -482,10 +509,11 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                     Container(
                                       padding: EdgeInsets.all(6),
                                       child: Text(
-                                          selected_package_cost.toString(),
-                                          style: montserratSemiBold.copyWith(
-                                              fontSize: width * 0.032,
-                                              color: warningcolor)),
+                                        selected_package_cost.toString(),
+                                        style: montserratSemiBold.copyWith(
+                                            color: warningcolor,
+                                            fontSize: width * 0.034),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -500,13 +528,14 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                   children: [
                                     Flexible(
                                       child: Container(
-                                        child: Text("Pickup Cost",
-                                            overflow: TextOverflow.clip,
-                                            maxLines: 3,
-                                            style: montserratRegular.copyWith(
-                                              fontSize: width * 0.032,
+                                        child: Text(
+                                          "Pickup Cost",
+                                          overflow: TextOverflow.clip,
+                                          maxLines: 3,
+                                          style: montserratMedium.copyWith(
                                               color: black,
-                                            )),
+                                              fontSize: width * 0.034),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -521,13 +550,80 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                               : (selected_pickup_type_cost
                                                   .toStringAsFixed(2)),
                                           style: montserratSemiBold.copyWith(
-                                              fontSize: width * 0.032,
+                                              fontSize: width * 0.034,
                                               color: warningcolor)),
                                     ),
                                   ],
                                 ),
                               ],
                             ).paddingSymmetric(vertical: 8),
+                            packagebooking['bk_consumcost'] != "0.00" &&
+                                    packagebooking['bk_consumepaymentflag'] !=
+                                        "0"
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Flexible(
+                                            child: Container(
+                                              child: Text(
+                                                "Consumables",
+                                                overflow: TextOverflow.clip,
+                                                maxLines: 3,
+                                                style:
+                                                    montserratMedium.copyWith(
+                                                        color: black,
+                                                        fontSize:
+                                                            width * 0.034),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ).expand(),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(6),
+                                            child: Text(
+                                                consumablecost
+                                                    .toStringAsFixed(2),
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        fontSize: width * 0.034,
+                                                        color: warningcolor)),
+                                          ),
+                                          packagebooking[
+                                                      'bk_consumepaymentflag'] !=
+                                                  "1"
+                                              ? SizedBox(
+                                                  width: 50,
+                                                )
+                                              : SizedBox(
+                                                  width: 8,
+                                                ),
+                                          Text(
+                                              packagebooking[
+                                                          'bk_consumepaymentflag'] !=
+                                                      "1"
+                                                  ? "PAID"
+                                                  : "PENDING",
+                                              style: montserratMedium.copyWith(
+                                                  fontSize: width * 0.034,
+                                                  color: packagebooking[
+                                                              'bk_consumepaymentflag'] !=
+                                                          "1"
+                                                      ? Colors.green
+                                                      : Colors.red)),
+                                        ],
+                                      ),
+                                    ],
+                                  ).paddingSymmetric(vertical: 2)
+                                : SizedBox(),
                             4.height,
                             approvedjobs.isEmpty
                                 ? Container(
@@ -555,21 +651,22 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                                                 Flexible(
                                                   child: Container(
                                                     child: Text(
-                                                        approvedjobs[i][
-                                                                    'bkj_jobname'] !=
-                                                                null
-                                                            ? approvedjobs[i]
-                                                                ['bkj_jobname']
-                                                            : "",
-                                                        overflow:
-                                                            TextOverflow.clip,
-                                                        maxLines: 3,
-                                                        style: montserratRegular
-                                                            .copyWith(
-                                                          fontSize:
-                                                              width * 0.032,
-                                                          color: black,
-                                                        )),
+                                                      approvedjobs[i][
+                                                                  'bkj_jobname'] !=
+                                                              null
+                                                          ? capitalize(
+                                                              approvedjobs[i][
+                                                                  'bkj_jobname'])
+                                                          : "",
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      maxLines: 3,
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                        color: black,
+                                                        fontSize: width * 0.034,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -602,25 +699,110 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                             Divider(
                               color: black,
                             ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    "Total: ",
-                                    style: montserratSemiBold.copyWith(
-                                        color: black, fontSize: width * 0.034),
-                                  ),
-                                  Text(
-                                    withoutcoupontotal.toString(),
-                                    style: montserratSemiBold.copyWith(
-                                        color: warningcolor,
-                                        fontSize: width * 0.034),
-                                  ),
-                                ],
-                              ),
+                            coupondiscount != 0 || normaldiscount != 0
+                                ? Container(
+                                    padding: EdgeInsets.only(right: 12.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 12,
+                                          child: Text(
+                                            "Total Cost: ",
+                                            textAlign: TextAlign.right,
+                                            style: montserratSemiBold.copyWith(
+                                              color: black,
+                                              fontSize: width * 0.034,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            withoutcoupontotal
+                                                .toStringAsFixed(2),
+                                            textAlign: TextAlign.right,
+                                            style: montserratSemiBold.copyWith(
+                                                color: warningcolor,
+                                                fontSize: width * 0.034),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(
+                              height: 4,
                             ),
+                            coupondiscount != 0
+                                ? Container(
+                                    padding: EdgeInsets.only(right: 12.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 12,
+                                          child: Text(
+                                            "Coupon Discounts: ",
+                                            style: montserratSemiBold.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            coupondiscount.toStringAsFixed(2),
+                                            style: montserratSemiBold.copyWith(
+                                                color: warningcolor,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            normaldiscount != 0
+                                ? Container(
+                                    padding: EdgeInsets.only(right: 12.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 12,
+                                          child: Text(
+                                            "Discounts: ",
+                                            style: montserratSemiBold.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            normaldiscount.toStringAsFixed(2),
+                                            style: montserratSemiBold.copyWith(
+                                                color: warningcolor,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
                             SizedBox(
                               height: 4,
                             ),
@@ -628,39 +810,27 @@ class ServicehistoryDetailsState extends State<ServicehistoryDetails> {
                               padding: EdgeInsets.only(right: 12.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
-                                  Text(
-                                    "Coupon Discount: ",
-                                    style: montserratSemiBold.copyWith(
-                                        color: black, fontSize: width * 0.034),
+                                  Expanded(
+                                    flex: 12,
+                                    child: Text(
+                                      "Grand Total\n(VAT inclusive): ",
+                                      style: montserratSemiBold.copyWith(
+                                          color: black,
+                                          fontSize: width * 0.034),
+                                      textAlign: TextAlign.right,
+                                    ),
                                   ),
-                                  Text(
-                                    coupondiscount.toString(),
-                                    style: montserratSemiBold.copyWith(
-                                        color: warningcolor,
-                                        fontSize: width * 0.034),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    "Grand Total: ",
-                                    style: montserratSemiBold.copyWith(
-                                        color: black, fontSize: width * 0.034),
-                                  ),
-                                  Text(
-                                    grandtotal.toString(),
-                                    style: montserratSemiBold.copyWith(
-                                        color: warningcolor,
-                                        fontSize: width * 0.034),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      grandtotal.toStringAsFixed(2),
+                                      style: montserratSemiBold.copyWith(
+                                          color: warningcolor,
+                                          fontSize: width * 0.034),
+                                      textAlign: TextAlign.right,
+                                    ),
                                   ),
                                 ],
                               ),
