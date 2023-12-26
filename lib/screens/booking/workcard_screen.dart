@@ -1609,51 +1609,121 @@ class WorkcardState extends State<Workcard> {
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 100),
-                            Container(
-                              padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                              child: Divider(
-                                color: black,
-                              ),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "DISCLAIMER",
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.clip,
-                                  style: montserratSemiBold.copyWith(
-                                    fontSize: 12,
-                                    color: black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                                    child: Text(
-                                      "Please note that while the final cost may vary depending on the specifics of the completed work, it will never exceed the amount agreed upon in the initial estimate.",
-                                      textAlign: TextAlign.justify,
-                                      style: montserratMedium.copyWith(
-                                        fontSize: 12,
-                                        color: black,
-                                      ),
+                            const SizedBox(height: 20),
+                            pendingjobs.isEmpty
+                                ? approvedjobs.isEmpty
+                                    ? SizedBox()
+                                    : Container(
+                                        padding: EdgeInsets.only(
+                                            left: 16.0, right: 16.0),
+                                        child: Divider(
+                                          color: black,
+                                        ),
+                                      )
+                                : Container(
+                                    padding: EdgeInsets.only(
+                                        left: 16.0, right: 16.0),
+                                    child: Divider(
+                                      color: black,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
+                            pendingjobs.isEmpty
+                                ? approvedjobs.isEmpty
+                                    ? SizedBox()
+                                    : Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "DISCLAIMER",
+                                            textAlign: TextAlign.start,
+                                            overflow: TextOverflow.clip,
+                                            style: montserratSemiBold.copyWith(
+                                              fontSize: 12,
+                                              color: black,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                : Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "DISCLAIMER",
+                                        textAlign: TextAlign.start,
+                                        overflow: TextOverflow.clip,
+                                        style: montserratSemiBold.copyWith(
+                                          fontSize: 12,
+                                          color: black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                            pendingjobs.isEmpty
+                                ? approvedjobs.isEmpty
+                                    ? SizedBox()
+                                    : const SizedBox(height: 4)
+                                : const SizedBox(height: 4),
+                            pendingjobs.isEmpty
+                                ? approvedjobs.isEmpty
+                                    ? SizedBox()
+                                    : Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  16, 0, 16, 0),
+                                              child: Text(
+                                                "Please note that while the final cost may vary depending on the specifics of the completed work, it will never exceed the amount agreed upon in the initial estimate.",
+                                                textAlign: TextAlign.justify,
+                                                style:
+                                                    montserratMedium.copyWith(
+                                                  fontSize: 12,
+                                                  color: black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                : Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(16, 0, 16, 0),
+                                          child: Text(
+                                            "Please note that while the final cost may vary depending on the specifics of the completed work, it will never exceed the amount agreed upon in the initial estimate.",
+                                            textAlign: TextAlign.justify,
+                                            style: montserratMedium.copyWith(
+                                              fontSize: 12,
+                                              color: black,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                            pendingjobs.isEmpty
+                                ? approvedjobs.isEmpty
+                                    ? SizedBox()
+                                    : SizedBox(
+                                        height: 20,
+                                      )
+                                : SizedBox(
+                                    height: 20,
+                                  ),
                             status['st_code'] == 'CDLC'
                                 ? amounttopay.toString() != "0.0"
                                     ? GestureDetector(
