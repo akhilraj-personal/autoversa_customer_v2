@@ -393,7 +393,7 @@ class AddAddressViaGmapState extends State<AddAddressViaGmap> {
   Widget _getCustomPin() {
     return Center(
       child: Container(
-        width: 65,
+        width: 40,
         child: Image.asset(
           ImageConst.maplocation,
         ),
