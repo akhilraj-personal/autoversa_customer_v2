@@ -186,3 +186,12 @@ class ServiceHistoryModel {
     this.flag,
   });
 }
+
+class MediaItem {
+  final String url;
+  final String type;
+  final String additionaltype;
+
+  MediaItem(
+      {required this.url, required this.type, required this.additionaltype});
+}

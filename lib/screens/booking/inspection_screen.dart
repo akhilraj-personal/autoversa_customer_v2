@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart' as lang;
+import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/booking/image_full_screen.dart';
 import 'package:autoversa/screens/booking/image_size_widget.dart';
 import 'package:autoversa/screens/booking/inspection_image_screen.dart';
@@ -48,7 +49,7 @@ class InspectionScreenState extends State<InspectionScreen>
   late Map<String, dynamic> getinspection = {};
   late VideoPlayerController _controller;
   late String vehicle_video;
-  var vehicleimages = [];
+  var vehicleimages = <MediaItem>[];
   var vehiclevideourl;
   var carcontentlist = [];
 
@@ -90,7 +91,11 @@ class InspectionScreenState extends State<InspectionScreen>
             if (filetype['bka_type'] == "png" ||
                 filetype['bka_type'] == "6" ||
                 filetype['bka_type'] == "5") {
-              vehicleimages.add(filetype['bka_url']);
+              vehicleimages.add(MediaItem(
+                url: filetype['bka_url'],
+                type: filetype['bka_image_type'],
+                additionaltype: filetype['bka_type'],
+              ));
               setState(() {});
             } else if (filetype['bka_type'] == "mp4") {
               vehiclevideourl = dotenv.env['aws_url']! + filetype['bka_url'];
@@ -509,16 +514,150 @@ class InspectionScreenState extends State<InspectionScreen>
                                     return InkWell(
                                       highlightColor: Colors.transparent,
                                       splashColor: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(4),
                                       onTap: () {
                                         ImageFullscreen(
-                                                img: dotenv.env['aws_url']! +
-                                                    vehicleimages[index])
-                                            .launch(context);
-                                      },
-                                      child: ImageWidget(
                                           img: dotenv.env['aws_url']! +
-                                              vehicleimages[index]),
+                                              vehicleimages[index].url,
+                                        ).launch(context);
+                                      },
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Stack(
+                                          children: [
+                                            ImageWidget(
+                                              img: dotenv.env['aws_url']! +
+                                                  vehicleimages[index].url,
+                                            ),
+                                            if (vehicleimages[index].type ==
+                                                "5") ...[
+                                              Positioned(
+                                                left: 8.0,
+                                                bottom: 8.0,
+                                                child: Text(
+                                                  "Front View",
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 14.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ] else if (vehicleimages[index]
+                                                    .type ==
+                                                "3") ...[
+                                              Positioned(
+                                                left: 8.0,
+                                                bottom: 8.0,
+                                                child: Text(
+                                                  "Right View",
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 14.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ] else if (vehicleimages[index]
+                                                    .type ==
+                                                "4") ...[
+                                              Positioned(
+                                                left: 8.0,
+                                                bottom: 8.0,
+                                                child: Text(
+                                                  "Back View",
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 14.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ] else if (vehicleimages[index]
+                                                    .type ==
+                                                "2") ...[
+                                              Positioned(
+                                                left: 8.0,
+                                                bottom: 8.0,
+                                                child: Text(
+                                                  "Left View",
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 14.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ] else if (vehicleimages[index]
+                                                    .type ==
+                                                "1") ...[
+                                              Positioned(
+                                                left: 8.0,
+                                                bottom: 8.0,
+                                                child: Text(
+                                                  "Top View",
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 14.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ] else if (vehicleimages[index]
+                                                    .type ==
+                                                "0") ...[
+                                              Positioned(
+                                                left: 8.0,
+                                                bottom: 8.0,
+                                                child: Text(
+                                                  "Additional\nImage",
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 14.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ] else if (vehicleimages[index]
+                                                        .type ==
+                                                    "10" &&
+                                                vehicleimages[index]
+                                                        .additionaltype ==
+                                                    "5") ...[
+                                              Positioned(
+                                                left: 8.0,
+                                                bottom: 8.0,
+                                                child: Text(
+                                                  "Odometer",
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 14.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ] else if (vehicleimages[index]
+                                                        .type ==
+                                                    "10" &&
+                                                vehicleimages[index]
+                                                        .additionaltype ==
+                                                    "6") ...[
+                                              Positioned(
+                                                left: 8.0,
+                                                bottom: 8.0,
+                                                child: Text(
+                                                  "Vin Number",
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 14.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ]
+                                          ],
+                                        ),
+                                      ),
                                     );
                                   },
                                 )
@@ -603,50 +742,50 @@ class InspectionScreenState extends State<InspectionScreen>
                                                                 MainAxisSize
                                                                     .min,
                                                             children: [
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  IconButton(
-                                                                    icon: Icon(isFullScreen
-                                                                        ? Icons
-                                                                            .fullscreen_exit
-                                                                        : Icons
-                                                                            .fullscreen),
-                                                                    onPressed:
-                                                                        () {
-                                                                      setState(
-                                                                        () {
-                                                                          !isFullScreen
-                                                                              ? SystemChrome.setPreferredOrientations(
-                                                                                  [
-                                                                                    DeviceOrientation.landscapeRight,
-                                                                                    DeviceOrientation.landscapeLeft
-                                                                                  ],
-                                                                                )
-                                                                              : SystemChrome.setPreferredOrientations(
-                                                                                  [
-                                                                                    DeviceOrientation.portraitUp,
-                                                                                    DeviceOrientation.portraitDown
-                                                                                  ],
-                                                                                );
-                                                                          isFullScreen =
-                                                                              !isFullScreen;
-                                                                        },
-                                                                      );
-                                                                    },
-                                                                  ).visible(
-                                                                      !isBuffering)
-                                                                ],
-                                                              ),
-                                                              VideoProgressIndicator(
-                                                                  _controller,
-                                                                  allowScrubbing:
-                                                                      true),
+                                                              // Row(
+                                                              //   mainAxisAlignment:
+                                                              //       MainAxisAlignment
+                                                              //           .spaceBetween,
+                                                              //   crossAxisAlignment:
+                                                              //       CrossAxisAlignment
+                                                              //           .center,
+                                                              //   children: [
+                                                              //     IconButton(
+                                                              //       icon: Icon(isFullScreen
+                                                              //           ? Icons
+                                                              //               .fullscreen_exit
+                                                              //           : Icons
+                                                              //               .fullscreen),
+                                                              //       onPressed:
+                                                              //           () {
+                                                              //         setState(
+                                                              //           () {
+                                                              //             !isFullScreen
+                                                              //                 ? SystemChrome.setPreferredOrientations(
+                                                              //                     [
+                                                              //                       DeviceOrientation.landscapeRight,
+                                                              //                       DeviceOrientation.landscapeLeft
+                                                              //                     ],
+                                                              //                   )
+                                                              //                 : SystemChrome.setPreferredOrientations(
+                                                              //                     [
+                                                              //                       DeviceOrientation.portraitUp,
+                                                              //                       DeviceOrientation.portraitDown
+                                                              //                     ],
+                                                              //                   );
+                                                              //             isFullScreen =
+                                                              //                 !isFullScreen;
+                                                              //           },
+                                                              //         );
+                                                              //       },
+                                                              //     ).visible(
+                                                              //         !isBuffering)
+                                                              //   ],
+                                                              // ),
+                                                              // VideoProgressIndicator(
+                                                              //     _controller,
+                                                              //     allowScrubbing:
+                                                              //         true),
                                                             ],
                                                           ),
                                                           Center(

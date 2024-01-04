@@ -850,6 +850,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
         "customerstatus": pastcustomerstatus,
         "unhold": true,
         "user_type": "0",
+        "booking_version": booking['bk_version']
       };
       await booking_unhold(req).then((value) {
         if (value['ret_data'] == "success") {

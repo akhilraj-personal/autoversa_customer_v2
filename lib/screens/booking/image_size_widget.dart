@@ -32,11 +32,6 @@ class ImageWidget extends StatelessWidget {
                   width: width,
                   fit: BoxFit.fill,
                 ),
-                // Image.asset(
-                //   img!,
-                //   height: 160,
-                //   fit: BoxFit.cover,
-                // ),
               ],
             ),
           ),

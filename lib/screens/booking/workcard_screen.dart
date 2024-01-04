@@ -150,26 +150,21 @@ class WorkcardState extends State<Workcard> {
                     },
                   for (var joblist in value['jobs'])
                     {
-                      if (joblist['bkj_status'] == "2" ||
-                          joblist['bkj_status'] == "4")
+                      if (joblist['bkj_status'] == "2")
                         {
-                          approvedjobs.add(joblist),
-                          totalamount = totalamount +
-                              double.parse(joblist['bkj_cust_cost'].toString()),
+                          setState(() {
+                            approvedjobs.add(joblist);
+                            totalamount = totalamount +
+                                double.parse(
+                                    joblist['bkj_cust_cost'].toString());
+                            var pendingjobid = {"jobid": joblist['bkj_id']};
+                            temppendingjobs.add(pendingjobid);
+                          })
                         }
                       else if (joblist['bkj_status'] == "1")
                         {
                           pendingjobs.add(joblist),
                         },
-                      if (joblist['bkj_status'] == "2" &&
-                          joblist['bkj_payment_status'] == "0")
-                        {
-                          setState(() {
-                            var pendingjobid = {"jobid": joblist['bkj_id']};
-                            temppendingjobs.add(pendingjobid);
-                            setState(() {});
-                          })
-                        }
                     },
                   if (value['booking']['bk_consumepaymentflag'] != "0")
                     {
@@ -918,8 +913,8 @@ class WorkcardState extends State<Workcard> {
                                                                   ),
                                                                 )),
                                                             approvedjobs[i][
-                                                                        'bkj_payment_status'] !=
-                                                                    "0"
+                                                                        'bkj_status'] ==
+                                                                    "4"
                                                                 ? SizedBox(
                                                                     width: 50,
                                                                   )
@@ -927,23 +922,23 @@ class WorkcardState extends State<Workcard> {
                                                                     width: 20,
                                                                   ),
                                                             approvedjobs[i][
-                                                                        'bkj_payment_status'] ==
-                                                                    "0"
-                                                                ? Text(
+                                                                        'bkj_status'] ==
+                                                                    "4"
+                                                                ? Text("PAID",
+                                                                    style: montserratMedium.copyWith(
+                                                                        fontSize:
+                                                                            width *
+                                                                                0.034,
+                                                                        color: Colors
+                                                                            .green))
+                                                                : Text(
                                                                     "PENDING",
                                                                     style: montserratMedium.copyWith(
                                                                         fontSize:
                                                                             width *
                                                                                 0.034,
                                                                         color: Colors
-                                                                            .red))
-                                                                : Text("PAID",
-                                                                    style: montserratMedium.copyWith(
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034,
-                                                                        color: Colors
-                                                                            .green)),
+                                                                            .red)),
                                                           ],
                                                         )
                                                       : Row(
@@ -969,8 +964,8 @@ class WorkcardState extends State<Workcard> {
                                                                           warningcolor)),
                                                             ),
                                                             approvedjobs[i][
-                                                                        'bkj_payment_status'] !=
-                                                                    "0"
+                                                                        'bkj_status'] ==
+                                                                    "4"
                                                                 ? SizedBox(
                                                                     width: 50,
                                                                   )
@@ -978,23 +973,23 @@ class WorkcardState extends State<Workcard> {
                                                                     width: 20,
                                                                   ),
                                                             approvedjobs[i][
-                                                                        'bkj_payment_status'] ==
-                                                                    "0"
-                                                                ? Text(
+                                                                        'bkj_status'] ==
+                                                                    "4"
+                                                                ? Text("PAID",
+                                                                    style: montserratMedium.copyWith(
+                                                                        fontSize:
+                                                                            width *
+                                                                                0.034,
+                                                                        color: Colors
+                                                                            .green))
+                                                                : Text(
                                                                     "PENDING",
                                                                     style: montserratMedium.copyWith(
                                                                         fontSize:
                                                                             width *
                                                                                 0.034,
                                                                         color: Colors
-                                                                            .red))
-                                                                : Text("PAID",
-                                                                    style: montserratMedium.copyWith(
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034,
-                                                                        color: Colors
-                                                                            .green)),
+                                                                            .red)),
                                                           ],
                                                         )
                                                 ],
@@ -1291,21 +1286,29 @@ class WorkcardState extends State<Workcard> {
                                                                   });
                                                                   Map req = {
                                                                     'selectedjobs':
-                                                                        selectedJobs
+                                                                        selectedJobs,
+                                                                    'bookid': widget
+                                                                        .booking_id,
+                                                                    "booking_version":
+                                                                        booking[
+                                                                            'bk_version']
                                                                   };
-                                                                  await multipleJobUpdate(
-                                                                          req)
-                                                                      .then(
-                                                                          (value) {
-                                                                    if (value[
-                                                                            'ret_data'] ==
-                                                                        "success") {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
-                                                                    }
-                                                                  });
+                                                                  print(
+                                                                      "req====>");
+                                                                  print(req);
+                                                                  // await multipleJobUpdate(
+                                                                  //         req)
+                                                                  //     .then(
+                                                                  //         (value) {
+                                                                  //   if (value[
+                                                                  //           'ret_data'] ==
+                                                                  //       "success") {
+                                                                  //     Navigator.push(
+                                                                  //         context,
+                                                                  //         MaterialPageRoute(
+                                                                  //             builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
+                                                                  //   }
+                                                                  // });
                                                                 },
                                                               );
                                                             },
@@ -1366,21 +1369,29 @@ class WorkcardState extends State<Workcard> {
 
                                                                   Map req = {
                                                                     'selectedjobs':
-                                                                        selectedJobs
+                                                                        selectedJobs,
+                                                                    'bookid': widget
+                                                                        .booking_id,
+                                                                    "booking_version":
+                                                                        booking[
+                                                                            'bk_version']
                                                                   };
-                                                                  await multipleJobUpdate(
-                                                                          req)
-                                                                      .then(
-                                                                          (value) {
-                                                                    if (value[
-                                                                            'ret_data'] ==
-                                                                        "success") {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
-                                                                    }
-                                                                  });
+                                                                  print(
+                                                                      "req====>");
+                                                                  print(req);
+                                                                  // await multipleJobUpdate(
+                                                                  //         req)
+                                                                  //     .then(
+                                                                  //         (value) {
+                                                                  //   if (value[
+                                                                  //           'ret_data'] ==
+                                                                  //       "success") {
+                                                                  //     Navigator.push(
+                                                                  //         context,
+                                                                  //         MaterialPageRoute(
+                                                                  //             builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
+                                                                  //   }
+                                                                  // });
                                                                 },
                                                               );
                                                             },
