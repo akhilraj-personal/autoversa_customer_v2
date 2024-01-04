@@ -107,9 +107,9 @@ class PackageDetailsState extends State<PackageDetails> {
           "model": widget.custvehlist[currentveh]['cv_model'],
           "variant": widget.custvehlist[currentveh]['cv_variant'],
           "year": widget.custvehlist[currentveh]['cv_year'],
+          "vingroup": widget.custvehlist[currentveh]['cv_vingroup'],
           // "vehicle_id": widget.custvehlist[currentveh]['cv_id'],
         };
-        print(req);
         totalCost = 0.0;
         totalCostwithoutVat = 0.0;
         operationlabourrate = 0.0;
@@ -343,6 +343,7 @@ class PackageDetailsState extends State<PackageDetails> {
       "pack_extra_details": pack_extra_details
     };
     prefs.setString("booking_data", json.encode(packdata));
+
     setState(() => isbooked = false);
     Navigator.push(
         context,

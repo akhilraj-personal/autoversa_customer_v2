@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
 
-class Tryout extends StatefulWidget {
-  const Tryout({super.key});
+class TryOut extends StatefulWidget {
+  const TryOut({super.key});
 
   @override
-  State<Tryout> createState() => _TryoutState();
+  State<TryOut> createState() => _TryOutState();
 }
 
-class _TryoutState extends State<Tryout> {
+class _TryOutState extends State<TryOut> {
   @override
   Widget build(BuildContext context) {
     return Container();

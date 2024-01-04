@@ -35,6 +35,7 @@ class BookingStatusFlow extends StatefulWidget {
 
 class BookingStatusFlowState extends State<BookingStatusFlow> {
   late Map<String, dynamic> booking = {};
+  late Map<String, dynamic> pickuptype = {};
   late Map<String, dynamic> booking_package = {};
   late Map<String, dynamic> pickup_timeslot = {};
   late Map<String, dynamic> drop_timeslot = {};
@@ -879,6 +880,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
       if (value['ret_data'] == "success") {
         setState(() {
           booking = value['booking'];
+          pickuptype = value['booking']['pickup_type'];
           booking_package = value['booking']['booking_package'];
           pickup_timeslot = value['booking']['pickup_timeslot'];
           vehicle = value['booking']['vehicle'];
@@ -1827,6 +1829,17 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                           ),
                                         ),
                                       ],
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      pickuptype['pk_name'] != null
+                                          ? pickuptype['pk_name']
+                                          : "",
+                                      style: montserratMedium.copyWith(
+                                          color: black,
+                                          fontSize: width * 0.034),
                                     ),
                                     SizedBox(
                                       height: 4,

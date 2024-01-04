@@ -221,7 +221,9 @@ class HomeScreenState extends State<HomeScreen> {
       }
     } else {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => VehicleAddPage(click: "fromhome")));
+          context,
+          MaterialPageRoute(
+              builder: (context) => VehicleAddPage(click: "fromhome")));
     }
   }
 
@@ -829,9 +831,10 @@ class HomeScreenState extends State<HomeScreen> {
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          VehicleAddPage(click: "fromhome")));
+                                                                  builder: (context) =>
+                                                                      VehicleAddPage(
+                                                                          click:
+                                                                              "fromhome")));
                                                         });
                                                       },
                                                       child: Row(
@@ -931,7 +934,9 @@ class HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) =>
-                                                                VehicleAddPage(click: "fromhome")));
+                                                                VehicleAddPage(
+                                                                    click:
+                                                                        "fromhome")));
                                                   });
                                                 },
                                                 child: Container(

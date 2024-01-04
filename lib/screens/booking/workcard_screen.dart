@@ -440,9 +440,7 @@ class WorkcardState extends State<Workcard> {
                                     left: 12.0,
                                   ),
                                   child: Text(
-                                    widget.click_id == 1
-                                        ? ""
-                                        : "Pending Payment",
+                                    widget.click_id == 1 ? "" : "",
                                     style: montserratSemiBold.copyWith(
                                         fontSize: 16,
                                         color: widget.click_id == 1
