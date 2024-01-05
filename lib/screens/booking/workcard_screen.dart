@@ -1293,22 +1293,34 @@ class WorkcardState extends State<Workcard> {
                                                                         booking[
                                                                             'bk_version']
                                                                   };
-                                                                  print(
-                                                                      "req====>");
-                                                                  print(req);
-                                                                  // await multipleJobUpdate(
-                                                                  //         req)
-                                                                  //     .then(
-                                                                  //         (value) {
-                                                                  //   if (value[
-                                                                  //           'ret_data'] ==
-                                                                  //       "success") {
-                                                                  //     Navigator.push(
-                                                                  //         context,
-                                                                  //         MaterialPageRoute(
-                                                                  //             builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
-                                                                  //   }
-                                                                  // });
+                                                                  await multipleJobUpdate(
+                                                                          req)
+                                                                      .then(
+                                                                          (value) {
+                                                                    if (value[
+                                                                            'ret_data'] ==
+                                                                        "success") {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
+                                                                    } else if (value[
+                                                                            'ret_data'] ==
+                                                                        "changed") {
+                                                                      showDialog(
+                                                                        barrierDismissible:
+                                                                            false,
+                                                                        context:
+                                                                            context,
+                                                                        builder: (BuildContext context) => ShowChangePopUp(
+                                                                            bk_id:
+                                                                                widget.booking_id,
+                                                                            vehname: widget.vehname,
+                                                                            make: widget.vehmake,
+                                                                            clickid: widget.click_id),
+                                                                      );
+                                                                    }
+                                                                  });
                                                                 },
                                                               );
                                                             },
@@ -1376,22 +1388,34 @@ class WorkcardState extends State<Workcard> {
                                                                         booking[
                                                                             'bk_version']
                                                                   };
-                                                                  print(
-                                                                      "req====>");
-                                                                  print(req);
-                                                                  // await multipleJobUpdate(
-                                                                  //         req)
-                                                                  //     .then(
-                                                                  //         (value) {
-                                                                  //   if (value[
-                                                                  //           'ret_data'] ==
-                                                                  //       "success") {
-                                                                  //     Navigator.push(
-                                                                  //         context,
-                                                                  //         MaterialPageRoute(
-                                                                  //             builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
-                                                                  //   }
-                                                                  // });
+                                                                  await multipleJobUpdate(
+                                                                          req)
+                                                                      .then(
+                                                                          (value) {
+                                                                    if (value[
+                                                                            'ret_data'] ==
+                                                                        "success") {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
+                                                                    } else if (value[
+                                                                            'ret_data'] ==
+                                                                        "changed") {
+                                                                      showDialog(
+                                                                        barrierDismissible:
+                                                                            false,
+                                                                        context:
+                                                                            context,
+                                                                        builder: (BuildContext context) => ShowChangePopUp(
+                                                                            bk_id:
+                                                                                widget.booking_id,
+                                                                            vehname: widget.vehname,
+                                                                            make: widget.vehmake,
+                                                                            clickid: widget.click_id),
+                                                                      );
+                                                                    }
+                                                                  });
                                                                 },
                                                               );
                                                             },
@@ -2042,6 +2066,183 @@ class CustomWarning extends StatelessWidget {
               ),
             ),
             16.height,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ShowChangePopUp extends StatelessWidget {
+  final String bk_id;
+  final String vehname;
+  final String make;
+  final int clickid;
+  const ShowChangePopUp(
+      {required this.bk_id,
+      required this.vehname,
+      required this.make,
+      required this.clickid,
+      super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius:
+              BorderRadius.circular(12.0), // Adjust the value for desired curve
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10.0,
+              offset: const Offset(0.0, 10.0),
+            ),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To make the card compact
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          white,
+                          white,
+                          white,
+                          white,
+                        ],
+                      )),
+                ),
+                // Container(height: 130, color: blackColor),
+                Column(
+                  children: [
+                    Image.asset(
+                      ImageConst.warning,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text("Status Changed",
+                        textAlign: TextAlign.center,
+                        style: montserratSemiBold.copyWith(
+                            fontSize: width * 0.034, color: black)),
+                  ],
+                )
+              ],
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Text(
+                    "Please refresh the booking to reflect the changes made to the work card.",
+                    textAlign: TextAlign.center,
+                    style: montserratRegular.copyWith(
+                        fontSize: width * 0.034, color: black))),
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () async {
+                      Navigator.pop(context);
+                    },
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 12, right: 12),
+                          height: height * 0.055,
+                          width: height * 0.25,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            border: Border.all(color: syanColor),
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                white,
+                                white,
+                                white,
+                                white,
+                              ],
+                            ),
+                          ),
+                          child: Text(
+                            "CLOSE",
+                            style:
+                                montserratSemiBold.copyWith(color: syanColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Workcard(
+                                  click_id: clickid,
+                                  booking_id: bk_id,
+                                  vehname: vehname,
+                                  vehmake: make)));
+                    },
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 12, right: 12),
+                          height: height * 0.055,
+                          width: height * 0.25,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            border: Border.all(color: syanColor),
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                lightblueColor,
+                                syanColor,
+                              ],
+                            ),
+                          ),
+                          child: Text(
+                            "REFRESH",
+                            style: montserratSemiBold.copyWith(color: white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 16,
+            ),
           ],
         ),
       ),
