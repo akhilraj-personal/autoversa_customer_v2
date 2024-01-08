@@ -913,8 +913,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
           backstatus = value['booking']['back_status'];
           for (var joblist in value['booking']['jobs']) {
             temppendingjobs = [];
-            if (joblist['bkj_status'] == "2" &&
-                joblist['bkj_payment_status'] == "2") {
+            if (joblist['bkj_status'] != "4") {
               var paymentpendingjobid = {"jobid": joblist['bkj_id']};
               temppendingjobs.add(paymentpendingjobid);
               setState(() {});
