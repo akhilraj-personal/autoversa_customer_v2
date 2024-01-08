@@ -5,6 +5,7 @@ import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart' as lang;
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
+import 'package:autoversa/screens/booking/schedule_drop_screen.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:autoversa/utils/common_utils.dart';
@@ -150,21 +151,25 @@ class WorkcardState extends State<Workcard> {
                     },
                   for (var joblist in value['jobs'])
                     {
-                      if (joblist['bkj_status'] == "2")
+                      if (joblist['bkj_status'] == "2" ||
+                          joblist['bkj_status'] == "4")
                         {
-                          setState(() {
-                            approvedjobs.add(joblist);
-                            totalamount = totalamount +
-                                double.parse(
-                                    joblist['bkj_cust_cost'].toString());
-                            var pendingjobid = {"jobid": joblist['bkj_id']};
-                            temppendingjobs.add(pendingjobid);
-                          })
+                          approvedjobs.add(joblist),
+                          totalamount = totalamount +
+                              double.parse(joblist['bkj_cust_cost'].toString()),
                         }
                       else if (joblist['bkj_status'] == "1")
                         {
                           pendingjobs.add(joblist),
                         },
+                      if (joblist['bkj_status'] == "2")
+                        {
+                          setState(() {
+                            var pendingjobid = {"jobid": joblist['bkj_id']};
+                            temppendingjobs.add(pendingjobid);
+                            setState(() {});
+                          })
+                        }
                     },
                   if (value['booking']['bk_consumepaymentflag'] != "0")
                     {
@@ -793,7 +798,7 @@ class WorkcardState extends State<Workcard> {
                                                         width: 50,
                                                       )
                                                     : SizedBox(
-                                                        width: 8,
+                                                        width: 20,
                                                       ),
                                                 Text(
                                                     packagebooking[
@@ -1942,11 +1947,11 @@ class CustomSuccess extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Workcard(
+                        builder: (context) => ScheduleDropScreen(
                             click_id: click_id,
-                            booking_id: booking_id,
+                            bk_id: booking_id,
                             vehname: vehname,
-                            vehmake: vehmake)));
+                            make: vehmake)));
               },
               child: Container(
                 decoration: BoxDecoration(
