@@ -2134,7 +2134,7 @@ class ShowChangePopUp extends StatelessWidget {
                 Column(
                   children: [
                     Image.asset(
-                      ImageConst.warning,
+                      ImageConst.change_warning,
                       height: 50,
                       fit: BoxFit.cover,
                     ),
