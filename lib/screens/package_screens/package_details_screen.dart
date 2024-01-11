@@ -1141,13 +1141,10 @@ class PackageDetailsState extends State<PackageDetails> {
                                                 Radius.circular(16)),
                                             color: white),
                                         child: TextField(
-                                            keyboardType:
-                                                TextInputType.multiline,
+                                            keyboardType: TextInputType.text,
                                             minLines: 1,
-                                            maxLines: 5,
+                                            maxLines: 6,
                                             maxLength: 230,
-                                            textInputAction:
-                                                TextInputAction.newline,
                                             controller: complaint,
                                             decoration: InputDecoration(
                                                 counterText: "",

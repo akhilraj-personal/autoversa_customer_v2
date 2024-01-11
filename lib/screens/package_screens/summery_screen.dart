@@ -1511,12 +1511,11 @@ class SummeryPageState extends State<SummeryPage> {
                             borderRadius: BorderRadius.all(Radius.circular(16)),
                             color: white),
                         child: TextField(
-                            keyboardType: TextInputType.multiline,
+                            keyboardType: TextInputType.text,
                             minLines: 1,
-                            maxLines: 5,
+                            maxLines: 6,
                             maxLength: 230,
                             controller: additionalcommentsController,
-                            textInputAction: TextInputAction.newline,
                             decoration: InputDecoration(
                                 counterText: "",
                                 hintText: lang.S.of(context).your_message_here,

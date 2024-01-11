@@ -581,9 +581,7 @@ class _AddressAddFinalScreenState extends State<AddressAddFinalScreen> {
                                       address = value;
                                     });
                                   },
-                                  validator: (value) {
-                                    return addressValidation(value, context);
-                                  },
+                                  validator: (value) {},
                                   onFieldSubmitted: (value) {
                                     FocusScope.of(context)
                                         .requestFocus(landmarkFocusNode);

@@ -27,6 +27,7 @@ class ReschedulefromBooking extends StatefulWidget {
 
 class ReschedulefromBookingState extends State<ReschedulefromBooking> {
   late Map<String, dynamic> dropdetails = {};
+  late Map<String, dynamic> booking = {};
   DateTime selectedDate = DateTime.now();
   var selected_timeslot = "";
   late List timeslots = [];
@@ -53,6 +54,7 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
     await getbookingdetails(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() {
+          booking = value['booking'];
           bookeddate = value['booking']['bk_booking_date'];
           dropdetails = value['booking']['drop_address'];
         });
@@ -253,7 +255,8 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
         "bookingdate": selectedDate.toString(),
         "slot": selected_timeid,
         "scheduletype": widget.scheduletype,
-        "prebookingdate": bookeddate
+        "prebookingdate": bookeddate,
+        "booking_version": booking['bk_version']
       };
       print("000===>");
       print(req);
@@ -264,6 +267,12 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
                 bgColor: Colors.black, textColor: white);
             Navigator.pushReplacementNamed(context, Routes.bottombar);
           });
+        } else if (value['ret_data'] == "changed") {
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) => ShowChangePopUp(),
+          );
         } else {
           print("else error ====>");
           print(value['ret_data']);
@@ -773,6 +782,167 @@ class ReschedulefromBookingState extends State<ReschedulefromBooking> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class ShowChangePopUp extends StatelessWidget {
+  const ShowChangePopUp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius:
+              BorderRadius.circular(12.0), // Adjust the value for desired curve
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10.0,
+              offset: const Offset(0.0, 10.0),
+            ),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To make the card compact
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          white,
+                          white,
+                          white,
+                          white,
+                        ],
+                      )),
+                ),
+                // Container(height: 130, color: blackColor),
+                Column(
+                  children: [
+                    Image.asset(
+                      ImageConst.change_warning,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text("Status Changed",
+                        textAlign: TextAlign.center,
+                        style: montserratSemiBold.copyWith(
+                            fontSize: width * 0.034, color: black)),
+                  ],
+                )
+              ],
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Text(
+                    "Please refresh the booking to reflect the changes made to the work card.",
+                    textAlign: TextAlign.center,
+                    style: montserratRegular.copyWith(
+                        fontSize: width * 0.034, color: black))),
+            SizedBox(
+              height: 16,
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () async {
+                      Navigator.pop(context);
+                    },
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 12, right: 12),
+                          height: height * 0.055,
+                          width: height * 0.25,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            border: Border.all(color: syanColor),
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                white,
+                                white,
+                                white,
+                                white,
+                              ],
+                            ),
+                          ),
+                          child: Text(
+                            "CLOSE",
+                            style:
+                                montserratSemiBold.copyWith(color: syanColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () async {
+                      Navigator.pop(context);
+                    },
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 12, right: 12),
+                          height: height * 0.055,
+                          width: height * 0.25,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            border: Border.all(color: syanColor),
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                lightblueColor,
+                                syanColor,
+                              ],
+                            ),
+                          ),
+                          child: Text(
+                            "REFRESH",
+                            style: montserratSemiBold.copyWith(color: white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 16,
+            ),
+          ],
         ),
       ),
     );
