@@ -635,7 +635,7 @@ class WorkcardState extends State<Workcard> {
                                                           color:
                                                               warningcolor))),
                                           24.width,
-                                          Text('Status',
+                                          Text('Payment\nStatus',
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       fontSize: width * 0.032,

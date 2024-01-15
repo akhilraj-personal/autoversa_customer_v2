@@ -1200,7 +1200,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
               splittedreason = reasonhold.split(':');
               reasonforhold = splittedreason[1].split(')')[0];
               var temp = {
-                "status": "Reason: " + reasonforhold,
+                "status": "Booking on hold",
                 "time": DateFormat('dd-MM-yyyy').format(
                         DateTime.tryParse(statuslist["bkt_created_on"])!) +
                     " / " +
@@ -2704,6 +2704,122 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                           child:
                                                                               Text(
                                                                             "INSPECTION\nREPORT",
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            style:
+                                                                                montserratSemiBold.copyWith(color: white, fontSize: width * 0.026),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ))
+                                                            : const SizedBox(
+                                                                height: 0,
+                                                              ),
+                                                        statusflow[index][
+                                                                        'code'] ==
+                                                                    "HOLDC" &&
+                                                                statusflow[index]
+                                                                        [
+                                                                        'unhold_status'] !=
+                                                                    "unhold"
+                                                            ? Expanded(
+                                                                flex: 2,
+                                                                child:
+                                                                    Container(
+                                                                  child:
+                                                                      GestureDetector(
+                                                                    onTap:
+                                                                        () async {
+                                                                      showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (BuildContext
+                                                                                context) {
+                                                                          return AlertDialog(
+                                                                            title:
+                                                                                Text(
+                                                                              "Hold Reason",
+                                                                              style: montserratSemiBold.copyWith(color: black, fontSize: width * 0.04),
+                                                                            ),
+                                                                            content:
+                                                                                Text(
+                                                                              reasonforhold,
+                                                                              style: montserratRegular.copyWith(color: black, fontSize: width * 0.035),
+                                                                            ),
+                                                                            actions: [
+                                                                              GestureDetector(
+                                                                                onTap: () async {
+                                                                                  Navigator.of(context).pop(true);
+                                                                                },
+                                                                                child: Stack(
+                                                                                  alignment: Alignment.bottomRight,
+                                                                                  children: [
+                                                                                    Container(
+                                                                                      height: height * 0.035,
+                                                                                      width: height * 0.075,
+                                                                                      alignment: Alignment.center,
+                                                                                      decoration: BoxDecoration(
+                                                                                        shape: BoxShape.rectangle,
+                                                                                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                                                                                        gradient: LinearGradient(
+                                                                                          begin: Alignment.topLeft,
+                                                                                          end: Alignment.bottomRight,
+                                                                                          colors: [
+                                                                                            syanColor,
+                                                                                            lightblueColor,
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                      child: Text(
+                                                                                        "CLOSE",
+                                                                                        style: montserratSemiBold.copyWith(color: Colors.white),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      );
+                                                                    },
+                                                                    child:
+                                                                        Stack(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .bottomCenter,
+                                                                      children: [
+                                                                        Container(
+                                                                          height:
+                                                                              height * 0.05,
+                                                                          width:
+                                                                              height * 0.2,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            shape:
+                                                                                BoxShape.rectangle,
+                                                                            border:
+                                                                                Border.all(color: white),
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(12)),
+                                                                            gradient:
+                                                                                LinearGradient(
+                                                                              begin: Alignment.topLeft,
+                                                                              end: Alignment.bottomRight,
+                                                                              colors: [
+                                                                                lightorangeColor,
+                                                                                holdorangeColor,
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          child:
+                                                                              Text(
+                                                                            "REASON",
                                                                             textAlign:
                                                                                 TextAlign.center,
                                                                             style:
