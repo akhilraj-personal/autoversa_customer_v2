@@ -345,6 +345,7 @@ class WorkcardState extends State<Workcard> {
   }
 
   Future refresh() async {
+    getBookingDetailsID();
     getCardJobDetails();
     setState(() {});
   }
@@ -688,7 +689,7 @@ class WorkcardState extends State<Workcard> {
                                                       fontSize: width * 0.034),
                                             ),
                                           ),
-                                          50.width,
+                                          60.width,
                                           Text("PAID",
                                               style: montserratMedium.copyWith(
                                                   fontSize: width * 0.034,
@@ -738,7 +739,7 @@ class WorkcardState extends State<Workcard> {
                                                         fontSize: width * 0.034,
                                                         color: warningcolor)),
                                           ),
-                                          50.width,
+                                          60.width,
                                           Text("PAID",
                                               style: montserratMedium.copyWith(
                                                   fontSize: width * 0.034,
@@ -795,7 +796,7 @@ class WorkcardState extends State<Workcard> {
                                                             'bk_consumepaymentflag'] !=
                                                         "1"
                                                     ? SizedBox(
-                                                        width: 50,
+                                                        width: 60,
                                                       )
                                                     : SizedBox(
                                                         width: 20,
@@ -972,7 +973,7 @@ class WorkcardState extends State<Workcard> {
                                                                         'bkj_status'] ==
                                                                     "4"
                                                                 ? SizedBox(
-                                                                    width: 50,
+                                                                    width: 60,
                                                                   )
                                                                 : SizedBox(
                                                                     width: 20,
