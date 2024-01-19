@@ -12,8 +12,10 @@ import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Workcard extends StatefulWidget {
   final int click_id;
@@ -83,6 +85,7 @@ class WorkcardState extends State<Workcard> {
 
   getBookingDetailsID() async {
     Map req = {"book_id": base64.encode(utf8.encode(widget.booking_id))};
+    print(req);
     await getbookingdetails(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() {
@@ -256,10 +259,8 @@ class WorkcardState extends State<Workcard> {
     );
     await Stripe.instance.initPaymentSheet(
       paymentSheetParameters: SetupPaymentSheetParameters(
-        // Main params
         paymentIntentClientSecret: payment['client_secret'],
         merchantDisplayName: 'AutoVersa',
-        // Customer params
         customerId: payment['customer'],
         customerEphemeralKeySecret: payment['ephemeralKey']['secret'],
         style: ThemeMode.light,
@@ -427,8 +428,8 @@ class WorkcardState extends State<Workcard> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // SizedBox(height: 10),
                     Container(
+                      color: white,
                       width: MediaQuery.of(context).size.width,
                       child: SingleChildScrollView(
                         child: Column(
@@ -452,7 +453,7 @@ class WorkcardState extends State<Workcard> {
                               ],
                             ),
                             Container(
-                              margin: EdgeInsets.all(8.0),
+                              margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(16.0),
@@ -553,28 +554,7 @@ class WorkcardState extends State<Workcard> {
                                           ],
                                         ),
                                         SizedBox(
-                                          height: 4,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              service_advisor['us_phone'] !=
-                                                      null
-                                                  ? "Advisor Contact" +
-                                                      ": " +
-                                                      service_advisor[
-                                                          'us_phone']
-                                                  : "",
-                                              style: montserratMedium.copyWith(
-                                                  color: black,
-                                                  fontSize: width * 0.034),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 4,
+                                          height: 8,
                                         ),
                                       ],
                                     ),
@@ -583,7 +563,8 @@ class WorkcardState extends State<Workcard> {
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.all(12.0),
+                              padding:
+                                  EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 12.0),
                               decoration: boxDecorationWithRoundedCorners(
                                 backgroundColor: white,
                                 borderRadius: radius(8),
@@ -591,16 +572,92 @@ class WorkcardState extends State<Workcard> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          "Advisor Name",
+                                          textAlign: TextAlign.start,
+                                          style: montserratMedium.copyWith(
+                                            fontSize: width * 0.035,
+                                            color: black,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          service_advisor['us_firstname'] !=
+                                                  null
+                                              ? service_advisor['us_phone'] !=
+                                                      null
+                                                  ? ": " +
+                                                      service_advisor[
+                                                          'us_firstname'] +
+                                                      " (" +
+                                                      service_advisor[
+                                                          'us_country_code'] +
+                                                      service_advisor[
+                                                          'us_phone'] +
+                                                      " )"
+                                                  : ""
+                                              : "",
+                                          textAlign: TextAlign.start,
+                                          style: montserratMedium.copyWith(
+                                            fontSize: width * 0.035,
+                                            color: black,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: RadiantGradientMask(
+                                          child: IconButton(
+                                              icon: Icon(Icons.call,
+                                                  color: white, size: 25),
+                                              onPressed: () async {
+                                                PermissionStatus phoneStatus =
+                                                    await Permission.phone
+                                                        .request();
+                                                if (phoneStatus ==
+                                                    PermissionStatus.denied) {
+                                                  showCustomToast(context,
+                                                      "This Permission is recommended for calling.",
+                                                      bgColor: errorcolor,
+                                                      textColor: white);
+                                                }
+                                                if (phoneStatus ==
+                                                    PermissionStatus
+                                                        .permanentlyDenied) {
+                                                  openAppSettings();
+                                                }
+                                                if (phoneStatus ==
+                                                    PermissionStatus.granted) {
+                                                  bool? res = await FlutterPhoneDirectCaller
+                                                      .callNumber(service_advisor[
+                                                              'us_country_code'] +
+                                                          service_advisor[
+                                                              'us_phone']);
+                                                }
+                                              }),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
                                   Text(
                                     "Confirmed Jobs",
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.clip,
                                     style: montserratSemiBold.copyWith(
-                                      fontSize: 16,
+                                      fontSize: width * 0.04,
                                       color: syanColor,
                                     ),
                                   ),
-                                  16.height,
+                                  4.height,
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -689,7 +746,7 @@ class WorkcardState extends State<Workcard> {
                                                       fontSize: width * 0.034),
                                             ),
                                           ),
-                                          60.width,
+                                          50.width,
                                           Text("PAID",
                                               style: montserratMedium.copyWith(
                                                   fontSize: width * 0.034,
@@ -739,7 +796,7 @@ class WorkcardState extends State<Workcard> {
                                                         fontSize: width * 0.034,
                                                         color: warningcolor)),
                                           ),
-                                          60.width,
+                                          50.width,
                                           Text("PAID",
                                               style: montserratMedium.copyWith(
                                                   fontSize: width * 0.034,
@@ -796,7 +853,7 @@ class WorkcardState extends State<Workcard> {
                                                             'bk_consumepaymentflag'] !=
                                                         "1"
                                                     ? SizedBox(
-                                                        width: 60,
+                                                        width: 50,
                                                       )
                                                     : SizedBox(
                                                         width: 20,
@@ -973,7 +1030,7 @@ class WorkcardState extends State<Workcard> {
                                                                         'bkj_status'] ==
                                                                     "4"
                                                                 ? SizedBox(
-                                                                    width: 60,
+                                                                    width: 50,
                                                                   )
                                                                 : SizedBox(
                                                                     width: 20,
@@ -1006,10 +1063,239 @@ class WorkcardState extends State<Workcard> {
                                 ],
                               ),
                             ),
+                            Container(
+                              padding: EdgeInsets.only(left: 16.0, right: 16.0),
+                              child: Divider(
+                                color: black,
+                              ),
+                            ),
+                            coupondiscount != 0 || normaldiscount != 0
+                                ? Container(
+                                    padding: EdgeInsets.only(right: 12.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 12,
+                                          child: Text(
+                                            "Total Cost: ",
+                                            textAlign: TextAlign.right,
+                                            style: montserratSemiBold.copyWith(
+                                              color: black,
+                                              fontSize: width * 0.034,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            withoutcoupontotal
+                                                .toStringAsFixed(2),
+                                            textAlign: TextAlign.right,
+                                            style: montserratSemiBold.copyWith(
+                                                color: warningcolor,
+                                                fontSize: width * 0.034),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            coupondiscount != 0
+                                ? Container(
+                                    padding: EdgeInsets.only(right: 12.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 12,
+                                          child: Text(
+                                            "Coupon Discounts: ",
+                                            style: montserratSemiBold.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            coupondiscount.toStringAsFixed(2),
+                                            style: montserratSemiBold.copyWith(
+                                                color: warningcolor,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            normaldiscount != 0
+                                ? Container(
+                                    padding: EdgeInsets.only(right: 12.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 12,
+                                          child: Text(
+                                            "Discounts: ",
+                                            style: montserratSemiBold.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            normaldiscount.toStringAsFixed(2),
+                                            style: montserratSemiBold.copyWith(
+                                                color: warningcolor,
+                                                fontSize: width * 0.034),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(right: 12.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 12,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "Grand Total",
+                                          style: montserratSemiBold.copyWith(
+                                            color: black,
+                                            fontSize: width * 0.034,
+                                          ),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                        Text(
+                                          "(VAT inclusive): ",
+                                          style: montserratSemiBold.copyWith(
+                                            color: greyColor,
+                                            fontSize: width * 0.028,
+                                          ),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      grandtotal.toStringAsFixed(2),
+                                      style: montserratSemiBold.copyWith(
+                                        color: warningcolor,
+                                        fontSize: width * 0.034,
+                                      ),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(right: 12.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 12,
+                                    child: Text(
+                                      "Paid Amount: ",
+                                      style: montserratSemiBold.copyWith(
+                                          color: black,
+                                          fontSize: width * 0.034),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      paidamount.toStringAsFixed(2),
+                                      style: montserratSemiBold.copyWith(
+                                          color: warningcolor,
+                                          fontSize: width * 0.034),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(right: 12.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 12,
+                                    child: Text(
+                                      "Balance Amount: ",
+                                      style: montserratSemiBold.copyWith(
+                                          color: black,
+                                          fontSize: width * 0.034),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      amounttopay.toStringAsFixed(2),
+                                      style: montserratSemiBold.copyWith(
+                                          color: warningcolor,
+                                          fontSize: width * 0.034),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(left: 16.0, right: 16.0),
+                              child: Divider(
+                                color: black,
+                              ),
+                            ),
                             pendingjobs.isEmpty
                                 ? Container()
                                 : Container(
-                                    padding: EdgeInsets.all(16.0),
+                                    padding: EdgeInsets.fromLTRB(
+                                        12.0, 8.0, 12.0, 12.0),
                                     decoration: boxDecorationWithRoundedCorners(
                                       backgroundColor: white,
                                       borderRadius: radius(8),
@@ -1023,11 +1309,10 @@ class WorkcardState extends State<Workcard> {
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.clip,
                                           style: montserratSemiBold.copyWith(
-                                            fontSize: width * 0.034,
+                                            fontSize: width * 0.04,
                                             color: warningcolor,
                                           ),
                                         ),
-                                        4.height,
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -1101,7 +1386,8 @@ class WorkcardState extends State<Workcard> {
                                                                 fontSize:
                                                                     width *
                                                                         0.032,
-                                                                color: black))),
+                                                                color:
+                                                                    warningcolor))),
                                               ],
                                             ),
                                           ],
@@ -1442,213 +1728,6 @@ class WorkcardState extends State<Workcard> {
                                       ],
                                     ),
                                   ),
-                            Container(
-                              padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                              child: Divider(
-                                color: black,
-                              ),
-                            ),
-                            coupondiscount != 0 || normaldiscount != 0
-                                ? Container(
-                                    padding: EdgeInsets.only(right: 12.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: <Widget>[
-                                        Expanded(
-                                          flex: 12,
-                                          child: Text(
-                                            "Total Cost: ",
-                                            textAlign: TextAlign.right,
-                                            style: montserratSemiBold.copyWith(
-                                              color: black,
-                                              fontSize: width * 0.034,
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
-                                          child: Text(
-                                            withoutcoupontotal
-                                                .toStringAsFixed(2),
-                                            textAlign: TextAlign.right,
-                                            style: montserratSemiBold.copyWith(
-                                                color: warningcolor,
-                                                fontSize: width * 0.034),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            coupondiscount != 0
-                                ? Container(
-                                    padding: EdgeInsets.only(right: 12.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: <Widget>[
-                                        Expanded(
-                                          flex: 12,
-                                          child: Text(
-                                            "Coupon Discounts: ",
-                                            style: montserratSemiBold.copyWith(
-                                                color: black,
-                                                fontSize: width * 0.034),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
-                                          child: Text(
-                                            coupondiscount.toStringAsFixed(2),
-                                            style: montserratSemiBold.copyWith(
-                                                color: warningcolor,
-                                                fontSize: width * 0.034),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            normaldiscount != 0
-                                ? Container(
-                                    padding: EdgeInsets.only(right: 12.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: <Widget>[
-                                        Expanded(
-                                          flex: 12,
-                                          child: Text(
-                                            "Discounts: ",
-                                            style: montserratSemiBold.copyWith(
-                                                color: black,
-                                                fontSize: width * 0.034),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
-                                          child: Text(
-                                            normaldiscount.toStringAsFixed(2),
-                                            style: montserratSemiBold.copyWith(
-                                                color: warningcolor,
-                                                fontSize: width * 0.034),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 12,
-                                    child: Text(
-                                      "Grand Total\n(VAT inclusive): ",
-                                      style: montserratSemiBold.copyWith(
-                                          color: black,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      grandtotal.toStringAsFixed(2),
-                                      style: montserratSemiBold.copyWith(
-                                          color: warningcolor,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 12,
-                                    child: Text(
-                                      "Paid Amount: ",
-                                      style: montserratSemiBold.copyWith(
-                                          color: black,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      paidamount.toStringAsFixed(2),
-                                      style: montserratSemiBold.copyWith(
-                                          color: warningcolor,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 12,
-                                    child: Text(
-                                      "Balance Amount: ",
-                                      style: montserratSemiBold.copyWith(
-                                          color: black,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      amounttopay.toStringAsFixed(2),
-                                      style: montserratSemiBold.copyWith(
-                                          color: warningcolor,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 20),
                             pendingjobs.isEmpty
                                 ? approvedjobs.isEmpty
                                     ? SizedBox()
@@ -1891,7 +1970,7 @@ class CustomSuccess extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
@@ -2005,7 +2084,7 @@ class CustomWarning extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
@@ -2099,8 +2178,7 @@ class ShowChangePopUp extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
-          borderRadius:
-              BorderRadius.circular(12.0), // Adjust the value for desired curve
+          borderRadius: BorderRadius.circular(12.0),
           boxShadow: [
             BoxShadow(
               color: Colors.black26,
@@ -2111,7 +2189,7 @@ class ShowChangePopUp extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
@@ -2131,7 +2209,6 @@ class ShowChangePopUp extends StatelessWidget {
                         ],
                       )),
                 ),
-                // Container(height: 130, color: blackColor),
                 Column(
                   children: [
                     Image.asset(

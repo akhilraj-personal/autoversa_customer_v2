@@ -151,6 +151,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
       "vgroup_id": widget.vehiclegroup,
       "totalamount": netpayable.toString(),
     };
+    print("suiiiiiiiiiiiiii=>");
+    print(req);
     couponList = [];
     await getCouponsListForCustomer(req).then((value) {
       if (value['ret_data'] == "success") {
@@ -265,7 +267,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
       setState(() {});
     } else if (coupontype == "0") {
       couponapplied = false;
-      netpayable = totalamount + (double.parse(coupondiscount));
+      netpayable = totalamount;
       discount = (double.parse(totalamount.round().toString()) -
               double.parse(netpayable.toString()))
           .round();
@@ -340,13 +342,10 @@ class ResummeryScreenState extends State<ResummeryScreen> {
     );
     await Stripe.instance.initPaymentSheet(
       paymentSheetParameters: SetupPaymentSheetParameters(
-        // Main params
         paymentIntentClientSecret: payment['client_secret'],
         merchantDisplayName: 'AutoVersa',
-        // Customer params
         customerId: payment['customer'],
         customerEphemeralKeySecret: payment['ephemeralKey']['secret'],
-        // Extra params
         style: ThemeMode.light,
         appearance: const PaymentSheetAppearance(
           colors: PaymentSheetAppearanceColors(
@@ -1324,29 +1323,30 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                                         MaterialPageRoute(
                                                           builder: (context) {
                                                             return CouponListScreen(
-                                                              clickid:
-                                                                  "awaiting",
-                                                              packageid: widget
-                                                                  .packid
-                                                                  .toString(),
-                                                              vehiclegroupid: widget
-                                                                  .vehiclegroup
-                                                                  .toString(),
-                                                              totalamount:
-                                                                  totalamount
-                                                                      .toString(),
-                                                              package_id: {},
-                                                              custvehlist: widget
-                                                                  .custvehlist,
-                                                              selectedveh: widget
-                                                                  .selectedveh,
-                                                              currency: widget
-                                                                  .currency,
-                                                              bk_data: {},
-                                                              packid: pack_id,
-                                                              vehiclegroup:
-                                                                  vehiclgroup,
-                                                            );
+                                                                clickid:
+                                                                    "awaiting",
+                                                                packageid: widget
+                                                                    .packid
+                                                                    .toString(),
+                                                                vehiclegroupid: widget
+                                                                    .vehiclegroup
+                                                                    .toString(),
+                                                                totalamount:
+                                                                    netpayable
+                                                                        .toString(),
+                                                                package_id: {},
+                                                                custvehlist: widget
+                                                                    .custvehlist,
+                                                                selectedveh: widget
+                                                                    .selectedveh,
+                                                                currency: widget
+                                                                    .currency,
+                                                                bk_data: widget
+                                                                    .bk_data,
+                                                                vehiclegroup: widget
+                                                                    .vehiclegroup,
+                                                                packid: widget
+                                                                    .packid);
                                                           },
                                                         ),
                                                       );
@@ -1623,7 +1623,7 @@ class CustomWarning extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
@@ -1673,7 +1673,6 @@ class CustomWarning extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
-                // Navigator.pushReplacementNamed(context, Routes.bottombar);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -1726,7 +1725,7 @@ class CustomSuccess extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
@@ -1748,7 +1747,6 @@ class CustomSuccess extends StatelessWidget {
                         ],
                       )),
                 ),
-                // Container(height: 130, color: black),
                 Column(
                   children: [
                     Image.asset(
@@ -1782,7 +1780,6 @@ class CustomSuccess extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                // Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, Routes.bottombar);
               },
               child: Container(
@@ -1842,7 +1839,7 @@ class ReScheduleTimeAndDate extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
@@ -1861,7 +1858,6 @@ class ReScheduleTimeAndDate extends StatelessWidget {
                     ],
                   )),
                 ),
-                // Container(height: 130, color: blackColor),
                 Column(
                   children: [
                     Image.asset(

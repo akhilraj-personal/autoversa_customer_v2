@@ -142,8 +142,8 @@ class SummeryPageState extends State<SummeryPage> {
     }).catchError((e) {
       print("11111111");
       print(e.toString());
-      showCustomToast(context, lang.S.of(context).toast_application_error,
-          bgColor: errorcolor, textColor: Colors.white);
+      // showCustomToast(context, lang.S.of(context).toast_application_error,
+      //     bgColor: errorcolor, textColor: Colors.white);
     });
   }
 
@@ -228,7 +228,7 @@ class SummeryPageState extends State<SummeryPage> {
     if (coupontype == "1") {
       couponapplied = false;
       netpayable = totalamount;
-      discount = (double.parse(totalamount.round().toString()) +
+      discount = (double.parse(totalamount.round().toString()) -
               double.parse(netpayable.toString()))
           .round();
       showCustomToast(context, "Coupon removed",
@@ -236,7 +236,7 @@ class SummeryPageState extends State<SummeryPage> {
       setState(() {});
     } else if (coupontype == "0") {
       couponapplied = false;
-      netpayable = totalamount + (double.parse(coupondiscount));
+      netpayable = totalamount;
       discount = (double.parse(totalamount.round().toString()) -
               double.parse(netpayable.toString()))
           .round();
@@ -362,7 +362,6 @@ class SummeryPageState extends State<SummeryPage> {
         data: formData,
         options: Options(
           followRedirects: false,
-          // will not throw errors
           validateStatus: (status) => true,
         ),
       );
@@ -410,13 +409,10 @@ class SummeryPageState extends State<SummeryPage> {
     );
     await Stripe.instance.initPaymentSheet(
       paymentSheetParameters: SetupPaymentSheetParameters(
-        // Main params
         paymentIntentClientSecret: payment['client_secret'],
         merchantDisplayName: 'AutoVersa',
-        // Customer params
         customerId: payment['customer'],
         customerEphemeralKeySecret: payment['ephemeralKey']['secret'],
-        // Extra params
         style: ThemeMode.light,
         appearance: const PaymentSheetAppearance(
           colors: PaymentSheetAppearanceColors(
@@ -533,15 +529,12 @@ class SummeryPageState extends State<SummeryPage> {
                       ],
                     ),
                   ),
-                  child:
-                      ////--------------- ClipPath for curv----------
-                      ClipPath(
+                  child: ClipPath(
                     clipper: SinCosineWaveClipper(
                       verticalPosition: VerticalPosition.top,
                     ),
                     child: Container(
                       height: height * 0.1,
-                      // padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
                         begin: Alignment.topLeft,
@@ -845,17 +838,6 @@ class SummeryPageState extends State<SummeryPage> {
                               ),
                             ],
                           ))
-                          // Flexible(
-                          //   child: Container(
-                          //     child: Text(
-                          //       packdata['pick_up_location']['cad_address'] ??
-                          //           "",
-                          //       overflow: TextOverflow.clip,
-                          //       style: montserratMedium.copyWith(
-                          //           color: black, fontSize: width * 0.04),
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
@@ -938,18 +920,6 @@ class SummeryPageState extends State<SummeryPage> {
                               ),
                             ],
                           ))
-                          // Flexible(
-                          //   child: Container(
-                          //     child: Text(
-                          //       packdata['drop_location']['cad_address'] ?? "",
-                          //       overflow: TextOverflow.clip,
-                          //       style: montserratMedium.copyWith(
-                          //         color: black,
-                          //         fontSize: width * 0.04,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
@@ -1874,7 +1844,7 @@ class CustomWarning extends StatelessWidget {
         ),
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Stack(
               alignment: Alignment.center,
@@ -2004,7 +1974,6 @@ class CustomSuccess extends StatelessWidget {
                         ],
                       )),
                 ),
-                // Container(height: 130, color: black),
                 Column(
                   children: [
                     Image.asset(
@@ -2038,7 +2007,6 @@ class CustomSuccess extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                // Navigator.of(context).pop();
                 Navigator.pushReplacementNamed(context, Routes.bottombar);
               },
               child: Container(

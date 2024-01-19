@@ -179,15 +179,12 @@ class CouponListScreenState extends State<CouponListScreen> {
                       ],
                     ),
                   ),
-                  child:
-                      ////--------------- ClipPath for curv----------
-                      ClipPath(
+                  child: ClipPath(
                     clipper: SinCosineWaveClipper(
                       verticalPosition: VerticalPosition.top,
                     ),
                     child: Container(
                       height: height * 0.1,
-                      // padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
@@ -387,7 +384,6 @@ class CouponListScreenState extends State<CouponListScreen> {
                             ],
                           ),
                         );
-                        // Customize the Coupon widget as needed
                       },
                     ),
                   ],
