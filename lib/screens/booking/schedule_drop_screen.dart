@@ -388,6 +388,7 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
                   : tempCostVat
             };
             pickup_options.add(temp);
+            setState(() {});
           }
         }
       });

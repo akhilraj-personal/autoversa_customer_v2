@@ -99,6 +99,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
 
   getBookingDetailsID() async {
     Map req = {"book_id": base64.encode(utf8.encode(widget.bk_data['bk_id']))};
+    print(req);
     await getbookingdetails(req).then((value) {
       if (value['ret_data'] == "success") {
         pack_id = value['booking']['booking_package']['bkp_pkg_id'];
@@ -785,7 +786,10 @@ class RescheduleScreenState extends State<RescheduleScreen> {
                                                           "current_bstatus":
                                                               "Awaiting payment",
                                                           "current_cstatus":
-                                                              "Awaiting payment"
+                                                              "Awaiting payment",
+                                                          "booking_version":
+                                                              bookingdetails[
+                                                                  'bk_version']
                                                         };
                                                         await booking_cancel(
                                                                 req)

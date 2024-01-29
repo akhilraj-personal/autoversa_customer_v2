@@ -173,15 +173,12 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
                       ],
                     ),
                   ),
-                  child:
-                      ////--------------- ClipPath for curv----------
-                      ClipPath(
+                  child: ClipPath(
                     clipper: SinCosineWaveClipper(
                       verticalPosition: VerticalPosition.top,
                     ),
                     child: Container(
                       height: height * 0.1,
-                      // padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
                         begin: Alignment.topLeft,
@@ -373,97 +370,97 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
                         ),
                       ],
                     ),
-                    Container(
-                      margin: EdgeInsets.only(right: 22.0, left: 22.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Odometer Reading",
-                            style: montserratSemiBold.copyWith(
-                                color: black, fontSize: width * 0.034),
-                          ),
-                        ],
-                      ),
-                    ),
-                    8.height,
-                    Container(
-                      margin: EdgeInsets.only(right: 22.0, left: 22.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Select Odometer year/range & will recommend services",
-                            style: montserratMedium.copyWith(
-                                color: black.withOpacity(0.5),
-                                fontSize: width * 0.03),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SliderTheme(
-                      data: SliderThemeData(
-                        activeTickMarkColor: Colors.transparent,
-                        inactiveTickMarkColor: Colors.transparent,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 16),
-                          buildSliderTopLabel(),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(right: 22.0, left: 22.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Recommended Services",
-                            style: montserratSemiBold.copyWith(
-                                color: black, fontSize: width * 0.034),
-                          ),
-                        ],
-                      ),
-                    ),
-                    8.height,
-                    Container(
-                      margin: EdgeInsets.only(right: 22.0, left: 22.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: Container(
-                              child: Text(
-                                "● With the first visit at approximately 10,000 miles or 1 years whichever comes first and then approximately every 20,000 miles or 2 years we suggest Minor Service",
-                                style: montserratMedium.copyWith(
-                                    color: black, fontSize: width * 0.03),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    4.height,
-                    Container(
-                      margin: EdgeInsets.only(right: 22.0, left: 22.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: Container(
-                              child: Text(
-                                "● With the first visit at approximately 20,000 miles or 1 year after the previous service - and then approximately every 20,000 miles or 2 years after that we suggest Major Service",
-                                style: montserratMedium.copyWith(
-                                    color: black, fontSize: width * 0.03),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    8.height,
+                    // Container(
+                    //   margin: EdgeInsets.only(right: 22.0, left: 22.0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       Text(
+                    //         "Odometer Reading",
+                    //         style: montserratSemiBold.copyWith(
+                    //             color: black, fontSize: width * 0.034),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // 8.height,
+                    // Container(
+                    //   margin: EdgeInsets.only(right: 22.0, left: 22.0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       Text(
+                    //         "Select Odometer year/range & will recommend services",
+                    //         style: montserratMedium.copyWith(
+                    //             color: black.withOpacity(0.5),
+                    //             fontSize: width * 0.03),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // SliderTheme(
+                    //   data: SliderThemeData(
+                    //     activeTickMarkColor: Colors.transparent,
+                    //     inactiveTickMarkColor: Colors.transparent,
+                    //   ),
+                    //   child: Column(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: [
+                    //       const SizedBox(height: 16),
+                    //       buildSliderTopLabel(),
+                    //     ],
+                    //   ),
+                    // ),
+                    // Container(
+                    //   margin: EdgeInsets.only(right: 22.0, left: 22.0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       Text(
+                    //         "Recommended Services",
+                    //         style: montserratSemiBold.copyWith(
+                    //             color: black, fontSize: width * 0.034),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // 8.height,
+                    // Container(
+                    //   margin: EdgeInsets.only(right: 22.0, left: 22.0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       Flexible(
+                    //         child: Container(
+                    //           child: Text(
+                    //             "● With the first visit at approximately 10,000 miles or 1 years whichever comes first and then approximately every 20,000 miles or 2 years we suggest Minor Service",
+                    //             style: montserratMedium.copyWith(
+                    //                 color: black, fontSize: width * 0.03),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // 4.height,
+                    // Container(
+                    //   margin: EdgeInsets.only(right: 22.0, left: 22.0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       Flexible(
+                    //         child: Container(
+                    //           child: Text(
+                    //             "● With the first visit at approximately 20,000 miles or 1 year after the previous service - and then approximately every 20,000 miles or 2 years after that we suggest Major Service",
+                    //             style: montserratMedium.copyWith(
+                    //                 color: black, fontSize: width * 0.03),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // 8.height,
                     Container(
                       margin: EdgeInsets.only(right: 22.0, left: 22.0),
                       child: Row(
@@ -492,8 +489,6 @@ class HomeVehicleListClickState extends State<HomeVehicleListClick> {
                                   shrinkWrap: true,
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
-                                          // maxCrossAxisExtent: 200,
-                                          // childAspectRatio: 3 / 2,
                                           crossAxisCount: 2,
                                           crossAxisSpacing: 25,
                                           mainAxisSpacing: 17),

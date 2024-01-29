@@ -46,6 +46,7 @@ class ImageConst {
   static const drive_car = baseIconURl + 'drive_car.png';
   static const change_warning = baseIconURl + 'change_warning.png';
   static const insurance = baseIconURl + 'insurance.png';
+  static const date_and_time = baseIconURl + 'date_and_time_icon.png';
   static const music = baseIconURl + 'music.png';
   static const comments_icon = baseIconURl + 'comments_icon.png';
   static const location_icon = baseIconURl + 'location_icon.png';

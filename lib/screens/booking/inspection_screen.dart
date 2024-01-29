@@ -83,6 +83,7 @@ class InspectionScreenState extends State<InspectionScreen>
 
   _getInspectionDetailsList() async {
     Map req = {"bookid": widget.bookid, "type": "1"};
+    print(req);
     await getInspectionDetails(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() {
@@ -701,149 +702,111 @@ class InspectionScreenState extends State<InspectionScreen>
                           vehiclevideourl != null
                               ? Padding(
                                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  child: AspectRatio(
-                                    aspectRatio: isloaded
-                                        ? _controller.value.aspectRatio
-                                        : 12 / 6,
-                                    child: Stack(
-                                      alignment: Alignment.bottomCenter,
-                                      children: [
-                                        VideoPlayer(_controller),
-                                        Stack(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                setState(
-                                                  () {
-                                                    showOverLay = !showOverLay;
-                                                    print("showoverlay:" +
-                                                        showOverLay.toString());
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                            AnimatedSwitcher(
-                                              duration:
-                                                  Duration(milliseconds: 50),
-                                              reverseDuration:
-                                                  Duration(milliseconds: 200),
-                                              child: showOverLay
-                                                  ? Container(
-                                                      margin:
-                                                          EdgeInsets.fromLTRB(
-                                                              0, 0, 0, 0),
-                                                      color: Colors.black38,
-                                                      child: Stack(
-                                                        alignment: Alignment
-                                                            .bottomLeft,
-                                                        children: [
-                                                          Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              // Row(
-                                                              //   mainAxisAlignment:
-                                                              //       MainAxisAlignment
-                                                              //           .spaceBetween,
-                                                              //   crossAxisAlignment:
-                                                              //       CrossAxisAlignment
-                                                              //           .center,
-                                                              //   children: [
-                                                              //     IconButton(
-                                                              //       icon: Icon(isFullScreen
-                                                              //           ? Icons
-                                                              //               .fullscreen_exit
-                                                              //           : Icons
-                                                              //               .fullscreen),
-                                                              //       onPressed:
-                                                              //           () {
-                                                              //         setState(
-                                                              //           () {
-                                                              //             !isFullScreen
-                                                              //                 ? SystemChrome.setPreferredOrientations(
-                                                              //                     [
-                                                              //                       DeviceOrientation.landscapeRight,
-                                                              //                       DeviceOrientation.landscapeLeft
-                                                              //                     ],
-                                                              //                   )
-                                                              //                 : SystemChrome.setPreferredOrientations(
-                                                              //                     [
-                                                              //                       DeviceOrientation.portraitUp,
-                                                              //                       DeviceOrientation.portraitDown
-                                                              //                     ],
-                                                              //                   );
-                                                              //             isFullScreen =
-                                                              //                 !isFullScreen;
-                                                              //           },
-                                                              //         );
-                                                              //       },
-                                                              //     ).visible(
-                                                              //         !isBuffering)
-                                                              //   ],
-                                                              // ),
-                                                              // VideoProgressIndicator(
-                                                              //     _controller,
-                                                              //     allowScrubbing:
-                                                              //         true),
-                                                            ],
-                                                          ),
-                                                          Center(
-                                                            child: IconButton(
-                                                              icon: Icon(
-                                                                _controller
-                                                                        .value
-                                                                        .isPlaying
-                                                                    ? Icons
-                                                                        .pause
-                                                                    : Icons
-                                                                        .play_arrow,
-                                                                color: Colors
-                                                                    .white,
-                                                                size: 56.0,
-                                                              ),
-                                                              onPressed: () {
-                                                                setState(
-                                                                  () {
-                                                                    _controller
-                                                                            .value
-                                                                            .isPlaying
-                                                                        ? _controller
-                                                                            .pause()
-                                                                        : _controller
-                                                                            .play();
-                                                                    showOverLay = _controller
-                                                                            .value
-                                                                            .isPlaying
-                                                                        ? false
-                                                                        : true;
-                                                                  },
-                                                                );
-                                                              },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: AspectRatio(
+                                      aspectRatio: isloaded
+                                          ? _controller.value.aspectRatio
+                                          : 12 / 6,
+                                      child: Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                          VideoPlayer(_controller),
+                                          Stack(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(
+                                                    () {
+                                                      showOverLay =
+                                                          !showOverLay;
+                                                      print("showoverlay:" +
+                                                          showOverLay
+                                                              .toString());
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                              AnimatedSwitcher(
+                                                duration:
+                                                    Duration(milliseconds: 50),
+                                                reverseDuration:
+                                                    Duration(milliseconds: 200),
+                                                child: showOverLay
+                                                    ? Container(
+                                                        margin:
+                                                            EdgeInsets.fromLTRB(
+                                                                0, 0, 0, 0),
+                                                        color: Colors.black38,
+                                                        child: Stack(
+                                                          alignment: Alignment
+                                                              .bottomLeft,
+                                                          children: [
+                                                            Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                // Additional overlay elements if needed
+                                                              ],
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ).onTap(
-                                                      () {
-                                                        setState(
-                                                          () {
-                                                            showOverLay =
-                                                                !showOverLay;
-                                                            print("showoverlay:" +
-                                                                showOverLay
-                                                                    .toString());
-                                                          },
-                                                        );
-                                                      },
-                                                    )
-                                                  : SizedBox.shrink(),
-                                            ),
-                                          ],
-                                        ),
-                                        Center(child: loadingWidgetMaker())
-                                            .visible(isBuffering)
-                                      ],
+                                                            Center(
+                                                              child: IconButton(
+                                                                icon: Icon(
+                                                                  _controller
+                                                                          .value
+                                                                          .isPlaying
+                                                                      ? Icons
+                                                                          .pause
+                                                                      : Icons
+                                                                          .play_arrow,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  size: 56.0,
+                                                                ),
+                                                                onPressed: () {
+                                                                  setState(
+                                                                    () {
+                                                                      _controller
+                                                                              .value
+                                                                              .isPlaying
+                                                                          ? _controller
+                                                                              .pause()
+                                                                          : _controller
+                                                                              .play();
+                                                                      showOverLay = _controller
+                                                                              .value
+                                                                              .isPlaying
+                                                                          ? false
+                                                                          : true;
+                                                                    },
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ).onTap(
+                                                        () {
+                                                          setState(
+                                                            () {
+                                                              showOverLay =
+                                                                  !showOverLay;
+                                                              print("showoverlay:" +
+                                                                  showOverLay
+                                                                      .toString());
+                                                            },
+                                                          );
+                                                        },
+                                                      )
+                                                    : SizedBox.shrink(),
+                                              ),
+                                            ],
+                                          ),
+                                          Center(child: loadingWidgetMaker())
+                                              .visible(isBuffering),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 )
@@ -945,40 +908,6 @@ class InspectionScreenState extends State<InspectionScreen>
                                   ],
                                 ),
                               ),
-                              // Expanded(
-                              //   flex: 1,
-                              //   child: Row(
-                              //     children: <Widget>[
-                              //       Theme(
-                              //         data: Theme.of(context).copyWith(
-                              //             unselectedWidgetColor:
-                              //                 appStore.textPrimaryColor),
-                              //         child: Radio(
-                              // fillColor: MaterialStateColor.resolveWith(
-                              //         (states) => syanColor),
-                              //           value: '2',
-                              //           groupValue:
-                              //               getinspection['bki_reg_card_flag'],
-                              //           onChanged: (value) {
-                              //             onChanged:
-                              //             (value) =>
-                              //                 getinspection['bki_reg_card_flag']
-                              //                     ? null
-                              //                     : value = "None";
-                              //           },
-                              //         ),
-                              //       ),
-                              //       Text(
-                              //         "None",
-                              //         style: TextStyle(
-                              //           fontSize: 11,
-                              //           color:
-                              //               appStore.isDarkModeOn ? white : black,
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
                             ],
                           ),
                           2.height,
@@ -1017,35 +946,6 @@ class InspectionScreenState extends State<InspectionScreen>
                               ],
                             ),
                           ),
-                          // Row(
-                          //   children: <Widget>[
-                          //     Expanded(
-                          //       flex: 1,
-                          //       child: Text(
-                          //         "Registration Validity Details: ",
-                          //         textAlign: TextAlign.start,
-                          //         style: TextStyle(
-                          //           fontSize: width * 0.034,
-                          //           color: appStore.isDarkModeOn ? white : black,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     Expanded(
-                          //       flex: 1,
-                          //       child: Text(
-                          //         getinspection['cv_registrationvalidity'] != null
-                          //             ? ": " +
-                          //                 getinspection['cv_registrationvalidity']
-                          //             : "",
-                          //         textAlign: TextAlign.start,
-                          //         style: TextStyle(
-                          //           fontSize: width * 0.034,
-                          //           color: appStore.isDarkModeOn ? white : black,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
                           8.height,
                           Padding(
                             padding: EdgeInsets.symmetric(
@@ -1124,7 +1024,7 @@ class InspectionScreenState extends State<InspectionScreen>
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisSize: MainAxisSize.max,
                               children: [
-                                Text("Comments Recorded",
+                                Text("Comments Recorded in Inspection",
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.clip,
                                     style: montserratSemiBold.copyWith(
@@ -1136,20 +1036,29 @@ class InspectionScreenState extends State<InspectionScreen>
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text(
-                                    getinspection['bki_comments'] != null
-                                        ? getinspection['bki_comments']
-                                        : "No Comments Recorded",
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.clip,
-                                    style: montserratMedium.copyWith(
-                                        fontSize: width * 0.034)),
-                              ],
+                            child: Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Flexible(
+                                    child: Container(
+                                      child: Text(
+                                          getinspection['bki_comments']
+                                                      ?.isEmpty ??
+                                                  true
+                                              ? 'No Comments Recorded'
+                                              : getinspection['bki_comments'],
+                                          textAlign: TextAlign.start,
+                                          overflow: TextOverflow.clip,
+                                          style: montserratMedium.copyWith(
+                                              fontSize: width * 0.034)),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           16.height,

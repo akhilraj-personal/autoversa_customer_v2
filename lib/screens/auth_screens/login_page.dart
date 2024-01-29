@@ -373,27 +373,27 @@ class _LoginPageState extends State<LoginPage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            InkWell(
-                                              onTap: () {
-                                                showCustomToast(
-                                                    context, "Coming Soon",
-                                                    bgColor: warningcolor,
-                                                    textColor: whiteColor);
-                                              },
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                padding: EdgeInsets.only(
-                                                  right: height * 0.045 / 2,
-                                                  left: height * 0.045 / 2,
-                                                ),
-                                                child: Image.asset(
-                                                  ImageConst.fb_icon,
-                                                  fit: BoxFit.contain,
-                                                  height: height * 0.065,
-                                                  width: height * 0.065,
-                                                ),
-                                              ),
-                                            ),
+                                            // InkWell(
+                                            //   onTap: () {
+                                            //     showCustomToast(
+                                            //         context, "Coming Soon",
+                                            //         bgColor: warningcolor,
+                                            //         textColor: whiteColor);
+                                            //   },
+                                            //   child: Container(
+                                            //     alignment: Alignment.center,
+                                            //     padding: EdgeInsets.only(
+                                            //       right: height * 0.045 / 2,
+                                            //       left: height * 0.045 / 2,
+                                            //     ),
+                                            //     child: Image.asset(
+                                            //       ImageConst.fb_icon,
+                                            //       fit: BoxFit.contain,
+                                            //       height: height * 0.065,
+                                            //       width: height * 0.065,
+                                            //     ),
+                                            //   ),
+                                            // ),
                                             InkWell(
                                               onTap: () {
                                                 final provider = Provider.of<

@@ -97,20 +97,23 @@ class ImageFullscreenState extends State<ImageFullscreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.white.withOpacity(0.3)),
-                child: Column(
-                  children: [
-                    CachedNetworkImage(
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      imageUrl: widget.img!,
-                      height: 450.0,
-                      width: MediaQuery.of(context).size.width,
-                      fit: BoxFit.fill,
-                    ),
-                  ],
+              InteractiveViewer(
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration:
+                      BoxDecoration(color: Colors.white.withOpacity(0.3)),
+                  child: Column(
+                    children: [
+                      CachedNetworkImage(
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        imageUrl: widget.img!,
+                        height: 450.0,
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.fill,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

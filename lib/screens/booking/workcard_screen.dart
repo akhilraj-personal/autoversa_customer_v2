@@ -1285,12 +1285,15 @@ class WorkcardState extends State<Workcard> {
                                 ],
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                              child: Divider(
-                                color: black,
-                              ),
-                            ),
+                            pendingjobs.isEmpty
+                                ? Container()
+                                : Container(
+                                    padding: EdgeInsets.only(
+                                        left: 16.0, right: 16.0),
+                                    child: Divider(
+                                      color: black,
+                                    ),
+                                  ),
                             pendingjobs.isEmpty
                                 ? Container()
                                 : Container(
@@ -2092,13 +2095,19 @@ class CustomWarning extends StatelessWidget {
                 Container(
                   height: 130,
                   decoration: BoxDecoration(
-                    color: warningcolor,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        topRight: Radius.circular(12),
-                        bottomLeft: Radius.circular(0),
-                        bottomRight: Radius.circular(0)),
-                  ),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          lightorangeColor,
+                          holdorangeColor,
+                        ],
+                      )),
                 ),
                 Column(
                   children: [

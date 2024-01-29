@@ -153,6 +153,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             : tempCostVat
       };
       pickup_options.add(temp);
+      print("pickup===================>");
+      print(pickup_options);
+      print("pickup===================>");
     }
     isserviceble = serviceAvailability;
     setState(() {});
