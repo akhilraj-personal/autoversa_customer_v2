@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
+import 'package:autoversa/screens/booking/audio_player.dart';
 import 'package:autoversa/services/post_auth_services.dart';
 import 'package:autoversa/utils/color_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
-import 'package:autoversa/screens/package_screens/sound_player_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -27,8 +27,6 @@ class SummeryinBookingState extends State<SummeryinBooking> {
   late Map<String, dynamic> pickup_type = {};
   var audiofile;
   var packdataaudio;
-  final player = SoundPlayer();
-  bool isPlaying = false;
   double total_amount = 0.0;
 
   @override
@@ -94,9 +92,7 @@ class SummeryinBookingState extends State<SummeryinBooking> {
     return time;
   }
 
-  Future<void> init() async {
-    player.init();
-  }
+  Future<void> init() async {}
 
   @override
   void setState(fn) {
@@ -106,16 +102,10 @@ class SummeryinBookingState extends State<SummeryinBooking> {
   @override
   void dispose() {
     super.dispose();
-    player.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // bool isPlaying = player.isPlaying;
-    // final playrecordicon = isPlaying
-    //     ? Icons.stop_circle_outlined
-    //     : Icons.play_circle_outline_sharp;
-    // final playrecordtext = isPlaying ? "Stop Playing" : "Play Recording";
     return AnnotatedRegion(
         value: SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.light,
@@ -634,108 +624,7 @@ class SummeryinBookingState extends State<SummeryinBooking> {
                         ),
                       ),
                       packdataaudio != null
-                          ? Padding(
-                              padding: EdgeInsets.fromLTRB(8, 8, 20, 0),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 4,
-                                    child: Container(
-                                      margin: const EdgeInsets.fromLTRB(
-                                          14.0, 0, 0, 0),
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.white.withOpacity(0.2),
-                                            blurRadius: 0.1,
-                                            spreadRadius: 0,
-                                          ),
-                                        ],
-                                        border: Border.all(
-                                            color: greyColor.withOpacity(0.5)),
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      padding: const EdgeInsets.all(8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Row(
-                                            children: <Widget>[
-                                              Padding(
-                                                  padding: EdgeInsets.all(4)),
-                                              Container(
-                                                alignment: Alignment.center,
-                                                padding: EdgeInsets.all(8),
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  gradient: LinearGradient(
-                                                    begin: Alignment.topRight,
-                                                    end: Alignment.bottomRight,
-                                                    colors: [
-                                                      lightblueColor,
-                                                      syanColor,
-                                                    ],
-                                                  ),
-                                                ),
-                                                child: Icon(
-                                                    Icons
-                                                        .record_voice_over_outlined,
-                                                    color: Colors.white,
-                                                    size: 20),
-                                              ),
-                                              SizedBox(
-                                                width: 16,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Text(
-                                                      isPlaying
-                                                          ? "Stop Playing"
-                                                          : "Play Recording",
-                                                      style: montserratRegular
-                                                          .copyWith(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: width *
-                                                                  0.034)),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                          CircleAvatar(
-                                            radius: 20,
-                                            backgroundColor: Colors.white,
-                                            child: IconButton(
-                                              icon: Icon(
-                                                  isPlaying
-                                                      ? Icons
-                                                          .stop_circle_outlined
-                                                      : Icons
-                                                          .play_circle_outline_sharp,
-                                                  color: Colors.black),
-                                              onPressed: () async {
-                                                await player.togglePlaying(
-                                                    whenFinished: () =>
-                                                        setState(() {}));
-                                                setState(() {
-                                                  isPlaying = !isPlaying;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
+                          ? AudioPlayerUI(audio: packdataaudio)
                           : Padding(
                               padding: EdgeInsets.fromLTRB(30, 8, 20, 0),
                               child: Row(

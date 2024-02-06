@@ -289,6 +289,93 @@ class ResummeryScreenState extends State<ResummeryScreen> {
     super.dispose();
   }
 
+  PaymentLater() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      Map<String, dynamic> booking = {
+        "bookid": bookingdetails['bk_id'],
+        "custId": prefs.getString('cust_id'),
+        "vehId": packdata['vehicle_id'],
+        "bookingdate": packdata['selected_date'],
+        "expenses": [],
+        "slot": packdata['selected_timeid'],
+        "pickupaddress": packdata['pick_up_location_id'],
+        "dropaddress": packdata['drop_location_id'],
+        "pickup_vat": packdata['pickup_vat'],
+        "pickuptype": packdata['pick_type_id'],
+        "pickupcost": (double.parse(packdata['pick_up_price']) -
+                double.parse(packdata['pickup_vat']))
+            .toStringAsFixed(2),
+        "pack_vat": packdata['pack_vat'],
+        'complaint': additionalcommentsController.text.toString(),
+        "sourcetype": "MOB",
+        "advance": "0",
+        "coupon_id": coupon_id != 0 ? coupon_id : null,
+        "discount": discount != null ? discount : "0",
+        "total_amount": netpayable.round(),
+        "gs_ispayment": packdata['payment_flag']
+      };
+      await createRescheduleBooking(booking).then((value) {
+        if (value['ret_data'] == "success") {
+          createPaymentLater();
+          trnxId = value['payment_details']['id'];
+        }
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  createPaymentLater() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      Map<String, dynamic> booking = {
+        'custId': prefs.getString('cust_id'),
+        'book_id': bookingdetails['bk_id'],
+        'tot_amount': netpayable.round(),
+        'trxn_id': trnxId,
+        'complaint': additionalcommentsController.text.toString(),
+        'slot': packdata['selected_timeid'],
+        'bookingdate': packdata['selected_date'],
+        'audiofile': audio != null ? audio['bka_url'] : "",
+        "gs_ispayment": packdata['payment_flag']
+      };
+      await confirmbookingpayment(booking).then((value) {
+        if (value['ret_data'] == "success") {
+          setState(() {
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context) => PayLaterSuccess(),
+            );
+          });
+        } else {
+          setState(() => isproceeding = false);
+          showCustomToast(context, value['ret_data'],
+              bgColor: errorcolor, textColor: white);
+        }
+      });
+    } on Exception catch (e) {
+      if (e is StripeException) {
+        setState(() => isproceeding = false);
+        setState(() {
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) => CustomWarning(),
+          );
+        });
+      } else {
+        setState(() => isproceeding = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Unforeseen error: ${e}'),
+          ),
+        );
+      }
+    }
+  }
+
   createBooking() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -389,7 +476,8 @@ class ResummeryScreenState extends State<ResummeryScreen> {
         'complaint': additionalcommentsController.text.toString(),
         'slot': packdata['selected_timeid'],
         'bookingdate': packdata['selected_date'],
-        'audiofile': audio != null ? audio['bka_url'] : ""
+        'audiofile': audio != null ? audio['bka_url'] : "",
+        "gs_ispayment": packdata['payment_flag']
       };
       await confirmbookingpayment(booking).then((value) {
         if (value['ret_data'] == "success") {
@@ -525,7 +613,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Padding(
                                   padding: EdgeInsets.only(top: 16, left: 8)),
@@ -632,7 +720,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                           overflow: TextOverflow.ellipsis,
                                           style: montserratMedium.copyWith(
                                               color: black,
-                                              fontSize: width * 0.034)),
+                                              fontSize: width * 0.04)),
                                       Text(
                                         packdata['package_cost'] != null
                                             ? packdata['package_cost'] != 0
@@ -650,7 +738,7 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                                         packdata['pick_type_name'] ?? "",
                                         style: montserratMedium.copyWith(
                                             color: black,
-                                            fontSize: width * 0.034),
+                                            fontSize: width * 0.04),
                                       ),
                                       Text(
                                         packdata['pick_up_price'] != null
@@ -1528,7 +1616,9 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                         if (isproceeding) return;
                         setState(() => isproceeding = true);
                         await Future.delayed(Duration(milliseconds: 1000));
-                        createBooking();
+                        packdata['payment_flag'] == "1"
+                            ? createBooking()
+                            : PaymentLater();
                       },
                       child: Stack(
                         alignment: Alignment.bottomCenter,
@@ -1566,7 +1656,9 @@ class ResummeryScreenState extends State<ResummeryScreen> {
                             ),
                             child: !isproceeding
                                 ? Text(
-                                    "PROCEED TO PAY",
+                                    packdata['payment_flag'] == "1"
+                                        ? "PROCEED TO PAY"
+                                        : "CONFIRM BOOKING",
                                     style: montserratSemiBold.copyWith(
                                         color: Colors.white),
                                   )
@@ -1684,6 +1776,114 @@ class CustomWarning extends StatelessWidget {
                       colors: [
                         lightorangeColor,
                         holdorangeColor,
+                      ],
+                    )),
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Text('OK',
+                    style: montserratSemiBold.copyWith(color: white)),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PayLaterSuccess extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: new BoxDecoration(
+          color: white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12)),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0)),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          lightblueColor,
+                          syanColor,
+                        ],
+                      )),
+                ),
+                Column(
+                  children: [
+                    Image.asset(
+                      ImageConst.success,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text("Heads up! Your booking is almost locked in",
+                        textAlign: TextAlign.center,
+                        style: montserratSemiBold.copyWith(
+                            fontSize: width * 0.034, color: white)),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Text(
+                    "Just a reminder that payment for this service will be handled after work completed and you are agreeing to pay the amount during invoicing.",
+                    textAlign: TextAlign.justify,
+                    style: montserratRegular.copyWith(
+                        fontSize: width * 0.034, color: black))),
+            SizedBox(
+              height: 16,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushReplacementNamed(context, Routes.bottombar);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(14)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        lightblueColor,
+                        syanColor,
                       ],
                     )),
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),

@@ -85,6 +85,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
   var buffertime = "0";
   double roundedTotalCost = 0.0;
   late int roundedCostValue = 0;
+  var payment_flag;
 
   @override
   void initState() {
@@ -288,6 +289,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
       });
       await getPickupOptions().then((value) {
         gs_vat = int.parse(value['settings']['gs_vat']);
+        payment_flag = value['settings']['gs_ispayment'];
         gs_isvat = int.parse(value['settings']['gs_isvat']);
         freeservicedistance =
             int.parse(value['settings']['gs_freeservicearea']);
@@ -1025,6 +1027,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
         showCustomToast(context, "Choose a time slot",
             bgColor: errorcolor, textColor: white);
       } else {
+        packdata['payment_flag'] = payment_flag;
         packdata['package_cost'] = roundedCostValue;
         packdata['pack_vat'] = booking_package['bkp_vat'];
         packdata['pickup_vat'] = bookingdetails['bk_pickup_vat'];
@@ -1078,6 +1081,7 @@ class RescheduleScreenState extends State<RescheduleScreen> {
         showCustomToast(context, "Choose a time slot",
             bgColor: errorcolor, textColor: white);
       } else {
+        packdata['payment_flag'] = payment_flag;
         packdata['package_cost'] = roundedCostValue;
         packdata['pick_up_location'] = SelectAddressList[selected_address];
         packdata['pick_up_location_id'] = ptemp;

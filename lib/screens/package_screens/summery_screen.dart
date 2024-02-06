@@ -261,6 +261,189 @@ class SummeryPageState extends State<SummeryPage> {
     player.dispose();
   }
 
+  PaymentLater() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      var audio;
+      if (prefs.getString('comp_audio') != null) {
+        audio = await MultipartFile.fromFile(prefs.getString('comp_audio')!,
+            filename: 'audio_test.aac');
+      } else {
+        audio = "";
+      }
+      var formData = FormData.fromMap({
+        'bookingattachment': audio,
+        "custId": prefs.getString('cust_id'),
+        "cust_name": prefs.getString('name'),
+        "vehId": packdata['vehicle_id'],
+        "brand": packdata['brand'],
+        "model": packdata['model'],
+        "variant": packdata['variant'],
+        "bkurl": packdata['audio_location'],
+        "pickupaddress": packdata['pick_up_location_id'],
+        "dropaddress": packdata['drop_location_id'],
+        "bookingdate": packdata['selected_date'],
+        "operationlabourrate": packdata['operationlabourrate'],
+        "sub_packages": packdata['sub_packages'],
+        "services": packdata['services'],
+        "expenses": [],
+        "packid": packdata['package_id'],
+        "packtype": packdata['packtype'],
+        "packprice": packdata['packprice'],
+        "pack_vat": packdata['pack_vat'].toStringAsFixed(2),
+        "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
+        "gs_vat": packdata['gs_vat'].toStringAsFixed(2),
+        "veh_groupid": packdata['veh_groupid'],
+        "vgm_labour_rate": packdata['vgm_labour_rate'],
+        "total_amount": widget.netpayableamount != null && couponapplied == true
+            ? widget.netpayableamount.round()
+            : netpayable.round(),
+        "advance": "0",
+        "discount": discount != null ? discount : "0",
+        "bk_branchid": 1,
+        'complaint': additionalcommentsController.text.toString(),
+        "slot": packdata['selected_timeid'],
+        "pickuptype": packdata['pick_type_id'],
+        "sourcetype": "MOB",
+        "pack_extra_details": packdata['pack_extra_details'],
+        "bk_pickup_cost":
+            (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
+                .toStringAsFixed(2),
+        "coupon_id": coupon_id != null ? coupon_id : null,
+        "gs_ispayment": packdata['payment_flag']
+      });
+      Map req = {
+        'bookingattachment': audio,
+        "custId": prefs.getString('cust_id'),
+        "cust_name": prefs.getString('name'),
+        "vehId": packdata['vehicle_id'],
+        "brand": packdata['brand'],
+        "model": packdata['model'],
+        "variant": packdata['variant'],
+        "bkurl": packdata['audio_location'],
+        "pickupaddress": packdata['pick_up_location_id'],
+        "dropaddress": packdata['drop_location_id'],
+        "bookingdate": packdata['selected_date'],
+        "operationlabourrate": packdata['operationlabourrate'],
+        "sub_packages": packdata['sub_packages'],
+        "services": packdata['services'],
+        "expenses": [],
+        "packid": packdata['package_id'],
+        "packtype": packdata['packtype'],
+        "packprice": packdata['packprice'],
+        "pack_vat": packdata['pack_vat'].toStringAsFixed(2),
+        "pickup_vat": packdata['pickup_vat'].toStringAsFixed(2),
+        "gs_vat": packdata['gs_vat'].toStringAsFixed(2),
+        "veh_groupid": packdata['veh_groupid'],
+        "vgm_labour_rate": packdata['vgm_labour_rate'],
+        "total_amount": widget.netpayableamount != null && couponapplied == true
+            ? widget.netpayableamount.round()
+            : netpayable.round(),
+        "advance": "0",
+        "discount": discount != null ? discount : "0",
+        "bk_branchid": 1,
+        'complaint': additionalcommentsController.text.toString(),
+        "slot": packdata['selected_timeid'],
+        "pickuptype": packdata['pick_type_id'],
+        "sourcetype": "MOB",
+        "pack_extra_details": packdata['pack_extra_details'],
+        "bk_pickup_cost":
+            (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
+                .toStringAsFixed(2),
+        "coupon_id": coupon_id != 0 ? coupon_id : null,
+        "gs_ispayment": packdata['payment_flag']
+      };
+      print("send items ==>");
+      print(req);
+      String? token = prefs.getString('token');
+      var dio = Dio();
+      dio.options.headers['content-Type'] = 'application/json';
+      dio.options.headers["authorization"] = "Bearer ${token}";
+      var response = await dio.post(
+        dotenv.env['API_URL']! + 'Booking/BookingController/create',
+        data: formData,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+        ),
+      );
+      var retdata = jsonDecode(response.toString());
+      if (retdata['ret_data'] == "paylater") {
+        createPaymentLater();
+        bookId = retdata['booking_id'];
+        audiofile = retdata['audio_file'];
+        trnxId = retdata['payment_details']['id'];
+        slot = packdata['selected_timeid'];
+        complaint = additionalcommentsController.text.toString();
+        bookingdate = packdata['selected_date'];
+        await prefs.remove("booking_data");
+      } else {
+        print(retdata['ret_data']);
+        showCustomToast(context, "Couldn't complete booking",
+            bgColor: errorcolor, textColor: white);
+      }
+    } catch (e) {
+      print(e.toString());
+      setState(() {
+        isproceeding = false;
+      });
+      showCustomToast(context, lang.S.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: white);
+    }
+  }
+
+  createPaymentLater() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      Map<String, dynamic> booking = {
+        'custId': prefs.getString('cust_id'),
+        'book_id': bookId,
+        'tot_amount': widget.netpayableamount != null && couponapplied == true
+            ? widget.netpayableamount.round()
+            : netpayable.round(),
+        'trxn_id': trnxId,
+        'audiofile': audiofile,
+        'slot': slot,
+        'bookingdate': bookingdate,
+        'complaint': complaint,
+        "gs_ispayment": packdata['payment_flag']
+      };
+      await confirmbookingpayment(booking).then((value) {
+        if (value['ret_data'] == "success") {
+          setState(() {
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context) => PayLaterSuccess(),
+            );
+          });
+        } else {
+          setState(() => isproceeding = false);
+          showCustomToast(context, value['ret_data'],
+              bgColor: errorcolor, textColor: white);
+        }
+      });
+    } on Exception catch (e) {
+      if (e is StripeException) {
+        setState(() => isproceeding = false);
+        setState(() {
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) => CustomWarning(),
+          );
+        });
+      } else {
+        setState(() => isproceeding = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Unforeseen error: ${e}'),
+          ),
+        );
+      }
+    }
+  }
+
   createBooking() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -310,6 +493,7 @@ class SummeryPageState extends State<SummeryPage> {
             (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
                 .toStringAsFixed(2),
         "coupon_id": coupon_id != null ? coupon_id : null,
+        "gs_ispayment": packdata['payment_flag']
       });
       Map req = {
         'bookingattachment': audio,
@@ -350,6 +534,7 @@ class SummeryPageState extends State<SummeryPage> {
             (double.parse(packdata['pick_up_price']) - packdata['pickup_vat'])
                 .toStringAsFixed(2),
         "coupon_id": coupon_id != 0 ? coupon_id : null,
+        "gs_ispayment": packdata['payment_flag']
       };
       print("send items ==>");
       print(req);
@@ -382,7 +567,6 @@ class SummeryPageState extends State<SummeryPage> {
             bgColor: errorcolor, textColor: white);
       }
     } catch (e) {
-      print("222222222222");
       print(e.toString());
       setState(() {
         isproceeding = false;
@@ -457,7 +641,8 @@ class SummeryPageState extends State<SummeryPage> {
         'audiofile': audiofile,
         'slot': slot,
         'bookingdate': bookingdate,
-        'complaint': complaint
+        'complaint': complaint,
+        "gs_ispayment": packdata['payment_flag']
       };
       await confirmbookingpayment(booking).then((value) {
         if (value['ret_data'] == "success") {
@@ -1751,7 +1936,9 @@ class SummeryPageState extends State<SummeryPage> {
                         if (isproceeding) return;
                         setState(() => isproceeding = true);
                         await Future.delayed(Duration(milliseconds: 1000));
-                        createBooking();
+                        packdata['payment_flag'] == "1"
+                            ? createBooking()
+                            : PaymentLater();
                       },
                       child: Stack(
                         alignment: Alignment.bottomCenter,
@@ -1789,7 +1976,9 @@ class SummeryPageState extends State<SummeryPage> {
                             ),
                             child: !isproceeding
                                 ? Text(
-                                    "PROCEED TO PAY",
+                                    packdata['payment_flag'] == "1"
+                                        ? "PROCEED TO PAY"
+                                        : "CONFIRM BOOKING",
                                     style: montserratSemiBold.copyWith(
                                         color: Colors.white),
                                   )
@@ -1911,6 +2100,114 @@ class CustomWarning extends StatelessWidget {
                       colors: [
                         lightorangeColor,
                         holdorangeColor,
+                      ],
+                    )),
+                padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Text('OK',
+                    style: montserratSemiBold.copyWith(color: white)),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PayLaterSuccess extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        decoration: new BoxDecoration(
+          color: white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12)),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0)),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 130,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          lightblueColor,
+                          syanColor,
+                        ],
+                      )),
+                ),
+                Column(
+                  children: [
+                    Image.asset(
+                      ImageConst.success,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text("Heads up! Your booking is almost locked in",
+                        textAlign: TextAlign.center,
+                        style: montserratSemiBold.copyWith(
+                            fontSize: width * 0.034, color: white)),
+                  ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: Text(
+                    "Just a reminder that payment for this service will be handled after work completed and you are agreeing to pay the amount during invoicing.",
+                    textAlign: TextAlign.justify,
+                    style: montserratRegular.copyWith(
+                        fontSize: width * 0.034, color: black))),
+            SizedBox(
+              height: 16,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushReplacementNamed(context, Routes.bottombar);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(14)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [
+                        lightblueColor,
+                        syanColor,
                       ],
                     )),
                 padding: EdgeInsets.fromLTRB(16, 8, 16, 8),

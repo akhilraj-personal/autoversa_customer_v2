@@ -62,6 +62,8 @@ class WorkcardState extends State<Workcard> {
   bool isproceeding = false;
   bool selectAll = false;
   List<Map<String, String>> selectedJobs = [];
+  var pickupcost = 0.0;
+  var packageprice = 0.0;
 
   @override
   void initState() {
@@ -94,6 +96,11 @@ class WorkcardState extends State<Workcard> {
           service_advisor = value['booking']['service_advisor'];
           vehicle = value['booking']['vehicle'];
         });
+        pickupcost = double.parse(booking['bk_pickup_cost']) +
+            double.parse(booking['bk_pickup_vat']);
+        packageprice = double.parse(booking['bk_total_amount']) -
+            (double.parse(booking['bk_pickup_cost']) +
+                double.parse(booking['bk_pickup_vat']));
       }
     });
   }
@@ -206,21 +213,50 @@ class WorkcardState extends State<Workcard> {
   createPayment(paramsconsumablecost, consumableflag) async {
     if (paramsconsumablecost != 0 &&
         temppendingjobs.length == 0 &&
-        int.parse(consumableflag) == 1) {
+        int.parse(consumableflag) == 1 &&
+        packagebooking['bkp_payment_status'] != "0") {
       type = "0";
       setState(() {});
     } else if (paramsconsumablecost == "0.00" &&
             temppendingjobs.length != 0 &&
-            int.parse(consumableflag) == 0 ||
+            int.parse(consumableflag) == 0 &&
+            packagebooking['bkp_payment_status'] != "0" ||
         temppendingjobs.length != 0 &&
             paramsconsumablecost != 0 &&
-            int.parse(consumableflag) == 4) {
+            int.parse(consumableflag) == 4 &&
+            packagebooking['bkp_payment_status'] != "0") {
       type = "1";
       setState(() {});
     } else if (temppendingjobs.length > 0 &&
         paramsconsumablecost != 0 &&
-        int.parse(consumableflag) == 1) {
+        int.parse(consumableflag) == 1 &&
+        packagebooking['bkp_payment_status'] != "0") {
       type = "2";
+      setState(() {});
+    } else if (paramsconsumablecost == "0.00" &&
+            temppendingjobs.length != 0 &&
+            int.parse(consumableflag) == 0 &&
+            packagebooking['bkp_payment_status'] == "0" ||
+        temppendingjobs.length != 0 &&
+            paramsconsumablecost != 0 &&
+            int.parse(consumableflag) == 4 &&
+            packagebooking['bkp_payment_status'] == "0") {
+      type = "3";
+      setState(() {});
+    } else if (paramsconsumablecost != 0 &&
+        temppendingjobs.length == 0 &&
+        int.parse(consumableflag) == 1 &&
+        packagebooking['bkp_payment_status'] == "0") {
+      type = "4";
+      setState(() {});
+    } else if (temppendingjobs.length > 0 &&
+        paramsconsumablecost != 0 &&
+        int.parse(consumableflag) == 1 &&
+        packagebooking['bkp_payment_status'] == "0") {
+      type = "6";
+      setState(() {});
+    } else if (packagebooking['bkp_payment_status'] == "0") {
+      type = "5";
       setState(() {});
     } else {}
     final prefs = await SharedPreferences.getInstance();
@@ -297,33 +333,65 @@ class WorkcardState extends State<Workcard> {
     try {
       await Stripe.instance.presentPaymentSheet();
       final prefs = await SharedPreferences.getInstance();
-      Map<String, dynamic> paymentreq = {
-        'custId': prefs.getString('cust_id'),
-        'booking_id': widget.booking_id,
-        'tot_amount': amounttopay.toString(),
-        'trxn_id': trnxId,
-        'job_id': temppendingjobs,
-        'type': type
-      };
-      await create_payment_for_job_workcard(paymentreq).then((value) {
-        if (value['ret_data'] == "success") {
-        } else {
-          setState(() => isproceeding = false);
-          showCustomToast(context, value['ret_data'],
-              bgColor: errorcolor, textColor: white);
-        }
-      });
-      setState(() {
-        showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) => CustomSuccess(
-              click_id: widget.click_id,
-              booking_id: widget.booking_id,
-              vehname: widget.vehname,
-              vehmake: widget.vehmake),
-        );
-      });
+      if (type == "3" || type == "4" || type == "5" || type == "6") {
+        Map<String, dynamic> paymentreq = {
+          'custId': prefs.getString('cust_id'),
+          'booking_id': widget.booking_id,
+          'tot_amount': (amounttopay - (pickupcost + packageprice)),
+          'trxn_id': trnxId,
+          'job_id': temppendingjobs,
+          'type': type,
+          'pickup_charge': pickupcost,
+          'package_charge': packageprice,
+        };
+        await create_payment_for_job_workcard(paymentreq).then((value) {
+          if (value['ret_data'] == "success") {
+          } else {
+            setState(() => isproceeding = false);
+            showCustomToast(context, value['ret_data'],
+                bgColor: errorcolor, textColor: white);
+          }
+        });
+        setState(() {
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) => CustomSuccess(
+                click_id: widget.click_id,
+                booking_id: widget.booking_id,
+                vehname: widget.vehname,
+                vehmake: widget.vehmake),
+          );
+        });
+      } else {
+        Map<String, dynamic> paymentreq = {
+          'custId': prefs.getString('cust_id'),
+          'booking_id': widget.booking_id,
+          'tot_amount': amounttopay.toString(),
+          'trxn_id': trnxId,
+          'job_id': temppendingjobs,
+          'type': type,
+        };
+        await create_payment_for_job_workcard(paymentreq).then((value) {
+          if (value['ret_data'] == "success") {
+          } else {
+            setState(() => isproceeding = false);
+            showCustomToast(context, value['ret_data'],
+                bgColor: errorcolor, textColor: white);
+          }
+        });
+        setState(() {
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) => CustomSuccess(
+                click_id: widget.click_id,
+                booking_id: widget.booking_id,
+                vehname: widget.vehname,
+                vehmake: widget.vehmake),
+          );
+        });
+      }
     } on Exception catch (e) {
       if (e is StripeException) {
         setState(() => isproceeding = false);

@@ -81,6 +81,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   bool isExpanded = false;
   bool isproceeding = false;
   var buffertime = "0";
+  var payment_flag;
 
   _setdatas() async {
     final prefs = await SharedPreferences.getInstance();
@@ -153,9 +154,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             : tempCostVat
       };
       pickup_options.add(temp);
-      print("pickup===================>");
-      print(pickup_options);
-      print("pickup===================>");
     }
     isserviceble = serviceAvailability;
     setState(() {});
@@ -285,6 +283,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       });
       await getPickupOptions().then((value) {
         gs_vat = int.parse(value['settings']['gs_vat']);
+        payment_flag = value['settings']['gs_ispayment'];
         gs_isvat = int.parse(value['settings']['gs_isvat']);
         freeservicedistance =
             int.parse(value['settings']['gs_freeservicearea']);
@@ -619,6 +618,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         showCustomToast(context, "Choose a time slot",
             bgColor: errorcolor, textColor: white);
       } else {
+        packdata['payment_flag'] = payment_flag;
         packdata['pick_up_location'] = SelectAddressList[selected_address];
         packdata['pick_up_location_id'] = ptempdata;
         packdata['drop_location_id'] = dtempdata;
@@ -634,7 +634,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         packdata['selected_date'] = selectedDate.toString();
         packdata['selected_timeid'] = selected_timeid;
         packdata['selected_timeslot'] = selected_timeslot;
+
         prefs.setString("booking_data", json.encode(packdata));
+        print("booking_data");
+        print(packdata);
         pickupoption = "";
         setState(() => isproceeding = false);
         Navigator.push(
@@ -667,12 +670,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         showCustomToast(context, "Choose a time slot",
             bgColor: errorcolor, textColor: white);
       } else {
+        packdata['payment_flag'] = payment_flag;
         packdata['pick_up_location'] = SelectAddressList[selected_address];
         packdata['pick_up_location_id'] = ptempdata;
         packdata['drop_location_id'] = dtempdata;
         packdata['drop_location'] = SelectAddressList[selected_drop_address];
         packdata['pick_up_price'] = pickup_cost;
-        packdata['pickup_vat'] = pickup_vat;
         if (pickup_name == "") {
           setState(() => isproceeding = false);
           showCustomToast(context, "Choose a pickup type",
@@ -684,7 +687,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           if (selected_timeid != 0) {
             packdata['selected_timeid'] = selected_timeid;
             packdata['selected_timeslot'] = selected_timeslot;
+            packdata['payment_flag'] = payment_flag;
             prefs.setString("booking_data", json.encode(packdata));
+            print("booking_data");
+            print(packdata);
             pickupoption = "";
             setState(() => isproceeding = false);
             Navigator.push(

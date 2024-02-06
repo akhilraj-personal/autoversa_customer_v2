@@ -1060,7 +1060,10 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
             ;
           }
           if (temppendingjobs.length == 0 &&
-              value['booking']['cust_status']['st_code'] == "CDLC") {
+              value['booking']['cust_status']['st_code'] == "CDLC" &&
+              value['booking']['booking_package'] != null &&
+              value['booking']['booking_package']['bkp_payment_status'] ==
+                  "1") {
             showDialog(
               barrierDismissible: false,
               context: context,
@@ -3061,7 +3064,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                           GestureDetector(
                                                                         onTap:
                                                                             () async {
-                                                                          temppendingjobs.length == 0
+                                                                          temppendingjobs.length == 0 && booking_package['bkp_payment_status'] != "0" && booking['bk_consumepaymentflag'] == "0" || booking['bk_consumepaymentflag'] == "4"
                                                                               ? Navigator.push(
                                                                                   context,
                                                                                   MaterialPageRoute(
@@ -3086,7 +3089,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                                 shape: BoxShape.rectangle,
                                                                                 border: Border.all(color: temppendingjobs.length == 0 ? syanColor : warningcolor),
                                                                                 borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                                                gradient: temppendingjobs.length == 0
+                                                                                gradient: temppendingjobs.length == 0 && booking_package['bkp_payment_status'] != "0" && booking['bk_consumepaymentflag'] == "0" || temppendingjobs.length == 0 && booking_package['bkp_payment_status'] == "1" && booking['bk_consumepaymentflag'] == "4"
                                                                                     ? LinearGradient(
                                                                                         begin: Alignment.topLeft,
                                                                                         end: Alignment.bottomRight,
@@ -3104,7 +3107,7 @@ class BookingStatusFlowState extends State<BookingStatusFlow> {
                                                                                         ],
                                                                                       ),
                                                                               ),
-                                                                              child: temppendingjobs.length == 0 ? Text('SCHEDULE\nDELIVERY', textAlign: TextAlign.center, style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026)) : Text('PENDING\nPAYMENT', textAlign: TextAlign.center, style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026)),
+                                                                              child: temppendingjobs.length == 0 && booking_package['bkp_payment_status'] == "1" && booking['bk_consumepaymentflag'] == "0" || temppendingjobs.length == 0 && booking_package['bkp_payment_status'] == "1" && booking['bk_consumepaymentflag'] == "4" ? Text('SCHEDULE\nDELIVERY', textAlign: TextAlign.center, style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026)) : Text('PENDING\nPAYMENT', textAlign: TextAlign.center, style: montserratSemiBold.copyWith(color: white, fontSize: width * 0.026)),
                                                                             ),
                                                                           ],
                                                                         ),

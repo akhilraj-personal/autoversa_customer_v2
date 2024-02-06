@@ -340,10 +340,10 @@ class PackageDetailsState extends State<PackageDetails> {
       "veh_groupid": veh_groupid,
       "vgm_labour_rate": veh_lbr_rate,
       "pack_vat": packVat,
-      "pack_extra_details": pack_extra_details
+      "pack_extra_details": pack_extra_details,
     };
     prefs.setString("booking_data", json.encode(packdata));
-
+    
     setState(() => isbooked = false);
     Navigator.push(
         context,
