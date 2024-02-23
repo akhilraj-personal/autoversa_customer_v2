@@ -257,3 +257,7 @@ Future create_payment_for_drop_confirmation(Map req) async {
   return handleResponse(await securedPostRequest(
       'Booking/BookingController/confirm_payment_for_drop', req));
 }
+
+Future deactivateaccount(Map req) async {
+  return handleResponse(await securedPostRequest('delete_customer', req));
+}

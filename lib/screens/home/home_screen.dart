@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:autoversa/model/model.dart';
 import 'package:autoversa/screens/booking/booking_status_flow_page.dart';
@@ -40,6 +41,7 @@ class HomeScreenState extends State<HomeScreen> {
   late List bookingList = [];
   late List packageList = [];
   late List<NotificationModel> notificationList = [];
+  late Map<String, dynamic> custdetails = {};
   String currency = "";
   int selectedVeh = 0;
   bool noofvehicle = false;
@@ -67,6 +69,7 @@ class HomeScreenState extends State<HomeScreen> {
       _getPackages();
       _getCustomerBookingList();
       _getNotificationList();
+      getProfileDetails();
     });
     Permission.notification.isDenied.then((value) {
       if (value) {
@@ -84,6 +87,25 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  getProfileDetails() async {
+    final prefs = await SharedPreferences.getInstance();
+    Map req = {
+      "cust_id":
+          base64.encode(utf8.encode(prefs.getString("cust_id").toString()))
+    };
+    print(req);
+    await getprofiledetails(req)
+        .then((value) => {
+              if (value['ret_data'] == "success")
+                {
+                  setState(() {
+                    custdetails = value['cust_info'];
+                  }),
+                }
+            })
+        .catchError((e) {});
   }
 
   _getPackages() async {
@@ -384,10 +406,46 @@ class HomeScreenState extends State<HomeScreen> {
                                                 ),
                                               );
                                             },
-                                            child: Image.asset(
-                                              ImageConst.person,
-                                              scale: 3.6,
-                                            ),
+                                            child: custdetails[
+                                                            'cust_profile_pic'] !=
+                                                        null &&
+                                                    custdetails[
+                                                            'cust_profile_pic'] !=
+                                                        ''
+                                                ? CachedNetworkImage(
+                                                    placeholder:
+                                                        (context, url) =>
+                                                            Transform.scale(
+                                                      scale: 0.5,
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                                    imageUrl: dotenv
+                                                            .env['aws_url']! +
+                                                        custdetails[
+                                                            'cust_profile_pic'],
+                                                    width: 45.0,
+                                                    height: 45.0,
+                                                    fit: BoxFit.cover,
+                                                    imageBuilder: (context,
+                                                            imageProvider) =>
+                                                        Container(
+                                                      width: 45.0,
+                                                      height: 45.0,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape
+                                                            .circle, 
+                                                        image: DecorationImage(
+                                                          image: imageProvider,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Image.asset(
+                                                    ImageConst.person,
+                                                    scale: 3.6,
+                                                  ),
                                           ),
                                           Container(
                                             margin: EdgeInsets.only(
@@ -754,18 +812,6 @@ class HomeScreenState extends State<HomeScreen> {
                                                                                                   make: bookingList[index]['cv_make'],
                                                                                                 )));
                                                                                   }
-                                                                                  // Navigator.push(
-                                                                                  //     context,
-                                                                                  //     MaterialPageRoute(
-                                                                                  //         builder: (context) => BookingStatusFlow(
-                                                                                  //               bk_id: bookingList[index]['bk_id'],
-                                                                                  //               vehname: bookingList[index]['cv_make'] != null
-                                                                                  //                   ? bookingList[index]['cv_variant'] != null
-                                                                                  //                       ? bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " " + bookingList[index]['cv_variant'] + " ( " + bookingList[index]['cv_year'] + " )"
-                                                                                  //                       : bookingList[index]['cv_make'] + " " + bookingList[index]['cv_model'] + " (" + bookingList[index]['cv_year'] + ")"
-                                                                                  //                   : "",
-                                                                                  //               make: bookingList[index]['cv_make'],
-                                                                                  //             )));
                                                                                 },
                                                                                 child: Container(
                                                                                   margin: EdgeInsets.only(top: height * 0.02, bottom: height * 0.01),
@@ -1577,7 +1623,7 @@ class HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                          ////------------- Offer for you ------------
+                          ////------------- Special Offers! ------------
                           Container(
                             margin: EdgeInsets.only(
                               bottom: height * 0.07,

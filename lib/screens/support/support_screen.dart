@@ -162,9 +162,9 @@ class SupportState extends State<Support> {
                     Row(
                       children: [
                         8.width,
-                        Text("Get in touch",
+                        Text("Get in Touch",
                                 style: montserratSemiBold.copyWith(
-                                    color: black, fontSize: 14))
+                                    color: black, fontSize: 18))
                             .expand(),
                         16.width,
                       ],
@@ -174,9 +174,10 @@ class SupportState extends State<Support> {
                       children: [
                         8.width,
                         Text(
-                          "Our advisor will be more than happy to help you. We are eager to discuss inquires. You may call us on number mentioned below during office hours for bookings and concern. Your happiness and saftey is our main priority. ",
+                          "Please feel free to reach out to our team for any inquiries or assistance. Our team is here to assist you during office hours. For bookings or inquiries, please call the number below. Your satisfaction and safety are our utmost priorities.",
                           style: montserratRegular.copyWith(
                               fontSize: width * 0.038, color: black),
+                          textAlign: TextAlign.justify,
                         ).expand(),
                         16.width,
                       ],
@@ -280,18 +281,28 @@ class SupportState extends State<Support> {
                             textStyle: montserratSemiBold.copyWith(
                                 color: Colors.white, fontSize: width * 0.04),
                             onTap: () async {
-                              PermissionStatus phoneStatus =
-                                  await Permission.phone.request();
-                              if (phoneStatus == PermissionStatus.denied) {
-                                showCustomToast(context,
-                                    "This Permission is recommended for calling.",
-                                    bgColor: errorcolor, textColor: white);
-                              }
-                              if (phoneStatus ==
-                                  PermissionStatus.permanentlyDenied) {
-                                openAppSettings();
-                              }
-                              if (phoneStatus == PermissionStatus.granted) {
+                              if (Platform.isAndroid) {
+                                PermissionStatus phoneStatus =
+                                    await Permission.phone.request();
+                                if (phoneStatus == PermissionStatus.denied) {
+                                  showCustomToast(context,
+                                      "This Permission is recommended for calling.",
+                                      bgColor: errorcolor, textColor: white);
+                                } else if (phoneStatus ==
+                                    PermissionStatus.permanentlyDenied) {
+                                  openAppSettings();
+                                } else if (phoneStatus ==
+                                    PermissionStatus.granted) {
+                                  final Uri url =
+                                      Uri(scheme: 'tel', path: '+971509766075');
+                                  if (await canLaunchUrl(url)) {
+                                    await launchUrl(url);
+                                  } else {
+                                    print("Cannot call");
+                                  }
+                                }
+                                finish(context);
+                              } else {
                                 final Uri url =
                                     Uri(scheme: 'tel', path: '+971509766075');
                                 if (await canLaunchUrl(url)) {
@@ -299,11 +310,6 @@ class SupportState extends State<Support> {
                                 } else {
                                   print("Cannot call");
                                 }
-                                // const number =
-                                //     '+971509766075'; //set the number here
-                                // bool? res =
-                                //     await FlutterPhoneDirectCaller.callNumber(
-                                //         number);
                               }
                             }).expand()
                       ],

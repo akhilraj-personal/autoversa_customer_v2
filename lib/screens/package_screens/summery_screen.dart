@@ -119,8 +119,6 @@ class SummeryPageState extends State<SummeryPage> {
       "vgroup_id": packdata['veh_groupid'],
       "totalamount": totalamount.toString(),
     };
-    print("coupon list req ====>");
-    print(req);
     couponList = [];
     await getCouponsListForCustomer(req).then((value) {
       if (value['ret_data'] == "success") {
@@ -140,10 +138,9 @@ class SummeryPageState extends State<SummeryPage> {
         });
       }
     }).catchError((e) {
-      print("11111111");
       print(e.toString());
-      // showCustomToast(context, lang.S.of(context).toast_application_error,
-      //     bgColor: errorcolor, textColor: Colors.white);
+      showCustomToast(context, lang.S.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: Colors.white);
     });
   }
 
@@ -353,8 +350,6 @@ class SummeryPageState extends State<SummeryPage> {
         "coupon_id": coupon_id != 0 ? coupon_id : null,
         "gs_ispayment": packdata['payment_flag']
       };
-      print("send items ==>");
-      print(req);
       String? token = prefs.getString('token');
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';
@@ -378,7 +373,6 @@ class SummeryPageState extends State<SummeryPage> {
         bookingdate = packdata['selected_date'];
         await prefs.remove("booking_data");
       } else {
-        print(retdata['ret_data']);
         showCustomToast(context, "Couldn't complete booking",
             bgColor: errorcolor, textColor: white);
       }
@@ -536,8 +530,6 @@ class SummeryPageState extends State<SummeryPage> {
         "coupon_id": coupon_id != 0 ? coupon_id : null,
         "gs_ispayment": packdata['payment_flag']
       };
-      print("send items ==>");
-      print(req);
       String? token = prefs.getString('token');
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';
@@ -551,7 +543,6 @@ class SummeryPageState extends State<SummeryPage> {
         ),
       );
       var retdata = jsonDecode(response.toString());
-      print(retdata);
       if (retdata['ret_data'] == "success") {
         createPayment(retdata['booking_id'], retdata['payment_details']);
         bookId = retdata['booking_id'];
@@ -567,7 +558,6 @@ class SummeryPageState extends State<SummeryPage> {
             bgColor: errorcolor, textColor: white);
       }
     } catch (e) {
-      print(e.toString());
       setState(() {
         isproceeding = false;
       });
@@ -2173,7 +2163,7 @@ class PayLaterSuccess extends StatelessWidget {
                     SizedBox(
                       height: 16,
                     ),
-                    Text("Heads up! Your booking is almost locked in",
+                    Text("Heads up! Your booking is nearly confirmed.",
                         textAlign: TextAlign.center,
                         style: montserratSemiBold.copyWith(
                             fontSize: width * 0.034, color: white)),
@@ -2187,7 +2177,7 @@ class PayLaterSuccess extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 child: Text(
-                    "Just a reminder that payment for this service will be handled after work completed and you are agreeing to pay the amount during invoicing.",
+                    "Please be reminded that payment for this service will be processed upon completion of the work, and you are consenting to settle the amount during invoicing.",
                     textAlign: TextAlign.justify,
                     style: montserratRegular.copyWith(
                         fontSize: width * 0.034, color: black))),

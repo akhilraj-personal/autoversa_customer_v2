@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:async/async.dart';
 import 'package:autoversa/services/location_controller.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -40,6 +40,7 @@ class ScheduleDropScreen extends StatefulWidget {
 }
 
 class ScheduleDropScreenState extends State<ScheduleDropScreen> {
+  AsyncMemoizer _memoizer = AsyncMemoizer();
   late Map<String, dynamic> currentBooking = {},
       currentDropDetails = {},
       currentDropType = {};
@@ -77,12 +78,16 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
   var buffertime = "0";
   DateTime selectedDate = DateTime.now();
 
+  fetchFutureDatas() {
+    return this._memoizer.runOnce(() async {
+      return await getBookingDetailsByID();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      getBookingDetailsByID();
-    });
+    _memoizer = AsyncMemoizer();
   }
 
   getBookingDetailsByID() async {
@@ -96,8 +101,8 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
           new_selected_drop =
               int.parse(value['booking']['drop_address']['cad_id']);
           currentDropType = value['booking']['pickup_type'];
-          _fetchdatas(0, 'd');
         });
+        await _fetchdatas(0, 'd');
       }
     });
   }
@@ -735,859 +740,1027 @@ class ScheduleDropScreenState extends State<ScheduleDropScreen> {
             iconSize: 18,
           ),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.fromLTRB(16.5, height * 0.02, 16.5, 16.5),
-            child: Stack(
-              children: [
-                Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      isLoaded
-                          ? Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    Padding(padding: EdgeInsets.all(4)),
-                                    if (currentBooking['vehicle']['cv_make'] ==
-                                        'Mercedes Benz') ...[
-                                      Image.asset(
-                                        ImageConst.benz_ico,
-                                        width: width * 0.12,
-                                      ),
-                                    ] else if (currentBooking['vehicle']
-                                            ['cv_make'] ==
-                                        'BMW') ...[
-                                      Image.asset(
-                                        ImageConst.bmw_ico,
-                                        width: width * 0.12,
-                                      ),
-                                    ] else if (currentBooking['vehicle']
-                                            ['cv_make'] ==
-                                        'Skoda') ...[
-                                      Image.asset(
-                                        ImageConst.skod_ico,
-                                        width: width * 0.12,
-                                      ),
-                                    ] else if (currentBooking['vehicle']
-                                            ['cv_make'] ==
-                                        'Audi') ...[
-                                      Image.asset(
-                                        ImageConst.aud_ico,
-                                        width: width * 0.12,
-                                      ),
-                                    ] else if (currentBooking['vehicle']
-                                            ['cv_make'] ==
-                                        'Porsche') ...[
-                                      Image.asset(
-                                        ImageConst.porsche_ico,
-                                        width: width * 0.12,
-                                      ),
-                                    ] else if (currentBooking['vehicle']
-                                            ['cv_make'] ==
-                                        'Volkswagen') ...[
-                                      Image.asset(
-                                        ImageConst.volkswagen_icon,
-                                        width: width * 0.12,
-                                      ),
-                                    ] else ...[
-                                      Image.asset(
-                                        ImageConst.defcar_ico,
-                                        width: width * 0.12,
-                                      ),
-                                    ],
-                                    SizedBox(width: 16.0),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          SizedBox(
-                                            height: 4,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+        body: FutureBuilder(
+          future: fetchFutureDatas(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+              case ConnectionState.active:
+                {
+                  return SizedBox(
+                      height: MediaQuery.of(context).size.height / 1.3,
+                      child: Center(
+                        child: CircularProgressIndicator(color: syanColor),
+                      ));
+                }
+              case ConnectionState.done:
+                {
+                  return SingleChildScrollView(
+                    child: Container(
+                      margin:
+                          EdgeInsets.fromLTRB(16.5, height * 0.02, 16.5, 16.5),
+                      child: Stack(
+                        children: [
+                          Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                isLoaded
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(16.0),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Row(
                                             children: <Widget>[
-                                              Flexible(
-                                                child: Container(
-                                                  child: Text(
-                                                      currentBooking['booking_package']
-                                                                  [
-                                                                  'pkg_name'] !=
-                                                              null
-                                                          ? currentBooking[
-                                                                      'booking_package']
-                                                                  ['pkg_name'] +
-                                                              " (" +
-                                                              currentBooking[
-                                                                  'bk_number'] +
-                                                              ")"
-                                                          : "",
-                                                      overflow:
-                                                          TextOverflow.clip,
-                                                      style: montserratSemiBold
-                                                          .copyWith(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: width *
-                                                                  0.04)),
+                                              Padding(
+                                                  padding: EdgeInsets.all(4)),
+                                              if (currentBooking['vehicle']
+                                                      ['cv_make'] ==
+                                                  'Mercedes Benz') ...[
+                                                Image.asset(
+                                                  ImageConst.benz_ico,
+                                                  width: width * 0.12,
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 4,
-                                          ),
-                                          Row(
-                                            children: <Widget>[
+                                              ] else if (currentBooking[
+                                                      'vehicle']['cv_make'] ==
+                                                  'BMW') ...[
+                                                Image.asset(
+                                                  ImageConst.bmw_ico,
+                                                  width: width * 0.12,
+                                                ),
+                                              ] else if (currentBooking[
+                                                      'vehicle']['cv_make'] ==
+                                                  'Skoda') ...[
+                                                Image.asset(
+                                                  ImageConst.skod_ico,
+                                                  width: width * 0.12,
+                                                ),
+                                              ] else if (currentBooking[
+                                                      'vehicle']['cv_make'] ==
+                                                  'Audi') ...[
+                                                Image.asset(
+                                                  ImageConst.aud_ico,
+                                                  width: width * 0.12,
+                                                ),
+                                              ] else if (currentBooking[
+                                                      'vehicle']['cv_make'] ==
+                                                  'Porsche') ...[
+                                                Image.asset(
+                                                  ImageConst.porsche_ico,
+                                                  width: width * 0.12,
+                                                ),
+                                              ] else if (currentBooking[
+                                                      'vehicle']['cv_make'] ==
+                                                  'Volkswagen') ...[
+                                                Image.asset(
+                                                  ImageConst.volkswagen_icon,
+                                                  width: width * 0.12,
+                                                ),
+                                              ] else ...[
+                                                Image.asset(
+                                                  ImageConst.defcar_ico,
+                                                  width: width * 0.12,
+                                                ),
+                                              ],
+                                              SizedBox(width: 16.0),
                                               Expanded(
-                                                flex: 1,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                flex: 2,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: <Widget>[
-                                                    Flexible(
-                                                      child: Container(
-                                                        child: Text(
-                                                          currentBooking[
-                                                                      'bk_booking_date'] !=
-                                                                  null
-                                                              ? "Booking Date: " +
-                                                                  DateFormat(
-                                                                          'dd-MM-yyyy')
-                                                                      .format(DateTime
-                                                                          .tryParse(
-                                                                              currentBooking['bk_booking_date'])!)
-                                                              : "",
-                                                          overflow:
-                                                              TextOverflow.clip,
-                                                          style: montserratMedium
-                                                              .copyWith(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.034),
+                                                    SizedBox(
+                                                      height: 4,
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Flexible(
+                                                          child: Container(
+                                                            child: Text(
+                                                                currentBooking['booking_package'][
+                                                                            'pkg_name'] !=
+                                                                        null
+                                                                    ? currentBooking['booking_package'][
+                                                                            'pkg_name'] +
+                                                                        " (" +
+                                                                        currentBooking[
+                                                                            'bk_number'] +
+                                                                        ")"
+                                                                    : "",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .clip,
+                                                                style: montserratSemiBold.copyWith(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.04)),
+                                                          ),
                                                         ),
-                                                      ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 4,
+                                                    ),
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: <Widget>[
+                                                              Flexible(
+                                                                child:
+                                                                    Container(
+                                                                  child: Text(
+                                                                    currentBooking['bk_booking_date'] !=
+                                                                            null
+                                                                        ? "Booking Date: " +
+                                                                            DateFormat('dd-MM-yyyy').format(DateTime.tryParse(currentBooking['bk_booking_date'])!)
+                                                                        : "",
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .clip,
+                                                                    style: montserratMedium.copyWith(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            width *
+                                                                                0.034),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 4,
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Flexible(
+                                                          child: Container(
+                                                            child: Text(
+                                                              currentBooking[
+                                                                          'vehicle']
+                                                                      [
+                                                                      'cv_make'] +
+                                                                  currentBooking[
+                                                                          'vehicle']
+                                                                      [
+                                                                      'cv_model'] +
+                                                                  " (" +
+                                                                  currentBooking[
+                                                                          'vehicle']
+                                                                      [
+                                                                      'cv_year'] +
+                                                                  ")",
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .clip,
+                                                              style: montserratMedium
+                                                                  .copyWith(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.034),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
                                               ),
                                             ],
                                           ),
-                                          SizedBox(
-                                            height: 4,
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                SizedBox(height: height * 0.02),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Current Drop Location",
+                                        textAlign: TextAlign.start,
+                                        style: montserratSemiBold.copyWith(
+                                          fontSize: width * 0.034,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          PermissionStatus locationStatus =
+                                              await Permission.location
+                                                  .request();
+                                          if (locationStatus ==
+                                              PermissionStatus.denied) {
+                                            showCustomToast(context,
+                                                "This Permission is recommended for location access.",
+                                                bgColor: errorcolor,
+                                                textColor: white);
+                                          }
+                                          if (locationStatus ==
+                                              PermissionStatus
+                                                  .permanentlyDenied) {
+                                            openAppSettings();
+                                          }
+                                          if (locationStatus ==
+                                              PermissionStatus.granted) {
+                                            Get.put(LocationController());
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddAddressViaGmap(
+                                                          pack_type: 0,
+                                                          click_id: 4,
+                                                          package_id: {},
+                                                          custvehlist: [],
+                                                          currency: "",
+                                                          selectedveh: 0,
+                                                          pickup_loc: 0,
+                                                          drop_loc:
+                                                              selected_address,
+                                                          drop_flag: true,
+                                                          bk_id: widget.bk_id,
+                                                          vehname:
+                                                              widget.vehname,
+                                                          make: widget.make,
+                                                        )));
+                                          }
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              lang.S.of(context).add_address +
+                                                  " ",
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: Colors.black,
+                                                      fontSize: width * 0.034),
+                                            ),
+                                            Container(
+                                              child: Image.asset(
+                                                ImageConst.add_black,
+                                                scale: 4.8,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ]),
+                                SizedBox(height: height * 0.02),
+                                Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height: height * 0.035,
+                                        width: height * 0.37,
+                                        margin: EdgeInsets.all(8.0),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 16,
+                                                  color:
+                                                      syanColor.withOpacity(.5),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: borderGreyColor),
                                           ),
-                                          Row(
+                                          child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: <Widget>[
-                                              Flexible(
+                                              Expanded(
                                                 child: Container(
-                                                  child: Text(
-                                                    currentBooking['vehicle']
-                                                            ['cv_make'] +
-                                                        currentBooking[
-                                                                'vehicle']
-                                                            ['cv_model'] +
-                                                        " (" +
-                                                        currentBooking[
-                                                                'vehicle']
-                                                            ['cv_year'] +
-                                                        ")",
-                                                    overflow: TextOverflow.clip,
-                                                    style: montserratMedium
-                                                        .copyWith(
-                                                            color: Colors.black,
-                                                            fontSize:
-                                                                width * 0.034),
+                                                  child:
+                                                      DropdownButtonFormField2(
+                                                    value: selected_address > 0
+                                                        ? SelectAddressList[
+                                                            selected_address]
+                                                        : null,
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      focusedErrorBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: const Color(
+                                                                    0xffCCCCCC),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    const Color(
+                                                                        0xfffff),
+                                                                width: 0.0),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      errorStyle:
+                                                          montserratRegular
+                                                              .copyWith(
+                                                        fontSize: 12,
+                                                        color: warningcolor,
+                                                      ),
+                                                    ),
+                                                    isExpanded: true,
+                                                    hint: Text(
+                                                      "Select Address" + "*",
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width * 0.04),
+                                                    ),
+                                                    buttonHeight:
+                                                        height * 0.095,
+                                                    buttonPadding:
+                                                        const EdgeInsets.all(4),
+                                                    itemHeight: height * 0.08,
+                                                    dropdownDecoration:
+                                                        BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                    ),
+                                                    icon: RadiantGradientMask(
+                                                      child: Icon(
+                                                          Icons
+                                                              .keyboard_arrow_down,
+                                                          color: white,
+                                                          size: 30),
+                                                    ),
+                                                    items:
+                                                        SelectAddressList.map(
+                                                            (String? value) {
+                                                      return DropdownMenuItem<
+                                                          String>(
+                                                        value: value,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      8.0),
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .location_on_outlined,
+                                                                color:
+                                                                    syanColor,
+                                                                size: width *
+                                                                    0.08,
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 10,
+                                                              ),
+                                                              Flexible(
+                                                                  child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    value!,
+                                                                    maxLines: 2,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .justify,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .clip,
+                                                                    style: montserratMedium.copyWith(
+                                                                        color:
+                                                                            toastgrey,
+                                                                        fontSize:
+                                                                            width *
+                                                                                0.04),
+                                                                  ),
+                                                                ],
+                                                              ))
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        dropAddressChange(
+                                                            SelectAddressList
+                                                                .indexOf(value
+                                                                    .toString()));
+                                                      });
+                                                    },
                                                   ),
                                                 ),
                                               ),
                                             ],
+                                          ))
+                                    ]),
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                Text(
+                                  "Drop Type" + "*",
+                                  textAlign: TextAlign.start,
+                                  style: montserratSemiBold.copyWith(
+                                      color: Colors.black,
+                                      fontSize: width * 0.034),
+                                ),
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: pickup_options.length,
+                                    itemBuilder: (context, index) {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Theme(
+                                                      data: pickup_options[
+                                                                      index]
+                                                                  ['pk_id'] ==
+                                                              "0"
+                                                          ? Theme.of(context)
+                                                              .copyWith(
+                                                                  unselectedWidgetColor:
+                                                                      Colors.grey[
+                                                                          350])
+                                                          : Theme
+                                                                  .of(context)
+                                                              .copyWith(
+                                                                  unselectedWidgetColor:
+                                                                      Colors
+                                                                          .black),
+                                                      child: pickup_options[
+                                                                      index]
+                                                                  ['pk_id'] ==
+                                                              "0"
+                                                          ? Radio(
+                                                              fillColor: MaterialStateColor
+                                                                  .resolveWith(
+                                                                      (states) =>
+                                                                          syanColor),
+                                                              value:
+                                                                  pickup_options[
+                                                                          index]
+                                                                      ['pk_id'],
+                                                              groupValue:
+                                                                  selected_drop,
+                                                              onChanged:
+                                                                  (dynamic
+                                                                      value) {
+                                                                setState(() {
+                                                                  value = null;
+                                                                });
+                                                              },
+                                                            )
+                                                          : Radio(
+                                                              fillColor: MaterialStateColor
+                                                                  .resolveWith(
+                                                                      (states) =>
+                                                                          syanColor),
+                                                              value:
+                                                                  pickup_options[
+                                                                          index]
+                                                                      ['pk_id'],
+                                                              groupValue:
+                                                                  selected_drop,
+                                                              onChanged:
+                                                                  (dynamic
+                                                                      value) {
+                                                                setState(() {
+                                                                  selected_drop =
+                                                                      value;
+                                                                  pending_payment =
+                                                                      double.parse(
+                                                                          pickup_options[index]
+                                                                              [
+                                                                              'pk_cost_value']);
+                                                                });
+                                                              },
+                                                            ),
+                                                    ),
+                                                    pickup_options[index]
+                                                                ['pk_id'] ==
+                                                            "0"
+                                                        ? Text(
+                                                            pickup_options[
+                                                                    index]
+                                                                ['pk_name'],
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: montserratMedium
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                            .grey[
+                                                                        350],
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.04),
+                                                          )
+                                                        : Text(
+                                                            pickup_options[
+                                                                    index]
+                                                                ['pk_name'],
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: montserratMedium
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.04),
+                                                          ),
+                                                  ]),
+                                              pickup_options[index]['pk_id'] ==
+                                                      "0"
+                                                  ? Text(
+                                                      pickup_options[index]
+                                                                  ['pk_cost'] ==
+                                                              "AED 0"
+                                                          ? lang.S
+                                                              .of(context)
+                                                              .free
+                                                          : pickup_options[
+                                                              index]['pk_cost'],
+                                                      textAlign: TextAlign.end,
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      style: montserratMedium.copyWith(
+                                                          color: pickup_options[
+                                                                          index]
+                                                                      [
+                                                                      'pk_cost'] !=
+                                                                  "PAID"
+                                                              ? Colors.black
+                                                              : Colors.green,
+                                                          fontSize:
+                                                              width * 0.04),
+                                                    )
+                                                  : Text(
+                                                      pickup_options[index]
+                                                                  ['pk_cost'] ==
+                                                              "AED 0"
+                                                          ? lang.S
+                                                              .of(context)
+                                                              .free
+                                                          : pickup_options[
+                                                              index]['pk_cost'],
+                                                      textAlign: TextAlign.end,
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      style: montserratMedium.copyWith(
+                                                          color: pickup_options[
+                                                                          index]
+                                                                      [
+                                                                      'pk_cost'] !=
+                                                                  "PAID"
+                                                              ? warningcolor
+                                                              : Colors.green,
+                                                          fontSize:
+                                                              width * 0.04),
+                                                    ),
+                                            ],
                                           ),
                                         ],
-                                      ),
+                                      );
+                                    }),
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                Row(
+                                  children: [
+                                    Padding(padding: EdgeInsets.all(2)),
+                                    Text(
+                                      "Select Drop Date" + "*",
+                                      style: montserratSemiBold.copyWith(
+                                          fontSize: width * 0.034,
+                                          color: Colors.black),
                                     ),
                                   ],
                                 ),
-                              ),
-                            )
-                          : SizedBox(),
-                      SizedBox(height: height * 0.02),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Current Drop Location",
-                              textAlign: TextAlign.start,
-                              style: montserratSemiBold.copyWith(
-                                fontSize: width * 0.034,
-                                color: Colors.black,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                PermissionStatus locationStatus =
-                                    await Permission.location.request();
-                                if (locationStatus == PermissionStatus.denied) {
-                                  showCustomToast(context,
-                                      "This Permission is recommended for location access.",
-                                      bgColor: errorcolor, textColor: white);
-                                }
-                                if (locationStatus ==
-                                    PermissionStatus.permanentlyDenied) {
-                                  openAppSettings();
-                                }
-                                if (locationStatus ==
-                                    PermissionStatus.granted) {
-                                  Get.put(LocationController());
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddAddressViaGmap(
-                                                pack_type: 0,
-                                                click_id: 4,
-                                                package_id: {},
-                                                custvehlist: [],
-                                                currency: "",
-                                                selectedveh: 0,
-                                                pickup_loc: 0,
-                                                drop_loc: selected_address,
-                                                drop_flag: true,
-                                                bk_id: widget.bk_id,
-                                                vehname: widget.vehname,
-                                                make: widget.make,
-                                              )));
-                                }
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    lang.S.of(context).add_address + " ",
-                                    style: montserratSemiBold.copyWith(
-                                        color: Colors.black,
-                                        fontSize: width * 0.034),
-                                  ),
-                                  Container(
-                                    child: Image.asset(
-                                      ImageConst.add_black,
-                                      scale: 4.8,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ]),
-                      SizedBox(height: height * 0.02),
-                      Stack(alignment: Alignment.bottomCenter, children: [
-                        Container(
-                          height: height * 0.035,
-                          width: height * 0.37,
-                          margin: EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 16,
-                                    color: syanColor.withOpacity(.5),
-                                    spreadRadius: 0,
-                                    blurStyle: BlurStyle.outer,
-                                    offset: Offset(0, 0)),
-                              ]),
-                        ),
-                        Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: borderGreyColor),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Container(
-                                    child: DropdownButtonFormField2(
-                                      value: selected_address > 0
-                                          ? SelectAddressList[selected_address]
-                                          : null,
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      decoration: InputDecoration(
-                                        isDense: true,
-                                        contentPadding: EdgeInsets.zero,
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              color: const Color(0xffCCCCCC),
-                                              width: 0.0),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              color: const Color(0xffCCCCCC),
-                                              width: 0.0),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              color: const Color(0xffCCCCCC),
-                                              width: 0.0),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        errorBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              color: const Color(0xfffff),
-                                              width: 0.0),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        errorStyle: montserratRegular.copyWith(
-                                          fontSize: 12,
-                                          color: warningcolor,
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                Card(
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(10),
+                                            bottomRight: Radius.circular(10),
+                                            topRight: Radius.circular(10),
+                                            topLeft: Radius.circular(10)),
+                                        side: BorderSide(
+                                            width: 1, color: Colors.black)),
+                                    elevation: 4,
+                                    child: ListTile(
+                                      trailing: RadiantGradientMask(
+                                        child: IconButton(
+                                          icon: Icon(
+                                            Icons.date_range,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            _selectDate(context);
+                                          },
                                         ),
                                       ),
-                                      isExpanded: true,
-                                      hint: Text(
-                                        "Select Address" + "*",
+                                      onTap: () {
+                                        _selectDate(context);
+                                      },
+                                      title: Text(
+                                        'Select your Drop date',
                                         style: montserratMedium.copyWith(
                                             color: Colors.black,
                                             fontSize: width * 0.04),
                                       ),
-                                      buttonHeight: height * 0.095,
-                                      buttonPadding: const EdgeInsets.all(4),
-                                      itemHeight: height * 0.08,
-                                      dropdownDecoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
+                                      subtitle: Text(
+                                        DateFormat('dd-MM-yyyy')
+                                            .format(selectedDate),
+                                        style: montserratSemiBold.copyWith(
+                                            color: Colors.black,
+                                            fontSize: width * 0.04),
                                       ),
-                                      icon: RadiantGradientMask(
-                                        child: Icon(Icons.keyboard_arrow_down,
-                                            color: white, size: 30),
-                                      ),
-                                      items: SelectAddressList.map(
-                                          (String? value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8.0),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: syanColor,
-                                                  size: width * 0.08,
-                                                ),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Flexible(
-                                                    child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      value!,
-                                                      maxLines: 2,
-                                                      textAlign:
-                                                          TextAlign.justify,
-                                                      overflow:
-                                                          TextOverflow.clip,
-                                                      style: montserratMedium
-                                                          .copyWith(
-                                                              color: toastgrey,
-                                                              fontSize:
-                                                                  width * 0.04),
-                                                    ),
-                                                  ],
-                                                ))
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          dropAddressChange(
-                                              SelectAddressList.indexOf(
-                                                  value.toString()));
-                                        });
-                                      },
+                                    )),
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                Text(
+                                  "Select Drop Time Slot*",
+                                  style: montserratSemiBold.copyWith(
+                                      fontSize: width * 0.034,
+                                      color: Colors.black),
+                                ),
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                Container(
+                                  margin: EdgeInsets.all(4.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: radius(10),
+                                    color: context.cardColor,
+                                    border: Border.all(
+                                      color: black,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ))
-                      ]),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      Text(
-                        "Drop Type" + "*",
-                        textAlign: TextAlign.start,
-                        style: montserratSemiBold.copyWith(
-                            color: Colors.black, fontSize: width * 0.034),
-                      ),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: pickup_options.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Theme(
-                                            data: pickup_options[index]
-                                                        ['pk_id'] ==
-                                                    "0"
-                                                ? Theme.of(context).copyWith(
-                                                    unselectedWidgetColor:
-                                                        Colors.grey[350])
-                                                : Theme.of(context).copyWith(
-                                                    unselectedWidgetColor:
-                                                        Colors.black),
-                                            child: pickup_options[index]
-                                                        ['pk_id'] ==
-                                                    "0"
-                                                ? Radio(
-                                                    fillColor:
-                                                        MaterialStateColor
-                                                            .resolveWith(
-                                                                (states) =>
-                                                                    syanColor),
-                                                    value: pickup_options[index]
-                                                        ['pk_id'],
-                                                    groupValue: selected_drop,
-                                                    onChanged: (dynamic value) {
-                                                      setState(() {
-                                                        value = null;
-                                                      });
-                                                    },
-                                                  )
-                                                : Radio(
-                                                    fillColor:
-                                                        MaterialStateColor
-                                                            .resolveWith(
-                                                                (states) =>
-                                                                    syanColor),
-                                                    value: pickup_options[index]
-                                                        ['pk_id'],
-                                                    groupValue: selected_drop,
-                                                    onChanged: (dynamic value) {
-                                                      setState(() {
-                                                        selected_drop = value;
-                                                        pending_payment = double
-                                                            .parse(pickup_options[
-                                                                    index][
-                                                                'pk_cost_value']);
-                                                      });
-                                                    },
-                                                  ),
-                                          ),
-                                          pickup_options[index]['pk_id'] == "0"
-                                              ? Text(
-                                                  pickup_options[index]
-                                                      ['pk_name'],
-                                                  textAlign: TextAlign.center,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style:
-                                                      montserratMedium.copyWith(
-                                                          color:
-                                                              Colors.grey[350],
-                                                          fontSize:
-                                                              width * 0.04),
-                                                )
-                                              : Text(
-                                                  pickup_options[index]
-                                                      ['pk_name'],
-                                                  textAlign: TextAlign.center,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style:
-                                                      montserratMedium.copyWith(
-                                                          color: Colors.black,
-                                                          fontSize:
-                                                              width * 0.04),
-                                                ),
-                                        ]),
-                                    pickup_options[index]['pk_id'] == "0"
-                                        ? Text(
-                                            pickup_options[index]['pk_cost'] ==
-                                                    "AED 0"
-                                                ? lang.S.of(context).free
-                                                : pickup_options[index]
-                                                    ['pk_cost'],
-                                            textAlign: TextAlign.end,
-                                            overflow: TextOverflow.clip,
-                                            style: montserratMedium.copyWith(
-                                                color: pickup_options[index]
-                                                            ['pk_cost'] !=
-                                                        "PAID"
-                                                    ? Colors.black
-                                                    : Colors.green,
-                                                fontSize: width * 0.04),
+                                  child: ExpansionTile(
+                                    childrenPadding: EdgeInsets.all(2),
+                                    leading: Container(
+                                        width: 25,
+                                        height: 25,
+                                        child: RadiantGradientMask(
+                                          child: Icon(Icons.av_timer_outlined,
+                                              color: white, size: 28),
+                                        )),
+                                    title: Text(
+                                        lang.S.of(context).select_a_time_slot,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: montserratMedium.copyWith(
+                                            color: black,
+                                            fontSize: width * 0.04),
+                                        maxLines: 3),
+                                    subtitle: Text(
+                                        selected_timeslot == ""
+                                            ? "Choose time slot"
+                                            : selected_timeslot,
+                                        style: montserratSemiBold.copyWith(
+                                            color: black,
+                                            fontSize: selected_timeslot == ""
+                                                ? width * 0.034
+                                                : width * 0.04)),
+                                    textColor: black,
+                                    trailing: isExpanded
+                                        ? Container(
+                                            child: Icon(Icons.keyboard_arrow_up,
+                                                color: syanColor, size: 30),
+                                            padding: EdgeInsets.all(4),
+                                            decoration: BoxDecoration(
+                                                borderRadius: radius(100),
+                                                color: context.accentColor
+                                                    .withAlpha(32)),
                                           )
-                                        : Text(
-                                            pickup_options[index]['pk_cost'] ==
-                                                    "AED 0"
-                                                ? lang.S.of(context).free
-                                                : pickup_options[index]
-                                                    ['pk_cost'],
-                                            textAlign: TextAlign.end,
-                                            overflow: TextOverflow.clip,
-                                            style: montserratMedium.copyWith(
-                                                color: pickup_options[index]
-                                                            ['pk_cost'] !=
-                                                        "PAID"
-                                                    ? warningcolor
-                                                    : Colors.green,
-                                                fontSize: width * 0.04),
-                                          ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          }),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      Row(
-                        children: [
-                          Padding(padding: EdgeInsets.all(2)),
-                          Text(
-                            "Select Drop Date" + "*",
-                            style: montserratSemiBold.copyWith(
-                                fontSize: width * 0.034, color: Colors.black),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      Card(
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10),
-                                  topRight: Radius.circular(10),
-                                  topLeft: Radius.circular(10)),
-                              side: BorderSide(width: 1, color: Colors.black)),
-                          elevation: 4,
-                          child: ListTile(
-                            trailing: RadiantGradientMask(
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.date_range,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {
-                                  _selectDate(context);
-                                },
-                              ),
-                            ),
-                            onTap: () {
-                              _selectDate(context);
-                            },
-                            title: Text(
-                              'Select your Drop date',
-                              style: montserratMedium.copyWith(
-                                  color: Colors.black, fontSize: width * 0.04),
-                            ),
-                            subtitle: Text(
-                              DateFormat('dd-MM-yyyy').format(selectedDate),
-                              style: montserratSemiBold.copyWith(
-                                  color: Colors.black, fontSize: width * 0.04),
-                            ),
-                          )),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      Text(
-                        "Select Drop Time Slot*",
-                        style: montserratSemiBold.copyWith(
-                            fontSize: width * 0.034, color: Colors.black),
-                      ),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(4.0),
-                        decoration: BoxDecoration(
-                          borderRadius: radius(10),
-                          color: context.cardColor,
-                          border: Border.all(
-                            color: black,
-                          ),
-                        ),
-                        child: ExpansionTile(
-                          childrenPadding: EdgeInsets.all(2),
-                          leading: Container(
-                              width: 25,
-                              height: 25,
-                              child: RadiantGradientMask(
-                                child: Icon(Icons.av_timer_outlined,
-                                    color: white, size: 28),
-                              )),
-                          title: Text(lang.S.of(context).select_a_time_slot,
-                              overflow: TextOverflow.ellipsis,
-                              style: montserratMedium.copyWith(
-                                  color: black, fontSize: width * 0.04),
-                              maxLines: 3),
-                          subtitle: Text(
-                              selected_timeslot == ""
-                                  ? "Choose time slot"
-                                  : selected_timeslot,
-                              style: montserratSemiBold.copyWith(
-                                  color: black,
-                                  fontSize: selected_timeslot == ""
-                                      ? width * 0.034
-                                      : width * 0.04)),
-                          textColor: black,
-                          trailing: isExpanded
-                              ? Container(
-                                  child: Icon(Icons.keyboard_arrow_up,
-                                      color: syanColor, size: 30),
-                                  padding: EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                      borderRadius: radius(100),
-                                      color: context.accentColor.withAlpha(32)),
-                                )
-                              : Icon(Icons.keyboard_arrow_down,
-                                  color: syanColor, size: 30),
-                          onExpansionChanged: (t1) {
-                            isExpanded = !isExpanded;
-                            setState(() {});
-                          },
-                          children: [
-                            Container(
-                              decoration: boxDecorationDefault(
-                                  color: white, boxShadow: null),
-                              padding: EdgeInsets.all(2),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  timeslots.length > 0
-                                      ? ListView.builder(
-                                          scrollDirection: Axis.vertical,
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                              top: 16, bottom: 16),
-                                          itemCount: timeslots.length,
-                                          itemBuilder: (context, index) {
-                                            return Row(
-                                              children: <Widget>[
-                                                Theme(
-                                                  data: Theme.of(context)
-                                                      .copyWith(
-                                                          unselectedWidgetColor:
-                                                              syanColor),
-                                                  child: Radio(
-                                                    value: timeslots[index]
-                                                            ['tm_start_time'] +
-                                                        " - " +
-                                                        timeslots[index]
-                                                            ['tm_end_time'],
-                                                    groupValue: isTimeCheck,
-                                                    fillColor:
-                                                        MaterialStateColor
-                                                            .resolveWith(
-                                                                (states) =>
-                                                                    syanColor),
-                                                    onChanged: (dynamic value) {
-                                                      timeslots[index][
-                                                                  'active_flag'] ==
-                                                              1
-                                                          ? value = 0
-                                                          : setState(() {
-                                                              isTimeCheck =
-                                                                  value;
-                                                              selected_timeid =
-                                                                  int.parse(timeslots[
+                                        : Icon(Icons.keyboard_arrow_down,
+                                            color: syanColor, size: 30),
+                                    onExpansionChanged: (t1) {
+                                      isExpanded = !isExpanded;
+                                      setState(() {});
+                                    },
+                                    children: [
+                                      Container(
+                                        decoration: boxDecorationDefault(
+                                            color: white, boxShadow: null),
+                                        padding: EdgeInsets.all(2),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            timeslots.length > 0
+                                                ? ListView.builder(
+                                                    scrollDirection:
+                                                        Axis.vertical,
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    padding: EdgeInsets.only(
+                                                        top: 16, bottom: 16),
+                                                    itemCount: timeslots.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Row(
+                                                        children: <Widget>[
+                                                          Theme(
+                                                            data: Theme.of(
+                                                                    context)
+                                                                .copyWith(
+                                                                    unselectedWidgetColor:
+                                                                        syanColor),
+                                                            child: Radio(
+                                                              value: timeslots[
                                                                           index]
                                                                       [
-                                                                      'tm_id']);
-                                                              selected_timeslot = timeFormatter(
-                                                                      timeslots[
-                                                                              index]
-                                                                          [
-                                                                          'tm_start_time']) +
+                                                                      'tm_start_time'] +
                                                                   " - " +
+                                                                  timeslots[
+                                                                          index]
+                                                                      [
+                                                                      'tm_end_time'],
+                                                              groupValue:
+                                                                  isTimeCheck,
+                                                              fillColor: MaterialStateColor
+                                                                  .resolveWith(
+                                                                      (states) =>
+                                                                          syanColor),
+                                                              onChanged:
+                                                                  (dynamic
+                                                                      value) {
+                                                                timeslots[index]
+                                                                            [
+                                                                            'active_flag'] ==
+                                                                        1
+                                                                    ? value = 0
+                                                                    : setState(
+                                                                        () {
+                                                                        isTimeCheck =
+                                                                            value;
+                                                                        selected_timeid =
+                                                                            int.parse(timeslots[index]['tm_id']);
+                                                                        selected_timeslot = timeFormatter(timeslots[index]['tm_start_time']) +
+                                                                            " - " +
+                                                                            timeFormatter(timeslots[index]['tm_end_time']);
+                                                                      });
+                                                              },
+                                                            ),
+                                                          ),
+                                                          timeslots[index][
+                                                                      'active_flag'] ==
+                                                                  1
+                                                              ? Text(
                                                                   timeFormatter(
-                                                                      timeslots[
-                                                                              index]
-                                                                          [
-                                                                          'tm_end_time']);
-                                                            });
-                                                    },
+                                                                          timeslots[index]
+                                                                              [
+                                                                              'tm_start_time']) +
+                                                                      " - " +
+                                                                      timeFormatter(
+                                                                          timeslots[index]
+                                                                              [
+                                                                              'tm_end_time']) +
+                                                                      "\n" +
+                                                                      "Slot Is Full",
+                                                                  style: montserratMedium
+                                                                      .copyWith(
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.04,
+                                                                    color:
+                                                                        black,
+                                                                  ),
+                                                                )
+                                                              : Text(
+                                                                  timeFormatter(
+                                                                          timeslots[index]
+                                                                              [
+                                                                              'tm_start_time']) +
+                                                                      " - " +
+                                                                      timeFormatter(
+                                                                          timeslots[index]
+                                                                              [
+                                                                              'tm_end_time']),
+                                                                  style: montserratMedium
+                                                                      .copyWith(
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.04,
+                                                                    color:
+                                                                        black,
+                                                                  ),
+                                                                ),
+                                                        ],
+                                                      );
+                                                    })
+                                                : Text(
+                                                    lang.S
+                                                        .of(context)
+                                                        .no_time_slot_available,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                      fontSize: width * 0.034,
+                                                      color: black,
+                                                    ),
                                                   ),
-                                                ),
-                                                timeslots[index]
-                                                            ['active_flag'] ==
-                                                        1
-                                                    ? Text(
-                                                        timeFormatter(timeslots[
-                                                                    index][
-                                                                'tm_start_time']) +
-                                                            " - " +
-                                                            timeFormatter(
-                                                                timeslots[index]
-                                                                    [
-                                                                    'tm_end_time']) +
-                                                            "\n" +
-                                                            "Slot Is Full",
-                                                        style: montserratMedium
-                                                            .copyWith(
-                                                          fontSize:
-                                                              width * 0.04,
-                                                          color: black,
-                                                        ),
-                                                      )
-                                                    : Text(
-                                                        timeFormatter(timeslots[
-                                                                    index][
-                                                                'tm_start_time']) +
-                                                            " - " +
-                                                            timeFormatter(
-                                                                timeslots[index]
-                                                                    [
-                                                                    'tm_end_time']),
-                                                        style: montserratMedium
-                                                            .copyWith(
-                                                          fontSize:
-                                                              width * 0.04,
-                                                          color: black,
-                                                        ),
-                                                      ),
-                                              ],
-                                            );
-                                          })
-                                      : Text(
-                                          lang.S
-                                              .of(context)
-                                              .no_time_slot_available,
-                                          style: montserratMedium.copyWith(
-                                            fontSize: width * 0.034,
-                                            color: black,
-                                          ),
+                                          ],
                                         ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: height * 0.02,
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          if (isProceeding) return;
-                          setState(() => isProceeding = true);
-                          scheduleDrop();
-                        },
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            Container(
-                              height: height * 0.045,
-                              width: height * 0.37,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 16,
-                                        color: syanColor.withOpacity(.6),
-                                        spreadRadius: 0,
-                                        blurStyle: BlurStyle.outer,
-                                        offset: Offset(0, 0)),
-                                  ]),
-                            ),
-                            Container(
-                              height: height * 0.075,
-                              width: width,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(14)),
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    syanColor,
-                                    lightblueColor,
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              child: !isProceeding
-                                  ? pending_payment == 0.00
-                                      ? Text(
-                                          "SCHEDULE",
-                                          style: montserratSemiBold.copyWith(
-                                              color: Colors.white,
-                                              fontSize: width * 0.034),
-                                        )
-                                      : Text(
-                                          "PAY AED " +
-                                              pending_payment.toString(),
-                                          style: montserratSemiBold.copyWith(
-                                              color: Colors.white,
-                                              fontSize: width * 0.034),
-                                        )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Transform.scale(
-                                          scale: 0.7,
-                                          child: CircularProgressIndicator(
-                                            color: white,
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    if (isProceeding) return;
+                                    setState(() => isProceeding = true);
+                                    scheduleDrop();
+                                  },
+                                  child: Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height: height * 0.045,
+                                        width: height * 0.37,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 16,
+                                                  color:
+                                                      syanColor.withOpacity(.6),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Container(
+                                        height: height * 0.075,
+                                        width: width,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(14)),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              syanColor,
+                                              lightblueColor,
+                                            ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                            ),
-                          ],
-                        ),
+                                        child: !isProceeding
+                                            ? pending_payment == 0.00
+                                                ? Text(
+                                                    "SCHEDULE",
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                            color: Colors.white,
+                                                            fontSize:
+                                                                width * 0.034),
+                                                  )
+                                                : Text(
+                                                    "PAY AED " +
+                                                        pending_payment
+                                                            .toString(),
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                            color: Colors.white,
+                                                            fontSize:
+                                                                width * 0.034),
+                                                  )
+                                            : Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Transform.scale(
+                                                    scale: 0.7,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ]),
+                        ],
                       ),
-                    ]),
-              ],
-            ),
-          ),
+                    ),
+                  );
+                }
+            }
+          },
         ),
       ),
     );

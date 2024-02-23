@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
@@ -12,10 +13,10 @@ import 'package:autoversa/utils/common_utils.dart';
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Workcard extends StatefulWidget {
   final int click_id;
@@ -65,11 +66,14 @@ class WorkcardState extends State<Workcard> {
   var pickupcost = 0.0;
   var packageprice = 0.0;
 
+  late Future futureBookingDetailsID;
+  late Future futuregetCardJobDetails;
+
   @override
   void initState() {
     super.initState();
-    getBookingDetailsID();
-    getCardJobDetails();
+    futureBookingDetailsID = getBookingDetailsID();
+    futuregetCardJobDetails = getCardJobDetails();
     init();
   }
 
@@ -487,1519 +491,1672 @@ class WorkcardState extends State<Workcard> {
               iconSize: 18,
             ),
           ),
-          body: RefreshIndicator(
-              displacement: 250,
-              backgroundColor: Colors.white,
-              color: syanColor,
-              strokeWidth: 3,
-              triggerMode: RefreshIndicatorTriggerMode.anywhere,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      color: white,
-                      width: MediaQuery.of(context).size.width,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 12.0,
-                                  ),
-                                  child: Text(
-                                    widget.click_id == 1 ? "" : "",
-                                    style: montserratSemiBold.copyWith(
-                                        fontSize: 16,
-                                        color: widget.click_id == 1
-                                            ? black
-                                            : black),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  SizedBox(width: 16.0),
-                                  if (vehicle['cv_make'] ==
-                                      'Mercedes Benz') ...[
-                                    Image.asset(ImageConst.benz_ico,
-                                        width: width / 8, height: 50),
-                                  ] else if (vehicle['cv_make'] == 'BMW') ...[
-                                    Image.asset(ImageConst.bmw_ico,
-                                        width: width / 8, height: 50),
-                                  ] else if (vehicle['cv_make'] == 'Skoda') ...[
-                                    Image.asset(ImageConst.skod_ico,
-                                        width: width / 8, height: 50),
-                                  ] else if (vehicle['cv_make'] == 'Audi') ...[
-                                    Image.asset(ImageConst.aud_ico,
-                                        width: width / 8, height: 50),
-                                  ] else if (vehicle['cv_make'] ==
-                                      'Porsche') ...[
-                                    Image.asset(ImageConst.porsche_ico,
-                                        width: width / 8, height: 50),
-                                  ] else if (vehicle['cv_make'] ==
-                                      'Volkswagen') ...[
-                                    Image.asset(ImageConst.volkswagen_icon,
-                                        width: width / 8, height: 50),
-                                  ] else ...[
-                                    Image.asset(ImageConst.defcar_ico,
-                                        width: width / 8, height: 50)
-                                  ],
-                                  SizedBox(width: 16.0),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        SizedBox(height: 10.0),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: <Widget>[
-                                            Flexible(
-                                              child: Container(
-                                                  child: Text(
-                                                      booking['bk_number'] !=
-                                                              null
-                                                          ? "Booking ID: " +
-                                                              booking[
-                                                                  'bk_number']
-                                                          : "",
-                                                      style: montserratSemiBold
-                                                          .copyWith(
-                                                              color: black,
-                                                              fontSize: width *
-                                                                  0.034))),
-                                            ),
-                                          ],
-                                        ),
-                                        4.height,
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Flexible(
-                                              child: Container(
-                                                child: Text(
-                                                  widget.vehname,
-                                                  overflow: TextOverflow.clip,
-                                                  style:
-                                                      montserratMedium.copyWith(
-                                                          color: black,
-                                                          fontSize:
-                                                              width * 0.034),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 4,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              vehicle['cv_plate_number'] != null
-                                                  ? "Reg No: " +
-                                                      vehicle['cv_plate_number']
-                                                  : "",
-                                              style: montserratMedium.copyWith(
-                                                  color: black,
-                                                  fontSize: width * 0.034),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding:
-                                  EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 12.0),
-                              decoration: boxDecorationWithRoundedCorners(
-                                backgroundColor: white,
-                                borderRadius: radius(8),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          "Advisor Name",
-                                          textAlign: TextAlign.start,
-                                          style: montserratMedium.copyWith(
-                                            fontSize: width * 0.035,
-                                            color: black,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Text(
-                                          service_advisor['us_firstname'] !=
-                                                  null
-                                              ? service_advisor['us_phone'] !=
-                                                      null
-                                                  ? ": " +
-                                                      service_advisor[
-                                                          'us_firstname'] +
-                                                      " (" +
-                                                      service_advisor[
-                                                          'us_country_code'] +
-                                                      service_advisor[
-                                                          'us_phone'] +
-                                                      " )"
-                                                  : ""
-                                              : "",
-                                          textAlign: TextAlign.start,
-                                          style: montserratMedium.copyWith(
-                                            fontSize: width * 0.035,
-                                            color: black,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: RadiantGradientMask(
-                                          child: IconButton(
-                                              icon: Icon(Icons.call,
-                                                  color: white, size: 25),
-                                              onPressed: () async {
-                                                PermissionStatus phoneStatus =
-                                                    await Permission.phone
-                                                        .request();
-                                                if (phoneStatus ==
-                                                    PermissionStatus.denied) {
-                                                  showCustomToast(context,
-                                                      "This Permission is recommended for calling.",
-                                                      bgColor: errorcolor,
-                                                      textColor: white);
-                                                }
-                                                if (phoneStatus ==
-                                                    PermissionStatus
-                                                        .permanentlyDenied) {
-                                                  openAppSettings();
-                                                }
-                                                if (phoneStatus ==
-                                                    PermissionStatus.granted) {
-                                                  bool? res = await FlutterPhoneDirectCaller
-                                                      .callNumber(service_advisor[
-                                                              'us_country_code'] +
-                                                          service_advisor[
-                                                              'us_phone']);
-                                                }
-                                              }),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Text(
-                                    "Confirmed Jobs",
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.clip,
-                                    style: montserratSemiBold.copyWith(
-                                      fontSize: width * 0.04,
-                                      color: syanColor,
-                                    ),
-                                  ),
-                                  4.height,
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+          body: FutureBuilder(
+            future:
+                Future.wait([futureBookingDetailsID, futuregetCardJobDetails]),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                case ConnectionState.active:
+                  {
+                    return SizedBox(
+                        height: MediaQuery.of(context).size.height / 1.3,
+                        child: Center(
+                          child: CircularProgressIndicator(color: Colors.blue),
+                        ));
+                  }
+                case ConnectionState.done:
+                  {
+                    return RefreshIndicator(
+                        displacement: 250,
+                        backgroundColor: Colors.white,
+                        color: syanColor,
+                        strokeWidth: 3,
+                        triggerMode: RefreshIndicatorTriggerMode.anywhere,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Container(
+                                color: white,
+                                width: MediaQuery.of(context).size.width,
+                                child: SingleChildScrollView(
+                                  child: Column(
                                     children: [
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Flexible(
-                                            child: Container(
-                                              child: Text("Package & Job Name",
-                                                  overflow: TextOverflow.clip,
-                                                  maxLines: 3,
-                                                  style: montserratSemiBold
-                                                      .copyWith(
-                                                          fontSize:
-                                                              width * 0.032,
-                                                          color: black)),
-                                            ),
-                                          ),
-                                        ],
-                                      ).expand(),
                                       Row(
-                                        children: [
-                                          Container(
-                                              padding: EdgeInsets.all(8),
-                                              child: Text('Cost (AED)',
-                                                  style: montserratSemiBold
-                                                      .copyWith(
-                                                          fontSize:
-                                                              width * 0.032,
-                                                          color:
-                                                              warningcolor))),
-                                          24.width,
-                                          Text('Payment\nStatus',
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              left: 12.0,
+                                            ),
+                                            child: Text(
+                                              widget.click_id == 1 ? "" : "",
                                               style:
                                                   montserratSemiBold.copyWith(
-                                                      fontSize: width * 0.032,
-                                                      color: black)),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Divider(),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Flexible(
-                                            child: Container(
-                                              child: Text(
-                                                packagebooking['pkg_name'] !=
-                                                        null
-                                                    ? packagebooking['pkg_name']
-                                                    : "",
-                                                overflow: TextOverflow.clip,
-                                                maxLines: 3,
-                                                style:
-                                                    montserratMedium.copyWith(
-                                                        color: black,
-                                                        fontSize:
-                                                            width * 0.034),
-                                              ),
+                                                      fontSize: 16,
+                                                      color:
+                                                          widget.click_id == 1
+                                                              ? black
+                                                              : black),
                                             ),
                                           ),
                                         ],
-                                      ).expand(),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(6),
-                                            child: Text(
-                                              selected_package_cost
-                                                  .round()
-                                                  .toStringAsFixed(2),
-                                              textAlign: TextAlign.left,
-                                              style:
-                                                  montserratSemiBold.copyWith(
-                                                      color: warningcolor,
-                                                      fontSize: width * 0.034),
-                                            ),
-                                          ),
-                                          50.width,
-                                          Text("PAID",
-                                              style: montserratMedium.copyWith(
-                                                  fontSize: width * 0.034,
-                                                  color: Colors.green)),
-                                        ],
                                       ),
-                                    ],
-                                  ).paddingSymmetric(vertical: 2),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Flexible(
-                                            child: Container(
-                                              child: Text(
-                                                "Pickup Cost",
-                                                overflow: TextOverflow.clip,
-                                                maxLines: 3,
-                                                style:
-                                                    montserratMedium.copyWith(
-                                                        color: black,
-                                                        fontSize:
-                                                            width * 0.034),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ).expand(),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(6),
-                                            child: Text(
-                                                selected_pickup_type_cost
-                                                            .toString() ==
-                                                        "0.0"
-                                                    ? "FREE"
-                                                    : (selected_pickup_type_cost
-                                                        .toStringAsFixed(2)),
-                                                style:
-                                                    montserratSemiBold.copyWith(
-                                                        fontSize: width * 0.034,
-                                                        color: warningcolor)),
-                                          ),
-                                          50.width,
-                                          Text("PAID",
-                                              style: montserratMedium.copyWith(
-                                                  fontSize: width * 0.034,
-                                                  color: Colors.green)),
-                                        ],
-                                      ),
-                                    ],
-                                  ).paddingSymmetric(vertical: 2),
-                                  packagebooking['bk_consumcost'] != "0.00" &&
-                                          packagebooking[
-                                                  'bk_consumepaymentflag'] !=
-                                              "0"
-                                      ? Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Flexible(
-                                                  child: Container(
-                                                    child: Text(
-                                                      "Consumables",
-                                                      overflow:
-                                                          TextOverflow.clip,
-                                                      maxLines: 3,
-                                                      style: montserratMedium
-                                                          .copyWith(
-                                                              color: black,
-                                                              fontSize: width *
-                                                                  0.034),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ).expand(),
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.all(6),
-                                                  child: Text(
-                                                      consumablecost
-                                                          .toStringAsFixed(2),
-                                                      style: montserratSemiBold
-                                                          .copyWith(
-                                                              fontSize:
-                                                                  width * 0.034,
-                                                              color:
-                                                                  warningcolor)),
-                                                ),
-                                                packagebooking[
-                                                            'bk_consumepaymentflag'] !=
-                                                        "1"
-                                                    ? SizedBox(
-                                                        width: 50,
-                                                      )
-                                                    : SizedBox(
-                                                        width: 20,
+                                      Container(
+                                        margin: EdgeInsets.fromLTRB(
+                                            8.0, 0.0, 8.0, 8.0),
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(16.0),
+                                        ),
+                                        child: Row(
+                                          children: <Widget>[
+                                            SizedBox(width: 16.0),
+                                            if (vehicle['cv_make'] ==
+                                                'Mercedes Benz') ...[
+                                              Image.asset(ImageConst.benz_ico,
+                                                  width: width / 8, height: 50),
+                                            ] else if (vehicle['cv_make'] ==
+                                                'BMW') ...[
+                                              Image.asset(ImageConst.bmw_ico,
+                                                  width: width / 8, height: 50),
+                                            ] else if (vehicle['cv_make'] ==
+                                                'Skoda') ...[
+                                              Image.asset(ImageConst.skod_ico,
+                                                  width: width / 8, height: 50),
+                                            ] else if (vehicle['cv_make'] ==
+                                                'Audi') ...[
+                                              Image.asset(ImageConst.aud_ico,
+                                                  width: width / 8, height: 50),
+                                            ] else if (vehicle['cv_make'] ==
+                                                'Porsche') ...[
+                                              Image.asset(
+                                                  ImageConst.porsche_ico,
+                                                  width: width / 8,
+                                                  height: 50),
+                                            ] else if (vehicle['cv_make'] ==
+                                                'Volkswagen') ...[
+                                              Image.asset(
+                                                  ImageConst.volkswagen_icon,
+                                                  width: width / 8,
+                                                  height: 50),
+                                            ] else ...[
+                                              Image.asset(ImageConst.defcar_ico,
+                                                  width: width / 8, height: 50)
+                                            ],
+                                            SizedBox(width: 16.0),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  SizedBox(height: 10.0),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Flexible(
+                                                        child: Container(
+                                                            child: Text(
+                                                                booking['bk_number'] !=
+                                                                        null
+                                                                    ? "Booking ID: " +
+                                                                        booking[
+                                                                            'bk_number']
+                                                                    : "",
+                                                                style: montserratSemiBold.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.034))),
                                                       ),
-                                                Text(
-                                                    packagebooking[
-                                                                'bk_consumepaymentflag'] !=
-                                                            "1"
-                                                        ? "PAID"
-                                                        : "PENDING",
-                                                    style: montserratMedium.copyWith(
-                                                        fontSize: width * 0.034,
-                                                        color: packagebooking[
-                                                                    'bk_consumepaymentflag'] !=
-                                                                "1"
-                                                            ? Colors.green
-                                                            : Colors.red)),
-                                              ],
-                                            ),
-                                          ],
-                                        ).paddingSymmetric(vertical: 2)
-                                      : SizedBox(),
-                                  approvedjobs.isEmpty
-                                      ? Container(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      color: Colors.white,
-                                                      width: 1.0))),
-                                        )
-                                      : Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 0),
-                                          child: Column(
-                                            children: List.generate(
-                                              approvedjobs.length,
-                                              (i) => Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
+                                                    ],
+                                                  ),
+                                                  4.height,
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
                                                       Flexible(
                                                         child: Container(
                                                           child: Text(
-                                                            approvedjobs[i][
-                                                                        'bkj_jobname'] !=
-                                                                    null
-                                                                ? capitalize(
-                                                                    approvedjobs[
-                                                                            i][
-                                                                        'bkj_jobname'])
-                                                                : "",
+                                                            widget.vehname,
                                                             overflow:
                                                                 TextOverflow
                                                                     .clip,
-                                                            maxLines: 3,
-                                                            style:
-                                                                montserratMedium
-                                                                    .copyWith(
-                                                              color: black,
-                                                              fontSize:
-                                                                  width * 0.034,
-                                                            ),
+                                                            style: montserratMedium
+                                                                .copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.034),
                                                           ),
                                                         ),
                                                       ),
                                                     ],
-                                                  ).expand(),
-                                                  status['st_code'] == 'CDLC' &&
-                                                          approvedjobs[i][
-                                                                  'bkj_approvedcost'] !=
-                                                              approvedjobs[i][
-                                                                  'bkj_cust_cost']
-                                                      ? Row(
-                                                          children: [
-                                                            Container(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(6),
-                                                                child: RichText(
-                                                                  text:
-                                                                      TextSpan(
-                                                                    children: <
-                                                                        TextSpan>[
-                                                                      TextSpan(
-                                                                        text: approvedjobs[i]['bkj_approvedcost'] !=
-                                                                                null
-                                                                            ? approvedjobs[i]['bkj_approvedcost']
-                                                                            : "",
-                                                                        style: montserratSemiBold
-                                                                            .copyWith(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                          fontSize:
-                                                                              width * 0.025,
-                                                                          decoration:
-                                                                              TextDecoration.lineThrough,
-                                                                        ),
-                                                                      ),
-                                                                      TextSpan(
-                                                                        text: approvedjobs[i]['bkj_cust_cost'] !=
-                                                                                null
-                                                                            ? " " +
-                                                                                approvedjobs[i]['bkj_cust_cost']
-                                                                            : "",
-                                                                        style: montserratSemiBold.copyWith(
-                                                                            color:
-                                                                                warningcolor,
-                                                                            fontSize:
-                                                                                width * 0.032),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                )),
-                                                            approvedjobs[i][
-                                                                        'bkj_status'] ==
-                                                                    "4"
-                                                                ? SizedBox(
-                                                                    width: 50,
-                                                                  )
-                                                                : SizedBox(
-                                                                    width: 20,
-                                                                  ),
-                                                            approvedjobs[i][
-                                                                        'bkj_status'] ==
-                                                                    "4"
-                                                                ? Text("PAID",
-                                                                    style: montserratMedium.copyWith(
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034,
-                                                                        color: Colors
-                                                                            .green))
-                                                                : Text(
-                                                                    "PENDING",
-                                                                    style: montserratMedium.copyWith(
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034,
-                                                                        color: Colors
-                                                                            .red)),
-                                                          ],
-                                                        )
-                                                      : Row(
-                                                          children: [
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(6),
-                                                              child: Text(
-                                                                  approvedjobs[i][
-                                                                              'bkj_cust_cost'] !=
-                                                                          null
-                                                                      ? approvedjobs[
-                                                                              i]
-                                                                          [
-                                                                          'bkj_cust_cost']
-                                                                      : "",
-                                                                  style: montserratSemiBold.copyWith(
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.032,
-                                                                      color:
-                                                                          warningcolor)),
-                                                            ),
-                                                            approvedjobs[i][
-                                                                        'bkj_status'] ==
-                                                                    "4"
-                                                                ? SizedBox(
-                                                                    width: 50,
-                                                                  )
-                                                                : SizedBox(
-                                                                    width: 20,
-                                                                  ),
-                                                            approvedjobs[i][
-                                                                        'bkj_status'] ==
-                                                                    "4"
-                                                                ? Text("PAID",
-                                                                    style: montserratMedium.copyWith(
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034,
-                                                                        color: Colors
-                                                                            .green))
-                                                                : Text(
-                                                                    "PENDING",
-                                                                    style: montserratMedium.copyWith(
-                                                                        fontSize:
-                                                                            width *
-                                                                                0.034,
-                                                                        color: Colors
-                                                                            .red)),
-                                                          ],
-                                                        )
-                                                ],
-                                              ).paddingSymmetric(vertical: 2),
-                                            ),
-                                          ),
-                                        ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                              child: Divider(
-                                color: black,
-                              ),
-                            ),
-                            coupondiscount != 0 || normaldiscount != 0
-                                ? Container(
-                                    padding: EdgeInsets.only(right: 12.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: <Widget>[
-                                        Expanded(
-                                          flex: 12,
-                                          child: Text(
-                                            "Total Cost: ",
-                                            textAlign: TextAlign.right,
-                                            style: montserratSemiBold.copyWith(
-                                              color: black,
-                                              fontSize: width * 0.034,
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
-                                          child: Text(
-                                            withoutcoupontotal
-                                                .toStringAsFixed(2),
-                                            textAlign: TextAlign.right,
-                                            style: montserratSemiBold.copyWith(
-                                                color: warningcolor,
-                                                fontSize: width * 0.034),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            coupondiscount != 0
-                                ? Container(
-                                    padding: EdgeInsets.only(right: 12.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: <Widget>[
-                                        Expanded(
-                                          flex: 12,
-                                          child: Text(
-                                            "Coupon Discounts: ",
-                                            style: montserratSemiBold.copyWith(
-                                                color: black,
-                                                fontSize: width * 0.034),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
-                                          child: Text(
-                                            coupondiscount.toStringAsFixed(2),
-                                            style: montserratSemiBold.copyWith(
-                                                color: warningcolor,
-                                                fontSize: width * 0.034),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            normaldiscount != 0
-                                ? Container(
-                                    padding: EdgeInsets.only(right: 12.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: <Widget>[
-                                        Expanded(
-                                          flex: 12,
-                                          child: Text(
-                                            "Discounts: ",
-                                            style: montserratSemiBold.copyWith(
-                                                color: black,
-                                                fontSize: width * 0.034),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
-                                          child: Text(
-                                            normaldiscount.toStringAsFixed(2),
-                                            style: montserratSemiBold.copyWith(
-                                                color: warningcolor,
-                                                fontSize: width * 0.034),
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 12,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          "Grand Total",
-                                          style: montserratSemiBold.copyWith(
-                                            color: black,
-                                            fontSize: width * 0.034,
-                                          ),
-                                          textAlign: TextAlign.right,
-                                        ),
-                                        Text(
-                                          "(VAT inclusive): ",
-                                          style: montserratSemiBold.copyWith(
-                                            color: greyColor,
-                                            fontSize: width * 0.028,
-                                          ),
-                                          textAlign: TextAlign.right,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      grandtotal.toStringAsFixed(2),
-                                      style: montserratSemiBold.copyWith(
-                                        color: warningcolor,
-                                        fontSize: width * 0.034,
-                                      ),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 12,
-                                    child: Text(
-                                      "Paid Amount: ",
-                                      style: montserratSemiBold.copyWith(
-                                          color: black,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      paidamount.toStringAsFixed(2),
-                                      style: montserratSemiBold.copyWith(
-                                          color: warningcolor,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(right: 12.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 12,
-                                    child: Text(
-                                      "Balance Amount: ",
-                                      style: montserratSemiBold.copyWith(
-                                          color: black,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      amounttopay.toStringAsFixed(2),
-                                      style: montserratSemiBold.copyWith(
-                                          color: warningcolor,
-                                          fontSize: width * 0.034),
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            pendingjobs.isEmpty
-                                ? Container()
-                                : Container(
-                                    padding: EdgeInsets.only(
-                                        left: 16.0, right: 16.0),
-                                    child: Divider(
-                                      color: black,
-                                    ),
-                                  ),
-                            pendingjobs.isEmpty
-                                ? Container()
-                                : Container(
-                                    padding: EdgeInsets.fromLTRB(
-                                        12.0, 8.0, 12.0, 12.0),
-                                    decoration: boxDecorationWithRoundedCorners(
-                                      backgroundColor: white,
-                                      borderRadius: radius(8),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Job Pending Approval",
-                                          textAlign: TextAlign.start,
-                                          overflow: TextOverflow.clip,
-                                          style: montserratSemiBold.copyWith(
-                                            fontSize: width * 0.04,
-                                            color: warningcolor,
-                                          ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Flexible(
-                                                  child: Row(children: [
-                                                    Checkbox(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(4.0),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        vehicle['cv_plate_number'] !=
+                                                                null
+                                                            ? "Reg No: " +
+                                                                vehicle[
+                                                                    'cv_plate_number']
+                                                            : "",
+                                                        style: montserratMedium
+                                                            .copyWith(
+                                                                color: black,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034),
                                                       ),
-                                                      value: selectAll,
-                                                      fillColor:
-                                                          MaterialStateProperty
-                                                              .all(
-                                                                  lightblueColor),
-                                                      onChanged: (bool? value) {
-                                                        setState(() {
-                                                          selectAll =
-                                                              value ?? false;
-
-                                                          if (selectAll) {
-                                                            selectedJobs =
-                                                                pendingjobs
-                                                                    .map(
-                                                                        (job) =>
-                                                                            {
-                                                                              'job_id': job['bkj_id'].toString(),
-                                                                              'job_accepted_cost': job['bkj_cust_cost'].toString(),
-                                                                              'status': "0",
-                                                                            })
-                                                                    .toList();
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                            12.0, 0.0, 12.0, 12.0),
+                                        decoration:
+                                            boxDecorationWithRoundedCorners(
+                                          backgroundColor: white,
+                                          borderRadius: radius(8),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Text(
+                                                    "Advisor Name",
+                                                    textAlign: TextAlign.start,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                      fontSize: width * 0.035,
+                                                      color: black,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Text(
+                                                    service_advisor[
+                                                                'us_firstname'] !=
+                                                            null
+                                                        ? service_advisor[
+                                                                    'us_phone'] !=
+                                                                null
+                                                            ? ": " +
+                                                                service_advisor[
+                                                                    'us_firstname'] +
+                                                                " (" +
+                                                                service_advisor[
+                                                                    'us_country_code'] +
+                                                                service_advisor[
+                                                                    'us_phone'] +
+                                                                " )"
+                                                            : ""
+                                                        : "",
+                                                    textAlign: TextAlign.start,
+                                                    style: montserratMedium
+                                                        .copyWith(
+                                                      fontSize: width * 0.035,
+                                                      color: black,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: RadiantGradientMask(
+                                                    child: IconButton(
+                                                        icon: Icon(Icons.call,
+                                                            color: white,
+                                                            size: 25),
+                                                        onPressed: () async {
+                                                          if (Platform
+                                                              .isAndroid) {
+                                                            PermissionStatus
+                                                                phoneStatus =
+                                                                await Permission
+                                                                    .phone
+                                                                    .request();
+                                                            if (phoneStatus ==
+                                                                PermissionStatus
+                                                                    .denied) {
+                                                              showCustomToast(
+                                                                  context,
+                                                                  "This Permission is recommended for calling.",
+                                                                  bgColor:
+                                                                      errorcolor,
+                                                                  textColor:
+                                                                      white);
+                                                            } else if (phoneStatus ==
+                                                                PermissionStatus
+                                                                    .permanentlyDenied) {
+                                                              openAppSettings();
+                                                            } else if (phoneStatus ==
+                                                                PermissionStatus
+                                                                    .granted) {
+                                                              final Uri url = Uri(
+                                                                  scheme: 'tel',
+                                                                  path: service_advisor[
+                                                                          'us_country_code'] +
+                                                                      service_advisor[
+                                                                          'us_phone']);
+                                                              if (await canLaunchUrl(
+                                                                  url)) {
+                                                                await launchUrl(
+                                                                    url);
+                                                              }
+                                                            }
+                                                            finish(context);
                                                           } else {
-                                                            selectedJobs
-                                                                .clear();
+                                                            final Uri url = Uri(
+                                                                scheme: 'tel',
+                                                                path: service_advisor[
+                                                                        'us_country_code'] +
+                                                                    service_advisor[
+                                                                        'us_phone']);
+                                                            if (await canLaunchUrl(
+                                                                url)) {
+                                                              await launchUrl(
+                                                                  url);
+                                                            }
                                                           }
-                                                        });
-                                                      },
-                                                    ),
-                                                    Container(
-                                                      child: Text("Job Name",
-                                                          overflow:
-                                                              TextOverflow.clip,
-                                                          maxLines: 3,
-                                                          style: montserratSemiBold
-                                                              .copyWith(
-                                                                  fontSize:
-                                                                      width *
-                                                                          0.032,
-                                                                  color:
-                                                                      black)),
-                                                    ),
-                                                  ]),
+                                                        }),
+                                                  ),
                                                 ),
                                               ],
-                                            ).expand(),
+                                            ),
+                                            SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              "Confirmed Jobs",
+                                              textAlign: TextAlign.start,
+                                              overflow: TextOverflow.clip,
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                fontSize: width * 0.04,
+                                                color: syanColor,
+                                              ),
+                                            ),
+                                            4.height,
                                             Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Container(
-                                                    padding: EdgeInsets.all(8),
-                                                    child: Text('Cost (AED)',
+                                                Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Flexible(
+                                                      child: Container(
+                                                        child: Text(
+                                                            "Package & Job Name",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                            maxLines: 3,
+                                                            style: montserratSemiBold
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.032,
+                                                                    color:
+                                                                        black)),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ).expand(),
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        child: Text(
+                                                            'Cost (AED)',
+                                                            style: montserratSemiBold
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.032,
+                                                                    color:
+                                                                        warningcolor))),
+                                                    24.width,
+                                                    Text('Payment\nStatus',
                                                         style: montserratSemiBold
                                                             .copyWith(
                                                                 fontSize:
                                                                     width *
                                                                         0.032,
-                                                                color:
-                                                                    warningcolor))),
+                                                                color: black)),
+                                                  ],
+                                                ),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                                        Divider(),
-                                        Column(
-                                          children: [
-                                            Column(
-                                              children: List.generate(
-                                                pendingjobs.length,
-                                                (i) => Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                            Divider(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Flexible(
-                                                          child: Row(
-                                                            children: [
-                                                              Checkbox(
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              4.0),
-                                                                ),
-                                                                fillColor: MaterialStateProperty
-                                                                    .all(syanColor
-                                                                        .withOpacity(
-                                                                            0.8)),
-                                                                value: selectedJobs.any((jobInfo) =>
-                                                                    jobInfo[
-                                                                        'job_id'] ==
-                                                                    pendingjobs[
-                                                                            i][
-                                                                        'bkj_id']),
-                                                                onChanged:
-                                                                    (bool?
-                                                                        value) {
-                                                                  setState(() {
-                                                                    if (value !=
-                                                                        null) {
-                                                                      Map<String,
-                                                                              String>
-                                                                          jobInfo =
-                                                                          {
-                                                                        'job_id':
-                                                                            pendingjobs[i]['bkj_id'].toString(),
-                                                                        'job_accepted_cost':
-                                                                            pendingjobs[i]['bkj_cust_cost'].toString(),
-                                                                        'status':
-                                                                            "0",
-                                                                      };
-
-                                                                      if (value) {
-                                                                        selectedJobs
-                                                                            .add(jobInfo);
-                                                                      } else {
-                                                                        selectedJobs.removeWhere((jobInfo) =>
-                                                                            jobInfo['job_id'] ==
-                                                                            pendingjobs[i]['bkj_id'].toString());
-                                                                      }
-                                                                    }
-                                                                    selectAll = selectedJobs
-                                                                            .length ==
-                                                                        pendingjobs
-                                                                            .length;
-                                                                  });
-                                                                },
+                                                    Flexible(
+                                                      child: Container(
+                                                        child: Text(
+                                                          packagebooking[
+                                                                      'pkg_name'] !=
+                                                                  null
+                                                              ? packagebooking[
+                                                                  'pkg_name']
+                                                              : "",
+                                                          overflow:
+                                                              TextOverflow.clip,
+                                                          maxLines: 3,
+                                                          style: montserratMedium
+                                                              .copyWith(
+                                                                  color: black,
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ).expand(),
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.all(6),
+                                                      child: Text(
+                                                        selected_package_cost
+                                                            .round()
+                                                            .toStringAsFixed(2),
+                                                        style: montserratSemiBold
+                                                            .copyWith(
+                                                                color:
+                                                                    warningcolor,
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034),
+                                                      ),
+                                                    ),
+                                                    packagebooking[
+                                                                'bkp_payment_status'] ==
+                                                            "0"
+                                                        ? 20.width
+                                                        : 50.width,
+                                                    Text(
+                                                        packagebooking[
+                                                                    'bkp_payment_status'] ==
+                                                                "0"
+                                                            ? "PENDING"
+                                                            : "PAID",
+                                                        style: montserratMedium
+                                                            .copyWith(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034,
+                                                                color: packagebooking[
+                                                                            'bkp_payment_status'] ==
+                                                                        "0"
+                                                                    ? Colors.red
+                                                                    : Colors
+                                                                        .green)),
+                                                  ],
+                                                ),
+                                              ],
+                                            ).paddingSymmetric(vertical: 2),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Flexible(
+                                                      child: Container(
+                                                        child: Text(
+                                                          "Pickup Cost",
+                                                          overflow:
+                                                              TextOverflow.clip,
+                                                          maxLines: 3,
+                                                          style: montserratMedium
+                                                              .copyWith(
+                                                                  color: black,
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ).expand(),
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.all(6),
+                                                      child: Text(
+                                                          selected_pickup_type_cost
+                                                                      .toString() ==
+                                                                  "0.0"
+                                                              ? "FREE"
+                                                              : (selected_pickup_type_cost
+                                                                  .toStringAsFixed(
+                                                                      2)),
+                                                          style: montserratSemiBold
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034,
+                                                                  color:
+                                                                      warningcolor)),
+                                                    ),
+                                                    packagebooking[
+                                                                'bkp_payment_status'] ==
+                                                            "0"
+                                                        ? 20.width
+                                                        : 50.width,
+                                                    Text(
+                                                        packagebooking[
+                                                                    'bkp_payment_status'] ==
+                                                                "0"
+                                                            ? "PENDING"
+                                                            : "PAID",
+                                                        style: montserratMedium
+                                                            .copyWith(
+                                                                fontSize:
+                                                                    width *
+                                                                        0.034,
+                                                                color: packagebooking[
+                                                                            'bkp_payment_status'] ==
+                                                                        "0"
+                                                                    ? Colors.red
+                                                                    : Colors
+                                                                        .green)),
+                                                  ],
+                                                ),
+                                              ],
+                                            ).paddingSymmetric(vertical: 2),
+                                            packagebooking['bk_consumcost'] !=
+                                                        "0.00" &&
+                                                    packagebooking[
+                                                            'bk_consumepaymentflag'] !=
+                                                        "0"
+                                                ? Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Flexible(
+                                                            child: Container(
+                                                              child: Text(
+                                                                "Consumables",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .clip,
+                                                                maxLines: 3,
+                                                                style: montserratMedium.copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.034),
                                                               ),
-                                                              Expanded(
-                                                                child:
-                                                                    Container(
-                                                                  child: Text(
-                                                                    pendingjobs[i]['bkj_jobname'] !=
-                                                                            null
-                                                                        ? capitalize(
-                                                                            pendingjobs[i]['bkj_jobname'],
-                                                                          )
-                                                                        : "",
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .clip,
-                                                                    maxLines: 3,
-                                                                    style: montserratMedium
-                                                                        .copyWith(
-                                                                      color:
-                                                                          black,
-                                                                      fontSize:
-                                                                          width *
-                                                                              0.034,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ).expand(),
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    6),
+                                                            child: Text(
+                                                                consumablecost
+                                                                    .toStringAsFixed(
+                                                                        2),
+                                                                style: montserratSemiBold.copyWith(
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.034,
+                                                                    color:
+                                                                        warningcolor)),
+                                                          ),
+                                                          packagebooking[
+                                                                      'bk_consumepaymentflag'] !=
+                                                                  "1"
+                                                              ? SizedBox(
+                                                                  width: 50,
+                                                                )
+                                                              : SizedBox(
+                                                                  width: 20,
+                                                                ),
+                                                          Text(
+                                                              packagebooking[
+                                                                          'bk_consumepaymentflag'] !=
+                                                                      "1"
+                                                                  ? "PAID"
+                                                                  : "PENDING",
+                                                              style: montserratMedium.copyWith(
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034,
+                                                                  color: packagebooking[
+                                                                              'bk_consumepaymentflag'] !=
+                                                                          "1"
+                                                                      ? Colors
+                                                                          .green
+                                                                      : Colors
+                                                                          .red)),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ).paddingSymmetric(
+                                                    vertical: 2)
+                                                : SizedBox(),
+                                            approvedjobs.isEmpty
+                                                ? Container(
+                                                    decoration: BoxDecoration(
+                                                        border: Border(
+                                                            bottom: BorderSide(
+                                                                color: Colors
+                                                                    .white,
+                                                                width: 1.0))),
+                                                  )
+                                                : Container(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 0),
+                                                    child: Column(
+                                                      children: List.generate(
+                                                        approvedjobs.length,
+                                                        (i) => Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Flexible(
+                                                                  child:
+                                                                      Container(
+                                                                    child: Text(
+                                                                      approvedjobs[i]['bkj_jobname'] !=
+                                                                              null
+                                                                          ? capitalize(approvedjobs[i]
+                                                                              [
+                                                                              'bkj_jobname'])
+                                                                          : "",
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .clip,
+                                                                      maxLines:
+                                                                          3,
+                                                                      style: montserratMedium
+                                                                          .copyWith(
+                                                                        color:
+                                                                            black,
+                                                                        fontSize:
+                                                                            width *
+                                                                                0.034,
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ).expand(),
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                          padding:
-                                                              EdgeInsets.all(8),
-                                                          child: Text(
-                                                            pendingjobs[i][
-                                                                'bkj_cust_cost'],
-                                                            style:
-                                                                montserratSemiBold
-                                                                    .copyWith(
-                                                              color:
-                                                                  warningcolor,
-                                                              fontSize:
-                                                                  width * 0.032,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
+                                                              ],
+                                                            ).expand(),
+                                                            status['st_code'] ==
+                                                                        'CDLC' &&
+                                                                    approvedjobs[i]
+                                                                            [
+                                                                            'bkj_approvedcost'] !=
+                                                                        approvedjobs[i]
+                                                                            [
+                                                                            'bkj_cust_cost']
+                                                                ? Row(
+                                                                    children: [
+                                                                      Container(
+                                                                          padding: EdgeInsets.all(
+                                                                              6),
+                                                                          child:
+                                                                              RichText(
+                                                                            text:
+                                                                                TextSpan(
+                                                                              children: <TextSpan>[
+                                                                                TextSpan(
+                                                                                  text: approvedjobs[i]['bkj_approvedcost'] != null ? approvedjobs[i]['bkj_approvedcost'] : "",
+                                                                                  style: montserratSemiBold.copyWith(
+                                                                                    color: Colors.grey,
+                                                                                    fontSize: width * 0.025,
+                                                                                    decoration: TextDecoration.lineThrough,
+                                                                                  ),
+                                                                                ),
+                                                                                TextSpan(
+                                                                                  text: approvedjobs[i]['bkj_cust_cost'] != null ? " " + approvedjobs[i]['bkj_cust_cost'] : "",
+                                                                                  style: montserratSemiBold.copyWith(color: warningcolor, fontSize: width * 0.032),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          )),
+                                                                      approvedjobs[i]['bkj_status'] ==
+                                                                              "4"
+                                                                          ? SizedBox(
+                                                                              width: 50,
+                                                                            )
+                                                                          : SizedBox(
+                                                                              width: 20,
+                                                                            ),
+                                                                      approvedjobs[i]['bkj_status'] ==
+                                                                              "4"
+                                                                          ? Text(
+                                                                              "PAID",
+                                                                              style: montserratMedium.copyWith(fontSize: width * 0.034, color: Colors.green))
+                                                                          : Text("PENDING", style: montserratMedium.copyWith(fontSize: width * 0.034, color: Colors.red)),
+                                                                    ],
+                                                                  )
+                                                                : Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        padding:
+                                                                            EdgeInsets.all(6),
+                                                                        child: Text(
+                                                                            approvedjobs[i]['bkj_cust_cost'] != null
+                                                                                ? approvedjobs[i]['bkj_cust_cost']
+                                                                                : "",
+                                                                            style: montserratSemiBold.copyWith(fontSize: width * 0.032, color: warningcolor)),
+                                                                      ),
+                                                                      approvedjobs[i]['bkj_status'] ==
+                                                                              "4"
+                                                                          ? SizedBox(
+                                                                              width: 50,
+                                                                            )
+                                                                          : SizedBox(
+                                                                              width: 20,
+                                                                            ),
+                                                                      approvedjobs[i]['bkj_status'] ==
+                                                                              "4"
+                                                                          ? Text(
+                                                                              "PAID",
+                                                                              style: montserratMedium.copyWith(fontSize: width * 0.034, color: Colors.green))
+                                                                          : Text("PENDING", style: montserratMedium.copyWith(fontSize: width * 0.034, color: Colors.red)),
+                                                                    ],
+                                                                  )
+                                                          ],
+                                                        ).paddingSymmetric(
+                                                            vertical: 2),
+                                                      ),
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            selectAll || selectedJobs.isNotEmpty
-                                                ? Divider(
-                                                    color: black,
-                                                  )
-                                                : SizedBox(),
-                                            selectAll || selectedJobs.isNotEmpty
-                                                ? Container(
-                                                    padding: EdgeInsets.all(2),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors.red
-                                                                .withAlpha(30),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                            border: Border.all(
-                                                                color:
-                                                                    Colors.red),
-                                                          ),
-                                                          child: IconButton(
-                                                            onPressed: () {
-                                                              showConfirmDialogCustom(
-                                                                height: 65,
-                                                                context,
-                                                                title:
-                                                                    'Are you sure you want to reject this job?',
-                                                                primaryColor:
-                                                                    warningcolor,
-                                                                customCenterWidget:
-                                                                    Padding(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .only(
-                                                                              top: 8),
-                                                                  child: Image
-                                                                      .asset(
-                                                                    "assets/icons/reject.png",
-                                                                    width:
-                                                                        width /
-                                                                            2,
-                                                                    height: 95,
-                                                                  ),
-                                                                ),
-                                                                onAccept:
-                                                                    (v) async {
-                                                                  selectedJobs
-                                                                      .forEach(
-                                                                          (jobInfo) {
-                                                                    jobInfo['status'] =
-                                                                        "3";
-                                                                  });
-                                                                  Map req = {
-                                                                    'selectedjobs':
-                                                                        selectedJobs,
-                                                                    'bookid': widget
-                                                                        .booking_id,
-                                                                    "booking_version":
-                                                                        booking[
-                                                                            'bk_version']
-                                                                  };
-                                                                  await multipleJobUpdate(
-                                                                          req)
-                                                                      .then(
-                                                                          (value) {
-                                                                    if (value[
-                                                                            'ret_data'] ==
-                                                                        "success") {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
-                                                                    } else if (value[
-                                                                            'ret_data'] ==
-                                                                        "changed") {
-                                                                      showDialog(
-                                                                        barrierDismissible:
-                                                                            false,
-                                                                        context:
-                                                                            context,
-                                                                        builder: (BuildContext context) => ShowChangePopUp(
-                                                                            bk_id:
-                                                                                widget.booking_id,
-                                                                            vehname: widget.vehname,
-                                                                            make: widget.vehmake,
-                                                                            clickid: widget.click_id),
-                                                                      );
-                                                                    }
-                                                                  });
-                                                                },
-                                                              );
-                                                            },
-                                                            icon: Icon(
-                                                                Icons
-                                                                    .close_outlined,
-                                                                color:
-                                                                    redColor),
-                                                            iconSize: 22,
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 8),
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors.green
-                                                                .withAlpha(30),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .green),
-                                                          ),
-                                                          child: IconButton(
-                                                            onPressed: () {
-                                                              showConfirmDialogCustom(
-                                                                height: 65,
-                                                                context,
-                                                                title:
-                                                                    'Approve Job?',
-                                                                primaryColor:
-                                                                    syanColor,
-                                                                customCenterWidget:
-                                                                    Padding(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .only(
-                                                                              top: 8),
-                                                                  child: Image
-                                                                      .asset(
-                                                                    "assets/icons/approve.png",
-                                                                    width:
-                                                                        width /
-                                                                            2,
-                                                                    height: 95,
-                                                                  ),
-                                                                ),
-                                                                onAccept:
-                                                                    (v) async {
-                                                                  selectedJobs
-                                                                      .forEach(
-                                                                          (jobInfo) {
-                                                                    jobInfo['status'] =
-                                                                        "2";
-                                                                  });
-
-                                                                  Map req = {
-                                                                    'selectedjobs':
-                                                                        selectedJobs,
-                                                                    'bookid': widget
-                                                                        .booking_id,
-                                                                    "booking_version":
-                                                                        booking[
-                                                                            'bk_version']
-                                                                  };
-                                                                  await multipleJobUpdate(
-                                                                          req)
-                                                                      .then(
-                                                                          (value) {
-                                                                    if (value[
-                                                                            'ret_data'] ==
-                                                                        "success") {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
-                                                                    } else if (value[
-                                                                            'ret_data'] ==
-                                                                        "changed") {
-                                                                      showDialog(
-                                                                        barrierDismissible:
-                                                                            false,
-                                                                        context:
-                                                                            context,
-                                                                        builder: (BuildContext context) => ShowChangePopUp(
-                                                                            bk_id:
-                                                                                widget.booking_id,
-                                                                            vehname: widget.vehname,
-                                                                            make: widget.vehmake,
-                                                                            clickid: widget.click_id),
-                                                                      );
-                                                                    }
-                                                                  });
-                                                                },
-                                                              );
-                                                            },
-                                                            icon: Icon(
-                                                                Icons
-                                                                    .check_sharp,
-                                                                color:
-                                                                    greenColor),
-                                                            iconSize: 22,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : SizedBox()
+                                                  ),
                                           ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                            pendingjobs.isEmpty
-                                ? approvedjobs.isEmpty
-                                    ? SizedBox()
-                                    : Container(
+                                      ),
+                                      Container(
                                         padding: EdgeInsets.only(
                                             left: 16.0, right: 16.0),
                                         child: Divider(
                                           color: black,
                                         ),
-                                      )
-                                : Container(
-                                    padding: EdgeInsets.only(
-                                        left: 16.0, right: 16.0),
-                                    child: Divider(
-                                      color: black,
-                                    ),
-                                  ),
-                            pendingjobs.isEmpty
-                                ? approvedjobs.isEmpty
-                                    ? SizedBox()
-                                    : Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "DISCLAIMER",
-                                            textAlign: TextAlign.start,
-                                            overflow: TextOverflow.clip,
-                                            style: montserratSemiBold.copyWith(
-                                              fontSize: 12,
-                                              color: black,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                : Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "DISCLAIMER",
-                                        textAlign: TextAlign.start,
-                                        overflow: TextOverflow.clip,
-                                        style: montserratSemiBold.copyWith(
-                                          fontSize: 12,
-                                          color: black,
-                                        ),
                                       ),
-                                    ],
-                                  ),
-                            pendingjobs.isEmpty
-                                ? approvedjobs.isEmpty
-                                    ? SizedBox()
-                                    : const SizedBox(height: 4)
-                                : const SizedBox(height: 4),
-                            pendingjobs.isEmpty
-                                ? approvedjobs.isEmpty
-                                    ? SizedBox()
-                                    : Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  16, 0, 16, 0),
-                                              child: Text(
-                                                "Please note that while the final cost may vary depending on the specifics of the completed work, it will never exceed the amount agreed upon in the initial estimate.",
-                                                textAlign: TextAlign.justify,
-                                                style:
-                                                    montserratMedium.copyWith(
-                                                  fontSize: 12,
-                                                  color: black,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                : Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsets.fromLTRB(16, 0, 16, 0),
-                                          child: Text(
-                                            "Please note that while the final cost may vary depending on the specifics of the completed work, it will never exceed the amount agreed upon in the initial estimate.",
-                                            textAlign: TextAlign.justify,
-                                            style: montserratMedium.copyWith(
-                                              fontSize: 12,
-                                              color: black,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                            pendingjobs.isEmpty
-                                ? approvedjobs.isEmpty
-                                    ? SizedBox()
-                                    : SizedBox(
-                                        height: 20,
-                                      )
-                                : SizedBox(
-                                    height: 20,
-                                  ),
-                            status['st_code'] == 'CDLC'
-                                ? amounttopay.toString() != "0.0"
-                                    ? GestureDetector(
-                                        onTap: () async {
-                                          if (isproceeding) return;
-                                          setState(() => isproceeding = true);
-                                          await Future.delayed(
-                                              Duration(milliseconds: 1000));
-                                          createPayment(
-                                              packagebooking['bk_consumcost'],
-                                              packagebooking[
-                                                  'bk_consumepaymentflag']);
-                                        },
-                                        child: Stack(
-                                          alignment: Alignment.bottomCenter,
-                                          children: [
-                                            Container(
-                                              height: height * 0.045,
-                                              width: height * 0.37,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(14),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        blurRadius: 16,
-                                                        color: syanColor
-                                                            .withOpacity(.6),
-                                                        spreadRadius: 0,
-                                                        blurStyle:
-                                                            BlurStyle.outer,
-                                                        offset: Offset(0, 0)),
-                                                  ]),
-                                            ),
-                                            Container(
-                                              height: height * 0.075,
-                                              width: height * 0.4,
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.rectangle,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(14)),
-                                                gradient: LinearGradient(
-                                                  begin: Alignment.topLeft,
-                                                  end: Alignment.bottomRight,
-                                                  colors: [
-                                                    syanColor,
-                                                    lightblueColor,
-                                                  ],
-                                                ),
-                                              ),
-                                              child: !isproceeding
-                                                  ? Text(
-                                                      "PAYMENT",
+                                      coupondiscount != 0 || normaldiscount != 0
+                                          ? Container(
+                                              padding:
+                                                  EdgeInsets.only(right: 12.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    flex: 12,
+                                                    child: Text(
+                                                      "Total Cost: ",
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                      style: montserratSemiBold
+                                                          .copyWith(
+                                                        color: black,
+                                                        fontSize: width * 0.034,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: Text(
+                                                      withoutcoupontotal
+                                                          .toStringAsFixed(2),
+                                                      textAlign:
+                                                          TextAlign.right,
                                                       style: montserratSemiBold
                                                           .copyWith(
                                                               color:
-                                                                  Colors.white),
-                                                    )
-                                                  : Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Transform.scale(
-                                                          scale: 0.7,
-                                                          child:
-                                                              CircularProgressIndicator(
-                                                            color: white,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                                  warningcolor,
+                                                              fontSize: width *
+                                                                  0.034),
                                                     ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      coupondiscount != 0
+                                          ? Container(
+                                              padding:
+                                                  EdgeInsets.only(right: 12.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    flex: 12,
+                                                    child: Text(
+                                                      "Coupon Discounts: ",
+                                                      style: montserratSemiBold
+                                                          .copyWith(
+                                                              color: black,
+                                                              fontSize: width *
+                                                                  0.034),
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: Text(
+                                                      coupondiscount
+                                                          .toStringAsFixed(2),
+                                                      style: montserratSemiBold
+                                                          .copyWith(
+                                                              color:
+                                                                  warningcolor,
+                                                              fontSize: width *
+                                                                  0.034),
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      normaldiscount != 0
+                                          ? Container(
+                                              padding:
+                                                  EdgeInsets.only(right: 12.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    flex: 12,
+                                                    child: Text(
+                                                      "Discounts: ",
+                                                      style: montserratSemiBold
+                                                          .copyWith(
+                                                              color: black,
+                                                              fontSize: width *
+                                                                  0.034),
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: Text(
+                                                      normaldiscount
+                                                          .toStringAsFixed(2),
+                                                      style: montserratSemiBold
+                                                          .copyWith(
+                                                              color:
+                                                                  warningcolor,
+                                                              fontSize: width *
+                                                                  0.034),
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(right: 12.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 12,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                    "Grand Total",
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                      color: black,
+                                                      fontSize: width * 0.034,
+                                                    ),
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                  Text(
+                                                    "(VAT inclusive): ",
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                      color: greyColor,
+                                                      fontSize: width * 0.028,
+                                                    ),
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                grandtotal.toStringAsFixed(2),
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                  color: warningcolor,
+                                                  fontSize: width * 0.034,
+                                                ),
+                                                textAlign: TextAlign.right,
+                                              ),
                                             ),
                                           ],
                                         ),
-                                      )
-                                    : Row()
-                                : SizedBox(),
-                            const SizedBox(height: 100),
-                          ],
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(right: 12.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 12,
+                                              child: Text(
+                                                "Paid Amount: ",
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        color: black,
+                                                        fontSize:
+                                                            width * 0.034),
+                                                textAlign: TextAlign.right,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                paidamount.toStringAsFixed(2),
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        color: warningcolor,
+                                                        fontSize:
+                                                            width * 0.034),
+                                                textAlign: TextAlign.right,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(right: 12.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 12,
+                                              child: Text(
+                                                "Balance Amount: ",
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        color: black,
+                                                        fontSize:
+                                                            width * 0.034),
+                                                textAlign: TextAlign.right,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                amounttopay.toStringAsFixed(2),
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        color: warningcolor,
+                                                        fontSize:
+                                                            width * 0.034),
+                                                textAlign: TextAlign.right,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      pendingjobs.isEmpty
+                                          ? Container()
+                                          : Container(
+                                              padding: EdgeInsets.only(
+                                                  left: 16.0, right: 16.0),
+                                              child: Divider(
+                                                color: black,
+                                              ),
+                                            ),
+                                      pendingjobs.isEmpty
+                                          ? Container()
+                                          : Container(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  12.0, 8.0, 12.0, 12.0),
+                                              decoration:
+                                                  boxDecorationWithRoundedCorners(
+                                                backgroundColor: white,
+                                                borderRadius: radius(8),
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Job Pending Approval",
+                                                    textAlign: TextAlign.start,
+                                                    overflow: TextOverflow.clip,
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                      fontSize: width * 0.04,
+                                                      color: warningcolor,
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Flexible(
+                                                            child: Row(
+                                                                children: [
+                                                                  Checkbox(
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              4.0),
+                                                                    ),
+                                                                    value:
+                                                                        selectAll,
+                                                                    fillColor:
+                                                                        MaterialStateProperty.all(
+                                                                            lightblueColor),
+                                                                    onChanged:
+                                                                        (bool?
+                                                                            value) {
+                                                                      setState(
+                                                                          () {
+                                                                        selectAll =
+                                                                            value ??
+                                                                                false;
+
+                                                                        if (selectAll) {
+                                                                          selectedJobs = pendingjobs
+                                                                              .map((job) => {
+                                                                                    'job_id': job['bkj_id'].toString(),
+                                                                                    'job_accepted_cost': job['bkj_cust_cost'].toString(),
+                                                                                    'status': "0",
+                                                                                  })
+                                                                              .toList();
+                                                                        } else {
+                                                                          selectedJobs
+                                                                              .clear();
+                                                                        }
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                                  Container(
+                                                                    child: Text(
+                                                                        "Job Name",
+                                                                        overflow:
+                                                                            TextOverflow
+                                                                                .clip,
+                                                                        maxLines:
+                                                                            3,
+                                                                        style: montserratSemiBold.copyWith(
+                                                                            fontSize: width *
+                                                                                0.032,
+                                                                            color:
+                                                                                black)),
+                                                                  ),
+                                                                ]),
+                                                          ),
+                                                        ],
+                                                      ).expand(),
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(8),
+                                                              child: Text(
+                                                                  'Cost (AED)',
+                                                                  style: montserratSemiBold.copyWith(
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.032,
+                                                                      color:
+                                                                          warningcolor))),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Divider(),
+                                                  Column(
+                                                    children: [
+                                                      Column(
+                                                        children: List.generate(
+                                                          pendingjobs.length,
+                                                          (i) => Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Flexible(
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Checkbox(
+                                                                          shape:
+                                                                              RoundedRectangleBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(4.0),
+                                                                          ),
+                                                                          fillColor:
+                                                                              MaterialStateProperty.all(syanColor.withOpacity(0.8)),
+                                                                          value: selectedJobs.any((jobInfo) =>
+                                                                              jobInfo['job_id'] ==
+                                                                              pendingjobs[i]['bkj_id']),
+                                                                          onChanged:
+                                                                              (bool? value) {
+                                                                            setState(() {
+                                                                              if (value != null) {
+                                                                                Map<String, String> jobInfo = {
+                                                                                  'job_id': pendingjobs[i]['bkj_id'].toString(),
+                                                                                  'job_accepted_cost': pendingjobs[i]['bkj_cust_cost'].toString(),
+                                                                                  'status': "0",
+                                                                                };
+
+                                                                                if (value) {
+                                                                                  selectedJobs.add(jobInfo);
+                                                                                } else {
+                                                                                  selectedJobs.removeWhere((jobInfo) => jobInfo['job_id'] == pendingjobs[i]['bkj_id'].toString());
+                                                                                }
+                                                                              }
+                                                                              selectAll = selectedJobs.length == pendingjobs.length;
+                                                                            });
+                                                                          },
+                                                                        ),
+                                                                        Expanded(
+                                                                          child:
+                                                                              Container(
+                                                                            child:
+                                                                                Text(
+                                                                              pendingjobs[i]['bkj_jobname'] != null
+                                                                                  ? capitalize(
+                                                                                      pendingjobs[i]['bkj_jobname'],
+                                                                                    )
+                                                                                  : "",
+                                                                              overflow: TextOverflow.clip,
+                                                                              maxLines: 3,
+                                                                              style: montserratMedium.copyWith(
+                                                                                color: black,
+                                                                                fontSize: width * 0.034,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ).expand(),
+                                                              Row(
+                                                                children: [
+                                                                  Container(
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(8),
+                                                                    child: Text(
+                                                                      pendingjobs[
+                                                                              i]
+                                                                          [
+                                                                          'bkj_cust_cost'],
+                                                                      style: montserratSemiBold
+                                                                          .copyWith(
+                                                                        color:
+                                                                            warningcolor,
+                                                                        fontSize:
+                                                                            width *
+                                                                                0.032,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      selectAll ||
+                                                              selectedJobs
+                                                                  .isNotEmpty
+                                                          ? Divider(
+                                                              color: black,
+                                                            )
+                                                          : SizedBox(),
+                                                      selectAll ||
+                                                              selectedJobs
+                                                                  .isNotEmpty
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(2),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .end,
+                                                                children: [
+                                                                  Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Colors
+                                                                          .red
+                                                                          .withAlpha(
+                                                                              30),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10),
+                                                                      border: Border.all(
+                                                                          color:
+                                                                              Colors.red),
+                                                                    ),
+                                                                    child:
+                                                                        IconButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        showConfirmDialogCustom(
+                                                                          height:
+                                                                              65,
+                                                                          context,
+                                                                          title:
+                                                                              'Are you sure you want to reject this job?',
+                                                                          primaryColor:
+                                                                              warningcolor,
+                                                                          customCenterWidget:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.only(top: 8),
+                                                                            child:
+                                                                                Image.asset(
+                                                                              "assets/icons/reject.png",
+                                                                              width: width / 2,
+                                                                              height: 95,
+                                                                            ),
+                                                                          ),
+                                                                          onAccept:
+                                                                              (v) async {
+                                                                            selectedJobs.forEach((jobInfo) {
+                                                                              jobInfo['status'] = "3";
+                                                                            });
+                                                                            Map req =
+                                                                                {
+                                                                              'selectedjobs': selectedJobs,
+                                                                              'bookid': widget.booking_id,
+                                                                              "booking_version": booking['bk_version']
+                                                                            };
+                                                                            await multipleJobUpdate(req).then((value) {
+                                                                              if (value['ret_data'] == "success") {
+                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
+                                                                              } else if (value['ret_data'] == "changed") {
+                                                                                showDialog(
+                                                                                  barrierDismissible: false,
+                                                                                  context: context,
+                                                                                  builder: (BuildContext context) => ShowChangePopUp(bk_id: widget.booking_id, vehname: widget.vehname, make: widget.vehmake, clickid: widget.click_id),
+                                                                                );
+                                                                              }
+                                                                            });
+                                                                          },
+                                                                        );
+                                                                      },
+                                                                      icon: Icon(
+                                                                          Icons
+                                                                              .close_outlined,
+                                                                          color:
+                                                                              redColor),
+                                                                      iconSize:
+                                                                          22,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      width: 8),
+                                                                  Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Colors
+                                                                          .green
+                                                                          .withAlpha(
+                                                                              30),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10),
+                                                                      border: Border.all(
+                                                                          color:
+                                                                              Colors.green),
+                                                                    ),
+                                                                    child:
+                                                                        IconButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        showConfirmDialogCustom(
+                                                                          height:
+                                                                              65,
+                                                                          context,
+                                                                          title:
+                                                                              'Approve Job?',
+                                                                          primaryColor:
+                                                                              syanColor,
+                                                                          customCenterWidget:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.only(top: 8),
+                                                                            child:
+                                                                                Image.asset(
+                                                                              "assets/icons/approve.png",
+                                                                              width: width / 2,
+                                                                              height: 95,
+                                                                            ),
+                                                                          ),
+                                                                          onAccept:
+                                                                              (v) async {
+                                                                            selectedJobs.forEach((jobInfo) {
+                                                                              jobInfo['status'] = "2";
+                                                                            });
+                                                                            print("selectedJobs=>");
+                                                                            print(selectedJobs);
+                                                                            Map req =
+                                                                                {
+                                                                              'selectedjobs': selectedJobs,
+                                                                              'bookid': widget.booking_id,
+                                                                              "booking_version": booking['bk_version']
+                                                                            };
+                                                                            print("req=>");
+                                                                            print(req);
+                                                                            await multipleJobUpdate(req).then((value) {
+                                                                              if (value['ret_data'] == "success") {
+                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
+                                                                              } else if (value['ret_data'] == "changed") {
+                                                                                showDialog(
+                                                                                  barrierDismissible: false,
+                                                                                  context: context,
+                                                                                  builder: (BuildContext context) => ShowChangePopUp(bk_id: widget.booking_id, vehname: widget.vehname, make: widget.vehmake, clickid: widget.click_id),
+                                                                                );
+                                                                              }
+                                                                            });
+                                                                          },
+                                                                        );
+                                                                      },
+                                                                      icon: Icon(
+                                                                          Icons
+                                                                              .check_sharp,
+                                                                          color:
+                                                                              greenColor),
+                                                                      iconSize:
+                                                                          22,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox()
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                      pendingjobs.isEmpty
+                                          ? approvedjobs.isEmpty
+                                              ? SizedBox()
+                                              : Container(
+                                                  padding: EdgeInsets.only(
+                                                      left: 16.0, right: 16.0),
+                                                  child: Divider(
+                                                    color: black,
+                                                  ),
+                                                )
+                                          : Container(
+                                              padding: EdgeInsets.only(
+                                                  left: 16.0, right: 16.0),
+                                              child: Divider(
+                                                color: black,
+                                              ),
+                                            ),
+                                      pendingjobs.isEmpty
+                                          ? approvedjobs.isEmpty
+                                              ? SizedBox()
+                                              : Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "DISCLAIMER",
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      style: montserratSemiBold
+                                                          .copyWith(
+                                                        fontSize: 12,
+                                                        color: black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                          : Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "DISCLAIMER",
+                                                  textAlign: TextAlign.start,
+                                                  overflow: TextOverflow.clip,
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                    fontSize: 12,
+                                                    color: black,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                      pendingjobs.isEmpty
+                                          ? approvedjobs.isEmpty
+                                              ? SizedBox()
+                                              : const SizedBox(height: 4)
+                                          : const SizedBox(height: 4),
+                                      pendingjobs.isEmpty
+                                          ? approvedjobs.isEmpty
+                                              ? SizedBox()
+                                              : Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                16, 0, 16, 0),
+                                                        child: Text(
+                                                          "Please be advised that the final cost of services may vary based on the particulars of the completed work. However, it will never surpass the agreed amount specified in the initial estimate",
+                                                          textAlign:
+                                                              TextAlign.justify,
+                                                          style:
+                                                              montserratMedium
+                                                                  .copyWith(
+                                                            fontSize: 12,
+                                                            color: black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                          : Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            16, 0, 16, 0),
+                                                    child: Text(
+                                                      "Please note that while the final cost may vary depending on the specifics of the completed work, it will never exceed the amount agreed upon in the initial estimate.",
+                                                      textAlign:
+                                                          TextAlign.justify,
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                        fontSize: 12,
+                                                        color: black,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                      pendingjobs.isEmpty
+                                          ? approvedjobs.isEmpty
+                                              ? SizedBox()
+                                              : SizedBox(
+                                                  height: 20,
+                                                )
+                                          : SizedBox(
+                                              height: 20,
+                                            ),
+                                      SizedBox(
+                                        height: 40,
+                                      ),
+                                      status['st_code'] == 'CDLC'
+                                          ? amounttopay.toString() != "0.0"
+                                              ? GestureDetector(
+                                                  onTap: () async {
+                                                    if (isproceeding) return;
+                                                    setState(() =>
+                                                        isproceeding = true);
+                                                    await Future.delayed(
+                                                        Duration(
+                                                            milliseconds:
+                                                                1000));
+                                                    createPayment(
+                                                        packagebooking[
+                                                            'bk_consumcost'],
+                                                        packagebooking[
+                                                            'bk_consumepaymentflag']);
+                                                  },
+                                                  child: Stack(
+                                                    alignment:
+                                                        Alignment.bottomCenter,
+                                                    children: [
+                                                      Container(
+                                                        height: height * 0.045,
+                                                        width: height * 0.37,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        14),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                  blurRadius:
+                                                                      16,
+                                                                  color: syanColor
+                                                                      .withOpacity(
+                                                                          .6),
+                                                                  spreadRadius:
+                                                                      0,
+                                                                  blurStyle:
+                                                                      BlurStyle
+                                                                          .outer,
+                                                                  offset:
+                                                                      Offset(0,
+                                                                          0)),
+                                                            ]),
+                                                      ),
+                                                      Container(
+                                                        height: height * 0.075,
+                                                        width: height * 0.4,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape: BoxShape
+                                                              .rectangle,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          14)),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            begin: Alignment
+                                                                .topLeft,
+                                                            end: Alignment
+                                                                .bottomRight,
+                                                            colors: [
+                                                              syanColor,
+                                                              lightblueColor,
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        child: !isproceeding
+                                                            ? Text(
+                                                                "PAYMENT",
+                                                                style: montserratSemiBold
+                                                                    .copyWith(
+                                                                        color: Colors
+                                                                            .white),
+                                                              )
+                                                            : Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Transform
+                                                                      .scale(
+                                                                    scale: 0.7,
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color:
+                                                                          white,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              : Row()
+                                          : SizedBox(),
+                                      const SizedBox(height: 100),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              onRefresh: refresh),
+                        onRefresh: refresh);
+                  }
+              }
+            },
+          ),
         ),
       ),
     );

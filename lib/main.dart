@@ -5,7 +5,6 @@ import 'package:autoversa/screens/auth_screens/login_page.dart';
 import 'package:autoversa/screens/bottom_tab/bottomtab.dart';
 import 'package:autoversa/screens/splash_screen/splash_screen.dart';
 import 'package:autoversa/screens/support/support_screen.dart';
-import 'package:autoversa/screens/vehicle/vehicle_add_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -5,7 +5,10 @@ import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/main.dart';
 import 'package:autoversa/screens/address/address_list_screen.dart';
 import 'package:autoversa/screens/service/service_list_screen.dart';
+import 'package:autoversa/screens/settings/delete_account.dart';
 import 'package:autoversa/screens/settings/edit_profile.dart';
+import 'package:autoversa/screens/settings/privacy_policy.dart';
+import 'package:autoversa/screens/settings/terms_and_conditions.dart';
 import 'package:autoversa/screens/support/support_screen.dart';
 import 'package:autoversa/screens/tryout_page.dart';
 import 'package:autoversa/screens/vehicle/vehicle_list_screen.dart';
@@ -640,11 +643,11 @@ class ProfilePageState extends State<ProfilePage> {
                                   ],
                                 ),
                               ),
-                              child: Icon(Icons.lock,
+                              child: Icon(Icons.assignment_turned_in,
                                   color: Colors.white, size: 20),
                             ),
                             16.width,
-                            Text("Privacy",
+                            Text("Terms & Conditions",
                                 style: montserratSemiBold.copyWith()),
                           ],
                         ).paddingOnly(left: 16),
@@ -653,16 +656,150 @@ class ProfilePageState extends State<ProfilePage> {
                             .paddingOnly(right: 16),
                       ],
                     ).onTap(() async {
-                      // String? name = await Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) {
-                      //       return TryOut();
-                      //     },
-                      //   ),
-                      // );
-                      // nameProfile = name;
-                      // setState(() {});
+                      String? name = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return termsandCondition();
+                          },
+                        ),
+                      );
+                      nameProfile = name;
+                      setState(() {});
+                    }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    lightblueColor,
+                                    syanColor,
+                                  ],
+                                ),
+                              ),
+                              child: Icon(Icons.lock,
+                                  color: Colors.white, size: 20),
+                            ),
+                            16.width,
+                            Text("Privacy Policy",
+                                style: montserratSemiBold.copyWith()),
+                          ],
+                        ).paddingOnly(left: 16),
+                        Icon(Icons.arrow_forward_ios,
+                                color: syanColor, size: 16)
+                            .paddingOnly(right: 16),
+                      ],
+                    ).onTap(() async {
+                      String? name = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return privacyPolicy();
+                          },
+                        ),
+                      );
+                      nameProfile = name;
+                      setState(() {});
+                    }),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Row(
+                    //       children: [
+                    //         Container(
+                    //           alignment: Alignment.center,
+                    //           margin: EdgeInsets.symmetric(vertical: 8),
+                    //           padding: EdgeInsets.all(10),
+                    //           decoration: BoxDecoration(
+                    //             shape: BoxShape.circle,
+                    //             gradient: LinearGradient(
+                    //               begin: Alignment.topRight,
+                    //               end: Alignment.bottomRight,
+                    //               colors: [
+                    //                 lightblueColor,
+                    //                 syanColor,
+                    //               ],
+                    //             ),
+                    //           ),
+                    //           child: Icon(Icons.lock,
+                    //               color: Colors.white, size: 20),
+                    //         ),
+                    //         16.width,
+                    //         Text("Tryout",
+                    //             style: montserratSemiBold.copyWith()),
+                    //       ],
+                    //     ).paddingOnly(left: 16),
+                    //     Icon(Icons.arrow_forward_ios,
+                    //             color: syanColor, size: 16)
+                    //         .paddingOnly(right: 16),
+                    //   ],
+                    // ).onTap(() async {
+                    //   // String? name = await Navigator.push(
+                    //   //   context,
+                    //   //   MaterialPageRoute(
+                    //   //     builder: (context) {
+                    //   //       return MyHomePage(
+                    //   //         title: "jjjj",
+                    //   //       );
+                    //   //     },
+                    //   //   ),
+                    //   // );
+                    //   // nameProfile = name;
+                    //   // setState(() {});
+                    // }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    lightblueColor,
+                                    syanColor,
+                                  ],
+                                ),
+                              ),
+                              child: Icon(Icons.delete_outlined,
+                                  color: Colors.white, size: 20),
+                            ),
+                            16.width,
+                            Text("Deactivate Account",
+                                style: montserratSemiBold.copyWith()),
+                          ],
+                        ).paddingOnly(left: 16),
+                        Icon(Icons.arrow_forward_ios,
+                                color: syanColor, size: 16)
+                            .paddingOnly(right: 16),
+                      ],
+                    ).onTap(() async {
+                      String? name = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DeactivateAccount();
+                          },
+                        ),
+                      );
+                      nameProfile = name;
+                      setState(() {});
                     }),
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.spaceBetween,

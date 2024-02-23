@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:async/async.dart';
 import 'package:autoversa/constant/image_const.dart';
 import 'package:autoversa/constant/text_style.dart';
 import 'package:autoversa/generated/l10n.dart' as lang;
@@ -50,6 +50,7 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class ScheduleScreenState extends State<ScheduleScreen> {
+  AsyncMemoizer _memoizer = AsyncMemoizer();
   late int package_price = 0;
   late List custAddressList = [];
   late List pickup_options = [];
@@ -91,15 +92,23 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     setState(() {});
   }
 
+  fetchFutureDatas() {
+    return this._memoizer.runOnce(() async {
+      return await _fetchdatas(0, 'p&d');
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _memoizer = AsyncMemoizer();
     init();
-    Future.delayed(Duration.zero, () {
-      _setdatas();
-      _fetchdatas(0, 'p&d');
-    });
-    setState(() => isserviceble = true);
+    _setdatas();
+    // Future.delayed(Duration.zero, () {
+    //   _setdatas();
+    //   _fetchdatas(0, 'p&d');
+    // });
+    // setState(() => isserviceble = true);
   }
 
   dropCostCalculation(
@@ -155,7 +164,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       };
       pickup_options.add(temp);
     }
-    isserviceble = serviceAvailability;
+    // isserviceble = serviceAvailability;
     setState(() {});
   }
 
@@ -626,18 +635,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             ? packdata['drop_location'] =
                 SelectAddressList[selected_drop_address]
             : packdata['drop_location'] = SelectAddressList[selected_address];
-
-        packdata['pick_up_price'] = pickup_cost;
         packdata['pickup_vat'] = pickup_vat;
+        packdata['pick_up_price'] = pickup_cost;
         packdata['pick_type_id'] = pickupoption.toString();
         packdata['pick_type_name'] = pickup_name;
         packdata['selected_date'] = selectedDate.toString();
         packdata['selected_timeid'] = selected_timeid;
         packdata['selected_timeslot'] = selected_timeslot;
-
         prefs.setString("booking_data", json.encode(packdata));
-        print("booking_data");
-        print(packdata);
         pickupoption = "";
         setState(() => isproceeding = false);
         Navigator.push(
@@ -670,6 +675,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         showCustomToast(context, "Choose a time slot",
             bgColor: errorcolor, textColor: white);
       } else {
+        packdata['pickup_vat'] = pickup_vat;
         packdata['payment_flag'] = payment_flag;
         packdata['pick_up_location'] = SelectAddressList[selected_address];
         packdata['pick_up_location_id'] = ptempdata;
@@ -687,10 +693,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           if (selected_timeid != 0) {
             packdata['selected_timeid'] = selected_timeid;
             packdata['selected_timeslot'] = selected_timeslot;
-            packdata['payment_flag'] = payment_flag;
             prefs.setString("booking_data", json.encode(packdata));
-            print("booking_data");
-            print(packdata);
             pickupoption = "";
             setState(() => isproceeding = false);
             Navigator.push(
@@ -729,512 +732,545 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         systemNavigationBarColor: Colors.white,
       ),
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            child: Stack(
-              children: [
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  width: width,
-                  height: height * 0.2,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        lightblueColor,
-                        syanColor,
-                      ],
-                    ),
-                  ),
-                  child:
-                      ////--------------- ClipPath for curv----------
-                      ClipPath(
-                    clipper: SinCosineWaveClipper(
-                      verticalPosition: VerticalPosition.top,
-                    ),
-                    child: Container(
-                      height: height * 0.1,
-                      // padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          syanColor.withOpacity(0.3),
-                          Color.fromARGB(255, 176, 205, 210),
-                        ],
-                      )),
-                    ),
-                  ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      margin: EdgeInsets.fromLTRB(
-                          16.5, height * 0.07, height * 0.07, 16.5),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              if (widget.click_id == 1 &&
-                                  widget.pack_type == 1) {
-                                Navigator.of(context).pop();
-                              } else if (widget.click_id == 2 &&
-                                  widget.pack_type == 1) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => PackageDetails(
-                                              package_id: widget.package_id,
-                                              custvehlist: widget.custvehlist,
-                                              currency: widget.currency,
-                                              selectedVeh: widget.selectedveh,
-                                              booking_list: widget.booking_list,
-                                              pack_type: 1,
-                                            )));
-                              } else if (widget.click_id == 1 &&
-                                  widget.pack_type == 2) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => CarRepair(
-                                              package_id: widget.package_id,
-                                              custvehlist: widget.custvehlist,
-                                              currency: widget.currency,
-                                              selectedVeh: widget.selectedveh,
-                                              booking_list: widget.booking_list,
-                                              pack_type: 2,
-                                            )));
-                              } else if (widget.click_id == 2 &&
-                                  widget.pack_type == 2) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => CarRepair(
-                                              package_id: widget.package_id,
-                                              custvehlist: widget.custvehlist,
-                                              currency: widget.currency,
-                                              selectedVeh: widget.selectedveh,
-                                              booking_list: widget.booking_list,
-                                              pack_type: 2,
-                                            )));
-                              }
-                            },
-                            child: Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                              size: width * 0.054,
-                            ),
-                          ),
-                          SizedBox(width: width * 0.08),
-                          Text(
-                            widget.package_id['pkg_name'],
-                            style: montserratRegular.copyWith(
-                              fontSize: width * 0.044,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.fromLTRB(
-                              16.0, height * 0.01, 16.0, 16.0),
-                          padding: EdgeInsets.all(12),
-                          height: height * 0.045,
-                          width: height * 0.37,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 12,
-                                    color: syanColor.withOpacity(.5),
-                                    spreadRadius: 0,
-                                    blurStyle: BlurStyle.outer,
-                                    offset: Offset(0, 0)),
-                              ]),
-                        ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(
-                              16.0, height * 0.01, 16.0, 16.0),
-                          padding: EdgeInsets.all(8),
-                          width: width * 1.85,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(12.0),
-                            color: Colors.white,
-                          ),
-                          child: Row(
-                            children: <Widget>[
-                              Padding(padding: EdgeInsets.all(8)),
-                              if (widget.custvehlist[widget.selectedveh]
-                                      ['cv_make'] ==
-                                  'Mercedes Benz') ...[
-                                Image.asset(
-                                  ImageConst.benz_ico,
-                                  width: width * 0.12,
+        body: FutureBuilder(
+            future: fetchFutureDatas(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                case ConnectionState.active:
+                  {
+                    return SizedBox(
+                        height: MediaQuery.of(context).size.height / 1.3,
+                        child: Center(
+                          child: CircularProgressIndicator(color: Colors.blue),
+                        ));
+                  }
+                case ConnectionState.done:
+                  {
+                    return SingleChildScrollView(
+                      child: Container(
+                        child: Stack(
+                          children: [
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              width: width,
+                              height: height * 0.2,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    lightblueColor,
+                                    syanColor,
+                                  ],
                                 ),
-                              ] else if (widget.custvehlist[widget.selectedveh]
-                                      ['cv_make'] ==
-                                  'BMW') ...[
-                                Image.asset(
-                                  ImageConst.bmw_ico,
-                                  width: width * 0.12,
+                              ),
+                              child:
+                                  ////--------------- ClipPath for curv----------
+                                  ClipPath(
+                                clipper: SinCosineWaveClipper(
+                                  verticalPosition: VerticalPosition.top,
                                 ),
-                              ] else if (widget.custvehlist[widget.selectedveh]
-                                      ['cv_make'] ==
-                                  'Skoda') ...[
-                                Image.asset(
-                                  ImageConst.skod_ico,
-                                  width: width * 0.12,
-                                ),
-                              ] else if (widget.custvehlist[widget.selectedveh]
-                                      ['cv_make'] ==
-                                  'Audi') ...[
-                                Image.asset(
-                                  ImageConst.aud_ico,
-                                  width: width * 0.12,
-                                ),
-                              ] else if (widget.custvehlist[widget.selectedveh]
-                                      ['cv_make'] ==
-                                  'Porsche') ...[
-                                Image.asset(
-                                  ImageConst.porsche_ico,
-                                  width: width * 0.12,
-                                ),
-                              ] else if (widget.custvehlist[widget.selectedveh]
-                                      ['cv_make'] ==
-                                  'Volkswagen') ...[
-                                Image.asset(
-                                  ImageConst.volkswagen_icon,
-                                  width: width * 0.12,
-                                ),
-                              ] else ...[
-                                Image.asset(
-                                  ImageConst.defcar_ico,
-                                  width: width * 0.12,
-                                ),
-                              ],
-                              SizedBox(width: 8.0),
-                              Expanded(
                                 child: Container(
-                                  padding: const EdgeInsets.only(left: 8),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                  height: height * 0.1,
+                                  // padding: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      syanColor.withOpacity(0.3),
+                                      Color.fromARGB(255, 176, 205, 210),
+                                    ],
+                                  )),
+                                ),
+                              ),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  alignment: Alignment.bottomCenter,
+                                  margin: EdgeInsets.fromLTRB(
+                                      16.5, height * 0.07, height * 0.07, 16.5),
+                                  child: Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      SizedBox(height: 8),
-                                      widget.custvehlist[widget.selectedveh]
-                                                      ['cv_plate_number'] !=
-                                                  "" &&
-                                              widget.custvehlist[
-                                                          widget.selectedveh]
-                                                      ['cv_plate_number'] !=
-                                                  null
-                                          ? Text(
-                                              widget.custvehlist[
-                                                      widget.selectedveh]
-                                                      ['cv_plate_number']
-                                                  .toUpperCase(),
-                                              style:
-                                                  montserratSemiBold.copyWith(
-                                                      color: black,
-                                                      fontSize: width * 0.04),
-                                              maxLines: 2)
-                                          : SizedBox(),
-                                      widget.custvehlist[widget.selectedveh]['cv_variant'] != "" && widget.custvehlist[widget.selectedveh]['cv_variant'] != null
-                                          ? Text(
-                                              widget.custvehlist[widget.selectedveh]['cv_make'] +
-                                                  " " +
-                                                  widget.custvehlist[widget.selectedveh]
-                                                      ['cv_model'] +
-                                                  " " +
-                                                  widget.custvehlist[widget.selectedveh]
-                                                      ['cv_variant'] +
-                                                  " ( " +
-                                                  widget.custvehlist[widget.selectedveh]
-                                                      ['cv_year'] +
-                                                  " )",
-                                              style: montserratMedium.copyWith(
-                                                  color: black,
-                                                  fontSize: width * 0.034),
-                                              overflow: TextOverflow.clip,
-                                              maxLines: 5)
-                                          : Text(
-                                              widget.custvehlist[widget.selectedveh]['cv_make'] +
-                                                  " " +
-                                                  widget.custvehlist[widget.selectedveh]
-                                                      ['cv_model'] +
-                                                  " ( " +
-                                                  widget.custvehlist[widget.selectedveh]
-                                                      ['cv_year'] +
-                                                  " )",
-                                              style: montserratMedium.copyWith(color: black, fontSize: width * 0.034),
-                                              overflow: TextOverflow.clip,
-                                              maxLines: 5),
-                                      Text(
-                                        widget.currency +
-                                            " " +
-                                            package_price.toStringAsFixed(2),
-                                        style: montserratSemiBold.copyWith(
-                                            color: warningcolor,
-                                            fontSize: width * 0.04),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (widget.click_id == 1 &&
+                                              widget.pack_type == 1) {
+                                            Navigator.of(context).pop();
+                                          } else if (widget.click_id == 2 &&
+                                              widget.pack_type == 1) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PackageDetails(
+                                                          package_id:
+                                                              widget.package_id,
+                                                          custvehlist: widget
+                                                              .custvehlist,
+                                                          currency:
+                                                              widget.currency,
+                                                          selectedVeh: widget
+                                                              .selectedveh,
+                                                          booking_list: widget
+                                                              .booking_list,
+                                                          pack_type: 1,
+                                                        )));
+                                          } else if (widget.click_id == 1 &&
+                                              widget.pack_type == 2) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CarRepair(
+                                                          package_id:
+                                                              widget.package_id,
+                                                          custvehlist: widget
+                                                              .custvehlist,
+                                                          currency:
+                                                              widget.currency,
+                                                          selectedVeh: widget
+                                                              .selectedveh,
+                                                          booking_list: widget
+                                                              .booking_list,
+                                                          pack_type: 2,
+                                                        )));
+                                          } else if (widget.click_id == 2 &&
+                                              widget.pack_type == 2) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CarRepair(
+                                                          package_id:
+                                                              widget.package_id,
+                                                          custvehlist: widget
+                                                              .custvehlist,
+                                                          currency:
+                                                              widget.currency,
+                                                          selectedVeh: widget
+                                                              .selectedveh,
+                                                          booking_list: widget
+                                                              .booking_list,
+                                                          pack_type: 2,
+                                                        )));
+                                          }
+                                        },
+                                        child: Icon(
+                                          Icons.arrow_back,
+                                          color: Colors.white,
+                                          size: width * 0.054,
+                                        ),
                                       ),
-                                      SizedBox(height: 8),
+                                      SizedBox(width: width * 0.08),
+                                      Text(
+                                        widget.package_id['pkg_name'],
+                                        style: montserratRegular.copyWith(
+                                          fontSize: width * 0.044,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(right: 16.0, left: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            custAddressList.length != 0
-                                ? "Pickup & Drop"
-                                : "Add Address",
-                            style: montserratSemiBold.copyWith(
-                                color: black, fontSize: width * 0.034),
-                          ),
-                          custAddressList.length != 0
-                              ? GestureDetector(
-                                  onTap: () async {
-                                    PermissionStatus locationStatus =
-                                        await Permission.location.request();
-                                    if (locationStatus ==
-                                        PermissionStatus.denied) {
-                                      showCustomToast(context,
-                                          "This Permission is recommended for location access.",
-                                          bgColor: errorcolor,
-                                          textColor: white);
-                                    }
-                                    if (locationStatus ==
-                                        PermissionStatus.permanentlyDenied) {
-                                      openAppSettings();
-                                    }
-                                    if (locationStatus ==
-                                        PermissionStatus.granted) {
-                                      Get.put(LocationController());
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddAddressViaGmap(
-                                                    pack_type: widget.pack_type,
-                                                    click_id: 2,
-                                                    package_id:
-                                                        widget.package_id,
-                                                    custvehlist:
-                                                        widget.custvehlist,
-                                                    currency: widget.currency,
-                                                    selectedveh:
-                                                        widget.selectedveh,
-                                                    pickup_loc:
-                                                        selected_address != null
-                                                            ? selected_address
-                                                            : 0,
-                                                    drop_loc:
-                                                        selected_drop_address !=
-                                                                null
-                                                            ? selected_drop_address
-                                                            : 0,
-                                                    drop_flag: isLocationCheck,
-                                                    bk_id: "",
-                                                    vehname: "",
-                                                    make: "",
-                                                  )));
-                                    }
-                                  },
+                                Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                          16.0, height * 0.01, 16.0, 16.0),
+                                      padding: EdgeInsets.all(12),
+                                      height: height * 0.045,
+                                      width: height * 0.37,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 12,
+                                                color:
+                                                    syanColor.withOpacity(.5),
+                                                spreadRadius: 0,
+                                                blurStyle: BlurStyle.outer,
+                                                offset: Offset(0, 0)),
+                                          ]),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                          16.0, height * 0.01, 16.0, 16.0),
+                                      padding: EdgeInsets.all(8),
+                                      width: width * 1.85,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        color: Colors.white,
+                                      ),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Padding(padding: EdgeInsets.all(8)),
+                                          if (widget.custvehlist[widget.selectedveh]
+                                                  ['cv_make'] ==
+                                              'Mercedes Benz') ...[
+                                            Image.asset(
+                                              ImageConst.benz_ico,
+                                              width: width * 0.12,
+                                            ),
+                                          ] else if (widget
+                                                      .custvehlist[widget.selectedveh]
+                                                  ['cv_make'] ==
+                                              'BMW') ...[
+                                            Image.asset(
+                                              ImageConst.bmw_ico,
+                                              width: width * 0.12,
+                                            ),
+                                          ] else if (widget
+                                                      .custvehlist[widget.selectedveh]
+                                                  ['cv_make'] ==
+                                              'Skoda') ...[
+                                            Image.asset(
+                                              ImageConst.skod_ico,
+                                              width: width * 0.12,
+                                            ),
+                                          ] else if (widget
+                                                      .custvehlist[widget.selectedveh]
+                                                  ['cv_make'] ==
+                                              'Audi') ...[
+                                            Image.asset(
+                                              ImageConst.aud_ico,
+                                              width: width * 0.12,
+                                            ),
+                                          ] else if (widget
+                                                      .custvehlist[widget.selectedveh]
+                                                  ['cv_make'] ==
+                                              'Porsche') ...[
+                                            Image.asset(
+                                              ImageConst.porsche_ico,
+                                              width: width * 0.12,
+                                            ),
+                                          ] else if (widget.custvehlist[
+                                                  widget.selectedveh]['cv_make'] ==
+                                              'Volkswagen') ...[
+                                            Image.asset(
+                                              ImageConst.volkswagen_icon,
+                                              width: width * 0.12,
+                                            ),
+                                          ] else ...[
+                                            Image.asset(
+                                              ImageConst.defcar_ico,
+                                              width: width * 0.12,
+                                            ),
+                                          ],
+                                          SizedBox(width: 8.0),
+                                          Expanded(
+                                            child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  SizedBox(height: 8),
+                                                  widget.custvehlist[widget.selectedveh]['cv_plate_number'] !=
+                                                              "" &&
+                                                          widget.custvehlist[widget.selectedveh][
+                                                                  'cv_plate_number'] !=
+                                                              null
+                                                      ? Text(
+                                                          widget.custvehlist[
+                                                                  widget.selectedveh]
+                                                                  [
+                                                                  'cv_plate_number']
+                                                              .toUpperCase(),
+                                                          style: montserratSemiBold
+                                                              .copyWith(
+                                                                  color: black,
+                                                                  fontSize:
+                                                                      width * 0.04),
+                                                          maxLines: 2)
+                                                      : SizedBox(),
+                                                  widget.custvehlist[widget.selectedveh]['cv_variant'] != "" && widget.custvehlist[widget.selectedveh]['cv_variant'] != null
+                                                      ? Text(widget.custvehlist[widget.selectedveh]['cv_make'] + " " + widget.custvehlist[widget.selectedveh]['cv_model'] + " " + widget.custvehlist[widget.selectedveh]['cv_variant'] + " ( " + widget.custvehlist[widget.selectedveh]['cv_year'] + " )",
+                                                          style: montserratMedium
+                                                              .copyWith(
+                                                                  color: black,
+                                                                  fontSize: width *
+                                                                      0.034),
+                                                          overflow:
+                                                              TextOverflow.clip,
+                                                          maxLines: 5)
+                                                      : Text(
+                                                          widget.custvehlist[widget.selectedveh]
+                                                                  ['cv_make'] +
+                                                              " " +
+                                                              widget.custvehlist[widget.selectedveh]
+                                                                  ['cv_model'] +
+                                                              " ( " +
+                                                              widget.custvehlist[widget.selectedveh]
+                                                                  ['cv_year'] +
+                                                              " )",
+                                                          style: montserratMedium.copyWith(
+                                                              color: black,
+                                                              fontSize: width * 0.034),
+                                                          overflow: TextOverflow.clip,
+                                                          maxLines: 5),
+                                                  Text(
+                                                    widget.currency +
+                                                        " " +
+                                                        package_price
+                                                            .toStringAsFixed(2),
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                            color: warningcolor,
+                                                            fontSize:
+                                                                width * 0.04),
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  margin:
+                                      EdgeInsets.only(right: 16.0, left: 16.0),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        lang.S.of(context).add_address + " ",
+                                        custAddressList.length != 0
+                                            ? "Pickup & Drop"
+                                            : "Add Address",
                                         style: montserratSemiBold.copyWith(
                                             color: black,
                                             fontSize: width * 0.034),
                                       ),
-                                      Container(
-                                        child: Image.asset(
-                                          ImageConst.add_black,
-                                          scale: 4.8,
-                                        ),
-                                      )
+                                      custAddressList.length != 0
+                                          ? GestureDetector(
+                                              onTap: () async {
+                                                PermissionStatus
+                                                    locationStatus =
+                                                    await Permission.location
+                                                        .request();
+                                                if (locationStatus ==
+                                                    PermissionStatus.denied) {
+                                                  showCustomToast(context,
+                                                      "This Permission is recommended for location access.",
+                                                      bgColor: errorcolor,
+                                                      textColor: white);
+                                                }
+                                                if (locationStatus ==
+                                                    PermissionStatus
+                                                        .permanentlyDenied) {
+                                                  openAppSettings();
+                                                }
+                                                if (locationStatus ==
+                                                    PermissionStatus.granted) {
+                                                  Get.put(LocationController());
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AddAddressViaGmap(
+                                                                pack_type: widget
+                                                                    .pack_type,
+                                                                click_id: 2,
+                                                                package_id: widget
+                                                                    .package_id,
+                                                                custvehlist: widget
+                                                                    .custvehlist,
+                                                                currency: widget
+                                                                    .currency,
+                                                                selectedveh: widget
+                                                                    .selectedveh,
+                                                                pickup_loc:
+                                                                    selected_address !=
+                                                                            null
+                                                                        ? selected_address
+                                                                        : 0,
+                                                                drop_loc:
+                                                                    selected_drop_address !=
+                                                                            null
+                                                                        ? selected_drop_address
+                                                                        : 0,
+                                                                drop_flag:
+                                                                    isLocationCheck,
+                                                                bk_id: "",
+                                                                vehname: "",
+                                                                make: "",
+                                                              )));
+                                                }
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    lang.S
+                                                            .of(context)
+                                                            .add_address +
+                                                        " ",
+                                                    style: montserratSemiBold
+                                                        .copyWith(
+                                                            color: black,
+                                                            fontSize:
+                                                                width * 0.034),
+                                                  ),
+                                                  Container(
+                                                    child: Image.asset(
+                                                      ImageConst.add_black,
+                                                      scale: 4.8,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                          : Row(),
                                     ],
                                   ),
-                                )
-                              : Row(),
-                        ],
-                      ),
-                    ),
-                    custAddressList.length != 0
-                        ? SizedBox(height: width * 0.025)
-                        : SizedBox(height: 0),
-                    custAddressList.length != 0
-                        ? Stack(alignment: Alignment.bottomCenter, children: [
-                            Container(
-                              margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
-                              height: height * 0.045,
-                              width: height * 0.37,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 16,
-                                        color: syanColor.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurStyle: BlurStyle.outer,
-                                        offset: Offset(0, 0)),
-                                  ]),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Container(
-                                    height: height * 0.095,
-                                    width: height * 0.46,
-                                    decoration: BoxDecoration(
-                                      color: white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border:
-                                          Border.all(color: borderGreyColor),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Container(
-                                            child: DropdownButtonFormField2(
-                                              value: selected_address != null
-                                                  ? SelectAddressList[
-                                                      selected_address]
-                                                  : null,
-                                              autovalidateMode: AutovalidateMode
-                                                  .onUserInteraction,
-                                              decoration: InputDecoration(
-                                                isDense: true,
-                                                contentPadding: EdgeInsets.zero,
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: const BorderSide(
-                                                      color: const Color(
-                                                          0xffCCCCCC),
-                                                      width: 0.0),
+                                ),
+                                custAddressList.length != 0
+                                    ? SizedBox(height: width * 0.025)
+                                    : SizedBox(height: 0),
+                                custAddressList.length != 0
+                                    ? Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  16, 16, 16, 16),
+                                              height: height * 0.045,
+                                              width: height * 0.37,
+                                              decoration: BoxDecoration(
                                                   borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                focusedErrorBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: const BorderSide(
-                                                      color: const Color(
-                                                          0xffCCCCCC),
-                                                      width: 0.0),
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: const BorderSide(
-                                                      color: const Color(
-                                                          0xffCCCCCC),
-                                                      width: 0.0),
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                errorBorder: OutlineInputBorder(
-                                                  borderSide: const BorderSide(
-                                                      color:
-                                                          const Color(0xfffff),
-                                                      width: 0.0),
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                errorStyle:
-                                                    montserratRegular.copyWith(
-                                                  fontSize: 12,
-                                                  color: warningcolor,
-                                                ),
-                                              ),
-                                              isExpanded: true,
-                                              hint: Text(
-                                                "Select Address" + "*",
-                                                style:
-                                                    montserratMedium.copyWith(
-                                                        color: Colors.black,
-                                                        fontSize: width * 0.04),
-                                              ),
-                                              buttonHeight: height * 0.095,
-                                              buttonPadding: EdgeInsets.all(4),
-                                              dropdownDecoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                              itemHeight: height * 0.1,
-                                              icon: RadiantGradientMask(
-                                                child: Icon(
-                                                    Icons.keyboard_arrow_down,
-                                                    color: white,
-                                                    size: 30),
-                                              ),
-                                              items: SelectAddressList.map(
-                                                  (value) {
-                                                return DropdownMenuItem<
-                                                        Map<String, dynamic>>(
-                                                    value: value,
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 0),
-                                                      child: Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .location_on_outlined,
-                                                            color: syanColor,
-                                                            size: width * 0.08,
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Flexible(
-                                                              child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                value['cad_landmark']
-                                                                        .toUpperCase() +
-                                                                    " (" +
-                                                                    value[
-                                                                        'cad_city'] +
-                                                                    ")",
-                                                                maxLines: 1,
+                                                      BorderRadius.circular(14),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        blurRadius: 16,
+                                                        color: syanColor
+                                                            .withOpacity(.5),
+                                                        spreadRadius: 0,
+                                                        blurStyle:
+                                                            BlurStyle.outer,
+                                                        offset: Offset(0, 0)),
+                                                  ]),
+                                            ),
+                                            Padding(
+                                                padding: EdgeInsets.all(16),
+                                                child: Container(
+                                                    height: height * 0.095,
+                                                    width: height * 0.46,
+                                                    decoration: BoxDecoration(
+                                                      color: white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                      border: Border.all(
+                                                          color:
+                                                              borderGreyColor),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Expanded(
+                                                          child: Container(
+                                                            child:
+                                                                DropdownButtonFormField2(
+                                                              value: selected_address !=
+                                                                      null
+                                                                  ? SelectAddressList[
+                                                                      selected_address]
+                                                                  : null,
+                                                              autovalidateMode:
+                                                                  AutovalidateMode
+                                                                      .onUserInteraction,
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                contentPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                                focusedBorder:
+                                                                    OutlineInputBorder(
+                                                                  borderSide: const BorderSide(
+                                                                      color: const Color(
+                                                                          0xffCCCCCC),
+                                                                      width:
+                                                                          0.0),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12),
+                                                                ),
+                                                                focusedErrorBorder:
+                                                                    OutlineInputBorder(
+                                                                  borderSide: const BorderSide(
+                                                                      color: const Color(
+                                                                          0xffCCCCCC),
+                                                                      width:
+                                                                          0.0),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12),
+                                                                ),
+                                                                enabledBorder:
+                                                                    OutlineInputBorder(
+                                                                  borderSide: const BorderSide(
+                                                                      color: const Color(
+                                                                          0xffCCCCCC),
+                                                                      width:
+                                                                          0.0),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12),
+                                                                ),
+                                                                errorBorder:
+                                                                    OutlineInputBorder(
+                                                                  borderSide: const BorderSide(
+                                                                      color: const Color(
+                                                                          0xfffff),
+                                                                      width:
+                                                                          0.0),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12),
+                                                                ),
+                                                                errorStyle:
+                                                                    montserratRegular
+                                                                        .copyWith(
+                                                                  fontSize: 12,
+                                                                  color:
+                                                                      warningcolor,
+                                                                ),
+                                                              ),
+                                                              isExpanded: true,
+                                                              hint: Text(
+                                                                "Select Address" +
+                                                                    "*",
                                                                 style: montserratMedium.copyWith(
                                                                     color: Colors
                                                                         .black,
@@ -1242,181 +1278,101 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                         width *
                                                                             0.04),
                                                               ),
-                                                              Text(
-                                                                value[
-                                                                    'cad_address'],
-                                                                maxLines: 2,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .justify,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style: montserratMedium.copyWith(
-                                                                    color:
-                                                                        toastgrey,
-                                                                    fontSize:
-                                                                        width *
-                                                                            0.03),
+                                                              buttonHeight:
+                                                                  height *
+                                                                      0.095,
+                                                              buttonPadding:
+                                                                  EdgeInsets
+                                                                      .all(4),
+                                                              dropdownDecoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
                                                               ),
-                                                            ],
-                                                          ))
-                                                        ],
-                                                      ),
-                                                    ));
-                                              }).toList(),
-                                              onChanged: (selected) {
-                                                setState(() {
-                                                  pickupaddresschange(
-                                                      SelectAddressList
-                                                          .indexWhere((element) =>
-                                                              element[
-                                                                  'cad_id'] ==
-                                                              selected![
-                                                                  'cad_id']));
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ))),
-                          ])
-                        : GestureDetector(
-                            onTap: () async {
-                              PermissionStatus locationStatus =
-                                  await Permission.location.request();
-                              if (locationStatus == PermissionStatus.denied) {
-                                showCustomToast(context,
-                                    "This Permission is recommended for location access.",
-                                    bgColor: errorcolor, textColor: white);
-                              }
-                              if (locationStatus ==
-                                  PermissionStatus.permanentlyDenied) {
-                                openAppSettings();
-                              }
-                              if (locationStatus == PermissionStatus.granted) {
-                                Get.put(LocationController());
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AddAddressViaGmap(
-                                              pack_type: widget.pack_type,
-                                              click_id: 2,
-                                              package_id: widget.package_id,
-                                              custvehlist: widget.custvehlist,
-                                              currency: widget.currency,
-                                              selectedveh: widget.selectedveh,
-                                              pickup_loc:
-                                                  selected_address != null
-                                                      ? selected_address
-                                                      : 0,
-                                              drop_loc:
-                                                  selected_drop_address != null
-                                                      ? selected_drop_address
-                                                      : 0,
-                                              drop_flag: isLocationCheck,
-                                              bk_id: "",
-                                              vehname: "",
-                                              make: "",
-                                            )));
-                              }
-                            },
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(
-                                  16.0, height * 0.01, 16.0, 16.0),
-                              padding: EdgeInsets.all(8),
-                              width: width * 1.85,
-                              height: width * 0.2,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(12.0),
-                                color: Colors.white,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Add new address",
-                                    style: montserratSemiBold.copyWith(
-                                        color: black, fontSize: 16),
-                                  ),
-                                  Icon(
-                                    Icons.add_circle_outline,
-                                    color: greyColor,
-                                    size: height * 0.04,
-                                    semanticLabel: 'Add Address',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                    custAddressList.length != 0
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(padding: EdgeInsets.all(2)),
-                              Transform.scale(
-                                scale: 1.3,
-                                child: Checkbox(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4.0),
-                                  ),
-                                  value: isLocationCheck,
-                                  fillColor:
-                                      MaterialStateProperty.all(syanColor),
-                                  onChanged: (value) {
-                                    setState(
-                                      () {
-                                        isLocationCheck = value!;
-                                        if (value != true) {
-                                          isdroplocation = true;
-                                          selected_drop_address = null;
-                                          dropCostCalculation(0, false,
-                                              "Select Drop", false, false);
-                                        } else {
-                                          isdroplocation = false;
-                                          selected_drop_address =
-                                              selected_address;
-                                          pickupaddresschange(selected_address);
-                                        }
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                              Text(
-                                lang.S.of(context).drop_location_same,
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.clip,
-                                style: montserratMedium.copyWith(
-                                    color: black, fontSize: width * 0.034),
-                              ),
-                            ],
-                          )
-                        : Row(),
-                    isdroplocation
-                        ? SizedBox(
-                            height: 4,
-                          )
-                        : SizedBox(),
-                    isdroplocation
-                        ? Container(
-                            margin: EdgeInsets.only(right: 16.0, left: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  lang.S.of(context).select_drop_address + "*",
-                                  textAlign: TextAlign.start,
-                                  style: montserratSemiBold.copyWith(
-                                      color: black, fontSize: width * 0.034),
-                                ),
-                                custAddressList.length != 0
-                                    ? GestureDetector(
+                                                              itemHeight:
+                                                                  height * 0.1,
+                                                              icon:
+                                                                  RadiantGradientMask(
+                                                                child: Icon(
+                                                                    Icons
+                                                                        .keyboard_arrow_down,
+                                                                    color:
+                                                                        white,
+                                                                    size: 30),
+                                                              ),
+                                                              items: SelectAddressList
+                                                                  .map((value) {
+                                                                return DropdownMenuItem<
+                                                                        Map<String,
+                                                                            dynamic>>(
+                                                                    value:
+                                                                        value,
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                          horizontal:
+                                                                              0),
+                                                                      child:
+                                                                          Row(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          Icon(
+                                                                            Icons.location_on_outlined,
+                                                                            color:
+                                                                                syanColor,
+                                                                            size:
+                                                                                width * 0.08,
+                                                                          ),
+                                                                          const SizedBox(
+                                                                            width:
+                                                                                10,
+                                                                          ),
+                                                                          Flexible(
+                                                                              child: Column(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.center,
+                                                                            children: [
+                                                                              Text(
+                                                                                value['cad_landmark'].toUpperCase() + " (" + value['cad_city'] + ")",
+                                                                                maxLines: 1,
+                                                                                style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
+                                                                              ),
+                                                                              Text(
+                                                                                value['cad_address'],
+                                                                                maxLines: 2,
+                                                                                textAlign: TextAlign.justify,
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                                style: montserratMedium.copyWith(color: toastgrey, fontSize: width * 0.03),
+                                                                              ),
+                                                                            ],
+                                                                          ))
+                                                                        ],
+                                                                      ),
+                                                                    ));
+                                                              }).toList(),
+                                                              onChanged:
+                                                                  (selected) {
+                                                                setState(() {
+                                                                  pickupaddresschange(SelectAddressList.indexWhere((element) =>
+                                                                      element[
+                                                                          'cad_id'] ==
+                                                                      selected![
+                                                                          'cad_id']));
+                                                                });
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ))),
+                                          ])
+                                    : GestureDetector(
                                         onTap: () async {
                                           PermissionStatus locationStatus =
                                               await Permission.location
@@ -1462,54 +1418,709 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                       null
                                                                   ? selected_drop_address
                                                                   : 0,
-                                                          drop_flag: false,
+                                                          drop_flag:
+                                                              isLocationCheck,
                                                           bk_id: "",
                                                           vehname: "",
                                                           make: "",
                                                         )));
                                           }
                                         },
+                                        child: Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              16.0, height * 0.01, 16.0, 16.0),
+                                          padding: EdgeInsets.all(8),
+                                          width: width * 1.85,
+                                          height: width * 0.2,
+                                          decoration: BoxDecoration(
+                                            border:
+                                                Border.all(color: Colors.grey),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            color: Colors.white,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Add new address",
+                                                style:
+                                                    montserratSemiBold.copyWith(
+                                                        color: black,
+                                                        fontSize: 16),
+                                              ),
+                                              Icon(
+                                                Icons.add_circle_outline,
+                                                color: greyColor,
+                                                size: height * 0.04,
+                                                semanticLabel: 'Add Address',
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                custAddressList.length != 0
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Padding(padding: EdgeInsets.all(2)),
+                                          Transform.scale(
+                                            scale: 1.3,
+                                            child: Checkbox(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(4.0),
+                                              ),
+                                              value: isLocationCheck,
+                                              fillColor:
+                                                  MaterialStateProperty.all(
+                                                      syanColor),
+                                              onChanged: (value) {
+                                                setState(
+                                                  () {
+                                                    isLocationCheck = value!;
+                                                    if (value != true) {
+                                                      isdroplocation = true;
+                                                      selected_drop_address =
+                                                          null;
+                                                      dropCostCalculation(
+                                                          0,
+                                                          false,
+                                                          "Select Drop",
+                                                          false,
+                                                          false);
+                                                    } else {
+                                                      isdroplocation = false;
+                                                      selected_drop_address =
+                                                          selected_address;
+                                                      pickupaddresschange(
+                                                          selected_address);
+                                                    }
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                          Text(
+                                            lang.S
+                                                .of(context)
+                                                .drop_location_same,
+                                            textAlign: TextAlign.start,
+                                            overflow: TextOverflow.clip,
+                                            style: montserratMedium.copyWith(
+                                                color: black,
+                                                fontSize: width * 0.034),
+                                          ),
+                                        ],
+                                      )
+                                    : Row(),
+                                isdroplocation
+                                    ? SizedBox(
+                                        height: 4,
+                                      )
+                                    : SizedBox(),
+                                isdroplocation
+                                    ? Container(
+                                        margin: EdgeInsets.only(
+                                            right: 16.0, left: 16.0),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              lang.S.of(context).add_address +
-                                                  " ",
+                                              lang.S
+                                                      .of(context)
+                                                      .select_drop_address +
+                                                  "*",
+                                              textAlign: TextAlign.start,
                                               style:
                                                   montserratSemiBold.copyWith(
                                                       color: black,
                                                       fontSize: width * 0.034),
                                             ),
-                                            Container(
-                                              child: Image.asset(
-                                                ImageConst.add_black,
-                                                scale: 4.8,
-                                              ),
-                                            )
+                                            custAddressList.length != 0
+                                                ? GestureDetector(
+                                                    onTap: () async {
+                                                      PermissionStatus
+                                                          locationStatus =
+                                                          await Permission
+                                                              .location
+                                                              .request();
+                                                      if (locationStatus ==
+                                                          PermissionStatus
+                                                              .denied) {
+                                                        showCustomToast(context,
+                                                            "This Permission is recommended for location access.",
+                                                            bgColor: errorcolor,
+                                                            textColor: white);
+                                                      }
+                                                      if (locationStatus ==
+                                                          PermissionStatus
+                                                              .permanentlyDenied) {
+                                                        openAppSettings();
+                                                      }
+                                                      if (locationStatus ==
+                                                          PermissionStatus
+                                                              .granted) {
+                                                        Get.put(
+                                                            LocationController());
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        AddAddressViaGmap(
+                                                                          pack_type:
+                                                                              widget.pack_type,
+                                                                          click_id:
+                                                                              2,
+                                                                          package_id:
+                                                                              widget.package_id,
+                                                                          custvehlist:
+                                                                              widget.custvehlist,
+                                                                          currency:
+                                                                              widget.currency,
+                                                                          selectedveh:
+                                                                              widget.selectedveh,
+                                                                          pickup_loc: selected_address != null
+                                                                              ? selected_address
+                                                                              : 0,
+                                                                          drop_loc: selected_drop_address != null
+                                                                              ? selected_drop_address
+                                                                              : 0,
+                                                                          drop_flag:
+                                                                              false,
+                                                                          bk_id:
+                                                                              "",
+                                                                          vehname:
+                                                                              "",
+                                                                          make:
+                                                                              "",
+                                                                        )));
+                                                      }
+                                                    },
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          lang.S
+                                                                  .of(context)
+                                                                  .add_address +
+                                                              " ",
+                                                          style: montserratSemiBold
+                                                              .copyWith(
+                                                                  color: black,
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.034),
+                                                        ),
+                                                        Container(
+                                                          child: Image.asset(
+                                                            ImageConst
+                                                                .add_black,
+                                                            scale: 4.8,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  )
+                                                : Row(),
                                           ],
                                         ),
                                       )
                                     : Row(),
-                              ],
-                            ),
-                          )
-                        : Row(),
-                    isdroplocation
-                        ? SizedBox(
-                            height: 4,
-                          )
-                        : SizedBox(),
-                    isdroplocation
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Stack(
+                                isdroplocation
+                                    ? SizedBox(
+                                        height: 4,
+                                      )
+                                    : SizedBox(),
+                                isdroplocation
+                                    ? Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Stack(
+                                              alignment: Alignment.bottomCenter,
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.all(16),
+                                                  height: height * 0.045,
+                                                  width: height * 0.37,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              14),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            blurRadius: 16,
+                                                            color: syanColor
+                                                                .withOpacity(
+                                                                    .5),
+                                                            spreadRadius: 0,
+                                                            blurStyle:
+                                                                BlurStyle.outer,
+                                                            offset:
+                                                                Offset(0, 0)),
+                                                      ]),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(16),
+                                                  child: Container(
+                                                      height: height * 0.095,
+                                                      width: height * 0.46,
+                                                      decoration: BoxDecoration(
+                                                        color: white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                        border: Border.all(
+                                                            color:
+                                                                borderGreyColor),
+                                                      ),
+                                                      child: Row(
+                                                        children: <Widget>[
+                                                          Expanded(
+                                                            child: Container(
+                                                              child:
+                                                                  DropdownButtonFormField2(
+                                                                value: selected_drop_address !=
+                                                                        null
+                                                                    ? SelectAddressList[
+                                                                        selected_drop_address]
+                                                                    : null,
+                                                                autovalidateMode:
+                                                                    AutovalidateMode
+                                                                        .onUserInteraction,
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  isDense: true,
+                                                                  contentPadding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                  focusedBorder:
+                                                                      OutlineInputBorder(
+                                                                    borderSide: const BorderSide(
+                                                                        color: const Color(
+                                                                            0xffCCCCCC),
+                                                                        width:
+                                                                            0.0),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12),
+                                                                  ),
+                                                                  focusedErrorBorder:
+                                                                      OutlineInputBorder(
+                                                                    borderSide: const BorderSide(
+                                                                        color: const Color(
+                                                                            0xffCCCCCC),
+                                                                        width:
+                                                                            0.0),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12),
+                                                                  ),
+                                                                  enabledBorder:
+                                                                      OutlineInputBorder(
+                                                                    borderSide: const BorderSide(
+                                                                        color: const Color(
+                                                                            0xffCCCCCC),
+                                                                        width:
+                                                                            0.0),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12),
+                                                                  ),
+                                                                  errorBorder:
+                                                                      OutlineInputBorder(
+                                                                    borderSide: const BorderSide(
+                                                                        color: const Color(
+                                                                            0xfffff),
+                                                                        width:
+                                                                            0.0),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12),
+                                                                  ),
+                                                                  errorStyle:
+                                                                      montserratRegular
+                                                                          .copyWith(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color:
+                                                                        warningcolor,
+                                                                  ),
+                                                                ),
+                                                                isExpanded:
+                                                                    true,
+                                                                hint: Text(
+                                                                  "Select Address" +
+                                                                      "*",
+                                                                  style: montserratMedium.copyWith(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          width *
+                                                                              0.04),
+                                                                ),
+                                                                buttonHeight:
+                                                                    height *
+                                                                        0.095,
+                                                                buttonPadding:
+                                                                    const EdgeInsets
+                                                                        .all(4),
+                                                                itemHeight:
+                                                                    height *
+                                                                        0.08,
+                                                                dropdownDecoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15),
+                                                                ),
+                                                                icon:
+                                                                    RadiantGradientMask(
+                                                                  child: Icon(
+                                                                      Icons
+                                                                          .keyboard_arrow_down,
+                                                                      color:
+                                                                          white,
+                                                                      size: 30),
+                                                                ),
+                                                                items: SelectAddressList
+                                                                    .map(
+                                                                        (value) {
+                                                                  return DropdownMenuItem<
+                                                                          Map<String,
+                                                                              dynamic>>(
+                                                                      value:
+                                                                          value,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.symmetric(horizontal: 8.0),
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Icon(
+                                                                              Icons.location_on_outlined,
+                                                                              color: syanColor,
+                                                                              size: width * 0.08,
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              width: 10,
+                                                                            ),
+                                                                            Flexible(
+                                                                                child: Column(
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              children: [
+                                                                                Text(
+                                                                                  value['cad_landmark'].toUpperCase() + " (" + value['cad_city'] + ")",
+                                                                                  maxLines: 1,
+                                                                                  style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
+                                                                                ),
+                                                                                Text(
+                                                                                  value['cad_address'],
+                                                                                  maxLines: 2,
+                                                                                  textAlign: TextAlign.justify,
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                  style: montserratMedium.copyWith(color: toastgrey, fontSize: width * 0.03),
+                                                                                ),
+                                                                              ],
+                                                                            ))
+                                                                          ],
+                                                                        ),
+                                                                      ));
+                                                                }).toList(),
+                                                                onChanged:
+                                                                    (selected) {
+                                                                  setState(() {
+                                                                    dropaddresschange(SelectAddressList.indexWhere((element) =>
+                                                                        element[
+                                                                            'cad_id'] ==
+                                                                        selected![
+                                                                            'cad_id']));
+                                                                  });
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )),
+                                                )
+                                              ]),
+                                        ],
+                                      )
+                                    : Container(),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                // isserviceble
+                                //     ?
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(padding: EdgeInsets.all(8)),
+                                    Text(
+                                      lang.S.of(context).pickup_options + "*",
+                                      textAlign: TextAlign.start,
+                                      style: montserratSemiBold.copyWith(
+                                          color: black,
+                                          fontSize: width * 0.034),
+                                    ),
+                                  ],
+                                ),
+                                // : Row(),
+                                // isserviceble
+                                //     ?
+                                ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    padding: EdgeInsets.only(
+                                        top: 16, bottom: 16, right: 16),
+                                    itemCount: pickup_options.length,
+                                    itemBuilder: (context, index) {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Theme(
+                                                      data: pickup_options[
+                                                                      index]
+                                                                  ['pk_id'] ==
+                                                              "0"
+                                                          ? Theme.of(context)
+                                                              .copyWith(
+                                                                  unselectedWidgetColor:
+                                                                      Colors.grey[
+                                                                          350])
+                                                          : Theme.of(context)
+                                                              .copyWith(
+                                                                  unselectedWidgetColor:
+                                                                      black),
+                                                      child: pickup_options[
+                                                                      index]
+                                                                  ['pk_id'] ==
+                                                              "0"
+                                                          ? Radio(
+                                                              fillColor: MaterialStateColor
+                                                                  .resolveWith(
+                                                                      (states) =>
+                                                                          syanColor),
+                                                              value:
+                                                                  pickup_options[
+                                                                          index]
+                                                                      ['pk_id'],
+                                                              groupValue:
+                                                                  pickupoption,
+                                                              onChanged:
+                                                                  (dynamic
+                                                                      value) {
+                                                                setState(() {
+                                                                  value = null;
+                                                                });
+                                                              },
+                                                            )
+                                                          : Radio(
+                                                              fillColor: MaterialStateColor
+                                                                  .resolveWith(
+                                                                      (states) =>
+                                                                          syanColor),
+                                                              value:
+                                                                  pickup_options[
+                                                                          index]
+                                                                      ['pk_id'],
+                                                              groupValue:
+                                                                  pickupoption,
+                                                              onChanged:
+                                                                  (dynamic
+                                                                      value) {
+                                                                if (ptempdata ==
+                                                                        "" &&
+                                                                    dtempdata ==
+                                                                        "") {
+                                                                  showCustomToast(
+                                                                      context,
+                                                                      "Choose a location",
+                                                                      bgColor:
+                                                                          errorcolor,
+                                                                      textColor:
+                                                                          white);
+                                                                } else {
+                                                                  if (pickup_options[
+                                                                              index]
+                                                                          [
+                                                                          'pk_mulkiyaflag'] !=
+                                                                      "0") {
+                                                                    _showMyDialog();
+                                                                    setState(
+                                                                        () {
+                                                                      pickupoption =
+                                                                          value;
+                                                                      pickup_name =
+                                                                          pickup_options[index]
+                                                                              [
+                                                                              'pk_name'];
+                                                                      pickup_cost =
+                                                                          pickup_options[index]
+                                                                              [
+                                                                              'pk_cost_value'];
+                                                                      pickup_vat =
+                                                                          pickup_options[index]
+                                                                              [
+                                                                              'pk_vat_value'];
+                                                                    });
+                                                                  } else {
+                                                                    setState(
+                                                                        () {
+                                                                      pickupoption =
+                                                                          value;
+                                                                      pickup_name =
+                                                                          pickup_options[index]
+                                                                              [
+                                                                              'pk_name'];
+                                                                      pickup_cost =
+                                                                          pickup_options[index]
+                                                                              [
+                                                                              'pk_cost_value'];
+                                                                      pickup_vat =
+                                                                          pickup_options[index]
+                                                                              [
+                                                                              'pk_vat_value'];
+                                                                    });
+                                                                  }
+                                                                }
+                                                              },
+                                                            ),
+                                                    ),
+                                                    pickup_options[index]
+                                                                ['pk_id'] ==
+                                                            "0"
+                                                        ? Text(
+                                                            pickup_options[
+                                                                    index]
+                                                                ['pk_name'],
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: montserratMedium
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                            .grey[
+                                                                        350],
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.04),
+                                                          )
+                                                        : Text(
+                                                            pickup_options[
+                                                                    index]
+                                                                ['pk_name'],
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: montserratMedium
+                                                                .copyWith(
+                                                                    color:
+                                                                        black,
+                                                                    fontSize:
+                                                                        width *
+                                                                            0.04),
+                                                          ),
+                                                  ]),
+                                              pickup_options[index]['pk_id'] ==
+                                                      "0"
+                                                  ? Text(
+                                                      pickup_options[index]
+                                                                  ['pk_cost'] ==
+                                                              "AED 0"
+                                                          ? lang.S
+                                                              .of(context)
+                                                              .free
+                                                          : pickup_options[
+                                                              index]['pk_cost'],
+                                                      textAlign: TextAlign.end,
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color: black,
+                                                              fontSize:
+                                                                  width * 0.04),
+                                                    )
+                                                  : Text(
+                                                      pickup_options[index]
+                                                                  ['pk_cost'] ==
+                                                              "AED 0"
+                                                          ? lang.S
+                                                              .of(context)
+                                                              .free
+                                                          : pickup_options[
+                                                              index]['pk_cost'],
+                                                      textAlign: TextAlign.end,
+                                                      overflow:
+                                                          TextOverflow.clip,
+                                                      style: montserratMedium
+                                                          .copyWith(
+                                                              color:
+                                                                  warningcolor,
+                                                              fontSize:
+                                                                  width * 0.04),
+                                                    ),
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    }),
+
+                                8.height,
+                                // : Row(),
+                                // isserviceble
+                                //     ?
+                                Row(
+                                  children: [
+                                    Padding(padding: EdgeInsets.all(12)),
+                                    Text(
+                                      lang.S.of(context).select_booking_date +
+                                          "*",
+                                      style: montserratSemiBold.copyWith(
+                                          fontSize: width * 0.034,
+                                          color: black),
+                                    ),
+                                  ],
+                                ),
+                                Stack(
                                   alignment: Alignment.bottomCenter,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.all(16),
+                                      margin: EdgeInsets.all(16.0),
+                                      padding: EdgeInsets.all(12),
                                       height: height * 0.045,
                                       width: height * 0.37,
                                       decoration: BoxDecoration(
@@ -1519,793 +2130,392 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                             BoxShadow(
                                                 blurRadius: 16,
                                                 color:
-                                                    syanColor.withOpacity(.5),
+                                                    syanColor.withOpacity(.6),
                                                 spreadRadius: 0,
                                                 blurStyle: BlurStyle.outer,
                                                 offset: Offset(0, 0)),
                                           ]),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.all(16),
-                                      child: Container(
-                                          height: height * 0.095,
-                                          width: height * 0.46,
-                                          decoration: BoxDecoration(
-                                            color: white,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            border: Border.all(
-                                                color: borderGreyColor),
-                                          ),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Container(
-                                                  child:
-                                                      DropdownButtonFormField2(
-                                                    value: selected_drop_address !=
-                                                            null
-                                                        ? SelectAddressList[
-                                                            selected_drop_address]
-                                                        : null,
-                                                    autovalidateMode:
-                                                        AutovalidateMode
-                                                            .onUserInteraction,
-                                                    decoration: InputDecoration(
-                                                      isDense: true,
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      focusedBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            const BorderSide(
-                                                                color: const Color(
-                                                                    0xffCCCCCC),
-                                                                width: 0.0),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                      ),
-                                                      focusedErrorBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            const BorderSide(
-                                                                color: const Color(
-                                                                    0xffCCCCCC),
-                                                                width: 0.0),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                      ),
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            const BorderSide(
-                                                                color: const Color(
-                                                                    0xffCCCCCC),
-                                                                width: 0.0),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                      ),
-                                                      errorBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            const BorderSide(
-                                                                color:
-                                                                    const Color(
-                                                                        0xfffff),
-                                                                width: 0.0),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                      ),
-                                                      errorStyle:
-                                                          montserratRegular
-                                                              .copyWith(
-                                                        fontSize: 12,
-                                                        color: warningcolor,
-                                                      ),
-                                                    ),
-                                                    isExpanded: true,
-                                                    hint: Text(
-                                                      "Select Address" + "*",
-                                                      style: montserratMedium
-                                                          .copyWith(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize:
-                                                                  width * 0.04),
-                                                    ),
-                                                    buttonHeight:
-                                                        height * 0.095,
-                                                    buttonPadding:
-                                                        const EdgeInsets.all(4),
-                                                    itemHeight: height * 0.08,
-                                                    dropdownDecoration:
-                                                        BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                    ),
-                                                    icon: RadiantGradientMask(
-                                                      child: Icon(
-                                                          Icons
-                                                              .keyboard_arrow_down,
-                                                          color: white,
-                                                          size: 30),
-                                                    ),
-                                                    items:
-                                                        SelectAddressList.map(
-                                                            (value) {
-                                                      return DropdownMenuItem<
-                                                              Map<String,
-                                                                  dynamic>>(
-                                                          value: value,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        8.0),
-                                                            child: Row(
-                                                              children: [
-                                                                Icon(
-                                                                  Icons
-                                                                      .location_on_outlined,
-                                                                  color:
-                                                                      syanColor,
-                                                                  size: width *
-                                                                      0.08,
-                                                                ),
-                                                                const SizedBox(
-                                                                  width: 10,
-                                                                ),
-                                                                Flexible(
-                                                                    child:
-                                                                        Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Text(
-                                                                      value['cad_landmark']
-                                                                              .toUpperCase() +
-                                                                          " (" +
-                                                                          value[
-                                                                              'cad_city'] +
-                                                                          ")",
-                                                                      maxLines:
-                                                                          1,
-                                                                      style: montserratMedium.copyWith(
-                                                                          color: Colors
-                                                                              .black,
-                                                                          fontSize:
-                                                                              width * 0.04),
-                                                                    ),
-                                                                    Text(
-                                                                      value[
-                                                                          'cad_address'],
-                                                                      maxLines:
-                                                                          2,
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .justify,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      style: montserratMedium.copyWith(
-                                                                          color:
-                                                                              toastgrey,
-                                                                          fontSize:
-                                                                              width * 0.03),
-                                                                    ),
-                                                                  ],
-                                                                ))
-                                                              ],
-                                                            ),
-                                                          ));
-                                                    }).toList(),
-                                                    onChanged: (selected) {
-                                                      setState(() {
-                                                        dropaddresschange(SelectAddressList
-                                                            .indexWhere((element) =>
-                                                                element[
-                                                                    'cad_id'] ==
-                                                                selected![
-                                                                    'cad_id']));
-                                                      });
-                                                    },
-                                                  ),
+                                      padding: EdgeInsets.all(12),
+                                      child: Card(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              side: BorderSide(
+                                                  width: 1,
+                                                  color: Colors.black)),
+                                          elevation: 4,
+                                          child: ListTile(
+                                            trailing: RadiantGradientMask(
+                                              child: IconButton(
+                                                icon: Icon(
+                                                  Icons.date_range,
+                                                  color: white,
                                                 ),
+                                                onPressed: () {
+                                                  _selectDate(context);
+                                                },
                                               ),
-                                            ],
-                                          )),
-                                    )
-                                  ]),
-                            ],
-                          )
-                        : Container(),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    // isserviceble
-                    //     ?
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(padding: EdgeInsets.all(8)),
-                        Text(
-                          lang.S.of(context).pickup_options + "*",
-                          textAlign: TextAlign.start,
-                          style: montserratSemiBold.copyWith(
-                              color: black, fontSize: width * 0.034),
-                        ),
-                      ],
-                    ),
-                    // : Row(),
-                    // isserviceble
-                    //     ?
-                    ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding:
-                            EdgeInsets.only(top: 16, bottom: 16, right: 16),
-                        itemCount: pickup_options.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Theme(
-                                          data: pickup_options[index]
-                                                      ['pk_id'] ==
-                                                  "0"
-                                              ? Theme.of(context).copyWith(
-                                                  unselectedWidgetColor:
-                                                      Colors.grey[350])
-                                              : Theme.of(context).copyWith(
-                                                  unselectedWidgetColor: black),
-                                          child: pickup_options[index]
-                                                      ['pk_id'] ==
-                                                  "0"
-                                              ? Radio(
-                                                  fillColor: MaterialStateColor
-                                                      .resolveWith((states) =>
-                                                          syanColor),
-                                                  value: pickup_options[index]
-                                                      ['pk_id'],
-                                                  groupValue: pickupoption,
-                                                  onChanged: (dynamic value) {
-                                                    setState(() {
-                                                      value = null;
-                                                    });
-                                                  },
-                                                )
-                                              : Radio(
-                                                  fillColor: MaterialStateColor
-                                                      .resolveWith((states) =>
-                                                          syanColor),
-                                                  value: pickup_options[index]
-                                                      ['pk_id'],
-                                                  groupValue: pickupoption,
-                                                  onChanged: (dynamic value) {
-                                                    if (ptempdata == "" &&
-                                                        dtempdata == "") {
-                                                      showCustomToast(context,
-                                                          "Choose a location",
-                                                          bgColor: errorcolor,
-                                                          textColor: white);
-                                                    } else {
-                                                      if (pickup_options[index][
-                                                              'pk_mulkiyaflag'] !=
-                                                          "0") {
-                                                        _showMyDialog();
-                                                        setState(() {
-                                                          pickupoption = value;
-                                                          pickup_name =
-                                                              pickup_options[
-                                                                      index]
-                                                                  ['pk_name'];
-                                                          pickup_cost =
-                                                              pickup_options[
-                                                                      index][
-                                                                  'pk_cost_value'];
-                                                          pickup_vat =
-                                                              pickup_options[
-                                                                      index][
-                                                                  'pk_vat_value'];
-                                                        });
-                                                      } else {
-                                                        setState(() {
-                                                          pickupoption = value;
-                                                          pickup_name =
-                                                              pickup_options[
-                                                                      index]
-                                                                  ['pk_name'];
-                                                          pickup_cost =
-                                                              pickup_options[
-                                                                      index][
-                                                                  'pk_cost_value'];
-                                                          pickup_vat =
-                                                              pickup_options[
-                                                                      index][
-                                                                  'pk_vat_value'];
-                                                        });
-                                                      }
-                                                      // setState(() {
-                                                      //   pickupoption = value;
-                                                      //   pickup_name =
-                                                      //       pickup_options[
-                                                      //               index]
-                                                      //           ['pk_name'];
-                                                      //   pickup_cost =
-                                                      //       pickup_options[
-                                                      //               index][
-                                                      //           'pk_cost_value'];
-                                                      //   pickup_vat =
-                                                      //       pickup_options[
-                                                      //               index][
-                                                      //           'pk_vat_value'];
-                                                      // });
-                                                    }
-                                                  },
-                                                ),
-                                        ),
-                                        pickup_options[index]['pk_id'] == "0"
-                                            ? Text(
-                                                pickup_options[index]
-                                                    ['pk_name'],
-                                                textAlign: TextAlign.center,
-                                                overflow: TextOverflow.ellipsis,
-                                                style:
-                                                    montserratMedium.copyWith(
-                                                        color: Colors.grey[350],
-                                                        fontSize: width * 0.04),
-                                              )
-                                            : Text(
-                                                pickup_options[index]
-                                                    ['pk_name'],
-                                                textAlign: TextAlign.center,
-                                                overflow: TextOverflow.ellipsis,
+                                            ),
+                                            onTap: () {
+                                              _selectDate(context);
+                                            },
+                                            title: Text(
+                                                lang.S
+                                                        .of(context)
+                                                        .select_booking_date +
+                                                    " ",
                                                 style:
                                                     montserratMedium.copyWith(
                                                         color: black,
                                                         fontSize: width * 0.04),
-                                              ),
-                                      ]),
-                                  pickup_options[index]['pk_id'] == "0"
-                                      ? Text(
-                                          pickup_options[index]['pk_cost'] ==
-                                                  "AED 0"
-                                              ? lang.S.of(context).free
-                                              : pickup_options[index]
-                                                  ['pk_cost'],
-                                          textAlign: TextAlign.end,
-                                          overflow: TextOverflow.clip,
-                                          style: montserratMedium.copyWith(
-                                              color: black,
-                                              fontSize: width * 0.04),
-                                        )
-                                      : Text(
-                                          pickup_options[index]['pk_cost'] ==
-                                                  "AED 0"
-                                              ? lang.S.of(context).free
-                                              : pickup_options[index]
-                                                  ['pk_cost'],
-                                          textAlign: TextAlign.end,
-                                          overflow: TextOverflow.clip,
-                                          style: montserratMedium.copyWith(
-                                              color: warningcolor,
-                                              fontSize: width * 0.04),
-                                        ),
-                                ],
-                              ),
-                            ],
-                          );
-                        }),
-
-                    8.height,
-                    // : Row(),
-                    // isserviceble
-                    //     ?
-                    Row(
-                      children: [
-                        Padding(padding: EdgeInsets.all(12)),
-                        Text(
-                          lang.S.of(context).select_booking_date + "*",
-                          style: montserratSemiBold.copyWith(
-                              fontSize: width * 0.034, color: black),
-                        ),
-                      ],
-                    ),
-                    Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.all(16.0),
-                          padding: EdgeInsets.all(12),
-                          height: height * 0.045,
-                          width: height * 0.37,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 16,
-                                    color: syanColor.withOpacity(.6),
-                                    spreadRadius: 0,
-                                    blurStyle: BlurStyle.outer,
-                                    offset: Offset(0, 0)),
-                              ]),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  side: BorderSide(
-                                      width: 1, color: Colors.black)),
-                              elevation: 4,
-                              child: ListTile(
-                                trailing: RadiantGradientMask(
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.date_range,
-                                      color: white,
+                                                maxLines: 3),
+                                            subtitle: Text(
+                                              selectedDate == " "
+                                                  ? " "
+                                                  : DateFormat('dd-MM-yyyy')
+                                                      .format(selectedDate),
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: black,
+                                                      fontSize: width * 0.04),
+                                            ),
+                                          )),
                                     ),
-                                    onPressed: () {
-                                      _selectDate(context);
-                                    },
-                                  ),
+                                  ],
                                 ),
-                                onTap: () {
-                                  _selectDate(context);
-                                },
-                                title: Text(
-                                    lang.S.of(context).select_booking_date +
-                                        " ",
-                                    style: montserratMedium.copyWith(
-                                        color: black, fontSize: width * 0.04),
-                                    maxLines: 3),
-                                subtitle: Text(
-                                  selectedDate == " "
-                                      ? " "
-                                      : DateFormat('dd-MM-yyyy')
-                                          .format(selectedDate),
-                                  style: montserratSemiBold.copyWith(
-                                      color: black, fontSize: width * 0.04),
+                                Row(
+                                  children: [
+                                    Padding(padding: EdgeInsets.all(12)),
+                                    Text(
+                                      lang.S.of(context).select_a_time_slot +
+                                          "*",
+                                      style: montserratSemiBold.copyWith(
+                                          fontSize: width * 0.034,
+                                          color: black),
+                                    ),
+                                  ],
                                 ),
-                              )),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Padding(padding: EdgeInsets.all(12)),
-                        Text(
-                          lang.S.of(context).select_a_time_slot + "*",
-                          style: montserratSemiBold.copyWith(
-                              fontSize: width * 0.034, color: black),
-                        ),
-                      ],
-                    ),
-                    Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.all(16.0),
-                          padding: EdgeInsets.all(12),
-                          height: height * 0.045,
-                          width: height * 0.37,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 16,
-                                    color: syanColor.withOpacity(.6),
-                                    spreadRadius: 0,
-                                    blurStyle: BlurStyle.outer,
-                                    offset: Offset(0, 0)),
-                              ]),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Container(
-                            margin: EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: white,
-                              border: Border.all(
-                                color: black,
-                              ),
-                            ),
-                            child: ExpansionTile(
-                              childrenPadding: EdgeInsets.all(8),
-                              leading: Container(
-                                width: 30,
-                                height: 30,
-                                child: RadiantGradientMask(
-                                  child: Icon(Icons.av_timer_outlined,
-                                      color: white, size: 28),
-                                ),
-                              ),
-                              title: Text(lang.S.of(context).select_a_time_slot,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: montserratMedium.copyWith(
-                                      color: black, fontSize: width * 0.04),
-                                  maxLines: 3),
-                              subtitle: Text(
-                                  selected_timeslot == ""
-                                      ? "Choose time slot"
-                                      : selected_timeslot,
-                                  style: montserratSemiBold.copyWith(
-                                      color: black,
-                                      fontSize: selected_timeslot == ""
-                                          ? width * 0.034
-                                          : width * 0.04)),
-                              textColor: black,
-                              trailing: isExpanded
-                                  ? Container(
-                                      child: RadiantGradientMask(
-                                        child: Icon(Icons.keyboard_arrow_up,
-                                            color: white, size: 30),
-                                      ),
-                                      padding: EdgeInsets.all(4),
+                                Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.all(16.0),
+                                      padding: EdgeInsets.all(12),
+                                      height: height * 0.045,
+                                      width: height * 0.37,
                                       decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(12),
-                                          color: white.withAlpha(32)),
-                                    )
-                                  : RadiantGradientMask(
-                                      child: Icon(Icons.keyboard_arrow_down,
-                                          color: white, size: 30),
+                                              BorderRadius.circular(14),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 16,
+                                                color:
+                                                    syanColor.withOpacity(.6),
+                                                spreadRadius: 0,
+                                                blurStyle: BlurStyle.outer,
+                                                offset: Offset(0, 0)),
+                                          ]),
                                     ),
-                              onExpansionChanged: (t1) {
-                                isExpanded = !isExpanded;
-                                setState(() {});
-                              },
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: white, boxShadow: null),
-                                  padding: EdgeInsets.all(8),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      timeslots.length > 0
-                                          ? ListView.builder(
-                                              scrollDirection: Axis.vertical,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              padding: EdgeInsets.only(
-                                                  top: 16, bottom: 16),
-                                              itemCount: timeslots.length,
-                                              itemBuilder: (context, index) {
-                                                return Row(
-                                                  children: <Widget>[
-                                                    Theme(
-                                                      data: Theme.of(context)
-                                                          .copyWith(
-                                                              unselectedWidgetColor:
-                                                                  black),
-                                                      child: Radio(
-                                                        value: timeslots[index][
-                                                                'tm_start_time'] +
-                                                            " - " +
-                                                            timeslots[index]
-                                                                ['tm_end_time'],
-                                                        groupValue: isTimeCheck,
-                                                        fillColor:
-                                                            MaterialStateColor
-                                                                .resolveWith(
-                                                                    (states) =>
-                                                                        syanColor),
-                                                        onChanged:
-                                                            (dynamic value) {
-                                                          timeslots[index][
-                                                                      'active_flag'] ==
-                                                                  1
-                                                              ? value = 0
-                                                              : setState(() {
-                                                                  isTimeCheck =
-                                                                      value;
-                                                                  selected_timeid =
-                                                                      int.parse(
-                                                                          timeslots[index]
-                                                                              [
-                                                                              'tm_id']);
-                                                                  selected_timeslot = timeFormatter(
-                                                                          timeslots[index]
-                                                                              [
-                                                                              'tm_start_time']) +
-                                                                      " - " +
-                                                                      timeFormatter(
-                                                                          timeslots[index]
-                                                                              [
-                                                                              'tm_end_time']);
-                                                                });
-                                                        },
-                                                      ),
-                                                    ),
-                                                    timeslots[index][
-                                                                'active_flag'] ==
-                                                            1
-                                                        ? Text(
-                                                            timeFormatter(
-                                                                    timeslots[
-                                                                            index]
-                                                                        [
-                                                                        'tm_start_time']) +
-                                                                " - " +
-                                                                timeFormatter(
-                                                                    timeslots[
-                                                                            index]
-                                                                        [
-                                                                        'tm_end_time']) +
-                                                                "\n" +
-                                                                lang.S
-                                                                    .of(context)
-                                                                    .slot_is_full,
-                                                            style:
-                                                                montserratMedium
-                                                                    .copyWith(
-                                                              fontSize:
-                                                                  width * 0.034,
-                                                              color: errorcolor,
-                                                            ),
-                                                          )
-                                                        : Text(
-                                                            timeFormatter(timeslots[
-                                                                        index][
-                                                                    'tm_start_time']) +
-                                                                " - " +
-                                                                timeFormatter(
-                                                                    timeslots[
-                                                                            index]
-                                                                        [
-                                                                        'tm_end_time']),
-                                                            style:
-                                                                montserratMedium
-                                                                    .copyWith(
-                                                              fontSize:
-                                                                  width * 0.04,
-                                                              color: black,
-                                                            ),
-                                                          ),
-                                                  ],
-                                                );
-                                              })
-                                          : Text(
+                                    Padding(
+                                      padding: EdgeInsets.all(12),
+                                      child: Container(
+                                        margin: EdgeInsets.all(4.0),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          color: white,
+                                          border: Border.all(
+                                            color: black,
+                                          ),
+                                        ),
+                                        child: ExpansionTile(
+                                          childrenPadding: EdgeInsets.all(8),
+                                          leading: Container(
+                                            width: 30,
+                                            height: 30,
+                                            child: RadiantGradientMask(
+                                              child: Icon(
+                                                  Icons.av_timer_outlined,
+                                                  color: white,
+                                                  size: 28),
+                                            ),
+                                          ),
+                                          title: Text(
                                               lang.S
                                                   .of(context)
-                                                  .no_time_slot_available,
+                                                  .select_a_time_slot,
+                                              overflow: TextOverflow.ellipsis,
                                               style: montserratMedium.copyWith(
-                                                fontSize: width * 0.034,
-                                                color: black,
+                                                  color: black,
+                                                  fontSize: width * 0.04),
+                                              maxLines: 3),
+                                          subtitle: Text(
+                                              selected_timeslot == ""
+                                                  ? "Choose time slot"
+                                                  : selected_timeslot,
+                                              style:
+                                                  montserratSemiBold.copyWith(
+                                                      color: black,
+                                                      fontSize:
+                                                          selected_timeslot ==
+                                                                  ""
+                                                              ? width * 0.034
+                                                              : width * 0.04)),
+                                          textColor: black,
+                                          trailing: isExpanded
+                                              ? Container(
+                                                  child: RadiantGradientMask(
+                                                    child: Icon(
+                                                        Icons.keyboard_arrow_up,
+                                                        color: white,
+                                                        size: 30),
+                                                  ),
+                                                  padding: EdgeInsets.all(4),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                      color:
+                                                          white.withAlpha(32)),
+                                                )
+                                              : RadiantGradientMask(
+                                                  child: Icon(
+                                                      Icons.keyboard_arrow_down,
+                                                      color: white,
+                                                      size: 30),
+                                                ),
+                                          onExpansionChanged: (t1) {
+                                            isExpanded = !isExpanded;
+                                            setState(() {});
+                                          },
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: white,
+                                                  boxShadow: null),
+                                              padding: EdgeInsets.all(8),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  timeslots.length > 0
+                                                      ? ListView.builder(
+                                                          scrollDirection:
+                                                              Axis.vertical,
+                                                          shrinkWrap: true,
+                                                          physics:
+                                                              const NeverScrollableScrollPhysics(),
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 16,
+                                                                  bottom: 16),
+                                                          itemCount:
+                                                              timeslots.length,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return Row(
+                                                              children: <
+                                                                  Widget>[
+                                                                Theme(
+                                                                  data: Theme.of(
+                                                                          context)
+                                                                      .copyWith(
+                                                                          unselectedWidgetColor:
+                                                                              black),
+                                                                  child: Radio(
+                                                                    value: timeslots[index]
+                                                                            [
+                                                                            'tm_start_time'] +
+                                                                        " - " +
+                                                                        timeslots[index]
+                                                                            [
+                                                                            'tm_end_time'],
+                                                                    groupValue:
+                                                                        isTimeCheck,
+                                                                    fillColor: MaterialStateColor.resolveWith(
+                                                                        (states) =>
+                                                                            syanColor),
+                                                                    onChanged:
+                                                                        (dynamic
+                                                                            value) {
+                                                                      timeslots[index]['active_flag'] ==
+                                                                              1
+                                                                          ? value =
+                                                                              0
+                                                                          : setState(
+                                                                              () {
+                                                                              isTimeCheck = value;
+                                                                              selected_timeid = int.parse(timeslots[index]['tm_id']);
+                                                                              selected_timeslot = timeFormatter(timeslots[index]['tm_start_time']) + " - " + timeFormatter(timeslots[index]['tm_end_time']);
+                                                                            });
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                                timeslots[index]
+                                                                            [
+                                                                            'active_flag'] ==
+                                                                        1
+                                                                    ? Text(
+                                                                        timeFormatter(timeslots[index]['tm_start_time']) +
+                                                                            " - " +
+                                                                            timeFormatter(timeslots[index]['tm_end_time']) +
+                                                                            "\n" +
+                                                                            lang.S.of(context).slot_is_full,
+                                                                        style: montserratMedium
+                                                                            .copyWith(
+                                                                          fontSize:
+                                                                              width * 0.034,
+                                                                          color:
+                                                                              errorcolor,
+                                                                        ),
+                                                                      )
+                                                                    : Text(
+                                                                        timeFormatter(timeslots[index]['tm_start_time']) +
+                                                                            " - " +
+                                                                            timeFormatter(timeslots[index]['tm_end_time']),
+                                                                        style: montserratMedium
+                                                                            .copyWith(
+                                                                          fontSize:
+                                                                              width * 0.04,
+                                                                          color:
+                                                                              black,
+                                                                        ),
+                                                                      ),
+                                                              ],
+                                                            );
+                                                          })
+                                                      : Text(
+                                                          lang.S
+                                                              .of(context)
+                                                              .no_time_slot_available,
+                                                          style:
+                                                              montserratMedium
+                                                                  .copyWith(
+                                                            fontSize:
+                                                                width * 0.034,
+                                                            color: black,
+                                                          ),
+                                                        ),
+                                                  SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                ],
                                               ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                4.height,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Flexible(
+                                      child: Container(
+                                          child: Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(22, 0, 22, 0),
+                                        child: Text(
+                                          "Drop location and type can be changed during drop schedule after work completion",
+                                          overflow: TextOverflow.clip,
+                                          style: montserratMedium.copyWith(
+                                              color: black.withOpacity(0.5),
+                                              fontSize: width * 0.0275),
+                                        ),
+                                      )),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 16,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    if (isproceeding) return;
+                                    setState(() => isproceeding = true);
+                                    await Future.delayed(
+                                        Duration(milliseconds: 1000));
+                                    proceedToSummaryClick();
+                                  },
+                                  child: Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.all(16),
+                                        height: height * 0.045,
+                                        width: height * 0.37,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(14),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  blurRadius: 16,
+                                                  color:
+                                                      syanColor.withOpacity(.6),
+                                                  spreadRadius: 0,
+                                                  blurStyle: BlurStyle.outer,
+                                                  offset: Offset(0, 0)),
+                                            ]),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(16),
+                                        child: Container(
+                                          height: height * 0.075,
+                                          width: height * 0.45,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(14)),
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                                syanColor,
+                                                lightblueColor,
+                                              ],
                                             ),
-                                      SizedBox(
-                                        height: 8,
+                                          ),
+                                          child: !isproceeding
+                                              ? Text(
+                                                  lang.S.of(context).proceed,
+                                                  style: montserratSemiBold
+                                                      .copyWith(
+                                                          color: Colors.white),
+                                                )
+                                              : Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Transform.scale(
+                                                      scale: 0.7,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        color: white,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                )
+                                ),
                               ],
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                    4.height,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Flexible(
-                          child: Container(
-                              child: Padding(
-                            padding: EdgeInsets.fromLTRB(22, 0, 22, 0),
-                            child: Text(
-                              "Drop location and type can be changed during drop schedule after work completion",
-                              overflow: TextOverflow.clip,
-                              style: montserratMedium.copyWith(
-                                  color: black.withOpacity(0.5),
-                                  fontSize: width * 0.0275),
-                            ),
-                          )),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        if (isproceeding) return;
-                        setState(() => isproceeding = true);
-                        await Future.delayed(Duration(milliseconds: 1000));
-                        proceedToSummaryClick();
-                      },
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.all(16),
-                            height: height * 0.045,
-                            width: height * 0.37,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                boxShadow: [
-                                  BoxShadow(
-                                      blurRadius: 16,
-                                      color: syanColor.withOpacity(.6),
-                                      spreadRadius: 0,
-                                      blurStyle: BlurStyle.outer,
-                                      offset: Offset(0, 0)),
-                                ]),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Container(
-                              height: height * 0.075,
-                              width: height * 0.45,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(14)),
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    syanColor,
-                                    lightblueColor,
-                                  ],
-                                ),
-                              ),
-                              child: !isproceeding
-                                  ? Text(
-                                      lang.S.of(context).proceed,
-                                      style: montserratSemiBold.copyWith(
-                                          color: Colors.white),
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Transform.scale(
-                                          scale: 0.7,
-                                          child: CircularProgressIndicator(
-                                            color: white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                            ),
-                          ),
-                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
+                    );
+                  }
+              }
+            }),
       ),
     );
   }

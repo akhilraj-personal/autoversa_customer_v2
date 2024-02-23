@@ -15,7 +15,7 @@ class TextConst {
   static const cardetailing = "Car\nDetailing";
   static const insurance = "Insurance\nRenewal";
   static const currentOrder = "Current Work Status";
-  static const offerForYou = "Offer For You";
+  static const offerForYou = "Special Offers!";
   static const carWash = "CAR\nWASH";
   static const vehicle = "Vehicle at Workshop ";
   static const view = "View Details";

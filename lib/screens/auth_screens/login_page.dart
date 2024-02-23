@@ -363,60 +363,60 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                         ),
                                         SizedBox(height: height * 0.03),
-                                        Text(
-                                          lang.S.of(context).sign_in_alt,
-                                          style: montserratRegular.copyWith(
-                                              color: blackColor, fontSize: 12),
-                                        ),
-                                        SizedBox(height: height * 0.04),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            // InkWell(
-                                            //   onTap: () {
-                                            //     showCustomToast(
-                                            //         context, "Coming Soon",
-                                            //         bgColor: warningcolor,
-                                            //         textColor: whiteColor);
-                                            //   },
-                                            //   child: Container(
-                                            //     alignment: Alignment.center,
-                                            //     padding: EdgeInsets.only(
-                                            //       right: height * 0.045 / 2,
-                                            //       left: height * 0.045 / 2,
-                                            //     ),
-                                            //     child: Image.asset(
-                                            //       ImageConst.fb_icon,
-                                            //       fit: BoxFit.contain,
-                                            //       height: height * 0.065,
-                                            //       width: height * 0.065,
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                            InkWell(
-                                              onTap: () {
-                                                final provider = Provider.of<
-                                                        GoogleSignInProvider>(
-                                                    context,
-                                                    listen: false);
-                                                provider.googleLogin(context);
-                                              },
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                padding: EdgeInsets.only(
-                                                    left: height * 0.045 / 2,
-                                                    right: height * 0.045 / 2),
-                                                child: Image.asset(
-                                                  ImageConst.g_icon,
-                                                  fit: BoxFit.contain,
-                                                  height: height * 0.065,
-                                                  width: height * 0.065,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
+                                        // Text(
+                                        //   lang.S.of(context).sign_in_alt,
+                                        //   style: montserratRegular.copyWith(
+                                        //       color: blackColor, fontSize: 12),
+                                        // ),
+                                        // SizedBox(height: height * 0.04),
+                                        // Row(
+                                        //   mainAxisAlignment:
+                                        //       MainAxisAlignment.center,
+                                        //   children: [
+                                        //     // InkWell(
+                                        //     //   onTap: () {
+                                        //     //     showCustomToast(
+                                        //     //         context, "Coming Soon",
+                                        //     //         bgColor: warningcolor,
+                                        //     //         textColor: whiteColor);
+                                        //     //   },
+                                        //     //   child: Container(
+                                        //     //     alignment: Alignment.center,
+                                        //     //     padding: EdgeInsets.only(
+                                        //     //       right: height * 0.045 / 2,
+                                        //     //       left: height * 0.045 / 2,
+                                        //     //     ),
+                                        //     //     child: Image.asset(
+                                        //     //       ImageConst.fb_icon,
+                                        //     //       fit: BoxFit.contain,
+                                        //     //       height: height * 0.065,
+                                        //     //       width: height * 0.065,
+                                        //     //     ),
+                                        //     //   ),
+                                        //     // ),
+                                        //     InkWell(
+                                        //       onTap: () {
+                                        //         final provider = Provider.of<
+                                        //                 GoogleSignInProvider>(
+                                        //             context,
+                                        //             listen: false);
+                                        //         provider.googleLogin(context);
+                                        //       },
+                                        //       child: Container(
+                                        //         alignment: Alignment.center,
+                                        //         padding: EdgeInsets.only(
+                                        //             left: height * 0.045 / 2,
+                                        //             right: height * 0.045 / 2),
+                                        //         child: Image.asset(
+                                        //           ImageConst.g_icon,
+                                        //           fit: BoxFit.contain,
+                                        //           height: height * 0.065,
+                                        //           width: height * 0.065,
+                                        //         ),
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // )
                                       ],
                                     )),
                               ])))),

@@ -316,13 +316,25 @@ class ResummeryScreenState extends State<ResummeryScreen> {
         "gs_ispayment": packdata['payment_flag']
       };
       await createRescheduleBooking(booking).then((value) {
-        if (value['ret_data'] == "success") {
+        if (value['ret_data'] == "paylater") {
           createPaymentLater();
           trnxId = value['payment_details']['id'];
+        } else {
+          print(value['ret_data']);
+          setState(() {
+            isproceeding = false;
+          });
+          showCustomToast(context, "Couldn't complete booking",
+              bgColor: errorcolor, textColor: white);
         }
       });
     } catch (e) {
       print(e.toString());
+      setState(() {
+        isproceeding = false;
+      });
+      showCustomToast(context, lang.S.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: white);
     }
   }
 
@@ -400,15 +412,25 @@ class ResummeryScreenState extends State<ResummeryScreen> {
         "coupon_id": coupon_id != 0 ? coupon_id : null,
         "discount": discount != null ? discount : "0",
         "total_amount": netpayable.round(),
+        "gs_ispayment": packdata['payment_flag']
       };
+      print(booking);
       await createRescheduleBooking(booking).then((value) {
         if (value['ret_data'] == "success") {
+          print("111111111");
+          print(value);
           createPayment(bookingdetails['bk_id'], value['payment_details']);
           trnxId = value['payment_details']['id'];
+        } else {
+          print("22222222222222");
+          print(value);
         }
       });
     } catch (e) {
+      print("33333333333333");
       print(e.toString());
+      showCustomToast(context, lang.S.of(context).toast_application_error,
+          bgColor: errorcolor, textColor: Colors.white);
     }
   }
 
