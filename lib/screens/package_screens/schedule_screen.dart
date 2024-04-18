@@ -419,6 +419,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       "date": DateFormat('dd-MM-yyyy').format(pickdate).toString(),
       "branch_id": 1
     };
+    print("-------");
+    print(req);
     try {
       await getTimeSlotsForBooking(req).then((value) {
         buffertime = value['settings']['gs_bookingbuffer_time'];
@@ -610,11 +612,19 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   proceedToSummaryClick() async {
+    print("++++++++++++");
+    print(ptempdata);
+    print(dtempdata);
+    print("++++++++++");
     final prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> packdata =
         json.decode(prefs.get("booking_data").toString());
     if (isLocationCheck) {
       if (ptempdata == "" && dtempdata == "") {
+        print("++++++++++++");
+        print(ptempdata);
+        print(dtempdata);
+        print("++++++++++");
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a location",
             bgColor: errorcolor, textColor: white);
@@ -663,6 +673,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       }
     } else {
       if (ptempdata == "" || dtempdata == "") {
+        print("++++++++++++");
+        print(ptempdata);
+        print(dtempdata);
+        print("++++++++++");
         setState(() => isproceeding = false);
         showCustomToast(context, "Choose a location",
             bgColor: errorcolor, textColor: white);
@@ -1339,7 +1353,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                                 MainAxisAlignment.center,
                                                                             children: [
                                                                               Text(
-                                                                                value['cad_landmark'].toUpperCase() + " (" + value['cad_city'] + ")",
+                                                                                value['cad_landmark'] != null ? value['cad_landmark'].toUpperCase() + " (" + value['cad_city'] + ")" : "",
                                                                                 maxLines: 1,
                                                                                 style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
                                                                               ),
@@ -1826,7 +1840,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                               mainAxisAlignment: MainAxisAlignment.center,
                                                                               children: [
                                                                                 Text(
-                                                                                  value['cad_landmark'].toUpperCase() + " (" + value['cad_city'] + ")",
+                                                                                  value['cad_landmark'] != null ? value['cad_landmark'].toUpperCase() + " (" + value['cad_city'] + ")" : "",
                                                                                   maxLines: 1,
                                                                                   style: montserratMedium.copyWith(color: Colors.black, fontSize: width * 0.04),
                                                                                 ),
@@ -1958,7 +1972,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                                   (dynamic
                                                                       value) {
                                                                 if (ptempdata ==
-                                                                        "" &&
+                                                                            "" &&
+                                                                        dtempdata ==
+                                                                            "" ||
+                                                                    ptempdata ==
+                                                                        "" ||
                                                                     dtempdata ==
                                                                         "") {
                                                                   showCustomToast(

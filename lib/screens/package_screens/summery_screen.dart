@@ -530,6 +530,8 @@ class SummeryPageState extends State<SummeryPage> {
         "coupon_id": coupon_id != 0 ? coupon_id : null,
         "gs_ispayment": packdata['payment_flag']
       };
+      print("=====>>>");
+      print(req);
       String? token = prefs.getString('token');
       var dio = Dio();
       dio.options.headers['content-Type'] = 'application/json';

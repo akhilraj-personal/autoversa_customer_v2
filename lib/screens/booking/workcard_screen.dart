@@ -1882,6 +1882,7 @@ class WorkcardState extends State<Workcard> {
                                                                             print("req=>");
                                                                             print(req);
                                                                             await multipleJobUpdate(req).then((value) {
+                                                                              print(value);
                                                                               if (value['ret_data'] == "success") {
                                                                                 Navigator.push(context, MaterialPageRoute(builder: (context) => Workcard(click_id: widget.click_id, booking_id: widget.booking_id, vehname: widget.vehname, vehmake: widget.vehmake)));
                                                                               } else if (value['ret_data'] == "changed") {

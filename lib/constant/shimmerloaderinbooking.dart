@@ -30,73 +30,81 @@ class ShimmerLoaderInBooking extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: BouncingScrollPhysics(),
-          itemCount: 8,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 26,
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey[400]!,
-                      highlightColor: Colors.grey[300]!,
-                      period: Duration(seconds: 2),
-                      child: Container(
-                        height: 90,
-                        decoration: ShapeDecoration(
-                            color: Colors.grey[400]!, shape: CircleBorder()),
+        Container(
+          margin: EdgeInsets.all(10.0),
+          padding: EdgeInsets.only(right: 16, left: 16, bottom: 10, top: 10),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            itemCount: 8,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 26,
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.grey[400]!,
+                        highlightColor: Colors.grey[300]!,
+                        period: Duration(seconds: 2),
+                        child: Container(
+                          height: 90,
+                          decoration: ShapeDecoration(
+                              color: Colors.grey[400]!, shape: CircleBorder()),
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(""),
-                  ),
-                  Expanded(
-                    flex: 70,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[400]!,
-                          highlightColor: Colors.grey[300]!,
-                          period: Duration(seconds: 2),
-                          child: Container(
-                            height: 16,
-                            width: 220,
-                            decoration: ShapeDecoration(
-                                color: Colors.grey[400]!,
-                                shape: RoundedRectangleBorder()),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[400]!,
-                          highlightColor: Colors.grey[300]!,
-                          period: Duration(seconds: 2),
-                          child: Container(
-                            height: 16,
-                            width: 150,
-                            decoration: ShapeDecoration(
-                                color: Colors.grey[400]!,
-                                shape: RoundedRectangleBorder()),
-                          ),
-                        ),
-                      ],
+                    Expanded(
+                      flex: 3,
+                      child: Text(""),
                     ),
-                  ),
-                ],
-              ),
-            );
-          },
-        )
+                    Expanded(
+                      flex: 70,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey[400]!,
+                            highlightColor: Colors.grey[300]!,
+                            period: Duration(seconds: 2),
+                            child: Container(
+                              height: 16,
+                              width: 220,
+                              decoration: ShapeDecoration(
+                                  color: Colors.grey[400]!,
+                                  shape: RoundedRectangleBorder()),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey[400]!,
+                            highlightColor: Colors.grey[300]!,
+                            period: Duration(seconds: 2),
+                            child: Container(
+                              height: 16,
+                              width: 150,
+                              decoration: ShapeDecoration(
+                                  color: Colors.grey[400]!,
+                                  shape: RoundedRectangleBorder()),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
       ],
     );
   }

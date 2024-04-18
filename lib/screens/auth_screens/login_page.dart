@@ -21,8 +21,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  var country_code = "+971";
-  // var country_code = "+91";
+  // var country_code = "+971";
+  var country_code = "+91";
 
   TextEditingController mobileNumber = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -33,34 +33,34 @@ class _LoginPageState extends State<LoginPage> {
       FocusScope.of(context).unfocus();
     });
     var in_mobile = mobileNumber.text.toString();
-    var valid_number = in_mobile.substring(in_mobile.length - 9);
-    Map req = {
-      "phone": valid_number,
-      "country_code": country_code,
-    };
+    // var valid_number = in_mobile.substring(in_mobile.length - 9);
     // Map req = {
-    //   "phone": in_mobile,
+    //   "phone": valid_number,
     //   "country_code": country_code,
     // };
+    Map req = {
+      "phone": in_mobile,
+      "country_code": country_code,
+    };
     await customerLoginService(req).then((value) {
       if (value['ret_data'] == "success") {
         setState(() => isLoading = false);
         showCustomToast(context, "OTP Send Successfully",
             bgColor: toastgrey, textColor: whiteColor);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => LoginOTPVerification(
-                    country_code: country_code.toString(),
-                    phone: valid_number.toString(),
-                    timer: value['timer'])));
         // Navigator.push(
         //     context,
         //     MaterialPageRoute(
         //         builder: (context) => LoginOTPVerification(
         //             country_code: country_code.toString(),
-        //             phone: in_mobile,
+        //             phone: valid_number.toString(),
         //             timer: value['timer'])));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LoginOTPVerification(
+                    country_code: country_code.toString(),
+                    phone: in_mobile,
+                    timer: value['timer'])));
       } else {
         setState(() => isLoading = false);
         showCustomToast(context, value['ret_data'],
